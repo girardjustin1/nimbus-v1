@@ -9,7 +9,7 @@ Storybook 10, and Vite.**
 
 ## 📖 Live Storybook
 
-### 👉 **[girardjustin1.github.io/nimbus-ds-v1](https://girardjustin1.github.io/nimbus-ds-v1/)**
+### 👉 **[girardjustin1.github.io/nimbus-v1](https://girardjustin1.github.io/nimbus-v1/)**
 
 The full, interactive library — styles, components, application patterns, and app
 screens — auto-deployed from `main`. Start on the **Introduction** page for a guided
@@ -92,7 +92,11 @@ npm run build-storybook  # static Storybook build → ./storybook-static
 
 Every push to `main` builds Storybook and deploys it to GitHub Pages:
 
-> https://girardjustin1.github.io/nimbus-ds-v1/
+> https://girardjustin1.github.io/nimbus-v1/
+
+The Vite prototype app (`src/main.tsx`) deploys alongside it:
+
+> https://girardjustin1.github.io/nimbus-v1/prototype/
 
 ## Structure
 
