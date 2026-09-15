@@ -35,8 +35,9 @@ jobs:
                   node-version: 22
                   cache: npm
 
-            # PRO icons install from Untitled UI's private registry; .npmrc reads
-            # the token from this env var (set as a repo secret).
+            # PRO icons are not installed for now, so the secret may be unset. If
+            # @untitledui-pro/icons is added back, .npmrc reads the token from
+            # this env var (set UNTITLEDUI_PRO_TOKEN as a repo secret).
             - name: Install dependencies
               run: npm ci
               env:
@@ -44,6 +45,13 @@ jobs:
 
             - name: Build Storybook
               run: npm run build-storybook
+              env:
+                  UNTITLEDUI_PRO_TOKEN: ${{ secrets.UNTITLEDUI_PRO_TOKEN }}
+
+            # Prototype app (Vite, src/main.tsx) served beside Storybook at
+            # /<repo>/prototype/. BASE_URL feeds the router basename.
+            - name: Build prototype app
+              run: npx vite build --base=/${{ github.event.repository.name }}/prototype/ --outDir storybook-static/prototype
               env:
                   UNTITLEDUI_PRO_TOKEN: ${{ secrets.UNTITLEDUI_PRO_TOKEN }}
 

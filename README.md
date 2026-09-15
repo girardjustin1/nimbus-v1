@@ -9,7 +9,7 @@ Storybook 10, and Vite.**
 
 ## 📖 Live Storybook
 
-### 👉 **[girardjustin1.github.io/nimbus-ds-v1](https://girardjustin1.github.io/nimbus-ds-v1/)**
+### 👉 **[girardjustin1.github.io/nimbus-v1](https://girardjustin1.github.io/nimbus-v1/)**
 
 The full, interactive library — styles, components, application patterns, and app
 screens — auto-deployed from `main`. Start on the **Introduction** page for a guided
@@ -84,15 +84,21 @@ npm run build            # type-check + production build
 npm run build-storybook  # static Storybook build → ./storybook-static
 ```
 
-> **Icons:** the icon set installs from a private registry. Put your registry
-> token in a local `.env` file (gitignored); the committed `.npmrc` reads it
-> during `npm install`. For CI, the token is provided as a repository secret.
+> **Icons:** the library uses the free `@untitledui/icons` set, so no token is
+> needed. The PRO icon set (`@untitledui-pro/icons`) is not installed for now; to
+> add it back, put your registry token in a local `.env` file (gitignored) — the
+> committed `.npmrc` reads it during `npm install` — and set
+> `UNTITLEDUI_PRO_TOKEN` as a repository secret for CI.
 
 ## Storybook on GitHub Pages
 
 Every push to `main` builds Storybook and deploys it to GitHub Pages:
 
-> https://girardjustin1.github.io/nimbus-ds-v1/
+> https://girardjustin1.github.io/nimbus-v1/
+
+The Vite prototype app (`src/main.tsx`) deploys alongside it:
+
+> https://girardjustin1.github.io/nimbus-v1/prototype/
 
 ## Structure
 
