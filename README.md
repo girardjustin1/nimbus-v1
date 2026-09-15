@@ -84,9 +84,11 @@ npm run build            # type-check + production build
 npm run build-storybook  # static Storybook build → ./storybook-static
 ```
 
-> **Icons:** the icon set installs from a private registry. Put your registry
-> token in a local `.env` file (gitignored); the committed `.npmrc` reads it
-> during `npm install`. For CI, the token is provided as a repository secret.
+> **Icons:** the library uses the free `@untitledui/icons` set, so no token is
+> needed. The PRO icon set (`@untitledui-pro/icons`) is not installed for now; to
+> add it back, put your registry token in a local `.env` file (gitignored) — the
+> committed `.npmrc` reads it during `npm install` — and set
+> `UNTITLEDUI_PRO_TOKEN` as a repository secret for CI.
 
 ## Storybook on GitHub Pages
 
