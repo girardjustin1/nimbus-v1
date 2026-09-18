@@ -52,7 +52,7 @@ const useHashRoute = () => {
 };
 
 /** Storybook (design system) lives at the Pages root; locally it runs on its own port. */
-const storybookUrl = () => (window.location.hostname === "localhost" ? "http://localhost:6007/" : "../../");
+const storybookUrl = () => (window.location.hostname === "localhost" ? "http://localhost:6006/" : "../../");
 
 const selectClass = "rounded-md border border-white/15 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-white/40";
 
