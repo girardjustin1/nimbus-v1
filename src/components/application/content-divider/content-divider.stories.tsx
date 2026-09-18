@@ -1,3 +1,4 @@
+import type { FC } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ContentDivider } from "@/components/application/content-divider/content-divider";
 
@@ -21,9 +22,8 @@ const meta = {
 export default meta;
 
 // ContentDivider requires `type` and `children`, so type render-only stories
-// off a no-prop component to avoid the "required args" error.
-const Divider = () => <ContentDivider type="single-line">OR</ContentDivider>;
-type Story = StoryObj<typeof Divider>;
+// as a no-prop component to avoid the "required args" error.
+type Story = StoryObj<FC>;
 
 /** Single-line divider with a centered label — the classic "OR" separator. */
 export const Default: Story = {

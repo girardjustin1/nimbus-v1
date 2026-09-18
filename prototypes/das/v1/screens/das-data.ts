@@ -280,6 +280,20 @@ export const campaigns: Campaign[] = [
     },
 ];
 
+/* ------------------------------------------------------------------- Pacing --- */
+
+export type PaceState = "on track" | "behind" | "ahead" | "not started" | "no budget";
+
+/** Compare spend share with flight elapsed: within ±10% is on track. */
+export const paceOf = (c: Pick<Campaign, "budget" | "spend" | "flightElapsed">): PaceState => {
+    if (!c.budget) return "no budget";
+    if (c.flightElapsed === 0) return "not started";
+    const ratio = ((c.spend / c.budget) * 100) / c.flightElapsed;
+    if (ratio < 0.9) return "behind";
+    if (ratio > 1.1) return "ahead";
+    return "on track";
+};
+
 /* ------------------------------------------------------------------ Reporting --- */
 
 /** Daily DAS vs Open Marketplace revenue for the reporting concepts (last 14 days). */

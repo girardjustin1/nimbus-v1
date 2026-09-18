@@ -200,7 +200,7 @@ export const Button = ({
 
     noTextPadding = isLinkType || noTextPadding;
 
-    let props = {};
+    let props: object;
 
     if (href) {
         props = {

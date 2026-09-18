@@ -22,6 +22,8 @@ export default tseslint.config(
         rules: {
             ...reactHooks.configs.recommended.rules,
             "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+            // A leading underscore marks a deliberately unused name (e.g. a prop pulled out of ...rest).
+            "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_", destructuredArrayIgnorePattern: "^_" }],
         },
     },
     {
@@ -37,7 +39,7 @@ export default tseslint.config(
         rules: {
             "@typescript-eslint/no-explicit-any": "warn",
             "@typescript-eslint/no-empty-object-type": "warn",
-            "@typescript-eslint/no-unused-vars": "warn",
+            "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_", destructuredArrayIgnorePattern: "^_" }],
             "@typescript-eslint/no-unused-expressions": "warn",
             "@typescript-eslint/ban-ts-comment": "warn",
             "no-useless-assignment": "warn",

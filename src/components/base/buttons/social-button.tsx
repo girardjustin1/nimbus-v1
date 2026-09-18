@@ -89,7 +89,7 @@ export const SocialButton = ({ size = "lg", theme = "brand", social, className, 
 
     const Logo = logos[social];
 
-    let props = {};
+    let props: object;
 
     if (href) {
         props = {

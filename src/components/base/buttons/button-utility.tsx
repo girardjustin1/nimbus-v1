@@ -63,7 +63,7 @@ export const ButtonUtility = ({
     const href = "href" in otherProps ? otherProps.href : undefined;
     const Component = href ? AriaLink : AriaButton;
 
-    let props = {};
+    let props: object;
 
     if (href) {
         props = {

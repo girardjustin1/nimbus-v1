@@ -5,8 +5,8 @@ import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Input } from "@/components/base/input/input";
 import { Toggle } from "@/components/base/toggle/toggle";
 import { cx } from "@/utils/cx";
-import { type Campaign, campaigns, compact, usd } from "./das-data";
-import { DasShell, DeliveryBar, KeywordChip, PINK, PaceLabel, StatusDot, TEAL, paceOf } from "./das-shell";
+import { type Campaign, campaigns, compact, paceOf, usd } from "./das-data";
+import { DasShell, DeliveryBar, KeywordChip, PINK, PaceLabel, StatusDot, TEAL } from "./das-shell";
 
 /**
  * Deal Activation System → Manage Campaigns.

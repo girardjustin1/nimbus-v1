@@ -1,3 +1,4 @@
+import type { FC } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CodeSnippet } from "@/components/application/code-snippet/code-snippet";
 
@@ -42,10 +43,9 @@ const meta = {
 
 export default meta;
 
-// CodeSnippet requires `language`, so type render-only stories off a no-prop
+// CodeSnippet requires `language`, so type render-only stories as a no-prop
 // component to avoid the "required args" error on `StoryObj<typeof meta>`.
-const Snippet = () => <CodeSnippet code={installCode} language="bash" />;
-type Story = StoryObj<typeof Snippet>;
+type Story = StoryObj<FC>;
 
 /** A bash install command with the hover copy control. */
 export const Default: Story = {

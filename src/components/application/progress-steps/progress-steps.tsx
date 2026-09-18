@@ -1,6 +1,7 @@
 import { cx } from "@/utils/cx";
 import { FeaturedIconLeft, FeaturedIconTop, IconLeft, IconLeftNumber, IconOnly, IconTop, IconTopNumber, TextLine, statuses } from "./progress-step-base";
-import type { CommonProps, ComponentType, ProgressIconsCenteredProps, ProgressMinimalIconsProps } from "./progress-types";
+import type { FC } from "react";
+import type { CommonProps, ComponentType, IconType, ProgressIconsCenteredProps, ProgressMinimalIconsProps, Step } from "./progress-types";
 
 const progressIcons = {
     horizontal: {
@@ -18,8 +19,9 @@ const progressIcons = {
 const IconsWithText = <T extends ComponentType>(props: ProgressIconsCenteredProps<T>) => {
     const { type = "icon", orientation = "vertical", size = "sm", connector = true, items, className } = props;
     const length = items.length;
-    // Single step component based on the type.
-    const StepBase = progressIcons[orientation][type];
+    // Single step component based on the type. The lookup yields a union of three
+    // generic components; every item is a Step with an optional icon, which all accept.
+    const StepBase = progressIcons[orientation][type] as FC<Step & { icon?: IconType; size?: "sm" | "md"; type?: ComponentType; step?: number }>;
 
     return (
         <div
@@ -36,7 +38,7 @@ const IconsWithText = <T extends ComponentType>(props: ProgressIconsCenteredProp
             {items.map((item, index) => (
                 <StepBase
                     key={index}
-                    {...(item as any)}
+                    {...item}
                     size={size}
                     connector={!connector ? false : item.connector || index !== length - 1}
                     type={type}

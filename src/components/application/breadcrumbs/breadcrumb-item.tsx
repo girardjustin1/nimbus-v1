@@ -81,11 +81,12 @@ interface BreadcrumbItemProps extends AriaBreadcrumbProps {
     onClick?: () => void;
 }
 
-export const BreadcrumbItem = ({ href, icon, divider, type, isEllipsis, children, onClick, avatarSrc, className, ...otherProps }: BreadcrumbItemProps) => {
+export const BreadcrumbItem = ({ href, icon, divider: dividerProp, type: typeProp, isEllipsis, children, onClick, avatarSrc, className, ...otherProps }: BreadcrumbItemProps) => {
     const context = useContext(BreadcrumbsContext);
 
-    type = context.type || "text";
-    divider = context.divider || "chevron";
+    // An item's own prop wins, then the parent <Breadcrumbs> setting, then the default.
+    const type = typeProp || context.type || "text";
+    const divider = dividerProp || context.divider || "chevron";
 
     return (
         <AriaBreadcrumb
