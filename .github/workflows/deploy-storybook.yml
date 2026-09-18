@@ -48,10 +48,10 @@ jobs:
               env:
                   UNTITLEDUI_PRO_TOKEN: ${{ secrets.UNTITLEDUI_PRO_TOKEN }}
 
-            # Prototype app (Vite, src/main.tsx) served beside Storybook at
-            # /<repo>/prototype/. BASE_URL feeds the router basename.
-            - name: Build prototype app
-              run: npx vite build --base=/${{ github.event.repository.name }}/prototype/ --outDir storybook-static/prototype
+            # Standalone prototypes (prototypes/<name>/<version>/) served beside
+            # Storybook at /<repo>/<name>/ — e.g. /nimbus-v1/das/v1/.
+            - name: Build standalone prototypes
+              run: npm run proto:build && cp -R dist-prototypes/. storybook-static/
               env:
                   UNTITLEDUI_PRO_TOKEN: ${{ secrets.UNTITLEDUI_PRO_TOKEN }}
 

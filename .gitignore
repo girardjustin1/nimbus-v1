@@ -10,6 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+dist-prototypes
 *.local
 
 # Editor directories and files
@@ -33,3 +34,6 @@ reference/screens/
 reference/screens - batch 2/
 reference/screens - batch 3/
 reference/colors/
+
+# DAS project sources (internal PDFs, staging screenshots, extracted notes) — local only.
+reference/das-system/

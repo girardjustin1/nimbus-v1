@@ -96,9 +96,13 @@ Every push to `main` builds Storybook and deploys it to GitHub Pages:
 
 > https://girardjustin1.github.io/nimbus-v1/
 
-The Vite prototype app (`src/main.tsx`) deploys alongside it:
+Standalone prototypes deploy alongside it, each at its own URL:
 
-> https://girardjustin1.github.io/nimbus-v1/prototype/
+- **Deal Activation System** — https://girardjustin1.github.io/nimbus-v1/das/
+- **Performance Insights** — https://girardjustin1.github.io/nimbus-v1/performance-insights/
+
+Each opens its latest version; every version stays live at its own path
+(`…/das/v1/`, `…/das/v2/`, …). See [`prototypes/README.md`](prototypes/README.md).
 
 ## Structure
 

@@ -1,0 +1,68 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+export const th = { textAlign: "left", fontSize: 12, fontWeight: 700, color: "#475467", padding: "10px 14px", borderBottom: "1px solid #EAECF0", background: "#F9FAFB" };
+export const td = { fontSize: 14, color: "#344054", padding: "12px 14px", borderBottom: "1px solid #EAECF0", verticalAlign: "top" };
+export const Table = ({ head, rows }) => (
+  <div style={{ overflowX: "auto", border: "1px solid #EAECF0", borderRadius: 12, margin: "12px 0 24px" }}>
+    <table style={{ width: "100%", borderCollapse: "collapse", margin: 0 }}>
+      <thead><tr>{head.map((h) => <th key={h} style={th}>{h}</th>)}</tr></thead>
+      <tbody>{rows.map((r, i) => <tr key={i}>{r.map((c, j) => <td key={j} style={td}>{c}</td>)}</tr>)}</tbody>
+    </table>
+  </div>
+);
+export const Story = ({ id, children }) => <a href={`./?path=/story/${id}`} target="_top" style={{ color: "#1F7F80", fontWeight: 600 }}>{children}</a>;
+
+<Meta title="Performance Insights/Overview" />
+
+<div style={{ maxWidth: 920 }}>
+
+<div style={{ fontSize: 13, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#A94579" }}>September 22, 2026 · Round 1 review</div>
+
+# Performance Insights — redesign concepts
+
+<div style={{ background: "#F9FAFB", border: "1px solid #EAECF0", borderRadius: 14, padding: "16px 20px", margin: "8px 0 24px", fontSize: 15, lineHeight: 1.65, color: "#344054" }}>
+  <strong>The experience.</strong> A publisher opens Performance Insights and starts from a template or saved query instead of a
+  blank wall of checkboxes. They build a question as one readable sentence ("show revenue and eCPM by demand source for the
+  last 7 days…") that only runs when they ask, see every number next to its change from the previous period, and drill from
+  app to demand source in a pivot view. It's fast, easier to read, and ready for the DAS and keyword dimensions coming next.
+</div>
+
+Today's Performance Insights shows every metric and breakdown as an always-visible checkbox,
+loads data up front, and can't absorb new dimensions: DAS already added three, and keyword
+targeting would add an unbounded number. These concepts explore replacements. They use the
+Nimbus design system and fictional sample data.
+
+## Concepts
+
+<Table
+  head={["Concept", "What it explores"]}
+  rows={[
+    [<Story id="performance-insights-concepts--concept-a-start-page">A · Start page</Story>, "Templates with trend previews and saved queries (with schedules) as the landing view"],
+    [<Story id="performance-insights-concepts--concept-b-question-bar">B · Question bar</Story>, "The query as one editable sentence: metrics, breakdown, dates, filters, comparison. Results show deltas vs the previous period."],
+    [<Story id="performance-insights-concepts--concept-b-question-bar-draft">B · Edited, not yet run</Story>, "Edits mark results stale; nothing re-queries until Run (answers the slow up-front loading)"],
+    [<Story id="performance-insights-concepts--concept-c-explorer">C · Explorer</Story>, "Pivot-table model: drag fields into Rows / Columns / Values, nested drill-down, heatmap cells"],
+  ]}
+/>
+
+Related: the DAS-specific reporting concepts live in
+<a href="./?path=/story/deal-activation-system-reporting--concept-a-overview" target="_top" style={{ color: "#1F7F80", fontWeight: 600 }}>Deal Activation System → Reporting</a>.
+
+## Open questions
+
+<ol style={{ listStyle: "decimal", paddingLeft: 24, lineHeight: 1.7 }}>
+  <li>Which templates cover most publisher visits today? (Query logs would tell us.)</li>
+  <li>Should saved queries support scheduled email/CSV delivery?</li>
+  <li>How large can a result get before we require a CSV export instead of an on-screen table?</li>
+  <li>Does the internal Nimbus view (all publishers) need its own starting templates?</li>
+</ol>
+
+## Changelog
+
+<Table
+  head={["Date", "Change"]}
+  rows={[
+    ["Sep 22, 2026", "Round 1 review. New Performance Insights category: Start page, Question bar (run + edited states), Explorer."],
+  ]}
+/>
+
+</div>

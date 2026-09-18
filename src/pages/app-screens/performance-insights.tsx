@@ -304,21 +304,25 @@ const PieChart = () => {
     const cx0 = 300;
     const cy0 = 260;
     const r = 190;
-    let angle = -Math.PI / 2;
     const total = pieData.reduce((s, d) => s + d[1], 0);
+    // Start/end angle of each slice, computed up front so render stays pure.
+    const slices = pieData.map((d, i) => {
+        const before = pieData.slice(0, i).reduce((s, p) => s + p[1], 0);
+        const start = -Math.PI / 2 + (before / total) * Math.PI * 2;
+        return { start, end: start + (d[1] / total) * Math.PI * 2 };
+    });
 
     return (
         <div className="px-6 py-10">
             <div className="flex flex-col items-center gap-10 md:flex-row md:justify-center">
                 <svg viewBox="0 0 600 520" className="h-80 w-full max-w-xl" role="img" aria-label="Pie chart of series distribution">
-                    {pieData.map(([, value, color], i) => {
-                        const slice = (value / total) * Math.PI * 2;
-                        const x1 = cx0 + r * Math.cos(angle);
-                        const y1 = cy0 + r * Math.sin(angle);
-                        angle += slice;
-                        const x2 = cx0 + r * Math.cos(angle);
-                        const y2 = cy0 + r * Math.sin(angle);
-                        const large = slice > Math.PI ? 1 : 0;
+                    {pieData.map(([, , color], i) => {
+                        const { start, end } = slices[i];
+                        const x1 = cx0 + r * Math.cos(start);
+                        const y1 = cy0 + r * Math.sin(start);
+                        const x2 = cx0 + r * Math.cos(end);
+                        const y2 = cy0 + r * Math.sin(end);
+                        const large = end - start > Math.PI ? 1 : 0;
                         return (
                             <path key={i} d={`M${cx0},${cy0} L${x1.toFixed(1)},${y1.toFixed(1)} A${r},${r} 0 ${large} 1 ${x2.toFixed(1)},${y2.toFixed(1)} Z`} fill={color} />
                         );

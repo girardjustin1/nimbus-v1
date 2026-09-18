@@ -1,0 +1,6 @@
+/* Design-system styles, plus explicit sources so Tailwind scans the prototypes
+   folder as well as the shared components in src/. */
+@import "../../src/styles/globals.css";
+
+@source "../../src";
+@source "../";
