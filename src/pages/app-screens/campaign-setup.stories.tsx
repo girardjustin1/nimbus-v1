@@ -26,8 +26,7 @@ const meta = {
 
 export default meta;
 
-// Render-only stories — type loosely so the shared meta's (empty) args don't trip "required args".
-type Story = StoryObj<any>;
+type Story = StoryObj<typeof meta>;
 
 /** Step 1 — Targeting: Deal ID, Campaign Name, Geos (All), Platform, Apps. */
 export const Step1Objective: Story = { render: () => <Step1Targeting /> };

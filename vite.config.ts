@@ -50,6 +50,14 @@ export default defineConfig({
           }]
         }
       }
+    }, {
+      // Fast Node tests for data, pacing logic and the prototype version registry.
+      extends: true,
+      test: {
+        name: 'unit',
+        environment: 'node',
+        include: ['src/**/*.test.{ts,tsx}', 'prototypes/**/*.test.{ts,tsx}']
+      }
     }]
   }
 });

@@ -1,0 +1,50 @@
+name: CI
+
+# Validates every pull request (and every push to a branch) before it can ship:
+# type-check, lint, unit + Storybook tests, and both builds that the Pages deploy runs.
+on:
+    pull_request:
+    push:
+        branches-ignore: [main]
+
+permissions:
+    contents: read
+
+concurrency:
+    group: ci-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    validate:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: npm
+
+            - name: Install dependencies
+              run: npm ci
+
+            # Storybook tests render every story in headless Chromium.
+            - name: Install Playwright Chromium
+              run: npx playwright install --with-deps chromium
+
+            - name: Type-check
+              run: npm run typecheck
+
+            - name: Lint
+              run: npm run lint
+
+            - name: Tests (unit + Storybook)
+              run: npm run test
+
+            - name: Build Storybook
+              run: npm run build-storybook
+
+            - name: Build standalone prototypes
+              run: npm run proto:build
