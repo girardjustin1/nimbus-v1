@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { campaigns, keywords } from "./das-data";
-import { paceOf } from "./das-shell";
+import { campaigns, keywords, paceOf } from "./das-data";
 
 describe("paceOf", () => {
     const at = (spend: number, flightElapsed: number, budget = 1000) => paceOf({ budget, spend, flightElapsed });

@@ -190,7 +190,7 @@ export const CommandDialog = ({ className, dialogClassName, children, ...combobo
     );
 };
 
-interface CommandMenuListProps extends Omit<ListBoxProps<CommandMenuGroupType>, "items"> {}
+type CommandMenuListProps = Omit<ListBoxProps<CommandMenuGroupType>, "items">;
 
 export const CommandMenuList = ({ className, selectionMode = "single", ...props }: CommandMenuListProps) => {
     const { hasFooter, emptyState, ...listBoxProps } = useContext(CommandMenuContext);

@@ -21,7 +21,7 @@ import { cx } from "@/utils/cx";
 const TEAL = "#37b6b7";
 
 /** Ordered wizard steps + the short descriptions shown under each stepper node. */
-export const WIZARD_STEPS = [
+const WIZARD_STEPS = [
     { title: "Targeting", description: "Deal, geos & apps" },
     { title: "Budget", description: "Spend & schedule" },
     { title: "Priority", description: "Auction rules" },

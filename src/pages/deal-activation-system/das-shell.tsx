@@ -3,7 +3,7 @@ import { ChevronDown, Lightbulb02, XClose } from "@untitledui/icons";
 import { type GlobalNavSection, navSections } from "@/components/application/global-nav/config";
 import { GlobalNav } from "@/components/application/global-nav/global-nav";
 import { cx } from "@/utils/cx";
-import type { Campaign, CampaignStatus } from "./das-data";
+import { type Campaign, type CampaignStatus, type PaceState, paceOf } from "./das-data";
 
 /**
  * Deal Activation System — shared prototype chrome and building blocks.
@@ -215,18 +215,6 @@ export const StatusDot = ({ status }: { status: CampaignStatus }) => (
 );
 
 /* ------------------------------------------------------------ Delivery --- */
-
-export type PaceState = "on track" | "behind" | "ahead" | "not started" | "no budget";
-
-/** Compare spend share with flight elapsed: within ±10% is on track. */
-export const paceOf = (c: Pick<Campaign, "budget" | "spend" | "flightElapsed">): PaceState => {
-    if (!c.budget) return "no budget";
-    if (c.flightElapsed === 0) return "not started";
-    const ratio = ((c.spend / c.budget) * 100) / c.flightElapsed;
-    if (ratio < 0.9) return "behind";
-    if (ratio > 1.1) return "ahead";
-    return "on track";
-};
 
 const paceColor: Record<PaceState, string> = {
     "on track": TEAL,

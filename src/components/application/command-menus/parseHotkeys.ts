@@ -55,7 +55,7 @@ export function parseKeysHookInput(keys: string, delimiter = ","): string[] {
 }
 
 export function parseHotkey(hotkey: string, splitKey = "+", sequenceSplitKey = ">", useKey = false, description?: string): Hotkey {
-    let keys: string[] = [];
+    let keys: string[];
     let isSequence = false;
 
     if (hotkey.includes(sequenceSplitKey)) {
