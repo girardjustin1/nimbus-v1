@@ -25,5 +25,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "prototypes"],
+  "exclude": ["prototypes/vite.config.ts"]
 }

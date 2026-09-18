@@ -8,7 +8,15 @@
         "build": "tsc -b && vite build",
         "preview": "vite preview",
         "storybook": "storybook dev -p 6006",
-        "build-storybook": "storybook build"
+        "build-storybook": "storybook build",
+        "proto:dev": "vite --config prototypes/vite.config.ts",
+        "proto:build": "vite build --config prototypes/vite.config.ts",
+        "typecheck": "tsc -b",
+        "lint": "eslint .",
+        "test": "vitest run",
+        "test:unit": "vitest run --project=unit",
+        "test:storybook": "vitest run --project=storybook",
+        "validate": "npm run typecheck && npm run lint && npm run test && npm run build-storybook && npm run proto:build"
     },
     "dependencies": {
         "@react-aria/utils": "^3.34.1",
@@ -37,6 +45,7 @@
     },
     "devDependencies": {
         "@chromatic-com/storybook": "^5.2.1",
+        "@eslint/js": "^10.0.1",
         "@storybook/addon-a11y": "^10.5.1",
         "@storybook/addon-docs": "^10.5.1",
         "@storybook/addon-mcp": "^0.7.0",
@@ -49,6 +58,9 @@
         "@vitejs/plugin-react": "^6.0.1",
         "@vitest/browser-playwright": "^4.1.10",
         "@vitest/coverage-v8": "^4.1.10",
+        "eslint": "^10.11.0",
+        "eslint-plugin-react-hooks": "^7.1.1",
+        "eslint-plugin-react-refresh": "^0.5.7",
         "globals": "^16.5.0",
         "hast-util-to-jsx-runtime": "^2.3.6",
         "playwright": "^1.61.1",

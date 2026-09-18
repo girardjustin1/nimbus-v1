@@ -23,8 +23,14 @@ const preview: Preview = {
                     // 4) Auth page templates
                     "Account Login",
                     ["Sign up", "Log in", "Forgot Password", "Verify Email"],
-                    // 5) App Screens (always last)
+                    // 5) App Screens
                     "App Screens",
+                    // 6) Active project — DAS screen concepts
+                    "Deal Activation System",
+                    ["Overview", "Campaign Setup (One Page)", "Targeting", "Keyword Library", "Manage Campaigns", "Reporting"],
+                    // 7) Active project — Performance Insights redesign concepts
+                    "Performance Insights",
+                    ["Overview", "Concepts"],
                     "*",
                 ],
             },

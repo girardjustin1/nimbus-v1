@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Performance Insights · Nimbus prototype</title>
+    </head>
+    <body>
+        <p>Opening the latest version…</p>
+        <!-- Always forwards to the newest version folder, keeping any #/screen link. -->
+        <script type="module">
+            import { latest } from "./versions.ts";
+            window.location.replace(`./${latest}/${window.location.hash}`);
+        </script>
+    </body>
+</html>

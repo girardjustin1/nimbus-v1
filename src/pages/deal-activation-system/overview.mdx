@@ -1,0 +1,109 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+export const th = { textAlign: "left", fontSize: 12, fontWeight: 700, color: "#475467", padding: "10px 14px", borderBottom: "1px solid #EAECF0", background: "#F9FAFB" };
+export const td = { fontSize: 14, color: "#344054", padding: "12px 14px", borderBottom: "1px solid #EAECF0", verticalAlign: "top" };
+export const Table = ({ head, rows }) => (
+  <div style={{ overflowX: "auto", border: "1px solid #EAECF0", borderRadius: 12, margin: "12px 0 24px" }}>
+    <table style={{ width: "100%", borderCollapse: "collapse", margin: 0 }}>
+      <thead><tr>{head.map((h) => <th key={h} style={th}>{h}</th>)}</tr></thead>
+      <tbody>{rows.map((r, i) => <tr key={i}>{r.map((c, j) => <td key={j} style={td}>{c}</td>)}</tr>)}</tbody>
+    </table>
+  </div>
+);
+export const Story = ({ id, children }) => <a href={`./?path=/story/${id}`} target="_top" style={{ color: "#37B6B7", fontWeight: 600 }}>{children}</a>;
+
+<Meta title="Deal Activation System/Overview" />
+
+<div style={{ maxWidth: 920 }}>
+
+<div style={{ fontSize: 13, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#1F7F80" }}>September 22, 2026 · Round 1 review</div>
+
+# Deal Activation System — Extended Targeting
+
+<div style={{ background: "#F9FAFB", border: "1px solid #EAECF0", borderRadius: 14, padding: "16px 20px", margin: "8px 0 24px", fontSize: 15, lineHeight: 1.65, color: "#344054" }}>
+  <strong>The experience.</strong> A publisher sets up a direct-sold campaign on a single page instead of a five-step wizard,
+  with problems flagged as they go and Publish enabled only when everything checks out. They target it with their own
+  keywords (words their app already sends, like "sports" or "over21") plus ad unit type and device language, and manage
+  those keywords in a new Keyword Library. After launch, every campaign shows at a glance whether it's on pace to deliver
+  what was promised to the advertiser, and DAS results are reported separately from Open Marketplace revenue.
+</div>
+
+**The goal:** let publishers run high-value direct campaigns through Nimbus instead of GAM.
+DAS gains **publisher-defined keyword targeting** plus two new standard targets (**ad unit
+type** and **device language**), and the setup, management and reporting screens need to
+handle that extra granularity.
+
+Everything in this section is an exploratory **screen concept** built from the Nimbus design
+system with fictional sample data. Each screen opens with a dashed teal note explaining what
+the concept is testing. That note is a review annotation, not product UI.
+
+---
+
+## Concepts
+
+<Table
+  head={["Area", "Concepts", "What it explores"]}
+  rows={[
+    [<Story id="deal-activation-system-campaign-setup-one-page--ready-to-publish">Campaign Setup (One Page)</Story>, "Ready · With errors · Fallback rule", "The 5-step wizard as one page. A live summary rail replaces the Review step."],
+    [<Story id="deal-activation-system-targeting--concept-a-inline-chips">Targeting</Story>, "A · Inline chips — B · Pick from library — C · Audience sentence", "Keyword targeting with ANY/ALL, ad unit type, device language"],
+    [<Story id="deal-activation-system-keyword-library--default">Keyword Library</Story>, "Default · Add · Delete in use · Empty", "A new page to create, edit and delete keywords"],
+    [<Story id="deal-activation-system-manage-campaigns--concept-a-delivery">Manage Campaigns</Story>, "A · Delivery view — B · Compare", "“How done is my campaign?” Pacing vs flight, deals → campaigns, compare"],
+    [<Story id="deal-activation-system-reporting--concept-a-overview">Reporting</Story>, "A · DAS overview — B · Query builder", "DAS vs Open Marketplace clarity, on-the-fly breakdowns, the keyword guardrail"],
+  ]}
+/>
+
+## What we're designing for
+
+- **Keywords are opaque.** The publisher's app sends words or codes (`sports`, `over21`,
+  `77541`) in `user.keywords`. Nimbus stores and matches them case-insensitively and never
+  interprets them.
+- **Create → target → report.** Publishers need to create, edit and delete keywords, target
+  campaigns with them (ANY by default, or ALL), and see results.
+- **Think in ad units, not creative sizes.** One creative *type* per campaign. Other formats
+  or languages use **Publish & Duplicate**.
+- **Delivery is a promise.** Under-delivering a direct deal is a contract problem, so spend
+  vs budget vs flight needs to be visible at a glance.
+- **Reporting guardrail.** Aggregate keyword metrics in the dashboard (keyword-targeted
+  yes/no + matched keyword count). Per-keyword detail via CSV/API only, and no per-keyword
+  charts at launch.
+- **Out of scope:** position, session depth, device type, day parting, third-party
+  audiences, API campaign setup, creative/size targeting.
+
+## Proposed design-system additions
+
+New patterns these concepts introduce. They'll move into **Application UI** if approved.
+
+<Table
+  head={["Pattern", "Where", "Notes"]}
+  rows={[
+    ["Keyword chip + chip input", "Targeting, Library, Campaigns", "Mono, teal, removable. Enter/comma to add, Backspace to remove."],
+    ["Delivery bar", "Campaigns, Reporting", "Spend vs budget with a “should be here by now” tick and a pace label"],
+    ["Summary rail", "Campaign Setup", "Sticky validation + summary + publish actions"],
+    ["Grouped dimension picker", "Reporting", "Searchable, grouped; locked items show why"],
+    ["Audience sentence", "Targeting", "Plain-language targeting with editable tokens"],
+    ["Global Nav: keyword library", "All DAS screens", "New item under Deal Activation System"],
+  ]}
+/>
+
+## Open questions
+
+<ol style={{ listStyle: "decimal", paddingLeft: 24, lineHeight: 1.7 }}>
+  <li>Is the keyword library per publisher account or per app?</li>
+  <li>Can a keyword used by a live campaign be renamed? (Concepts assume no: add new, switch, delete.)</li>
+  <li>Should we suggest keywords already seen in traffic that aren't in the library yet?</li>
+  <li>Is ANY/ALL enough, or will publishers ask for exclusions? (Exclusions are currently unsupported.)</li>
+  <li>Does the one-pager still need an explicit review moment, or is the summary rail enough?</li>
+  <li>Is CSV-only per-keyword reporting a hard launch rule or a performance safeguard we can revisit?</li>
+</ol>
+
+## Changelog
+
+<Table
+  head={["Date", "Change"]}
+  rows={[
+    ["Sep 22, 2026", "Round 1 review. Experience summary added; Performance Insights now has its own category, linked from the Introduction."],
+    ["Sep 18, 2026", "Kickoff. Added the Deal Activation System category: Overview, Campaign Setup (One Page) ×3, Targeting ×4, Keyword Library ×4, Manage Campaigns ×3, Reporting ×3."],
+  ]}
+/>
+
+</div>
