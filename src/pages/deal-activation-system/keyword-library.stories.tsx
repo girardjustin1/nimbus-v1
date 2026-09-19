@@ -7,7 +7,7 @@ import { KeywordLibrary } from "./keyword-library";
  * Where publishers create, edit and delete the keywords their campaigns target.
  */
 const meta = {
-    title: "Deal Activation System/Keyword Library",
+    title: "Deal Activation System/Round 1 Concepts/Keyword Library",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

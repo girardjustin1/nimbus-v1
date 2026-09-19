@@ -1,5 +1,6 @@
 import type { ProtoScreen } from "../../shared/prototype-frame";
 import { CampaignSetupOnePage } from "./screens/campaign-setup-one-page";
+import { ViewDeliveryFirst, ViewOnePage, ViewPerformance, ViewSentence } from "./screens/campaign-view";
 import { KeywordLibrary } from "./screens/keyword-library";
 import { AudienceSentence, KeywordTargetingInline, KeywordTargetingLibrary } from "./screens/keyword-targeting";
 import { CompareCampaigns, ManageCampaignsDelivery } from "./screens/manage-campaigns";
@@ -14,22 +15,64 @@ export const screens: ProtoScreen[] = [
         id: "setup-ready",
         area: "Campaign Setup (One Page)",
         title: "Ready to publish",
-        description: "Five wizard steps as one page with a live summary rail.",
+        description: "Five sections, calendar pickers for the flight, live summary rail. Publish goes live.",
         render: () => <CampaignSetupOnePage />,
+    },
+    {
+        id: "setup-empty",
+        area: "Campaign Setup (One Page)",
+        title: "Empty form",
+        description: "Nothing filled in: “On this page” and the summary rail in their empty states.",
+        render: () => <CampaignSetupOnePage preset="empty" />,
+    },
+    {
+        id: "setup-empty-errors",
+        area: "Campaign Setup (One Page)",
+        title: "Empty form, Publish pressed",
+        description: "Every required field flagged; banner links to each.",
+        render: () => <CampaignSetupOnePage preset="empty" attempted />,
+    },
+    {
+        id: "setup-calendar",
+        area: "Campaign Setup (One Page)",
+        title: "Flight calendar open",
+        description: "Start-date picker open; past dates can't be picked.",
+        render: () => <CampaignSetupOnePage calendarOpen="start" />,
+    },
+    {
+        id: "setup-dates-invalid",
+        area: "Campaign Setup (One Page)",
+        title: "Invalid flight dates",
+        description: "Start in the past and end before start, after Publish.",
+        render: () => <CampaignSetupOnePage preset="datesInvalid" attempted />,
     },
     {
         id: "setup-errors",
         area: "Campaign Setup (One Page)",
         title: "With errors",
-        description: "Missing budget and mixed creatives; Publish disabled.",
-        render: () => <CampaignSetupOnePage state="errors" />,
+        description: "Missing budget and mixed creatives, after Publish.",
+        render: () => <CampaignSetupOnePage preset="errors" attempted />,
     },
     {
         id: "setup-fallback",
         area: "Campaign Setup (One Page)",
         title: "Fallback rule",
-        description: "Budget and eCPM hide when they don't apply.",
-        render: () => <CampaignSetupOnePage initialRule="Fallback" />,
+        description: "Budget and eCPM hide. End date and creative still missing: press Publish.",
+        render: () => <CampaignSetupOnePage preset="fallback" />,
+    },
+    {
+        id: "setup-fallback-errors",
+        area: "Campaign Setup (One Page)",
+        title: "Fallback rule, Publish pressed",
+        description: "Missing end date and creative flagged in place and in the rail.",
+        render: () => <CampaignSetupOnePage preset="fallback" attempted />,
+    },
+    {
+        id: "setup-published",
+        area: "Campaign Setup (One Page)",
+        title: "Published",
+        description: "Lands on View campaign with a confirmation.",
+        render: () => <ViewOnePage id="new" published />,
     },
 
     {
@@ -133,4 +176,17 @@ export const screens: ProtoScreen[] = [
         description: "Grouped, searchable picker; Keyword locked to CSV/API.",
         render: () => <QueryBuilder pickerOpen />,
     },
+
+    { id: "view-a", area: "View Campaign", title: "A · One page (running)", description: "Setup's sections read-only, with a live delivery rail.", render: () => <ViewOnePage /> },
+    { id: "view-a-behind", area: "View Campaign", title: "A · Behind pace", description: "Banner with projected shortfall and a fix.", render: () => <ViewOnePage id="c2" /> },
+    { id: "view-a-paused", area: "View Campaign", title: "A · Paused", description: "What's left to spend per day to finish.", render: () => <ViewOnePage id="c4" /> },
+    { id: "view-a-scheduled", area: "View Campaign", title: "A · Scheduled", description: "Empty delivery state before it starts.", render: () => <ViewOnePage id="c6" /> },
+    { id: "view-a-fallback", area: "View Campaign", title: "A · Fallback", description: "No budget: delivery as impressions.", render: () => <ViewOnePage id="c5" /> },
+    { id: "view-b", area: "View Campaign", title: "B · Delivery first", description: "KPIs, projected finish and pace chart lead.", render: () => <ViewDeliveryFirst /> },
+    { id: "view-b-behind", area: "View Campaign", title: "B · Delivery first, behind", description: "Projected finish shown in red.", render: () => <ViewDeliveryFirst id="c2" /> },
+    { id: "view-b-scheduled", area: "View Campaign", title: "B · Delivery first, scheduled", description: "Target per day before launch.", render: () => <ViewDeliveryFirst id="c6" /> },
+    { id: "view-c", area: "View Campaign", title: "C · Campaign sentence", description: "The whole campaign as one readable sentence.", render: () => <ViewSentence /> },
+    { id: "view-c-fallback", area: "View Campaign", title: "C · Sentence, fallback", description: "How a fallback reads back.", render: () => <ViewSentence id="c5" /> },
+    { id: "view-d", area: "View Campaign", title: "D · Performance vs open marketplace", description: "eCPM premium, keyword split.", render: () => <ViewPerformance /> },
+    { id: "view-d-empty", area: "View Campaign", title: "D · Performance, no data yet", description: "Explains what will appear once it delivers.", render: () => <ViewPerformance id="c6" /> },
 ];

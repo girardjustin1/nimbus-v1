@@ -39,16 +39,23 @@ the concept is testing. That note is a review annotation, not product UI.
 
 ---
 
-## Concepts
+## How this section is organised
+
+Each concept lives in its own folder, with its screens and the components it introduces kept together:
+
+- **Round 1 Concepts:** Campaign Setup (One Page), Targeting, Keyword Library, Manage Campaigns and Reporting, plus a **Components** folder (Keyword Chip, Delivery Bar, Status & Pace, Keyword Fields, Concept Note).
+- **Studio Concept:** a guided, full-screen builder with live estimates and a live ad preview. It has its own <a href="./?path=/docs/deal-activation-system-studio-concept-overview--docs" target="_top" style={{ color: "#3538CD", fontWeight: 600 }}>Overview</a>, **Screens** and **Components** (Ad Preview, Preview Stage, Goal Tiles, Step Rail, Estimate Panel and more).
+
+## Round 1 concepts
 
 <Table
   head={["Area", "Concepts", "What it explores"]}
   rows={[
-    [<Story id="deal-activation-system-campaign-setup-one-page--ready-to-publish">Campaign Setup (One Page)</Story>, "Ready · With errors · Fallback rule", "The 5-step wizard as one page. A live summary rail replaces the Review step."],
-    [<Story id="deal-activation-system-targeting--concept-a-inline-chips">Targeting</Story>, "A · Inline chips — B · Pick from library — C · Audience sentence", "Keyword targeting with ANY/ALL, ad unit type, device language"],
-    [<Story id="deal-activation-system-keyword-library--default">Keyword Library</Story>, "Default · Add · Delete in use · Empty", "A new page to create, edit and delete keywords"],
-    [<Story id="deal-activation-system-manage-campaigns--concept-a-delivery">Manage Campaigns</Story>, "A · Delivery view — B · Compare", "“How done is my campaign?” Pacing vs flight, deals → campaigns, compare"],
-    [<Story id="deal-activation-system-reporting--concept-a-overview">Reporting</Story>, "A · DAS overview — B · Query builder", "DAS vs Open Marketplace clarity, on-the-fly breakdowns, the keyword guardrail"],
+    [<Story id="deal-activation-system-round-1-concepts-campaign-setup-one-page--ready-to-publish">Campaign Setup (One Page)</Story>, "Ready · With errors · Fallback rule", "The 5-step wizard as one page. A live summary rail replaces the Review step."],
+    [<Story id="deal-activation-system-round-1-concepts-targeting--concept-a-inline-chips">Targeting</Story>, "A · Inline chips — B · Pick from library — C · Audience sentence", "Keyword targeting with ANY/ALL, ad unit type, device language"],
+    [<Story id="deal-activation-system-round-1-concepts-keyword-library--default">Keyword Library</Story>, "Default · Add · Delete in use · Empty", "A new page to create, edit and delete keywords"],
+    [<Story id="deal-activation-system-round-1-concepts-manage-campaigns--concept-a-delivery">Manage Campaigns</Story>, "A · Delivery view — B · Compare", "“How done is my campaign?” Pacing vs flight, deals → campaigns, compare"],
+    [<Story id="deal-activation-system-round-1-concepts-reporting--concept-a-overview">Reporting</Story>, "A · DAS overview — B · Query builder", "DAS vs Open Marketplace clarity, on-the-fly breakdowns, the keyword guardrail"],
   ]}
 />
 
@@ -101,6 +108,7 @@ New patterns these concepts introduce. They'll move into **Application UI** if a
 <Table
   head={["Date", "Change"]}
   rows={[
+    ["Sep 22, 2026", "Studio Concept added (Overview, 19 screens, 11 components). Round 1 stories moved into a Round 1 Concepts folder with a Components folder. The standalone DAS prototype gained an empty form, Publish error states, calendar pickers and View campaign pages."],
     ["Sep 22, 2026", "Round 1 review. Experience summary added; Performance Insights now has its own category, linked from the Introduction."],
     ["Sep 18, 2026", "Kickoff. Added the Deal Activation System category: Overview, Campaign Setup (One Page) ×3, Targeting ×4, Keyword Library ×4, Manage Campaigns ×3, Reporting ×3."],
   ]}

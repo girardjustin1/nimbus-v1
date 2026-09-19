@@ -1,0 +1,76 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+export const th = { textAlign: "left", fontSize: 12, fontWeight: 700, color: "#475467", padding: "10px 14px", borderBottom: "1px solid #EAECF0", background: "#F9FAFB" };
+export const td = { fontSize: 14, color: "#344054", padding: "12px 14px", borderBottom: "1px solid #EAECF0", verticalAlign: "top" };
+export const Table = ({ head, rows }) => (
+  <div style={{ overflowX: "auto", border: "1px solid #EAECF0", borderRadius: 12, margin: "12px 0 24px" }}>
+    <table style={{ width: "100%", borderCollapse: "collapse", margin: 0 }}>
+      <thead><tr>{head.map((h) => <th key={h} style={th}>{h}</th>)}</tr></thead>
+      <tbody>{rows.map((r, i) => <tr key={i}>{r.map((c, j) => <td key={j} style={td}>{c}</td>)}</tr>)}</tbody>
+    </table>
+  </div>
+);
+export const S = ({ id, children }) => <a href={`./?path=/story/performance-insights-charts-${id}`} target="_top" style={{ color: "#A94579", fontWeight: 600 }}>{children}</a>;
+export const Swatch = ({ c, n }) => <span style={{ display: "inline-flex", alignItems: "center", gap: 6, marginRight: 14, fontSize: 13 }}><span style={{ width: 14, height: 14, borderRadius: 999, background: c, display: "inline-block" }} />{n}</span>;
+
+<Meta title="Performance Insights/Charts/Overview" />
+
+<div style={{ maxWidth: 920 }}>
+
+# Charts
+
+Every chart type from Untitled UI, plus five that reporting needs, restyled as one Nimbus
+family. They're built on **Recharts** (the library Untitled UI uses) with shared Nimbus
+chrome: the card, legend, change badge and dark tooltip. See them all together in the
+<S id="gallery--dashboard">Gallery</S>.
+
+The vendored versions under **Application UI › Charts** are left as-is, so syncing Untitled
+UI never overwrites these.
+
+## Style
+
+- **Palette, in order:** <Swatch c="#DA6EA3" n="Pink" /><Swatch c="#37B6B7" n="Teal" /><Swatch c="#6172F3" n="Indigo" /><Swatch c="#F79009" n="Orange" /><Swatch c="#A94579" n="Deep pink" /><Swatch c="#1F7F80" n="Deep teal" /><Swatch c="#98A2B3" n="Gray" />
+- **Comparisons** (previous period) are gray and dashed.
+- **Axes** have no lines or ticks, and gridlines are horizontal and dashed.
+- **Lines** are 2.5px, smooth, with no dots until hovered. **Areas** fade from 30% to clear. **Bars** have 6px rounded ends.
+- **Tooltips** are dark cards with a colour dot per series, and every value is formatted (`$`, `%`, `K`/`M`).
+- **Good vs bad change** is teal vs pink. It can be flipped when a fall is good, e.g. timeout rate.
+
+## Chart types
+
+<Table
+  head={["Chart", "Source", "Use it for", "Variants"]}
+  rows={[
+    [<S id="line-chart--vs-previous-period">Line</S>, "Untitled UI", "Trends over time", "Vs previous period · Multi-series"],
+    [<S id="area-chart--single">Area</S>, "Untitled UI", "Volume over time", "Single · Stacked"],
+    [<S id="bar-chart--grouped">Bar</S>, "Untitled UI", "Comparing categories", "Grouped · Stacked · Horizontal"],
+    [<S id="pie-chart--default">Pie</S>, "Untitled UI", "Share of a whole (few parts)", "With list · Chart only"],
+    [<S id="donut-chart--default">Donut</S>, "Untitled UI", "Share of a whole, with the total", "Default · Two-part"],
+    [<S id="radar-chart--three-partners">Radar</S>, "Untitled UI", "Scorecards across dimensions", "Three partners · Single"],
+    [<S id="activity-gauge--monthly-goals">Activity gauge</S>, "Untitled UI", "Progress on several goals", "With legend · Small"],
+    [<S id="progress-circle--default">Progress circle</S>, "Untitled UI", "One value against a goal", "Sizes · Half circle"],
+    [<S id="metric-card--with-trend">Metric card</S>, "Untitled UI", "Headline KPIs", "With trend · Simple · Lower is better"],
+    [<S id="combo-chart--revenue-and-ecpm">Combo (bar + line)</S>, "Nimbus extra", "Two measures on two axes", "Revenue and eCPM"],
+    [<S id="heatmap--teal">Heatmap</S>, "Nimbus extra", "Two dimensions at once", "Teal · Pink · No values"],
+    [<S id="funnel--auction-funnel">Funnel</S>, "Nimbus extra", "Drop-off through the auction", "Auction funnel"],
+    [<S id="scatter-chart--bubbles">Scatter / bubble</S>, "Nimbus extra", "Price vs fill, sized by revenue", "Bubbles · Plain"],
+    [<S id="treemap--revenue-share">Treemap</S>, "Nimbus extra", "Share of a whole (many parts)", "Revenue share"],
+    [<S id="chart-card-legend--card">Chart card & legend</S>, "Shared", "Title, value, change, legend, tooltip", "Card · Change badges · Tooltip"],
+  ]}
+/>
+
+## Using them
+
+```tsx
+import { NimbusLineChart } from "@/pages/performance-insights/charts/cartesian-charts";
+import { ChartCard, Legend } from "@/pages/performance-insights/charts/chart-kit";
+
+<ChartCard title="Revenue" value="$55,330" change={0.023} legend={<Legend items={…} />}>
+    <NimbusLineChart data={rows} xKey="day" fmt="usd" series={[{ key: "This week" }, { key: "Previous week", dashed: true, color: "#98A2B3" }]} />
+</ChartCard>
+```
+
+All sample data is fictional. These live in Storybook for now. Once approved, they can move
+into **Application UI** and power the Performance Insights prototype.
+
+</div>

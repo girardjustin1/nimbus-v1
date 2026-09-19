@@ -1,0 +1,93 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+export const th = { textAlign: "left", fontSize: 12, fontWeight: 700, color: "#475467", padding: "10px 14px", borderBottom: "1px solid #EAECF0", background: "#F9FAFB" };
+export const td = { fontSize: 14, color: "#344054", padding: "12px 14px", borderBottom: "1px solid #EAECF0", verticalAlign: "top" };
+export const Table = ({ head, rows }) => (
+  <div style={{ overflowX: "auto", border: "1px solid #EAECF0", borderRadius: 12, margin: "12px 0 24px" }}>
+    <table style={{ width: "100%", borderCollapse: "collapse", margin: 0 }}>
+      <thead><tr>{head.map((h) => <th key={h} style={th}>{h}</th>)}</tr></thead>
+      <tbody>{rows.map((r, i) => <tr key={i}>{r.map((c, j) => <td key={j} style={td}>{c}</td>)}</tr>)}</tbody>
+    </table>
+  </div>
+);
+export const S = ({ id, children }) => <a href={`./?path=/story/${id}`} target="_top" style={{ color: "#3538CD", fontWeight: 600 }}>{children}</a>;
+export const proto = () => (typeof window !== "undefined" && window.location.hostname === "localhost" ? "http://localhost:5190/das-studio/" : "./das-studio/");
+
+<Meta title="Deal Activation System/Studio Concept/Overview" />
+
+<div style={{ maxWidth: 920 }}>
+
+<div style={{ fontSize: 13, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#3538CD" }}>September 22, 2026 · Studio concept</div>
+
+# DAS Studio: build with the result in view
+
+<div style={{ background: "#F9FAFB", border: "1px solid #EAECF0", borderRadius: 14, padding: "16px 20px", margin: "8px 0 24px", fontSize: 15, lineHeight: 1.65, color: "#344054" }}>
+  <strong>The experience.</strong> A publisher builds a deal campaign in a focused, full-screen studio: pick a goal from four
+  visual tiles, name the deal, choose who sees it, then set budget, bid and dates. A live panel estimates delivery likelihood,
+  impressions and reach as they go, and the bid shows where it sits in the recommended range. While building the creative,
+  the ad renders in a real app screen beside the form and updates with every keystroke. Review leads with the flight, budget
+  and a render of the ad, and a full-screen preview steps through every moment of the format before anything is published.
+</div>
+
+<a href={proto()} target="_top" style={{ display: "inline-block", background: "#3538CD", color: "#fff", fontWeight: 600, fontSize: 14, padding: "10px 16px", borderRadius: 10, textDecoration: "none" }}>Open the clickable prototype →</a>
+
+## How it differs from Round 1
+
+<Table
+  head={["", "Round 1 Concepts", "Studio Concept"]}
+  rows={[
+    ["Shape", "One scrolling page inside the app", "A focused, full-screen builder, one step at a time"],
+    ["First decision", "Auction rule radio buttons", "Goal tiles that say what the campaign is judged on"],
+    ["Feedback while building", "Checklist of what's missing", "Delivery likelihood, impressions, reach and eCPM ranges"],
+    ["Creative", "Pick files from the asset library", "Build the ad with a live render beside the form"],
+    ["Before publishing", "Summary rail", "Review with a hero card, then a full-screen preview on phone or tablet"],
+  ]}
+/>
+
+## Screens
+
+<Table
+  head={["Step", "States"]}
+  rows={[
+    [<S id="deal-activation-system-studio-concept-screens--step-1-goal">1 · Goal</S>, "Empty · Chosen · Next without a goal"],
+    [<S id="deal-activation-system-studio-concept-screens--step-2-deal">2 · Deal & campaign</S>, "Existing deal, campaign name, live estimates"],
+    [<S id="deal-activation-system-studio-concept-screens--step-3-audience">3 · Audience</S>, "Default · Too narrow (likelihood drops)"],
+    [<S id="deal-activation-system-studio-concept-screens--step-4-budget">4 · Budget, bid & schedule</S>, "Default · Bid below range · Fallback (no budget)"],
+    [<S id="deal-activation-system-studio-concept-screens--step-5-interstitial">5 · Creative & preview</S>, "Nothing added · Interstitial · Banner · Rewarded video · Native"],
+    [<S id="deal-activation-system-studio-concept-screens--step-6-review">6 · Review</S>, "Ready · With problems · Published"],
+    [<S id="deal-activation-system-studio-concept-screens--full-preview">Full-screen preview</S>, "Phone/tablet, every moment of the format, processing status"],
+  ]}
+/>
+
+## Components
+
+Each one has its own page under **Studio Concept › Components**, with states you can try.
+
+<Table
+  head={["Component", "What it does"]}
+  rows={[
+    [<S id="deal-activation-system-studio-concept-components-ad-preview--interstitial">Ad Preview</S>, "Renders the creative in a device running a sample app: banner 320×50 and 300×250, interstitial, rewarded video (playing and end card), native."],
+    [<S id="deal-activation-system-studio-concept-components-preview-stage--interstitial">Preview Stage</S>, "Full-screen final render: device switch, moment carousel, status, share note."],
+    [<S id="deal-activation-system-studio-concept-components-goal-tiles--selected">Goal Tiles</S>, "Four visual tiles for the campaign goal."],
+    [<S id="deal-activation-system-studio-concept-components-step-rail--in-progress">Step Rail</S>, "Deal › Campaign › Creative outline with done, current, to-do and error states."],
+    [<S id="deal-activation-system-studio-concept-components-estimate-panel--high-likelihood">Estimate Panel</S>, "Delivery likelihood and estimated results by day, week or month."],
+    [<S id="deal-activation-system-studio-concept-components-format-picker--interstitial">Format Picker</S>, "Formats as chips with size notes."],
+    [<S id="deal-activation-system-studio-concept-components-bid-range-field--within-range">Bid Range Field</S>, "The bid drawn on its recommended range."],
+    [<S id="deal-activation-system-studio-concept-components-budget-schedule--lifetime">Budget & Schedule</S>, "Daily or lifetime budget, calendar pickers, optional end date."],
+    [<S id="deal-activation-system-studio-concept-components-creative-fields--filled">Creative Fields</S>, "Uploads and message fields that drive the preview."],
+    [<S id="deal-activation-system-studio-concept-components-review-summary--hero">Review Summary</S>, "Hero card with a small render, and one section per step."],
+    [<S id="deal-activation-system-studio-concept-components-studio-shell--with-panel">Studio Shell</S>, "Top bar, step rail, form, right panel and sticky footer."],
+  ]}
+/>
+
+## Open questions
+
+<ol style={{ listStyle: "decimal", paddingLeft: 24, lineHeight: 1.7 }}>
+  <li>Should the studio replace the one-page setup, or sit beside it as a guided mode for new users?</li>
+  <li>Are four goals the right split of today's auction rules, and do publishers recognise the names?</li>
+  <li>Can we source real delivery estimates (available requests by app, geo and keyword) at launch?</li>
+  <li>Do we host creative uploads, or keep the asset library and render from it?</li>
+  <li>Who needs the shareable preview link: advertisers, sales, or both?</li>
+</ol>
+
+</div>

@@ -88,7 +88,7 @@ const CampaignRow = ({ c, selected, onToggle }: { c: Campaign; selected: boolean
     >
         <Checkbox size="sm" isSelected={selected} onChange={onToggle} aria-label={`Compare ${c.name}`} />
         <div className="flex min-w-0 flex-col gap-1">
-            <a href="#" className="truncate text-sm font-semibold" style={{ color: TEAL }}>
+            <a href={`#/view-a?c=${c.id}`} className="truncate text-sm font-semibold hover:underline" style={{ color: TEAL }}>
                 {c.name}
             </a>
             <span className="flex items-center gap-2 text-xs text-tertiary">
