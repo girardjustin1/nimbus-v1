@@ -78,7 +78,7 @@ older versions stay live (`…/das/v1/`, `…/das/v2/`, …).
 | B: Question bar | Results · Metric picker open · Edited, not yet run · Save dialog · Saved confirmation |
 | C: Explorer (drag to build) | Default · Country by platform · Filtered · No columns · Too many columns · Empty · Rail collapsed. Drag fields from the right rail; the layout is kept in the link |
 | Saved Queries (reference) | Today's page |
-| D: Smart table | 14 states: filters, grouping, search, first run, loading, selection, row menu, schedule, delete, undo |
+| D: Smart table | 15 states: filters, grouping, search, first run, loading, selection, row menu, schedule, delete, bulk delete, undo |
 | E: Preview cards | All · Filtered by type · "Why this?" open · Recommendation dismissed |
 | F: Date-range timeline | By account · By report type · Bar selected · Ended ranges highlighted |
 | G: List + preview | Saved · Recommendation · Ended range · Loading · Share |
