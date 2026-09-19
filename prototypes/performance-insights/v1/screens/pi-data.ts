@@ -65,12 +65,5 @@ export const templates = [
     { title: "Top countries", tags: ["Revenue", "Impressions", "Country"], trend: [3, 4, 4, 5, 4, 5, 6] },
 ];
 
-export const savedQueries = [
-    { name: "Weekly exec summary", owner: "Maya Chen", lastRun: "Today, 9:02 AM", schedule: "Mondays · email" },
-    { name: "Android fill-rate watch", owner: "Luis Ortega", lastRun: "Yesterday", schedule: "Daily · email" },
-    { name: "Nimbus+ vs OMP eCPM", owner: "You", lastRun: "Sep 15", schedule: "—" },
-    { name: "Q3 country mix", owner: "Ari Patel", lastRun: "Sep 2", schedule: "—" },
-];
-
 export const usd = (n: number, digits = 0) =>
     n.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: digits, maximumFractionDigits: digits });

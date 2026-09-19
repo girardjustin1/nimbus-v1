@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, MouseEvent, ReactNode } from "react";
 import { ChevronDown, Lightbulb02, XClose } from "@untitledui/icons";
 import { type GlobalNavSection, navSections } from "@/components/application/global-nav/config";
 import { GlobalNav } from "@/components/application/global-nav/global-nav";
@@ -42,7 +42,7 @@ export interface DasShellProps {
     /** Global Nav item to highlight. */
     navKey: DasNavKey;
     /** Optional tab strip under the account header. */
-    tabs?: { label: string; active?: boolean }[];
+    tabs?: { label: string; active?: boolean; href?: string }[];
     /** Optional sticky footer (actions). */
     footer?: ReactNode;
     /** Concept annotation shown above the page body. */
@@ -70,9 +70,9 @@ export const DasShell = ({ navKey, tabs, footer, concept, children }: DasShellPr
             {tabs && (
                 <div className="flex border-b border-secondary px-8">
                     {tabs.map((tab) => (
-                        <button
+                        <a
                             key={tab.label}
-                            type="button"
+                            href={tab.href}
                             aria-current={tab.active ? "page" : undefined}
                             className={cx(
                                 "-mb-px border-b-2 px-6 py-4 text-md font-semibold transition-colors duration-100 ease-linear",
@@ -81,7 +81,7 @@ export const DasShell = ({ navKey, tabs, footer, concept, children }: DasShellPr
                             style={{ color: TEAL, backgroundColor: tab.active ? `${TEAL}14` : undefined }}
                         >
                             {tab.label}
-                        </button>
+                        </a>
                     ))}
                 </div>
             )}
@@ -266,3 +266,23 @@ export const DeliveryBar = ({ campaign, showLabels = true }: { campaign: Campaig
         </div>
     );
 };
+
+/* ------------------------------------------------------------ Jump link --- */
+
+/**
+ * In-page link to a section id. Screens use hash routing (#/screen), so a plain
+ * href="#section" would change the screen; this scrolls instead.
+ */
+export const JumpLink = ({ to, className, style, children }: { to: string; className?: string; style?: CSSProperties; children: ReactNode }) => (
+    <a
+        href={`#${to}`}
+        className={className}
+        style={style}
+        onClick={(e: MouseEvent) => {
+            e.preventDefault();
+            document.getElementById(to)?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }}
+    >
+        {children}
+    </a>
+);

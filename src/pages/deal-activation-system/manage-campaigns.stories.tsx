@@ -8,7 +8,7 @@ import { CompareCampaigns, ManageCampaignsDelivery } from "./manage-campaigns";
  * and how do sibling campaigns compare?
  */
 const meta = {
-    title: "Deal Activation System/Manage Campaigns",
+    title: "Deal Activation System/Round 1 Concepts/Manage Campaigns",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

@@ -38,7 +38,8 @@ export interface ProtoMeta {
 }
 
 const useHashRoute = () => {
-    const read = () => window.location.hash.replace(/^#\/?/, "");
+    // "#/screen?param=…" → "screen"; params carry in-screen state (see a prototype's route.ts).
+    const read = () => window.location.hash.replace(/^#\/?/, "").split("?")[0];
     const [route, setRoute] = useState(read);
     useEffect(() => {
         const onChange = () => {

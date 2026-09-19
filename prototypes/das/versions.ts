@@ -7,7 +7,7 @@ export const versions: ProtoVersion[] = [
         label: "Round 1",
         date: "September 22, 2026",
         summary:
-            "A publisher sets up a direct-sold campaign on a single page instead of a five-step wizard, with problems flagged as they go and Publish enabled only when everything checks out. They target it with their own keywords (words their app already sends, like “sports” or “over21”) plus ad unit type and device language, and manage those keywords in a new Keyword Library. After launch, every campaign shows at a glance whether it's on pace to deliver what was promised, and DAS results are reported separately from Open Marketplace revenue.",
+            "A publisher sets up a direct-sold campaign on a single page instead of a five-step wizard, with flight dates on calendar pickers; pressing Publish checks everything and flags each problem on the page, in the “On this page” rail and in a banner that links to it. They target it with their own keywords (words their app already sends, like “sports” or “over21”) plus ad unit type and device language, and manage those keywords in a new Keyword Library. After launch, every campaign shows at a glance whether it's on pace to deliver what was promised, with a View campaign page drawn in each concept's style, and DAS results are reported separately from Open Marketplace revenue.",
     },
 ];
 

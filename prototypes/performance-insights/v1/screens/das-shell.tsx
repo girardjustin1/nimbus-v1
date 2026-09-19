@@ -42,7 +42,7 @@ export interface DasShellProps {
     /** Global Nav item to highlight. */
     navKey: DasNavKey;
     /** Optional tab strip under the account header. */
-    tabs?: { label: string; active?: boolean }[];
+    tabs?: { label: string; active?: boolean; href?: string }[];
     /** Optional sticky footer (actions). */
     footer?: ReactNode;
     /** Concept annotation shown above the page body. */
@@ -70,9 +70,9 @@ export const DasShell = ({ navKey, tabs, footer, concept, children }: DasShellPr
             {tabs && (
                 <div className="flex border-b border-secondary px-8">
                     {tabs.map((tab) => (
-                        <button
+                        <a
                             key={tab.label}
-                            type="button"
+                            href={tab.href}
                             aria-current={tab.active ? "page" : undefined}
                             className={cx(
                                 "-mb-px border-b-2 px-6 py-4 text-md font-semibold transition-colors duration-100 ease-linear",
@@ -81,7 +81,7 @@ export const DasShell = ({ navKey, tabs, footer, concept, children }: DasShellPr
                             style={{ color: TEAL, backgroundColor: tab.active ? `${TEAL}14` : undefined }}
                         >
                             {tab.label}
-                        </button>
+                        </a>
                     ))}
                 </div>
             )}

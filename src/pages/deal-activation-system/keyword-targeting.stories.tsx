@@ -8,7 +8,7 @@ import { AudienceSentence, KeywordTargetingInline, KeywordTargetingLibrary } fro
  * keywords with ANY/ALL matching, Ad Unit Type and Device Language.
  */
 const meta = {
-    title: "Deal Activation System/Targeting",
+    title: "Deal Activation System/Round 1 Concepts/Targeting",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

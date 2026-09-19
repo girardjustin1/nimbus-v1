@@ -18,9 +18,10 @@ Storybook 10 · Vite.**
 | **Storybook** (design system) | [girardjustin1.github.io/nimbus-v1](https://girardjustin1.github.io/nimbus-v1/) | `npm run storybook` → http://localhost:6006 |
 | **Prototype: Deal Activation System** | […/nimbus-v1/das/](https://girardjustin1.github.io/nimbus-v1/das/) | `npm run proto:dev` → http://localhost:5190/das/ |
 | **Prototype: Performance Insights** | […/nimbus-v1/performance-insights/](https://girardjustin1.github.io/nimbus-v1/performance-insights/) | `npm run proto:dev` → http://localhost:5190/performance-insights/ |
+| **Prototype: DAS Studio** | […/nimbus-v1/das-studio/](https://girardjustin1.github.io/nimbus-v1/das-studio/) | `npm run proto:dev` → http://localhost:5190/das-studio/ |
 
 Start with the **[Introduction](https://girardjustin1.github.io/nimbus-v1/?path=/docs/introduction--docs)**
-page in Storybook. It gives a guided overview and links to both prototypes.
+page in Storybook. It gives a guided overview and links to every prototype.
 
 Everything on `main` deploys automatically. Merge to `main`, and a couple of minutes
 later the links above show the new version.
@@ -42,20 +43,22 @@ older versions stay live (`…/das/v1/`, `…/das/v2/`, …).
 [Storybook concepts](https://girardjustin1.github.io/nimbus-v1/?path=/docs/deal-activation-system-overview--docs)
 
 > **The experience.** A publisher sets up a direct-sold campaign on a single page
-> instead of a five-step wizard. Problems are flagged as they go, and Publish is enabled
-> only when everything checks out. They target the campaign with their own keywords
+> instead of a five-step wizard, with flight dates on calendar pickers. Pressing Publish
+> checks everything and flags each problem on the page, in the "On this page" rail and
+> in a banner that links to it. They target the campaign with their own keywords
 > (words their app already sends, like "sports" or "over21") plus ad unit type and
 > device language, and manage those keywords in a new Keyword Library. After launch,
-> every campaign shows at a glance whether it's on pace to deliver what was promised,
-> and DAS results are reported separately from Open Marketplace revenue.
+> every campaign shows at a glance whether it's on pace to deliver what was promised
+> (with a View campaign page drawn in each concept's style), and DAS results are reported separately from Open Marketplace revenue.
 
 | Area | Screens |
 | --- | --- |
-| Campaign Setup (one page) | Ready to publish · With errors · Fallback rule |
+| Campaign Setup (one page) | Ready to publish · Empty form · Empty form, Publish pressed · Flight calendar open · Invalid flight dates · With errors · Fallback rule · Fallback, Publish pressed · Published |
 | Targeting | A: Inline keyword chips · A: ALL match + warnings · B: Pick from library · C: Audience sentence |
 | Keyword Library | Default · Add keywords · Delete keyword in use · Empty state |
 | Manage Campaigns | A: Delivery view · A: Selected for compare · B: Compare |
 | Reporting | A: DAS overview · B: Query builder · B: Breakdown picker open |
+| View Campaign | A: One page (running · behind · paused · scheduled · fallback) · B: Delivery first (running · behind · scheduled) · C: Campaign sentence (running · fallback) · D: Performance vs open marketplace (data · no data yet) |
 
 ### Performance Insights: Reporting redesign
 
@@ -66,13 +69,45 @@ older versions stay live (`…/das/v1/`, `…/das/v2/`, …).
 > or saved query instead of a blank wall of checkboxes. They build a question as one
 > readable sentence ("show revenue and eCPM by demand source for the last 7 days…")
 > that only runs when they ask, see every number next to its change from the previous
-> period, and drill from app to demand source in a pivot view.
+> period, and build any breakdown by dragging fields into a pivot that rebuilds live.
+> Saved queries show their date range, trend and latest number at a glance.
 
 | Concept | Screens |
 | --- | --- |
-| A: Start page | Templates & saved queries |
-| B: Question bar | Results · Edited, not yet run |
-| C: Explorer | Pivot with drill-down |
+| A: Start page | Templates & saved queries · Searching · Search with no results |
+| B: Question bar | Results · Metric picker open · Edited, not yet run · Save dialog · Saved confirmation |
+| C: Explorer (drag to build) | Default · Country by platform · Filtered · No columns · Too many columns · Empty · Rail collapsed. Drag fields from the right rail; the layout is kept in the link |
+| Saved Queries (reference) | Today's page |
+| D: Smart table | 15 states: filters, grouping, search, first run, loading, selection, row menu, schedule, delete, bulk delete, undo |
+| E: Preview cards | All · Filtered by type · "Why this?" open · Recommendation dismissed |
+| F: Date-range timeline | By account · By report type · Bar selected · Ended ranges highlighted |
+| G: List + preview | Saved · Recommendation · Ended range · Loading · Share |
+
+### DAS Studio: build with the result in view
+
+[Open prototype →](https://girardjustin1.github.io/nimbus-v1/das-studio/) ·
+[Storybook concept](https://girardjustin1.github.io/nimbus-v1/?path=/docs/deal-activation-system-studio-concept-overview--docs)
+
+> **The experience.** A publisher builds a deal campaign in a focused, full-screen
+> studio: pick a goal from four visual tiles, name the deal, choose who sees it, then set
+> budget, bid and dates. A live panel estimates delivery likelihood, impressions and
+> reach as they go. While building the creative, the ad renders in a real app screen
+> beside the form (banner, interstitial, rewarded video or native) and updates with
+> every keystroke. Review leads with the flight, budget and a render of the ad, and a
+> full-screen preview steps through every moment of the format on phone or tablet.
+
+| Step | Screens |
+| --- | --- |
+| 1: Goal | Start from scratch · Goal chosen · Next without a goal |
+| 2: Deal & campaign | Deal & campaign |
+| 3: Audience | Audience · Too narrow |
+| 4: Budget & schedule | Budget, bid & schedule · Bid below range · Calendar open · Fallback goal |
+| 5: Creative & preview | Nothing added · Interstitial · Banner · Rewarded video · Rewarded end card · Native |
+| 6: Review & publish | Ready · Publish pressed with problems · Published |
+| Full-screen preview | Phone · Tablet · Banner moments · Rewarded end card · Processing |
+
+Back / Next keep your choices from step to step. Opening a screen's link directly
+starts from that screen's sample state.
 
 > All prototype data is **fictional sample data**. The Pages site is public, so never
 > add real publisher data, internal figures or people's names.
@@ -92,8 +127,8 @@ then components, then full screens, then active prototype work.
 | **Application UI** (23) | App Navigation – Sidebar · Alerts · Breadcrumbs · Carousel · Charts · Code Snippet · Command Menu · Date Picker · Dividers · Empty State · File Upload · Filter Bars · Loading Indicator · Metrics · Modal · Notifications · Pagination · Pie Charts · Progress Steps · Radar Charts · Slideout Menu · Table · Tabs |
 | **Account Login** (4) | Sign up · Log in · Forgot Password · Verify Email |
 | **App Screens** (17) | Full Nimbus product screens built from the system (see below) |
-| **Deal Activation System** | Round 1 screen concepts + overview (reference copy; new rounds happen in the standalone prototype) |
-| **Performance Insights** | Round 1 screen concepts + overview (reference copy) |
+| **Deal Activation System** | Overview, then one folder per concept: **Round 1 Concepts** (screens + Components) and **Studio Concept** (Overview, Screens, 11 Components) |
+| **Performance Insights** | Overview, Round 1 concepts (reference copy), and **Charts**: 14 Nimbus-styled chart types (every Untitled UI chart plus combo, heatmap, funnel, scatter and treemap) with a Gallery and an Overview |
 
 **App Screens**, grouped by area:
 
@@ -169,7 +204,8 @@ Storybook tests need Playwright's Chromium once per machine:
 │   ├── pages/
 │   │   ├── auth/                 # Account Login templates
 │   │   ├── app-screens/          # App Screens
-│   │   ├── deal-activation-system/   # DAS concepts (Storybook category)
+│   │   ├── deal-activation-system/   # DAS concepts: Round 1 + round-1-components/,
+│   │   │                             # studio/ (Studio Concept screens + components)
 │   │   └── performance-insights/     # PI concepts (Storybook category)
 │   ├── styles/                   # theme.css (Nimbus tokens), globals, typography
 │   └── Introduction.mdx          # Storybook landing page
@@ -177,7 +213,8 @@ Storybook tests need Playwright's Chromium once per machine:
 │   ├── vite.config.ts            # one multi-page build; finds every version
 │   ├── shared/                   # prototype toolbar/index frame + styles
 │   ├── das/                      # index.html (→ latest) · versions.ts · v1/
-│   └── performance-insights/     # same shape
+│   ├── performance-insights/     # same shape
+│   └── das-studio/               # same shape; screens come from src/…/studio
 ├── .storybook/                   # Storybook config + sidebar order (preview.tsx)
 ├── .github/workflows/            # CI, Pages deploy, component sync
 ├── reference/                    # design sources: token export, screen exports
@@ -229,6 +266,7 @@ GitHub Pages:
 https://girardjustin1.github.io/nimbus-v1/                        Storybook
 https://girardjustin1.github.io/nimbus-v1/das/                    DAS prototype (latest)
 https://girardjustin1.github.io/nimbus-v1/performance-insights/   PI prototype (latest)
+https://girardjustin1.github.io/nimbus-v1/das-studio/             DAS Studio prototype (latest)
 ```
 
 No extra setup is needed. Pages is configured to deploy from GitHub Actions. Progress
