@@ -1,3 +1,5 @@
+import { nextMonth } from "../dates";
+
 /**
  * DAS Studio — data model, sample draft and the estimate math behind the live panel.
  *
@@ -89,6 +91,9 @@ export interface StudioDraft {
     bid?: number;
     start?: string;
     end?: string;
+    /** "HH:MM", UTC. Defaults: start of day / end of day. */
+    startTime?: string;
+    endTime?: string;
     hasEnd: boolean;
     creative: Creative;
 }
@@ -134,8 +139,9 @@ export const sampleDraft: StudioDraft = {
     budgetType: "lifetime",
     budget: 25000,
     bid: 8.9,
-    start: "2026-10-01",
-    end: "2026-10-31",
+    // Next month, so the sample flight is always in the future.
+    start: nextMonth().start.toString(),
+    end: nextMonth().end.toString(),
     hasEnd: true,
     creative: sampleCreative,
 };
@@ -232,7 +238,8 @@ export const validateDraft = (d: StudioDraft): StepIssue[] => {
     }
     if (!d.start) out.push({ step: "budget", text: "Pick a start date" });
     if (d.hasEnd && !d.end) out.push({ step: "budget", text: "Pick an end date" });
-    if (d.start && d.end && d.hasEnd && d.end < d.start) out.push({ step: "budget", text: "End date is before the start" });
+    if (d.start && d.end && d.hasEnd && (d.end < d.start || (d.end === d.start && (d.endTime ?? "23:59") <= (d.startTime ?? "00:00"))))
+        out.push({ step: "budget", text: "End is before the start" });
     if (!d.creative.brand.trim()) out.push({ step: "creative", text: "Add the advertiser name" });
     if (d.format === "rewarded" ? !d.creative.video : !d.creative.image) out.push({ step: "creative", text: d.format === "rewarded" ? "Upload a video" : "Upload an image" });
     return out;

@@ -16,6 +16,8 @@ import { PreviewStage } from "./components/preview-stage";
 import { ReviewHero, ReviewSections } from "./components/review-summary";
 import { StepRail, type StepState } from "./components/step-rail";
 import { StudioShell } from "./components/studio-shell";
+import { parseDate } from "@internationalized/date";
+import { formatTime12, longDay, toTime } from "../dates";
 import { stepHref, useStudioDraft } from "./draft-store";
 import {
     type FormatId,
@@ -363,7 +365,9 @@ export const PublishedScreen = ({ preset = sampleDraft }: { preset?: StudioDraft
                 </span>
                 <div className="flex flex-col gap-1">
                     <h1 className="text-display-xs font-semibold text-primary">{d.campaignName || "Your campaign"} is scheduled</h1>
-                    <p className="text-md text-tertiary">It goes live Oct 1 at 00:00 UTC. You can edit anything until then.</p>
+                    <p className="text-md text-tertiary">
+                        It goes live {d.start ? longDay(parseDate(d.start)) : "when it starts"} at {formatTime12(toTime(d.startTime))} UTC. You can edit anything until then.
+                    </p>
                 </div>
                 <AdPreview format={d.format} creative={d.creative} scale={0.8} />
                 <div className="flex gap-3">

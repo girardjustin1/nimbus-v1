@@ -6,6 +6,7 @@ import { Button } from "@/components/base/buttons/button";
 import { cx } from "@/utils/cx";
 import { type Campaign, campaigns, compact, paceOf, usd } from "./das-data";
 import { DasShell, DeliveryBar, JumpLink, KeywordChip, PINK, PaceLabel, PinkAction, Section, StatusDot, TEAL } from "./das-shell";
+import { nextMonth, shortDay } from "@/pages/deal-activation-system/dates";
 import { readHashParams } from "./route";
 
 /**
@@ -25,15 +26,15 @@ const justPublished: Campaign = {
     id: "new",
     dealId: "D-10482",
     dealName: "Summit Sportswear — Fall Launch",
-    name: "Sports fans · Interstitial (Oct)",
+    name: `Sports fans · Interstitial (${shortDay(nextMonth().start).split(" ")[0]})`,
     status: "Scheduled",
     rule: "CPM Priority",
     ecpm: 8.5,
     budget: 25000,
     spend: 0,
     impressions: 0,
-    start: "Oct 1",
-    end: "Oct 31",
+    start: shortDay(nextMonth().start),
+    end: shortDay(nextMonth().end),
     flightElapsed: 0,
     geos: "United States, Canada",
     platforms: "iOS, Android",
