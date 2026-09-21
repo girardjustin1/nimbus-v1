@@ -7,6 +7,7 @@ import { Toggle } from "@/components/base/toggle/toggle";
 import { cx } from "@/utils/cx";
 import { type Campaign, campaigns, compact, paceOf, usd } from "./das-data";
 import { DasShell, DeliveryBar, KeywordChip, PINK, PaceLabel, StatusDot, TEAL } from "./das-shell";
+import { readHashParams, writeHashParams } from "./route";
 
 /**
  * Deal Activation System → Manage Campaigns.
@@ -57,6 +58,27 @@ const KpiStrip = () => {
     );
 };
 
+/* ------------------------------------------------------------- Search --- */
+
+/** Wraps the part of `text` that matches `query` in a soft pink highlight. */
+const Highlight = ({ text, query }: { text: string; query: string }) => {
+    const q = query.trim().toLowerCase();
+    const i = q ? text.toLowerCase().indexOf(q) : -1;
+    if (i < 0) return <>{text}</>;
+    return (
+        <>
+            {text.slice(0, i)}
+            <mark className="rounded-sm px-0.5 text-inherit" style={{ backgroundColor: `${PINK}33` }}>
+                {text.slice(i, i + q.length)}
+            </mark>
+            {text.slice(i + q.length)}
+        </>
+    );
+};
+
+const campaignText = (c: Campaign) => [c.name, c.status, c.rule, c.geos, c.platforms, ...c.adUnits, ...c.languages, ...c.keywords].join(" ").toLowerCase();
+const dealText = (c: Campaign) => `${c.dealName} ${c.dealId}`.toLowerCase();
+
 /* -------------------------------------------------------------- Rows --- */
 
 const TargetSummary = ({ c }: { c: Campaign }) => (
@@ -78,7 +100,7 @@ const TargetSummary = ({ c }: { c: Campaign }) => (
     </div>
 );
 
-const CampaignRow = ({ c, selected, onToggle }: { c: Campaign; selected: boolean; onToggle: () => void }) => (
+const CampaignRow = ({ c, selected, onToggle, query = "" }: { c: Campaign; selected: boolean; onToggle: () => void; query?: string }) => (
     <div
         className={cx(
             "grid grid-cols-[28px_minmax(220px,1.4fr)_minmax(200px,1fr)_minmax(240px,1.3fr)_110px_64px] items-center gap-4 px-5 py-4",
@@ -89,7 +111,7 @@ const CampaignRow = ({ c, selected, onToggle }: { c: Campaign; selected: boolean
         <Checkbox size="sm" isSelected={selected} onChange={onToggle} aria-label={`Compare ${c.name}`} />
         <div className="flex min-w-0 flex-col gap-1">
             <a href={`#/view-a?c=${c.id}`} className="truncate text-sm font-semibold hover:underline" style={{ color: TEAL }}>
-                {c.name}
+                <Highlight text={c.name} query={query} />
             </a>
             <span className="flex items-center gap-2 text-xs text-tertiary">
                 <StatusDot status={c.status} /> · {c.rule}
@@ -107,36 +129,68 @@ const CampaignRow = ({ c, selected, onToggle }: { c: Campaign; selected: boolean
     </div>
 );
 
-const DealGroup = ({ dealId, rows, selected, toggle }: { dealId: string; rows: Campaign[]; selected: string[]; toggle: (id: string) => void }) => {
+const DealGroup = ({
+    dealId,
+    rows,
+    total,
+    selected,
+    toggle,
+    open,
+    onOpenChange,
+    query,
+}: {
+    dealId: string;
+    rows: Campaign[];
+    /** Campaigns in the deal before search filtering. */
+    total: number;
+    selected: string[];
+    toggle: (id: string) => void;
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    query: string;
+}) => {
     const budget = rows.reduce((s, c) => s + c.budget, 0);
     const spend = rows.reduce((s, c) => s + c.spend, 0);
+    const behind = rows.filter((c) => c.status === "Running" && paceOf(c) === "behind").length;
+    const panelId = `deal-${dealId}`;
     return (
         <div className="overflow-hidden rounded-xl ring-1 ring-secondary">
             <div className="flex flex-wrap items-center justify-between gap-3 bg-secondary/60 px-5 py-3">
-                <div className="flex items-center gap-3">
-                    <ChevronDown className="size-4 text-fg-quaternary" aria-hidden="true" />
-                    <span className="text-sm font-semibold text-primary">{rows[0].dealName}</span>
-                    <span className="font-mono text-xs text-tertiary">{dealId}</span>
-                </div>
+                <button type="button" aria-expanded={open} aria-controls={panelId} onClick={() => onOpenChange(!open)} className="flex items-center gap-3 rounded-md text-left outline-focus-ring focus-visible:outline-2">
+                    <ChevronDown className={cx("size-4 text-fg-quaternary transition-transform duration-150", !open && "-rotate-90")} aria-hidden="true" />
+                    <span className="text-sm font-semibold text-primary">
+                        <Highlight text={rows[0].dealName} query={query} />
+                    </span>
+                    <span className="font-mono text-xs text-tertiary">
+                        <Highlight text={dealId} query={query} />
+                    </span>
+                    {!open && behind > 0 && (
+                        <span className="rounded-full px-2 py-0.5 text-xs font-semibold" style={{ color: "#A94579", backgroundColor: `${PINK}24` }}>
+                            {behind} behind pace
+                        </span>
+                    )}
+                </button>
                 <div className="flex items-center gap-4 text-xs text-tertiary">
                     <span>
-                        {rows.length} campaign{rows.length === 1 ? "" : "s"}
+                        {rows.length === total ? `${total} campaign${total === 1 ? "" : "s"}` : `${rows.length} of ${total} campaigns`}
                     </span>
                     {budget > 0 && (
                         <span>
                             {usd(spend)} / {usd(budget)}
                         </span>
                     )}
-                    <button type="button" className="inline-flex items-center gap-1 font-semibold uppercase" style={{ color: PINK }}>
+                    <a href="#/setup-empty" className="inline-flex items-center gap-1 font-semibold uppercase" style={{ color: PINK }}>
                         <Plus className="size-3.5" aria-hidden="true" /> Campaign
-                    </button>
+                    </a>
                 </div>
             </div>
-            <div className="divide-y divide-secondary">
-                {rows.map((c) => (
-                    <CampaignRow key={c.id} c={c} selected={selected.includes(c.id)} onToggle={() => toggle(c.id)} />
-                ))}
-            </div>
+            {open && (
+                <div id={panelId} className="divide-y divide-secondary">
+                    {rows.map((c) => (
+                        <CampaignRow key={c.id} c={c} selected={selected.includes(c.id)} onToggle={() => toggle(c.id)} query={query} />
+                    ))}
+                </div>
+            )}
         </div>
     );
 };
@@ -165,10 +219,29 @@ const CompareTray = ({ selected, clear }: { selected: Campaign[]; clear: () => v
     </div>
 );
 
-export const ManageCampaignsDelivery = ({ preselected = [] as string[] }) => {
+export const ManageCampaignsDelivery = ({ preselected = [] as string[], search = "", collapsed: initialCollapsed = [] as string[] }) => {
     const [selected, setSelected] = useState<string[]>(preselected);
+    const [query, setQuery] = useState(() => readHashParams().get("q") ?? search);
+    const [collapsed, setCollapsed] = useState<string[]>(initialCollapsed);
     const toggle = (id: string) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
     const deals = [...new Set(campaigns.map((c) => c.dealId))];
+
+    const q = query.trim().toLowerCase();
+    // A deal-name match shows the whole deal; otherwise only the campaigns that match.
+    const groups = deals
+        .map((d) => {
+            const all = campaigns.filter((c) => c.dealId === d);
+            const rows = !q || dealText(all[0]).includes(q) ? all : all.filter((c) => campaignText(c).includes(q));
+            return { d, all, rows };
+        })
+        .filter((g) => g.rows.length > 0);
+    const matchCount = groups.reduce((n, g) => n + g.rows.length, 0);
+    const allCollapsed = collapsed.length === deals.length;
+
+    const onSearch = (v: string) => {
+        setQuery(v);
+        writeHashParams({ q: v.trim() || undefined });
+    };
 
     return (
         <DasShell
@@ -197,8 +270,10 @@ export const ManageCampaignsDelivery = ({ preselected = [] as string[] }) => {
                             icon={SearchLg}
                             placeholder="Search deals, campaigns, keywords"
                             wrapperClassName="sm:w-80"
+                            value={query}
+                            onChange={onSearch}
                         />
-                        <Button color="primary-pink" iconLeading={Plus}>
+                        <Button color="primary-pink" iconLeading={Plus} href="#/setup-empty">
                             New campaign
                         </Button>
                     </div>
@@ -206,13 +281,61 @@ export const ManageCampaignsDelivery = ({ preselected = [] as string[] }) => {
 
                 <KpiStrip />
 
-                <div className="overflow-x-auto">
-                    <div className="flex min-w-[1000px] flex-col gap-4">
-                        {deals.map((d) => (
-                            <DealGroup key={d} dealId={d} rows={campaigns.filter((c) => c.dealId === d)} selected={selected} toggle={toggle} />
-                        ))}
-                    </div>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                    <p className="text-sm text-tertiary" aria-live="polite">
+                        {q ? (
+                            <>
+                                <span className="font-semibold text-primary">{matchCount}</span> campaign{matchCount === 1 ? "" : "s"} in{" "}
+                                <span className="font-semibold text-primary">{groups.length}</span> deal{groups.length === 1 ? "" : "s"} match “{query.trim()}” ·{" "}
+                                <button type="button" onClick={() => onSearch("")} className="font-semibold" style={{ color: PINK }}>
+                                    Clear
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                {campaigns.length} campaigns in {deals.length} deals
+                            </>
+                        )}
+                    </p>
+                    <button type="button" onClick={() => setCollapsed(allCollapsed ? [] : deals)} className="text-sm font-semibold uppercase" style={{ color: PINK }}>
+                        {allCollapsed ? "Expand all" : "Collapse all"}
+                    </button>
                 </div>
+
+                {groups.length === 0 ? (
+                    <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-secondary px-6 py-14 text-center">
+                        <SearchLg className="size-6 text-fg-quaternary" aria-hidden="true" />
+                        <p className="text-md font-semibold text-primary">No campaigns match “{query.trim()}”</p>
+                        <p className="max-w-md text-sm text-tertiary">Search looks at deal names and IDs, campaign names, status, auction rule, geos, platforms, ad units, languages and keywords.</p>
+                        <div className="flex gap-3">
+                            <Button size="sm" color="secondary" onClick={() => onSearch("")}>
+                                Clear search
+                            </Button>
+                            <Button size="sm" color="primary-pink" iconLeading={Plus} href="#/setup-empty">
+                                New campaign
+                            </Button>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="overflow-x-auto">
+                        <div className="flex min-w-[1000px] flex-col gap-4">
+                            {groups.map(({ d, all, rows }) => (
+                                <DealGroup
+                                    key={d}
+                                    dealId={d}
+                                    rows={rows}
+                                    total={all.length}
+                                    selected={selected}
+                                    toggle={toggle}
+                                    // Searching opens every deal that has a match.
+                                    open={Boolean(q) || !collapsed.includes(d)}
+                                    onOpenChange={(open) => setCollapsed((c) => (open ? c.filter((x) => x !== d) : [...c, d]))}
+                                    query={query}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
         </DasShell>
     );
