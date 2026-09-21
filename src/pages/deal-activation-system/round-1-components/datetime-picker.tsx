@@ -13,10 +13,11 @@ import {
 import { Calendar } from "@/components/application/date-picker/calendar";
 import { Button } from "@/components/base/buttons/button";
 import { cx } from "@/utils/cx";
+import { formatTime12, longDay, todayDate } from "../dates";
 
 /**
  * Date & time picker (Nimbus) — the trigger shows the date in bold and the time muted
- * ("Oct 1, 2026 12:00 AM"). The panel puts the design-system calendar beside a
+ * (e.g. "Oct 1, 2026 12:00 AM"). The panel puts the design-system calendar beside a
  * scrolling list of available times (every 30 minutes, UTC), with a typed date, Today,
  * Cancel and Apply along the bottom. Nothing changes until Apply.
  */
@@ -25,12 +26,8 @@ const PINK = "#DA6EA3";
 const PINK_DEEP = "#A94579";
 const PINK_SOFT = "#FCE7F1";
 
-const formatDate = (d: CalendarDate) => new Date(Date.UTC(d.year, d.month - 1, d.day)).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
-
-const formatTime = (t: Time) => {
-    const h = t.hour % 12 || 12;
-    return `${h}:${String(t.minute).padStart(2, "0")} ${t.hour < 12 ? "AM" : "PM"}`;
-};
+const formatDate = longDay;
+const formatTime = formatTime12;
 
 /** Every 30 minutes, plus 11:59 PM so a flight can run to the end of the day. */
 const SLOTS: Time[] = [...Array.from({ length: 48 }, (_, i) => new Time(Math.floor(i / 2), (i % 2) * 30)), new Time(23, 59)];
@@ -48,7 +45,7 @@ export const DateTimePicker = ({
     value,
     onChange,
     minValue,
-    today,
+    today = todayDate(),
     notBefore,
     invalid,
     defaultOpen,
@@ -59,7 +56,7 @@ export const DateTimePicker = ({
     onChange: (v: DateTimeValue) => void;
     /** Earliest selectable day. */
     minValue?: CalendarDate;
-    /** What the Today button jumps to (the prototype's fixed "today"). */
+    /** What the Today button jumps to; defaults to the real date. */
     today?: CalendarDate;
     /** Times on this day at or before this time are unavailable (e.g. an end before the start). */
     notBefore?: { date: CalendarDate; time: Time };

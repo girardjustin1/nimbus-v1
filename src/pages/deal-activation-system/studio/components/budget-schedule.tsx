@@ -1,24 +1,25 @@
 import { parseDate } from "@internationalized/date";
 import { CurrencyDollar } from "@untitledui/icons";
-import { DatePicker } from "@/components/application/date-picker/date-picker";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Input } from "@/components/base/input/input";
 import { cx } from "@/utils/cx";
+import { END_OF_DAY, START_OF_DAY, timeString, toTime, todayDate } from "../../dates";
+import { DateTimePicker } from "../../round-1-components/datetime-picker";
 import { type BudgetType, usd0 } from "../studio-data";
 
 /**
- * BudgetSchedule — daily or lifetime budget, then start and (optional) end dates on
- * calendar pickers. The line under the amount turns the choice into money: what a day
- * or the whole flight can cost at most.
+ * BudgetSchedule — daily or lifetime budget, then start and (optional) end on the shared
+ * date & time picker (calendar + available times, UTC). The line under the amount turns
+ * the choice into money: what a day or the whole flight can cost at most.
  */
-
-const TODAY = parseDate("2026-09-18");
 
 export interface BudgetScheduleValue {
     budgetType: BudgetType;
     budget?: number;
     start?: string;
     end?: string;
+    startTime?: string;
+    endTime?: string;
     hasEnd: boolean;
 }
 
@@ -39,25 +40,30 @@ export const BudgetSchedule = ({
     openCalendar?: "start" | "end";
 }) => {
     const set = (p: Partial<BudgetScheduleValue>) => onChange?.(p);
-    const dateField = (which: "start" | "end") => (
-        <div className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium text-secondary">{which === "start" ? "Start date" : "End date"}</span>
-            <div className="flex items-center gap-2">
-                <div className={cx("rounded-lg", errors[which] && "ring-2 ring-error_subtle ring-offset-1")}>
-                    <DatePicker
-                        aria-label={which === "start" ? "Start date" : "End date"}
-                        size="md"
-                        value={value[which] ? parseDate(value[which]!) : null}
-                        onChange={(v) => set({ [which]: v ? v.toString() : undefined })}
-                        minValue={TODAY}
-                        defaultOpen={openCalendar === which}
-                    />
-                </div>
-                <Input aria-label={`${which} time (UTC)`} size="md" defaultValue={which === "start" ? "00:00" : "23:59"} wrapperClassName="w-24" />
+    const today = todayDate();
+    const dateField = (which: "start" | "end") => {
+        const isStart = which === "start";
+        const date = value[which] ? parseDate(value[which]!) : undefined;
+        const start = value.start ? parseDate(value.start) : undefined;
+        return (
+            <div className="flex flex-col gap-1.5">
+                <span className="text-sm font-medium text-secondary">{isStart ? "Start" : "End"}</span>
+                <DateTimePicker
+                    label={isStart ? "Start" : "End"}
+                    value={{ date, time: toTime(isStart ? value.startTime : value.endTime, isStart ? START_OF_DAY : END_OF_DAY) }}
+                    onChange={(v) =>
+                        set(isStart ? { start: v.date?.toString(), startTime: timeString(v.time) } : { end: v.date?.toString(), endTime: timeString(v.time) })
+                    }
+                    minValue={isStart ? today : (start ?? today)}
+                    notBefore={!isStart && start ? { date: start, time: toTime(value.startTime, START_OF_DAY) } : undefined}
+                    invalid={Boolean(errors[which])}
+                    defaultOpen={openCalendar === which}
+                    placeholder={isStart ? "Select start" : "Select end"}
+                />
+                {errors[which] && <span className="text-sm text-error-primary">{errors[which]}</span>}
             </div>
-            {errors[which] && <span className="text-sm text-error-primary">{errors[which]}</span>}
-        </div>
-    );
+        );
+    };
 
     return (
         <div className="flex flex-col gap-5">
@@ -100,8 +106,9 @@ export const BudgetSchedule = ({
                     />
                 </>
             )}
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-4">
                 {dateField("start")}
+                {value.hasEnd && <span className="hidden pt-9 text-quaternary sm:block">→</span>}
                 {value.hasEnd && dateField("end")}
             </div>
             <Checkbox label="Set an end date" isSelected={value.hasEnd} onChange={(hasEnd) => set({ hasEnd })} hint={value.hasEnd ? undefined : "Runs until you pause it."} />

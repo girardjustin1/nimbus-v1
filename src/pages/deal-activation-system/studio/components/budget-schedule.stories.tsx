@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { nextMonth } from "../../dates";
 import { type BudgetScheduleValue, BudgetSchedule } from "./budget-schedule";
 
 /** Studio · Budget & schedule — daily or lifetime budget, calendar pickers, optional end date. */
@@ -11,7 +12,7 @@ const Demo = ({ initial, errors, hideBudget, openCalendar }: { initial: BudgetSc
     const [v, setV] = useState(initial);
     return <BudgetSchedule value={v} onChange={(p) => setV((x) => ({ ...x, ...p }))} days={31} errors={errors} hideBudget={hideBudget} openCalendar={openCalendar} />;
 };
-const filled: BudgetScheduleValue = { budgetType: "lifetime", budget: 25000, start: "2026-10-01", end: "2026-10-31", hasEnd: true };
+const filled: BudgetScheduleValue = { budgetType: "lifetime", budget: 25000, start: nextMonth().start.toString(), end: nextMonth().end.toString(), hasEnd: true };
 
 export const Lifetime: Story = { render: () => <Demo initial={filled} /> };
 export const Daily: Story = { render: () => <Demo initial={{ ...filled, budgetType: "daily", budget: 800 }} /> };

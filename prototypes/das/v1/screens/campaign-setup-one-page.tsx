@@ -1,14 +1,15 @@
 import { type ReactNode, useEffect, useState } from "react";
-import { type CalendarDate, Time, parseDate } from "@internationalized/date";
+import type { CalendarDate, Time } from "@internationalized/date";
 import { AlertCircle, CheckCircle, Circle, CurrencyDollar, FilePlus02, InfoCircle, SearchLg, XClose } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
 import { RadioButton, RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
 import { Select } from "@/components/base/select/select";
+import { END_OF_DAY, START_OF_DAY, nextMonth, todayDate } from "@/pages/deal-activation-system/dates";
+import { DateTimePicker } from "@/pages/deal-activation-system/round-1-components/datetime-picker";
 import { cx } from "@/utils/cx";
 import type { AuctionRule, MatchLogic } from "./das-data";
 import { DasShell, JumpLink, NewFieldBadge, PINK, PinkAction, Section, TEAL } from "./das-shell";
-import { DateTimePicker } from "./datetime-picker";
 import { AdUnitTypeField, DeviceLanguageField, ExistingTargets, KeywordChipInput, MatchLogicField } from "./keyword-targeting";
 
 /**
@@ -57,10 +58,9 @@ const library: Creative[] = [
     { name: "Summit_FallLaunch_Interstitial_C", type: "HTML", size: "Full screen" },
 ];
 
-/** The prototype's "today" (UTC). */
-const TODAY = parseDate("2026-09-18");
-const START_OF_DAY = new Time(0, 0);
-const END_OF_DAY = new Time(23, 59);
+/** Today is the real date; sample flights run next month so they never go stale. */
+const TODAY = todayDate();
+const FLIGHT = nextMonth();
 
 /* ----------------------------------------------------------------- Form --- */
 
@@ -80,7 +80,6 @@ interface SetupForm {
     creatives: Creative[];
 }
 
-const d = (iso: string) => parseDate(iso);
 
 const presets = {
     ready: {
@@ -89,8 +88,8 @@ const presets = {
         rule: "CPM Priority",
         budget: "25,000.00",
         ecpm: "8.50",
-        start: d("2026-10-01"),
-        end: d("2026-10-31"),
+        start: FLIGHT.start,
+        end: FLIGHT.end,
         keywords: ["sports", "power-user"],
         creatives: library.slice(0, 2),
     },
@@ -100,8 +99,8 @@ const presets = {
         rule: "CPM Priority",
         budget: "",
         ecpm: "8.50",
-        start: d("2026-10-01"),
-        end: d("2026-10-31"),
+        start: FLIGHT.start,
+        end: FLIGHT.end,
         keywords: ["sports", "power-user"],
         creatives: library.slice(0, 3),
     },
@@ -111,7 +110,7 @@ const presets = {
         rule: "Fallback",
         budget: "",
         ecpm: "",
-        start: d("2026-10-01"),
+        start: FLIGHT.start,
         end: undefined,
         keywords: ["sports"],
         creatives: [],
@@ -122,8 +121,8 @@ const presets = {
         rule: "CPM Priority",
         budget: "25,000.00",
         ecpm: "8.50",
-        start: d("2026-10-15"),
-        end: d("2026-10-10"),
+        start: FLIGHT.start.add({ days: 14 }),
+        end: FLIGHT.start.add({ days: 9 }),
         keywords: ["sports", "power-user"],
         creatives: library.slice(0, 2),
     },

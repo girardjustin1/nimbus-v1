@@ -11,6 +11,14 @@ import { AdPreview, type PreviewDevice, type PreviewMoment } from "./ad-preview"
  * and shows the render status and a shareable preview link.
  */
 
+/** "Sep 21, 2026 · 6:24 PM UTC" for right now. */
+const previewStamp = () => {
+    const now = new Date();
+    const day = now.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+    const time = now.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "UTC" });
+    return `${day} · ${time} UTC`;
+};
+
 const momentsFor = (f: FormatId): { id: PreviewMoment; label: string }[] =>
     f === "banner"
         ? [
@@ -69,7 +77,7 @@ export const PreviewStage = ({
                 </div>
                 <div className="flex flex-col items-center">
                     <span className="text-sm font-semibold text-primary">{title}</span>
-                    <span className="text-xs text-tertiary">Preview as of Sep 18, 2026 · 6:24 PM UTC</span>
+                    <span className="text-xs text-tertiary">Preview as of {previewStamp()}</span>
                 </div>
                 <div className="flex items-center gap-3">
                     <span className="inline-flex items-center gap-1.5 text-xs font-semibold" style={{ color: status === "ready" ? "#1F7F80" : "#B54708" }}>

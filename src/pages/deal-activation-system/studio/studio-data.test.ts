@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { nextMonth } from "../dates";
 import { estimate, flightDays, formats, studioPresets, validateDraft } from "./studio-data";
 
 describe("DAS Studio estimates", () => {
@@ -21,8 +22,9 @@ describe("DAS Studio estimates", () => {
         expect(e.dailySpend).toBe(0);
     });
 
-    it("counts both flight days inclusively", () => {
-        expect(flightDays(studioPresets.sample)).toBe(31);
+    it("counts both flight days inclusively (the sample runs all of next month)", () => {
+        const { start, end } = nextMonth();
+        expect(flightDays(studioPresets.sample)).toBe(end.day - start.day + 1);
     });
 
     it("keeps every format's recommended range ordered", () => {
