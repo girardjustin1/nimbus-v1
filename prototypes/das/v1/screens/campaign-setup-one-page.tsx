@@ -1,7 +1,6 @@
 import { type ReactNode, useEffect, useState } from "react";
-import { type CalendarDate, parseDate } from "@internationalized/date";
+import { type CalendarDate, Time, parseDate } from "@internationalized/date";
 import { AlertCircle, CheckCircle, Circle, CurrencyDollar, FilePlus02, InfoCircle, SearchLg, XClose } from "@untitledui/icons";
-import { DatePicker } from "@/components/application/date-picker/date-picker";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
 import { RadioButton, RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
@@ -9,6 +8,7 @@ import { Select } from "@/components/base/select/select";
 import { cx } from "@/utils/cx";
 import type { AuctionRule, MatchLogic } from "./das-data";
 import { DasShell, JumpLink, NewFieldBadge, PINK, PinkAction, Section, TEAL } from "./das-shell";
+import { DateTimePicker } from "./datetime-picker";
 import { AdUnitTypeField, DeviceLanguageField, ExistingTargets, KeywordChipInput, MatchLogicField } from "./keyword-targeting";
 
 /**
@@ -59,6 +59,8 @@ const library: Creative[] = [
 
 /** The prototype's "today" (UTC). */
 const TODAY = parseDate("2026-09-18");
+const START_OF_DAY = new Time(0, 0);
+const END_OF_DAY = new Time(23, 59);
 
 /* ----------------------------------------------------------------- Form --- */
 
@@ -70,6 +72,9 @@ interface SetupForm {
     ecpm: string;
     start?: CalendarDate;
     end?: CalendarDate;
+    /** Start and end times (UTC); default to the whole day. */
+    startTime?: Time;
+    endTime?: Time;
     /** Keywords the chip input starts with; the live count is tracked separately. */
     keywords: string[];
     creatives: Creative[];
@@ -117,15 +122,33 @@ const presets = {
         rule: "CPM Priority",
         budget: "25,000.00",
         ecpm: "8.50",
-        start: d("2026-09-14"),
-        end: d("2026-09-10"),
+        start: d("2026-10-15"),
+        end: d("2026-10-10"),
         keywords: ["sports", "power-user"],
         creatives: library.slice(0, 2),
     },
     empty: { name: "", budget: "", ecpm: "", keywords: [], creatives: [] },
 } satisfies Record<string, SetupForm>;
 
-export type SetupPreset = keyof typeof presets;
+/* Step-by-step progress through the form (empty → ready), and edge cases where exactly
+   one thing is wrong on an otherwise complete form. */
+const ready = presets.ready as SetupForm;
+const stepPresets = {
+    stepDeal: { ...presets.empty, dealId: ready.dealId, name: ready.name },
+    stepRules: { ...presets.empty, dealId: ready.dealId, name: ready.name, rule: ready.rule },
+    stepBudget: { ...ready, keywords: [], creatives: [] },
+    stepTargeting: { ...ready, creatives: [] },
+    noName: { ...ready, name: "" },
+    noBudget: { ...ready, budget: "" },
+    noKeywords: { ...ready, keywords: [] },
+    noCreative: { ...ready, creatives: [] },
+    mixedCreative: { ...ready, creatives: library.slice(0, 3) },
+    fallbackReady: { ...ready, name: "Fallback · Sports fans", rule: "Fallback", budget: "", ecpm: "", creatives: library.slice(0, 2) },
+} satisfies Record<string, SetupForm>;
+
+const allPresets: Record<string, SetupForm> = { ...presets, ...stepPresets };
+
+export type SetupPreset = keyof typeof presets | keyof typeof stepPresets;
 
 interface Issue {
     section: SectionId;
@@ -142,10 +165,13 @@ const validate = (f: SetupForm): Issue[] => {
         if (!f.budget.trim()) issues.push({ section: "budget", field: "budget", text: "Budget is required" });
         if (!f.ecpm.trim()) issues.push({ section: "budget", field: "ecpm", text: "eCPM is required" });
     }
-    if (!f.start) issues.push({ section: "budget", field: "start", text: "Pick a start date" });
-    else if (f.start.compare(TODAY) < 0) issues.push({ section: "budget", field: "start", text: "Start date is in the past" });
-    if (!f.end) issues.push({ section: "budget", field: "end", text: "Pick an end date" });
-    else if (f.start && f.end.compare(f.start) < 0) issues.push({ section: "budget", field: "end", text: "End date is before the start date" });
+    const startAt = f.start && { d: f.start, t: f.startTime ?? START_OF_DAY };
+    const endAt = f.end && { d: f.end, t: f.endTime ?? END_OF_DAY };
+    if (!startAt) issues.push({ section: "budget", field: "start", text: "Pick a start date and time" });
+    else if (startAt.d.compare(TODAY) < 0) issues.push({ section: "budget", field: "start", text: "Start is in the past" });
+    if (!endAt) issues.push({ section: "budget", field: "end", text: "Pick an end date and time" });
+    else if (startAt && (endAt.d.compare(startAt.d) < 0 || (endAt.d.compare(startAt.d) === 0 && endAt.t.compare(startAt.t) <= 0)))
+        issues.push({ section: "budget", field: "end", text: "End is before the start" });
     if (!f.creatives.length) issues.push({ section: "creative", field: "creatives", text: "Add at least one creative" });
     else if (new Set(f.creatives.map((c) => c.type)).size > 1) issues.push({ section: "creative", field: "creatives", text: "Creatives mix HTML and VAST" });
     return issues;
@@ -248,47 +274,46 @@ const RulesSection = ({ form, set, error }: { form: SetupForm; set: Setter; erro
 
 const flightDays = (f: SetupForm) => (f.start && f.end && f.end.compare(f.start) >= 0 ? f.end.compare(f.start) + 1 : undefined);
 
-/** Start and end each get a calendar picker (the design-system DatePicker) plus a UTC time. */
-const FlightDates = ({ form, set, error, calendarOpen }: { form: SetupForm; set: Setter; error: FieldError; calendarOpen?: "start" | "end" }) => {
+/** Start and end as date & time pickers (bold date, muted time), in UTC. */
+const FlightDates = ({ form, set, error, calendarOpen }: { form: SetupForm; set: Setter; error: FieldError; calendarOpen?: boolean }) => {
     const days = flightDays(form);
     const field = (which: "start" | "end") => {
         const err = error(which);
+        const isStart = which === "start";
         return (
             <div className="flex flex-col gap-1.5">
                 <span className="text-sm font-medium text-secondary">
-                    {which === "start" ? "Start date" : "End date"} <span className="text-brand-tertiary">*</span>
+                    {isStart ? "Start" : "End"} <span className="text-brand-tertiary">*</span>
                 </span>
-                <div className="flex items-center gap-2">
-                    <div className={cx("rounded-lg", err && "ring-2 ring-error_subtle ring-offset-1")}>
-                        <DatePicker
-                            aria-label={which === "start" ? "Start date" : "End date"}
-                            size="md"
-                            value={form[which] ?? null}
-                            onChange={(v) => set({ [which]: (v as CalendarDate | null) ?? undefined })}
-                            minValue={TODAY}
-                            defaultOpen={calendarOpen === which}
-                            isInvalid={Boolean(err)}
-                        />
-                    </div>
-                    <Input aria-label={`${which} time (UTC)`} size="md" defaultValue={which === "start" ? "00:00" : "23:59"} wrapperClassName="w-24" />
-                </div>
+                <DateTimePicker
+                    label={isStart ? "Start" : "End"}
+                    value={{ date: form[which], time: (isStart ? form.startTime : form.endTime) ?? (isStart ? START_OF_DAY : END_OF_DAY) }}
+                    onChange={(v) => set(isStart ? { start: v.date, startTime: v.time } : { end: v.date, endTime: v.time })}
+                    minValue={isStart ? TODAY : (form.start ?? TODAY)}
+                    today={TODAY}
+                    notBefore={!isStart && form.start ? { date: form.start, time: form.startTime ?? START_OF_DAY } : undefined}
+                    invalid={Boolean(err)}
+                    defaultOpen={calendarOpen && isStart}
+                    placeholder={isStart ? "Select start" : "Select end"}
+                />
                 {err && <span className="text-sm text-error-primary">{err}</span>}
             </div>
         );
     };
     return (
         <div className="flex flex-col gap-3">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-4">
                 {field("start")}
+                <span className="hidden pt-9 text-quaternary sm:block">→</span>
                 {field("end")}
-                <span className="text-sm text-tertiary sm:pt-9">{days ? `${days}-day flight` : ""}</span>
+                {days && <span className="text-sm text-tertiary sm:pt-9">{days}-day flight</span>}
             </div>
             <p className="text-sm text-tertiary italic">All scheduling times are in UTC. Past dates can't be picked.</p>
         </div>
     );
 };
 
-const BudgetSection = ({ form, set, error, calendarOpen }: { form: SetupForm; set: Setter; error: FieldError; calendarOpen?: "start" | "end" }) => {
+const BudgetSection = ({ form, set, error, calendarOpen }: { form: SetupForm; set: Setter; error: FieldError; calendarOpen?: boolean }) => {
     const flight = <FlightDates form={form} set={set} error={error} calendarOpen={calendarOpen} />;
     if (form.rule === "Fallback") {
         return (
@@ -434,7 +459,7 @@ interface ProgressProps {
 const sectionState = ({ form, issues, attempted, keywordCount }: ProgressProps, s: SectionId) => {
     const bad = issues.some((x) => x.section === s);
     const blank = SECTIONS.every((x) => !started(form, x.id, keywordCount));
-    const isStarted = started(form, s, keywordCount) || (s === "targeting" && !blank);
+    const isStarted = started(form, s, keywordCount) || (s === "targeting" && !blank && form.creatives.length > 0);
     return bad && attempted ? "error" : bad || !isStarted ? "todo" : "done";
 };
 
@@ -525,7 +550,7 @@ const SummaryRail = (props: ProgressProps & { onPublish: () => void }) => {
 
 /* ------------------------------------------------------------ Section nav --- */
 
-const SectionNav = (props: ProgressProps) => {
+const SectionNav = ({ current, ...props }: ProgressProps & { current?: SectionId }) => {
     const { form, issues, attempted, keywordCount } = props;
     const blank = SECTIONS.every((s) => !started(form, s.id, keywordCount));
     return (
@@ -540,6 +565,7 @@ const SectionNav = (props: ProgressProps) => {
                         to={s.id}
                         className={cx(
                             "flex items-start gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-primary_hover",
+                            s.id === current && "bg-secondary",
                             state === "error" ? "text-error-primary" : state === "done" ? "text-primary" : "text-tertiary",
                         )}
                     >
@@ -578,14 +604,16 @@ export interface CampaignSetupOnePageProps {
     preset?: SetupPreset;
     /** Publish has been pressed: show every error in place. */
     attempted?: boolean;
-    /** A flight-date calendar is open on load. */
-    calendarOpen?: "start" | "end";
+    /** The flight-date range picker is open on load. */
+    calendarOpen?: boolean;
+    /** Section to scroll to and mark as current on load (step-by-step walkthrough). */
+    focus?: SectionId;
 }
 
-export const CampaignSetupOnePage = ({ preset = "ready", attempted: initialAttempted = false, calendarOpen }: CampaignSetupOnePageProps) => {
-    const [form, setForm] = useState<SetupForm>(presets[preset]);
+export const CampaignSetupOnePage = ({ preset = "ready", attempted: initialAttempted = false, calendarOpen, focus }: CampaignSetupOnePageProps) => {
+    const [form, setForm] = useState<SetupForm>(allPresets[preset]);
     const [attempted, setAttempted] = useState(initialAttempted);
-    const [keywordCount, setKeywordCount] = useState(presets[preset].keywords.length);
+    const [keywordCount, setKeywordCount] = useState(allPresets[preset].keywords.length);
     const set: Setter = (p) => setForm((f) => ({ ...f, ...p }));
     const issues = validate(form);
     const error: FieldError = (field) => (attempted ? issues.find((i) => i.field === field)?.text : undefined);
@@ -594,7 +622,8 @@ export const CampaignSetupOnePage = ({ preset = "ready", attempted: initialAttem
     // Deep link to an open calendar: bring the flight dates into view first.
     useEffect(() => {
         if (calendarOpen) document.getElementById("budget")?.scrollIntoView({ block: "center" });
-    }, [calendarOpen]);
+        else if (focus) document.getElementById(focus)?.scrollIntoView({ block: "start" });
+    }, [calendarOpen, focus]);
 
     const publish = () => {
         if (issues.length) {
@@ -618,12 +647,12 @@ export const CampaignSetupOnePage = ({ preset = "ready", attempted: initialAttem
                 notes: [
                     "The five wizard steps become five sections on one page. The left rail jumps between them and shows what's done, what's left and, after Publish, what's wrong.",
                     "Publish is never greyed out. Pressing it checks everything: problems are flagged on the fields, in the rail and in a banner that links to each one.",
-                    "Flight dates use the calendar picker. Past dates can't be picked, and an end date before the start is caught. Budget and eCPM hide for Fallback campaigns.",
+                    "Start and end use date & time pickers: pick the day on the calendar and the UTC time underneath. Past dates can't be picked, and an end before the start is caught. Budget and eCPM hide for Fallback campaigns.",
                 ],
             }}
         >
             <div className="grid grid-cols-1 gap-8 px-8 py-8 xl:grid-cols-[190px_minmax(0,1fr)_340px]">
-                <SectionNav {...progress} />
+                <SectionNav {...progress} current={focus} />
                 <div className="min-w-0">
                     {attempted && issues.length > 0 && (
                         <div role="alert" className="mb-6 flex flex-col gap-3 rounded-xl p-4 ring-1 ring-error_subtle" style={{ backgroundColor: `${PINK}0f` }}>
