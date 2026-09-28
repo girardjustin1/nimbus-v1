@@ -61,6 +61,20 @@ const preview: Preview = {
                         ],
                     ],
                     "*",
+                    // 8) Sept 22 review — staged revisions, last so it reads as a batch
+                    //    of pending changes rather than part of the concepts themselves.
+                    "Sept 22",
+                    [
+                        "Overview",
+                        "1 Reporting placement",
+                        "2 Date only, no time",
+                        "3 Stacked revenue chart",
+                        "4 Behind pace is clickable",
+                        "5 Sample advertisers stay fictional",
+                        "6 The stepper is recorded, not recommended",
+                        "7 Preview is an approximation",
+                        "8 Concept letters get a scope",
+                    ],
                 ],
             },
         },

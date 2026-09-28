@@ -1,0 +1,35 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { ItemDoc } from "./docs";
+import * as Stories from "./4-behind-pace.stories";
+
+<Meta of={Stories} />
+
+# 4 · Behind pace becomes a link
+
+<ItemDoc n={4} />
+
+## Which tiles link, and which do not
+
+| Tile | Links? | Why |
+| --- | --- | --- |
+| Live campaigns | No | Describes the account. There is no single campaign to open. |
+| Spend this flight | No | Same — an account-level total. |
+| Behind pace | Yes | Names a campaign, and is the one you most want to act on. |
+| Ending in 7 days | Yes | Names a campaign, and is time-critical by definition. |
+
+Making every tile clickable would be worse than making none of them clickable: it teaches
+people that tiles are buttons, and then two of them do nothing.
+
+## One match versus several
+
+With one campaign behind, the tile goes straight to it — the *go to campaign* case. With
+several, guessing which one was meant would be wrong, so it goes to the campaign list
+filtered to them instead. The label changes to match, so the tile never promises a
+destination it is not going to.
+
+## The hardcoded number
+
+**Ending in 7 days** was the literal string `"1"` with the campaign name typed underneath
+it. It is now derived, counting from **Sep 18, 2026** — the last day of the window the
+sample data describes — rather than from the real clock, so the tile does not quietly
+change meaning every time someone opens the prototype.

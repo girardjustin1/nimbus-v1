@@ -1,0 +1,30 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { ItemDoc } from "./docs";
+import * as Stories from "./7-preview-approximation.stories";
+
+<Meta of={Stories} />
+
+# 7 · The device preview says it is an approximation
+
+<ItemDoc n={7} />
+
+## Why a caption is the whole fix
+
+The worry raised on the call was not that the preview is inaccurate — it is that it looks
+accurate enough to be held to. A publisher who reads it as exact will report every
+difference on a real handset as a bug, and the more compelling the preview is, the harder
+that gets to walk back.
+
+Nothing about the rendering needs to change for that. The claim does:
+
+> This preview shows **how the ad renders** in a Nimbus-served app.
+
+becomes
+
+> **Approximate preview.** Size and placement vary by device, screen and app.
+
+## Where the caveat has to live
+
+Not in a tooltip, and not only in the docs. Previews get screenshotted and pasted into
+threads, and the caveat has to survive that trip — so it sits in the frame, in the
+screenshot, next to the thing it is qualifying.

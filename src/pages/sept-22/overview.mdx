@@ -1,0 +1,69 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Batch, NoteKey } from "./docs";
+import { framing } from "./feedback";
+
+export const S = ({ id, children }) => (
+  <a href={`./?path=/docs/sept-22-${id}--docs`} target="_top" style={{ color: "#A94579", fontWeight: 600 }}>{children}</a>
+);
+
+<Meta title="Sept 22/Overview" />
+
+<div style={{ maxWidth: 920 }}>
+
+# Sept 22 review
+
+Everything coming out of the September 22 design review, in one place: what was said, what
+we decided to do about it, and the revised screen sitting next to the one that was
+reviewed.
+
+> “{framing.quote}”
+
+{framing.decision}
+
+## Nothing here is applied yet
+
+The screens under **Deal Activation System** and **Performance Insights** are still exactly
+as they were reviewed. This folder holds the revisions so the two can be compared before
+anything is adopted — no feedback lands on a screen that has already moved underneath it.
+
+Once an item is signed off it moves into the real screens and its page here becomes the
+record of why.
+
+## The batch
+
+<Batch />
+
+**Asked for** means it was requested outright on the call. **Proposed** means it came from
+design in response to something raised — worth a look, and a no is a perfectly good answer.
+
+## How to read a page
+
+Every item has the same shape: the quotes it came from, the decision and its reasoning,
+what was considered and rejected, and the files that change when it is adopted. Items with
+a visual change also have a **before and after** story.
+
+<NoteKey />
+
+## Where each one is
+
+- <S id="1-reporting-placement">1 · Reporting placement</S> — out of Performance Insights, into its own group
+- <S id="2-date-only-no-time">2 · Date only, no time</S> — the backend has no time of day on a flight yet
+- <S id="3-stacked-revenue-chart">3 · Stacked revenue chart</S> — one segment per campaign
+- <S id="4-behind-pace-is-clickable">4 · Behind pace is clickable</S> — the tile links to the campaign it names
+- <S id="5-sample-advertisers-stay-fictional">5 · Sample advertisers stay fictional</S> — recorded so it does not get undone
+- <S id="6-the-stepper-is-recorded-not-recommended">6 · The stepper is recorded, not recommended</S> — kept, reframed
+- <S id="7-preview-is-an-approximation">7 · Preview is an approximation</S> — the caption stops claiming accuracy
+- <S id="8-concept-letters-get-a-scope">8 · Concept letters get a scope</S> — “Targeting · A”, not “Concept A”
+
+## Still open
+
+Two things from the review need something from outside design before they can move:
+
+**The component audit.** Comparing the new components against the ones already live means
+either access to the existing React package or a pass from engineering. The Nimbus side
+can be listed now; the other column has to wait.
+
+**Real ad assets.** The device preview is drawn with placeholder creative. Sample assets
+would make it land harder in a demo, and they have to come from the product side.
+
+</div>
