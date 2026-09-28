@@ -1,0 +1,25 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { ItemDoc } from "./docs";
+import * as Stories from "./2-date-only.stories";
+
+<Meta of={Stories} />
+
+# 2 · Flight dates lose the time of day
+
+<ItemDoc n={2} />
+
+## Why the component is kept
+
+Taking the time out of the flows is a one-line change. Taking it out of the design system
+would mean rebuilding it when the backend catches up, and losing the reasoning in between.
+
+So the date **and time** picker stays where it is, in
+**Deal Activation System › Round 1 Concepts › Components › Date & Time Picker**, marked as
+the target state. The date-only picker in this folder is what the flows should use today.
+Same panel, same behaviour, one column fewer.
+
+## What happens to the validation
+
+The end-before-start check does not go away — it compares dates instead of dates and
+times. An end date equal to the start is still valid; it means a one-day flight running to
+the end of that day, which is what the revised **End** field says underneath it.

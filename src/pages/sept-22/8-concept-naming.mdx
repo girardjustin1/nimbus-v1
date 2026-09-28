@@ -1,0 +1,43 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { ItemDoc } from "./docs";
+
+<Meta title="Sept 22/8 Concept letters get a scope" />
+
+# 8 · Concept letters get a scope
+
+<ItemDoc n={8} />
+
+## The rename
+
+Each letter belongs to one surface and always did. Putting the surface in the label is the
+whole fix — a reader should not have to work out the scoping rule, or find a legend that
+explains it.
+
+| Surface | Now | Proposed |
+| --- | --- | --- |
+| Campaign setup | Concept A · One-page setup with a live summary rail | **Setup · A** — One page with a live summary rail |
+| Targeting | Concept A · Inline keyword chips | **Targeting · A** — Inline keyword chips |
+| Targeting | Concept B · Pick from the Keyword Library | **Targeting · B** — Pick from the Keyword Library |
+| Targeting | Concept C · Audience sentence | **Targeting · C** — Audience sentence |
+| Keyword Library | Concept · Keyword Library: a new DAS page | **Keyword Library** — A new DAS page |
+| Manage campaigns | Concept A · Delivery-first campaign list | **Campaign list · A** — Delivery first |
+| Manage campaigns | Concept B · Side-by-side compare | **Campaign list · B** — Side-by-side compare |
+| Reporting | Concept A · DAS overview | **Reporting · A** — A purpose-built reporting home |
+| Reporting | Concept B · Build breakdowns on the fly | **Reporting · B** — Build breakdowns on the fly |
+| View campaign | View · A — One page, read-only | unchanged |
+
+## The one that already worked
+
+**View · A** through **View · D** never caused this confusion, because the scope is in the
+label. The rename makes every other surface behave the way that one already does.
+
+## Two places to change
+
+The label appears twice for most screens, and both have to move together or the Storybook
+sidebar and the note on the screen will disagree:
+
+- the `ConceptNote` label rendered on the screen itself, and
+- the story name in the Storybook sidebar.
+
+The Keyword Library note has no letter at all, because there is only one concept for it.
+That is correct and stays that way — a lone **A** implies a **B** that was never drawn.

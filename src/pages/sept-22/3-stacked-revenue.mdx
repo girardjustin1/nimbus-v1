@@ -1,0 +1,48 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { ItemDoc } from "./docs";
+import * as Stories from "./3-stacked-revenue.stories";
+
+<Meta of={Stories} />
+
+# 3 · Revenue by day stacks by campaign
+
+<ItemDoc n={3} />
+
+## The part that needed a judgement call
+
+Stacking the campaigns inside the full-height bar does what was asked and does not work.
+DAS is about **14% of total revenue**, so five campaigns split across that share come out
+two or three pixels tall each — strictly harder to read than the single teal block they
+replaced. Doing it literally would have satisfied the request and missed the point of it.
+
+So the chart has two views, and the data behind them is identical:
+
+- **DAS campaigns** — scaled to DAS, where the campaigns are actually legible. Default.
+- **Share of total** — the same stack with Open Marketplace back on top, which is the
+  comparison the original chart existed to make.
+
+Worth a look together, since "leave Open Marketplace" and "make the campaigns visible"
+pull against each other at this ratio. If the split view is the wrong answer, the other
+obvious one is a second, shorter chart underneath rather than a toggle.
+
+## Keeping the numbers honest
+
+Two things could have drifted here, and both are closed off.
+
+**Which campaigns exist.** The series are derived from the same `campaigns` array the
+delivery table reads, filtered the same way — scheduled campaigns have not run, so they
+contribute nothing to a past window. Add a campaign to the data and it appears in both
+places or neither.
+
+**What the totals say.** Each day's per-campaign values add up to exactly the `das` figure
+that was already there, so **DAS revenue $35,250** and **share of total 14%** are the same
+numbers that were reviewed. Only the breakdown is new.
+
+The split itself is a fixed weighting with a deterministic wobble — not a random number —
+so the chart is identical on every render and in every screenshot taken from it.
+
+## Colour
+
+Dark to light teal, biggest campaign darkest. The DAS block still reads as one mass
+against the gray Open Marketplace band, which is what makes the share comparison survive
+being subdivided. Open Marketplace itself is untouched.
