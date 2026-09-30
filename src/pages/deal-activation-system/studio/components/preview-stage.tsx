@@ -4,6 +4,8 @@ import { cx } from "@/utils/cx";
 import { TEAL } from "../../das-shell";
 import type { Creative, FormatId } from "../studio-data";
 import { AdPreview, type PreviewDevice, type PreviewMoment } from "./ad-preview";
+import { AdFormatDemo } from "./ad-format-demo";
+import { PreviewModePicker, type PreviewMode } from "./preview-mode-picker";
 
 /**
  * PreviewStage — the full-screen "final render". Steps through every moment of the
@@ -38,6 +40,7 @@ export const PreviewStage = ({
     title,
     initialDevice = "phone",
     initialMoment = 0,
+    initialMode = "creative",
     status = "ready",
     closeHref,
 }: {
@@ -46,10 +49,12 @@ export const PreviewStage = ({
     title: string;
     initialDevice?: PreviewDevice;
     initialMoment?: number;
+    initialMode?: PreviewMode;
     status?: "processing" | "ready";
     closeHref?: string;
 }) => {
     const [device, setDevice] = useState<PreviewDevice>(initialDevice);
+    const [mode, setMode] = useState<PreviewMode>(initialMode);
     const moments = momentsFor(format);
     const [i, setI] = useState(Math.min(initialMoment, moments.length - 1));
     const m = moments[i];
@@ -85,7 +90,7 @@ export const PreviewStage = ({
                         {status === "ready" ? "Ready" : "Processing"}
                     </span>
                     {closeHref && (
-                        <a href={closeHref} aria-label="Close preview" className="rounded-md p-1.5 text-fg-quaternary hover:bg-secondary">
+                        <a href={`${closeHref}${closeHref.includes("?") ? "&" : "?"}demo=${mode === "demo" ? "1" : "0"}&moment=${m.id}`} aria-label="Close preview" className="rounded-md p-1.5 text-fg-quaternary hover:bg-secondary">
                             <XClose className="size-5" aria-hidden="true" />
                         </a>
                     )}
@@ -93,12 +98,13 @@ export const PreviewStage = ({
             </header>
 
             <div className="flex flex-1 flex-col items-center justify-center gap-5 bg-secondary/40 px-6 py-10">
+                <PreviewModePicker value={mode} onChange={setMode} />
                 <span className="text-sm font-semibold text-secondary">{m.label}</span>
                 <div className="flex items-center gap-8">
                     <button type="button" aria-label="Previous moment" disabled={i === 0} onClick={() => setI(i - 1)} className="rounded-full p-2 text-fg-secondary hover:bg-primary disabled:opacity-25">
                         <ChevronLeft className="size-6" aria-hidden="true" />
                     </button>
-                    <AdPreview format={format} creative={creative} device={device} moment={m.id} />
+                    {mode === "demo" ? <AdFormatDemo key={format} format={format} device={device} moment={m.id} /> : <AdPreview format={format} creative={creative} device={device} moment={m.id} />}
                     <button type="button" aria-label="Next moment" disabled={i === moments.length - 1} onClick={() => setI(i + 1)} className="rounded-full p-2 text-fg-secondary hover:bg-primary disabled:opacity-25">
                         <ChevronRight className="size-6" aria-hidden="true" />
                     </button>
@@ -110,7 +116,7 @@ export const PreviewStage = ({
                 </div>
                 <p className="flex max-w-md items-center gap-2 text-center text-xs text-tertiary">
                     <Link01 className="size-4 shrink-0" aria-hidden="true" />
-                    This preview shows how the ad renders in a Nimbus-served app. Anyone with the preview link can see it.
+                    {mode === "demo" ? "Illustrated example. Placement, rewards and timing vary by app." : "Approximate preview. Size and placement vary by device, screen and app."}
                 </p>
             </div>
         </div>

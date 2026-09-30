@@ -2,6 +2,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { CheckCircle, Home02, Sun, SearchLg, User01, VolumeX, XClose } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
 import type { Creative, FormatId } from "../studio-data";
+import { DeviceFrame, type PreviewDevice } from "./device-frame";
 
 /**
  * AdPreview — renders the creative the way a user will see it, inside a device frame
@@ -9,7 +10,7 @@ import type { Creative, FormatId } from "../studio-data";
  * each (banner vs medium rectangle, video playing vs end card).
  */
 
-export type PreviewDevice = "phone" | "tablet";
+export type { PreviewDevice } from "./device-frame";
 export type PreviewMoment = "default" | "mrec" | "end-card";
 
 export interface AdPreviewProps {
@@ -243,13 +244,7 @@ const Native = ({ creative }: { creative: Creative }) => (
 
 /* ------------------------------------------------------------- Device --- */
 
-const DEVICE = {
-    phone: { w: 280, h: 580, radius: 40, bezel: 10 },
-    tablet: { w: 460, h: 600, radius: 28, bezel: 14 },
-};
-
 export const AdPreview = ({ format, creative, device = "phone", moment = "default", scale = 1, className }: AdPreviewProps) => {
-    const d = DEVICE[device];
     const screen =
         format === "banner" ? (
             moment === "mrec" ? (
@@ -265,21 +260,13 @@ export const AdPreview = ({ format, creative, device = "phone", moment = "defaul
             <Native creative={creative} />
         );
     return (
-        <div className={cx("relative shrink-0", className)} style={{ width: d.w * scale, height: d.h * scale }} aria-label={`${format} ad preview on ${device}`} role="img">
-            <div
-                className="absolute top-0 left-0 origin-top-left bg-[#101828] shadow-[0_24px_48px_-12px_rgba(16,24,40,0.35)]"
-                style={{ width: d.w, height: d.h, borderRadius: d.radius, padding: d.bezel, transform: `scale(${scale})` }}
-            >
-                <div className="relative h-full w-full overflow-hidden bg-white" style={{ borderRadius: d.radius - d.bezel }}>
-                    {screen}
-                    {device === "phone" && <span className="absolute top-1.5 left-1/2 h-4 w-20 -translate-x-1/2 rounded-full bg-[#101828]" />}
-                    {!hasContent(creative) && (
-                        <span className="absolute inset-x-3 bottom-14 rounded-lg bg-[#101828]/85 px-3 py-2 text-center text-[10px] font-medium text-white">
-                            Add your creative to see the real thing
-                        </span>
-                    )}
-                </div>
-            </div>
-        </div>
+        <DeviceFrame device={device} scale={scale} className={className} label={`${format} ad preview on ${device}`}>
+            {screen}
+            {!hasContent(creative) && (
+                <span className="absolute inset-x-3 bottom-14 rounded-lg bg-[#101828]/85 px-3 py-2 text-center text-[10px] font-medium text-white">
+                    Add your creative to see the real thing
+                </span>
+            )}
+        </DeviceFrame>
     );
 };
