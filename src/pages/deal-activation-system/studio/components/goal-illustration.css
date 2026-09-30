@@ -1,0 +1,125 @@
+.goal-illustration .goal-gap-tile {
+    transform-box: view-box;
+    transform-origin: 140.5px 40px;
+    transform: rotate(-10deg);
+}
+
+/* Applying animations only to the selected scene also restarts them on selection. */
+.goal-illustration[data-active="true"] .goal-delivery-check {
+    stroke-dasharray: 1;
+    animation: goal-check-complete 4.8s ease-in-out infinite both;
+}
+
+.goal-illustration[data-active="true"] .goal-delivery-check-1 { animation-delay: .35s; }
+.goal-illustration[data-active="true"] .goal-delivery-check-2 { animation-delay: .7s; }
+.goal-illustration[data-active="true"] .goal-delivery-clock {
+    transform-box: view-box;
+    transform-origin: 190px 120px;
+    animation: goal-clock-tick 4.8s linear infinite;
+}
+.goal-illustration[data-active="true"] .goal-delivery-stamp {
+    transform-box: view-box;
+    transform-origin: 46px 126px;
+    animation: goal-delivery-pop 4.8s ease-in-out infinite;
+}
+.goal-illustration[data-active="true"] .goal-delivery-route { animation: goal-route-flow 2.4s linear infinite; }
+
+.goal-illustration[data-active="true"] .goal-priority-podium {
+    transform-box: view-box;
+    transform-origin: 130.5px 150px;
+    animation: goal-podium-rise 6s cubic-bezier(.22,.61,.36,1) infinite;
+}
+.goal-illustration[data-active="true"] .goal-priority-winner {
+    transform-box: view-box;
+    transform-origin: 130.5px 69px;
+    animation: goal-winning-bid 6s cubic-bezier(.22,.61,.36,1) infinite;
+}
+.goal-illustration[data-active="true"] .goal-priority-arrow {
+    transform-box: view-box;
+    transform-origin: 166px 36px;
+    animation: goal-bid-pop 6s ease-in-out infinite;
+}
+.goal-illustration[data-active="true"] .goal-priority-competitor { animation: goal-other-bids 6s ease-in-out infinite; }
+
+.goal-illustration[data-active="true"] .goal-always-card {
+    transform-box: fill-box;
+    offset-path: path("M31 89C31 58.6 75.3 34 130 34S229 58.6 229 89S184.7 144 130 144S31 119.4 31 89Z");
+    offset-anchor: 50% 50%;
+    offset-rotate: 0deg;
+    animation: goal-ad-circulation 8s linear infinite;
+}
+.goal-illustration[data-active="true"] .goal-always-card-pink { animation-delay: -4s; }
+.goal-illustration[data-active="true"] .goal-always-card-message { animation-delay: -6s; }
+.goal-illustration[data-active="true"] .goal-always-route {
+    stroke-dasharray: 10 6;
+    animation: goal-route-flow 2s linear infinite;
+}
+.goal-illustration[data-active="true"] .goal-always-sun {
+    transform-box: view-box;
+    transform-origin: 120px 76px;
+    animation: goal-sun-breathe 4s ease-in-out infinite;
+}
+
+.goal-illustration[data-active="true"] .goal-gap-tile { animation: goal-fill-slot 6s cubic-bezier(.22,.61,.36,1) infinite; }
+.goal-illustration[data-active="true"] .goal-gap-slot { animation: goal-empty-slot 6s ease-in-out infinite; }
+.goal-illustration[data-active="true"] .goal-gap-guide { animation: goal-gap-guide 6s ease-in-out infinite; }
+.goal-illustration[data-active="true"] .goal-gap-halo {
+    transform-box: view-box;
+    transform-origin: 130.5px 126px;
+    animation: goal-gap-confirm 6s ease-out infinite;
+}
+
+@keyframes goal-check-complete {
+    0%,8%,100% { stroke-dashoffset: 1; opacity: 0; }
+    24%,74% { stroke-dashoffset: 0; opacity: 1; }
+    92% { stroke-dashoffset: 0; opacity: 0; }
+}
+@keyframes goal-clock-tick { to { transform: rotate(360deg); } }
+@keyframes goal-route-flow { to { stroke-dashoffset: -32; } }
+@keyframes goal-delivery-pop {
+    0%,16%,100% { transform: scale(.8); opacity: .5; }
+    32% { transform: scale(1.12); opacity: 1; }
+    43%,78% { transform: scale(1); opacity: 1; }
+}
+@keyframes goal-podium-rise {
+    0%,12%,100% { transform: scaleY(.55); }
+    34% { transform: scaleY(1.06); }
+    44%,80% { transform: scaleY(1); }
+}
+@keyframes goal-winning-bid {
+    0%,12%,100% { transform: translateY(20px) scale(.98); }
+    34% { transform: translateY(-4px) scale(1.025); }
+    44%,80% { transform: translateY(0) scale(1); }
+}
+@keyframes goal-bid-pop {
+    0%,18%,100% { transform: scale(.7); }
+    36% { transform: scale(1.15); }
+    48%,80% { transform: scale(1); }
+}
+@keyframes goal-other-bids {
+    0%,12%,100% { transform: translateY(0); opacity: 1; }
+    38%,80% { transform: translateY(6px); opacity: .65; }
+}
+@keyframes goal-ad-circulation { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+@keyframes goal-sun-breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+@keyframes goal-fill-slot {
+    0%,10%,100% { transform: translate(0,0) rotate(-10deg); opacity: 1; }
+    24% { transform: translate(47px,30px) rotate(8deg); opacity: 1; }
+    42% { transform: translate(-10px,86px) rotate(0); opacity: 1; }
+    50% { transform: translate(-10px,86px) rotate(0) scale(1.045); opacity: 1; }
+    58%,78% { transform: translate(-10px,86px) rotate(0) scale(1); opacity: 1; }
+    88% { transform: translate(-10px,86px) rotate(0) scale(1); opacity: 0; }
+    89% { transform: translate(0,0) rotate(-10deg); opacity: 0; }
+}
+@keyframes goal-empty-slot { 0%,24%,100% { opacity: 1; } 42%,78% { opacity: 0; } }
+@keyframes goal-gap-guide { 0%,24%,100% { opacity: 1; } 42%,82% { opacity: 0; } }
+@keyframes goal-gap-confirm {
+    0%,39%,66%,100% { transform: scale(1); opacity: 0; }
+    46% { transform: scale(1.05); opacity: .9; }
+    64% { transform: scale(1.5); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .goal-illustration[data-active="true"] * { animation: none !important; }
+    .goal-illustration[data-active="true"] .goal-always-card { offset-path: none; }
+}

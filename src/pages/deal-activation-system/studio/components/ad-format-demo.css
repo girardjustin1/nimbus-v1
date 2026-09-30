@@ -1,0 +1,14 @@
+.ad-format-demo > svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* The exported SVG includes a phone; the product uses the shared device frame. */
+.ad-format-demo[data-device="tablet"] .demo-hardware {
+    display: none;
+}
+
+.ad-format-demo[data-paused="true"] svg * {
+    animation-play-state: paused !important;
+}

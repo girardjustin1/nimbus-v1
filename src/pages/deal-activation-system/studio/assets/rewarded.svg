@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="demo-root" viewBox="0 0 280 580" width="280" height="580" role="img" aria-labelledby="demo-title demo-description">
+  <title id="demo-title">Rewarded video ad format demo</title>
+  <desc id="demo-description">An invitation offers 100 points, a short illustrated video plays with progress, then points count into the account balance. Timing and rewards are illustrative.</desc>
+  <defs><clipPath id="demo-screen-clip"><rect x="10" y="10" width="260" height="560" rx="30"/></clipPath><clipPath id="demo-feed-clip"><rect x="0" y="97" width="260" height="416"/></clipPath></defs>
+  <style>
+  #demo-root { font-family: 'Proxima Nova', Arial, sans-serif; }
+  #demo-root .demo-feed-scroll { animation: demo-scroll 10s ease-in-out infinite; }
+  #demo-root .demo-banner-arrive { animation: demo-arrive 10s ease-in-out infinite; }
+  #demo-root .demo-placement-outline { animation: demo-outline 10s ease-in-out infinite; }
+  #demo-root .demo-interstitial-overlay { animation: demo-takeover 12s ease-in-out infinite; }
+  #demo-root .demo-close-tap { opacity: 0; transform-origin: 237px 43px; animation: demo-tap 12s ease-out infinite; }
+  #demo-root .demo-sun,
+  #demo-root .demo-arch,
+  #demo-root .demo-hill-far,
+  #demo-root .demo-hill-middle,
+  #demo-root .demo-hill-near {
+    transform-box: view-box;
+    transform-origin: 50% 100%;
+    animation-duration: 12s;
+    animation-timing-function: cubic-bezier(.22,.61,.36,1);
+    animation-iteration-count: infinite;
+    animation-fill-mode: both;
+  }
+  #demo-root .demo-sun { transform-origin: 50% 50%; animation-name: demo-journey-sun; }
+  #demo-root .demo-arch { animation-name: demo-journey-arch; }
+  #demo-root .demo-hill-far { animation-name: demo-journey-far; }
+  #demo-root .demo-hill-middle { animation-name: demo-journey-middle; }
+  #demo-root .demo-hill-near { animation-name: demo-journey-near; }
+  #demo-root .demo-scene-reset { opacity: 0; animation: demo-journey-reset 12s ease-in-out infinite; }
+  @keyframes demo-scroll { 0%,20%,100% { transform: translateY(0); } 65%,82% { transform: translateY(-72px); } }
+  @keyframes demo-arrive { 0%,100% { opacity: 0; transform: translateY(10px); } 8%,94% { opacity: 1; transform: translateY(0); } }
+  @keyframes demo-outline { 0%,15%,90%,100% { opacity: .8; } 35%,75% { opacity: .25; } }
+  @keyframes demo-takeover { 0%,3%,88%,100% { opacity: 0; transform: translateY(8px); } 10%,73% { opacity: 1; transform: translateY(0); } }
+  @keyframes demo-tap { 0%,64%,79%,100% { opacity: 0; transform: scale(.75); } 69% { opacity: 1; transform: scale(1); } 76% { opacity: 0; transform: scale(1.35); } }
+  @keyframes demo-journey-sun { 0%,8% { transform: translate(-20px,-12%) scale(.88); } 52%,100% { transform: translate(0,0) scale(1); } }
+  @keyframes demo-journey-arch { 0%,8% { transform: translate(28px,6%) scale(.9); } 52%,100% { transform: translate(0,0) scale(1); } }
+  @keyframes demo-journey-far { 0%,8% { transform: translate(-14px,-10%) scale(1.16); } 54%,100% { transform: translate(0,0) scale(1); } }
+  @keyframes demo-journey-middle { 0%,8% { transform: translate(20px,-24%) scale(1.4); } 54%,100% { transform: translate(0,0) scale(1); } }
+  @keyframes demo-journey-near { 0%,8% { transform: translate(42px,-56%) scale(1.8); } 54%,100% { transform: translate(0,0) scale(1); } }
+  @keyframes demo-journey-reset { 0%,4%,100% { opacity: 1; } 10%,92% { opacity: 0; } }
+
+  #demo-root .demo-reward-prompt { opacity: 0; animation: demo-offer 12s ease-in-out infinite; }
+  #demo-root .demo-watch-cta { transform-box: fill-box; transform-origin: center; animation: demo-cta-press 12s ease-in-out infinite; }
+  #demo-root .demo-watch-tap { opacity: 0; transform-box: fill-box; transform-origin: center; animation: demo-watch-tap 12s ease-out infinite; }
+  #demo-root .demo-rewarded-video { opacity: 0; animation: demo-video 12s ease-in-out infinite; }
+  #demo-root .demo-video-progress { transform-origin: 28px 119.5px; animation: demo-progress 12s linear infinite; }
+  #demo-root .demo-reward-complete { opacity: 1; animation: demo-complete 12s ease-in-out infinite; }
+  #demo-root .demo-reward-end-card { animation: demo-end-card 12s ease-in-out infinite; }
+  #demo-root .demo-reward-card { transform-box: fill-box; transform-origin: center; animation: demo-award-pop 12s ease-out infinite; }
+  #demo-root .demo-reward-medal { transform-box: fill-box; transform-origin: center; animation: demo-medal-pop 12s ease-out infinite; }
+  #demo-root .demo-reward-halo { opacity: 0; transform-box: fill-box; transform-origin: center; animation: demo-award-halo 12s ease-out infinite; }
+  #demo-root .demo-point-deposit { opacity: 0; transform-box: fill-box; transform-origin: center; animation: demo-deposit 12s ease-in-out infinite; }
+  #demo-root .demo-account-before { opacity: 0; animation: demo-account-before 12s step-end infinite; }
+  #demo-root .demo-account-after { opacity: 1; animation: demo-account-after 12s step-end infinite; }
+  #demo-root .demo-account-pulse { opacity: 0; animation: demo-account-pulse 12s ease-out infinite; }
+  @keyframes demo-offer { 0%,15%,100% { opacity: 1; } 20%,97% { opacity: 0; } }
+  @keyframes demo-cta-press { 0%,14%,21%,100% { transform: scale(1); } 17% { transform: scale(.95); } }
+  @keyframes demo-watch-tap { 0%,11%,22%,100% { opacity: 0; transform: scale(.65); } 16% { opacity: 1; transform: scale(1); } 21% { opacity: 0; transform: scale(1.55); } }
+  @keyframes demo-video { 0%,18%,56%,100% { opacity: 0; } 21%,51% { opacity: 1; } }
+  @keyframes demo-progress { 0%,21% { transform: scaleX(0); } 50%,100% { transform: scaleX(1); } }
+  @keyframes demo-complete { 0%,50%,91%,100% { opacity: 0; } 57%,84% { opacity: 1; } }
+  @keyframes demo-end-card { 0%,100% { opacity: 0; } 7%,94% { opacity: 1; } }
+  @keyframes demo-award-pop { 0%,54% { transform: translateY(14px) scale(.9); } 58% { transform: translateY(-2px) scale(1.025); } 61%,100% { transform: translateY(0) scale(1); } }
+  @keyframes demo-medal-pop { 0%,54% { transform: scale(.6) rotate(-14deg); } 58% { transform: scale(1.15) rotate(7deg); } 62%,100% { transform: scale(1) rotate(0); } }
+  @keyframes demo-award-halo { 0%,54%,71%,100% { opacity: 0; transform: scale(.65); } 58% { opacity: .65; transform: scale(1); } 70% { opacity: 0; transform: scale(1.75); } }
+  @keyframes demo-deposit { 0%,62%,74%,100% { opacity: 0; transform: translateY(0) scale(1); } 63% { opacity: 1; transform: translateY(0) scale(1); } 71% { opacity: 1; transform: translateY(140px) scale(.55); } 73% { opacity: 0; transform: translateY(150px) scale(.35); } }
+  @keyframes demo-account-before { 0%,74% { opacity: 1; } 75%,100% { opacity: 0; } }
+  @keyframes demo-account-after { 0%,74% { opacity: 0; } 75%,100% { opacity: 1; } }
+  @keyframes demo-account-pulse { 0%,89%,99%,100% { opacity: 0; } 93% { opacity: 1; } 98% { opacity: 0; } }
+
+  #demo-root .demo-confetti-1 { opacity: 0; transform-box: fill-box; transform-origin: center; animation: demo-confetti-1 12s ease-out infinite; }
+  @keyframes demo-confetti-1 { 0%,54%,73%,100% { opacity: 0; transform: translate(0,0) rotate(0); } 57% { opacity: 1; transform: translate(-41.6px,-35px) rotate(-25deg); } 71% { opacity: 0; transform: translate(-64px,3px) rotate(-75deg); } }
+  #demo-root .demo-confetti-2 { opacity: 0; transform-box: fill-box; transform-origin: center; animation: demo-confetti-2 12s ease-out infinite; }
+  @keyframes demo-confetti-2 { 0%,54%,73%,100% { opacity: 0; transform: translate(0,0) rotate(0); } 57% { opacity: 1; transform: translate(-44.85px,21px) rotate(0deg); } 71% { opacity: 0; transform: translate(-69px,59px) rotate(0deg); } }
+  #demo-root .demo-confetti-3 { opacity: 0; transform-box: fill-box; transform-origin: center; animation: demo-confetti-3 12s ease-out infinite; }
+  @keyframes demo-confetti-3 { 0%,54%,73%,100% { opacity: 0; transform: translate(0,0) rotate(0); } 57% { opacity: 1; transform: translate(-15.600000000000001px,-56px) rotate(-15deg); } 71% { opacity: 0; transform: translate(-24px,-18px) rotate(-45deg); } }
+  #demo-root .demo-confetti-4 { opacity: 0; transform-box: fill-box; transform-origin: center; animation: demo-confetti-4 12s ease-out infinite; }
+  @keyframes demo-confetti-4 { 0%,54%,73%,100% { opacity: 0; transform: translate(0,0) rotate(0); } 57% { opacity: 1; transform: translate(39px,-31px) rotate(28deg); } 71% { opacity: 0; transform: translate(60px,7px) rotate(84deg); } }
+  #demo-root .demo-confetti-5 { opacity: 0; transform-box: fill-box; transform-origin: center; animation: demo-confetti-5 12s ease-out infinite; }
+  @keyframes demo-confetti-5 { 0%,54%,73%,100% { opacity: 0; transform: translate(0,0) rotate(0); } 57% { opacity: 1; transform: translate(42.25px,22px) rotate(0deg); } 71% { opacity: 0; transform: translate(65px,60px) rotate(0deg); } }
+  #demo-root .demo-confetti-6 { opacity: 0; transform-box: fill-box; transform-origin: center; animation: demo-confetti-6 12s ease-out infinite; }
+  @keyframes demo-confetti-6 { 0%,54%,73%,100% { opacity: 0; transform: translate(0,0) rotate(0); } 57% { opacity: 1; transform: translate(20.150000000000002px,-53px) rotate(18deg); } 71% { opacity: 0; transform: translate(31px,-15px) rotate(54deg); } }
+  #demo-root .demo-balance-250 { opacity: 0; animation: demo-balance-250 12s step-end infinite; } @keyframes demo-balance-250 { 0%,64% { opacity: 1; } 65%,100% { opacity: 0; } }
+  #demo-root .demo-balance-275 { opacity: 0; animation: demo-balance-275 12s step-end infinite; } @keyframes demo-balance-275 { 0%,64% { opacity: 0; } 65%,67% { opacity: 1; } 68%,100% { opacity: 0; } }
+  #demo-root .demo-balance-300 { opacity: 0; animation: demo-balance-300 12s step-end infinite; } @keyframes demo-balance-300 { 0%,67% { opacity: 0; } 68%,70% { opacity: 1; } 71%,100% { opacity: 0; } }
+  #demo-root .demo-balance-325 { opacity: 0; animation: demo-balance-325 12s step-end infinite; } @keyframes demo-balance-325 { 0%,70% { opacity: 0; } 71%,73% { opacity: 1; } 74%,100% { opacity: 0; } }
+  #demo-root .demo-balance-350 { opacity: 1; animation: demo-balance-350 12s step-end infinite; } @keyframes demo-balance-350 { 0%,73% { opacity: 0; } 74%,100% { opacity: 1; } }
+  #demo-root .demo-countdown-3 { animation: demo-countdown-3 12s step-end infinite; }
+  #demo-root .demo-countdown-2 { animation: demo-countdown-2 12s step-end infinite; }
+  #demo-root .demo-countdown-1 { animation: demo-countdown-1 12s step-end infinite; }
+  #demo-root .demo-countdown-done { animation: demo-countdown-done 12s step-end infinite; }
+  @keyframes demo-countdown-3 { 0%,30% { opacity: 1; } 31%,100% { opacity: 0; } }
+  @keyframes demo-countdown-2 { 0%,30% { opacity: 0; } 31%,40% { opacity: 1; } 41%,100% { opacity: 0; } }
+  @keyframes demo-countdown-1 { 0%,40% { opacity: 0; } 41%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
+  @keyframes demo-countdown-done { 0%,49% { opacity: 0; } 50%,100% { opacity: 1; } }
+
+
+  @media (prefers-reduced-motion: reduce) { #demo-root * { animation: none !important; } }
+</style>
+  <rect class="demo-hardware" width="280" height="580" rx="40" fill="#101828"/>
+  <g clip-path="url(#demo-screen-clip)"><g transform="translate(10 10)"><rect width="260" height="560" fill="#F9F7F3"/><g><circle cx="29" cy="64" r="11" fill="#D8DCE2"/><rect x="50" y="57" width="110" height="6" rx="3" fill="#D8DCE2"/><rect x="50" y="71" width="77" height="5" rx="2.5" fill="#D8DCE2"/><circle cx="229" cy="64" r="7" fill="#EAECF0"/></g><g clip-path="url(#demo-feed-clip)"><g transform="translate(0 103)"><g ><g transform="translate(18 0)"><rect width="224" height="104" rx="12" fill="#EAECF0"/><rect x="12" y="12" width="58" height="80" rx="8" fill="#D8DCE2"/><rect x="82" y="24" width="114" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="39" width="88" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="54" width="100" height="6" rx="3" fill="#D8DCE2"/></g><g transform="translate(18 118)"><rect width="224" height="104" rx="12" fill="#EAECF0"/><rect x="12" y="12" width="58" height="80" rx="8" fill="#D8DCE2"/><rect x="82" y="24" width="114" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="39" width="88" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="54" width="100" height="6" rx="3" fill="#D8DCE2"/></g><g transform="translate(18 236)"><rect width="224" height="104" rx="12" fill="#EAECF0"/><rect x="12" y="12" width="58" height="80" rx="8" fill="#D8DCE2"/><rect x="82" y="24" width="114" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="39" width="88" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="54" width="100" height="6" rx="3" fill="#D8DCE2"/></g><g transform="translate(18 354)"><rect width="224" height="104" rx="12" fill="#EAECF0"/><rect x="12" y="12" width="58" height="80" rx="8" fill="#D8DCE2"/><rect x="82" y="24" width="114" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="39" width="88" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="54" width="100" height="6" rx="3" fill="#D8DCE2"/></g></g></g></g><g><path d="M0 517h260" stroke="#EAECF0"/><path d="m23 533 7-6 7 6v8h-5v-5h-4v5h-5Z" fill="#101828"/><g stroke="#B2B9C3" stroke-width="1.8" fill="none" stroke-linecap="round"><circle cx="81" cy="533" r="4.5"/><path d="m84.5 536.5 3 3"/><rect x="124" y="528" width="11" height="11" rx="3"/><path d="M129.5 531v5m-2.5-2.5h5"/><path d="M175 537h10l-1.5-7h-7Zm4 3h2"/><circle cx="227" cy="531" r="3"/><path d="M221 541v-2a6 6 0 0 1 12 0v2"/></g></g><rect x="45" y="47" width="118" height="35" fill="#F9F7F3"/><text x="50" y="66" font-size="11" font-weight="700" fill="#101828">Your app</text><g class="demo-account-before"><rect x="153" y="51" width="90" height="27" rx="13.5" fill="#101828"/><text x="198" y="68" text-anchor="middle" font-size="10" font-weight="700" fill="white">250 points</text></g><g class="demo-account-after"><rect x="153" y="51" width="90" height="27" rx="13.5" fill="#101828"/><text x="198" y="68" text-anchor="middle" font-size="10" font-weight="700" fill="white">350 points</text><rect class="demo-account-pulse" x="151" y="49" width="94" height="31" rx="15.5" fill="none" stroke="#DA6EA3" stroke-width="2"/></g><g class="demo-reward-prompt">
+      <rect width="260" height="560" fill="#101828" fill-opacity=".3"/>
+      <rect x="20" y="160" width="220" height="252" rx="24" fill="#F9F7F3"/>
+      <text x="130" y="188" text-anchor="middle" font-size="8" font-weight="700" letter-spacing="1.5" fill="#667085">A LITTLE WATCH. A BIG REWARD.</text>
+      <circle cx="130" cy="225" r="26" fill="#DA6EA3"/><circle cx="130" cy="225" r="20.28" fill="none" stroke="#FCE7EF" stroke-width="1.5"/><path d="m130 213.56 3.38 8.06 8.06 3.38-8.06 3.38-3.38 8.06-3.38-8.06-8.06-3.38 8.06-3.38Z" fill="white"/>
+      <text x="130" y="273" text-anchor="middle" font-size="16" font-weight="700" fill="#101828">Watch a short video</text>
+      <text x="130" y="296" text-anchor="middle" font-size="10" fill="#667085">Earn 100 points for your account</text>
+      <g class="demo-watch-cta"><rect x="40" y="319" width="180" height="36" rx="18" fill="#101828"/><text x="130" y="341" text-anchor="middle" font-size="11" font-weight="700" fill="#FFFFFF">Watch video · +100 pts</text></g>
+      <circle class="demo-watch-tap" cx="130" cy="337" r="23" fill="none" stroke="#DA6EA3" stroke-width="2"/>
+      <text x="130" y="385" text-anchor="middle" font-size="10" fill="#667085">No thanks</text>
+    </g>
+          <g class="demo-rewarded-video">
+            <svg x="0" y="0" width="260" height="560" viewBox="0 0 320 560" preserveAspectRatio="xMidYMid slice" overflow="hidden">
+      <rect width="320" height="560" fill="#FCE7EF"/>
+      <g class="demo-sun"><circle cx="110" cy="154" r="40" fill="#DA6EA3"/></g>
+      <g class="demo-arch"><path d="M216 560V290a49 49 0 0 1 98 0V560h-26.95V290a22.05 22.05 0 0 0-44.1 0V560Z" fill="#E587B7"/></g>
+      <g class="demo-hill-far"><path d="M-12 246.4C94 224 158 431.2 340 352.8V1680H-12Z" fill="#37B6B7"/></g>
+      <g class="demo-hill-middle"><path d="M-12 403.2C106 252 232 408.8 340 448V1680H-12Z" fill="#299C9F"/></g>
+      <g class="demo-hill-near"><path d="M-12 476C110 403.2 185 442.40000000000003 340 548.8V1680H-12Z" fill="#32AEB0"/></g>
+      <rect class="demo-scene-reset" width="320" height="560" fill="#32AEB0"/>
+    </svg><rect x="15" y="34" width="23" height="15" rx="4" fill="#DA6EA3"/><text x="26.5" y="45" text-anchor="middle" font-size="8" font-weight="700" fill="white">AD</text>
+            <rect x="16" y="65" width="228" height="70" rx="15" fill="#101828"/>
+            <text x="28" y="88" font-size="12" font-weight="700" fill="white">Watch &amp; earn 100 points</text>
+            <text x="28" y="107" font-size="9" fill="#D8DCE2">Your reward is on its way</text>
+            <text class="demo-countdown-3" x="232" y="107" text-anchor="end" font-size="9" font-weight="700" fill="white">3s left</text><text class="demo-countdown-2" x="232" y="107" text-anchor="end" font-size="9" font-weight="700" fill="white">2s left</text><text class="demo-countdown-1" x="232" y="107" text-anchor="end" font-size="9" font-weight="700" fill="white">1s left</text><text class="demo-countdown-done" x="232" y="107" text-anchor="end" font-size="9" font-weight="700" fill="white">Complete</text>
+            <rect x="28" y="117" width="204" height="5" rx="2.5" fill="white" fill-opacity=".2"/>
+            <rect class="demo-video-progress" x="28" y="117" width="204" height="5" rx="2.5" fill="#37B6B7"/>
+            <rect class="demo-watch-status-pill" x="38" y="462" width="184" height="36" rx="18" fill="#101828"/>
+            <text class="demo-watch-status-label" x="130" y="480" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="700" fill="white"><tspan font-size="10">▶</tspan><tspan dx="8">A quick watch. +100 pts.</tspan></text>
+          </g>
+          <g class="demo-reward-complete"><rect width="260" height="560" fill="#101828" fill-opacity=".12"/><g class="demo-reward-card">
+      <rect x="20" y="150" width="220" height="306" rx="24" fill="#F9F7F3"/>
+      <text x="130" y="184" text-anchor="middle" font-size="12" font-weight="700" fill="#101828">Reward unlocked!</text>
+      <circle class="demo-reward-halo" cx="130" cy="228" r="39" fill="none" stroke="#DA6EA3" stroke-width="2"/>
+      <g class="demo-reward-medal"><circle cx="130" cy="228" r="32" fill="#DA6EA3"/><circle cx="130" cy="228" r="24.96" fill="none" stroke="#FCE7EF" stroke-width="1.5"/><path d="m130 213.92 4.16 9.92 9.92 4.16-9.92 4.16-4.16 9.92-4.16-9.92-9.92-4.16 9.92-4.16Z" fill="white"/></g>
+      <g class="demo-confetti-1"><rect x="103" y="208" width="5" height="12" rx="2" fill="#DA6EA3"/></g>
+      <g class="demo-confetti-2"><circle cx="112" cy="231" r="3" fill="#37B6B7"/></g>
+      <g class="demo-confetti-3"><rect x="125" y="199" width="4" height="9" rx="2" fill="#37B6B7"/></g>
+      <g class="demo-confetti-4"><rect x="151" y="210" width="5" height="12" rx="2" fill="#37B6B7"/></g>
+      <g class="demo-confetti-5"><circle cx="149" cy="234" r="3" fill="#DA6EA3"/></g>
+      <g class="demo-confetti-6"><rect x="138" y="198" width="4" height="9" rx="2" fill="#DA6EA3"/></g>
+      <text x="130" y="298" text-anchor="middle" font-size="36" font-weight="700" fill="#101828">+100</text>
+      <text x="130" y="320" text-anchor="middle" font-size="11" fill="#667085">Points added to your account</text>
+      <rect x="40" y="339" width="180" height="55" rx="12" fill="#E0F2F1"/>
+      <text x="130" y="356" text-anchor="middle" font-size="7.5" font-weight="700" letter-spacing="1.2" fill="#297477">ACCOUNT BALANCE</text>
+      <text class="demo-balance-250" x="130" y="380" text-anchor="middle" font-size="18" font-weight="700" fill="#101828">250 points</text><text class="demo-balance-275" x="130" y="380" text-anchor="middle" font-size="18" font-weight="700" fill="#101828">275 points</text><text class="demo-balance-300" x="130" y="380" text-anchor="middle" font-size="18" font-weight="700" fill="#101828">300 points</text><text class="demo-balance-325" x="130" y="380" text-anchor="middle" font-size="18" font-weight="700" fill="#101828">325 points</text><text class="demo-balance-350" x="130" y="380" text-anchor="middle" font-size="18" font-weight="700" fill="#101828">350 points</text>
+      <g class="demo-point-deposit"><circle cx="130" cy="228" r="14" fill="#DA6EA3"/><circle cx="130" cy="228" r="10.92" fill="none" stroke="#FCE7EF" stroke-width="1.5"/><path d="m130 221.84 1.82 4.34 4.34 1.82-4.34 1.82-1.82 4.34-1.82-4.34-4.34-1.82 4.34-1.82Z" fill="white"/></g>
+      <rect x="40" y="408" width="180" height="36" rx="18" fill="#101828"/><text x="130" y="430" text-anchor="middle" font-size="11" font-weight="700" fill="#FFFFFF">Continue to app →</text>
+    </g></g></g></g>
+  <g class="demo-hardware"><rect x="100" y="16" width="80" height="16" rx="8" fill="#101828"/></g>
+</svg>

@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="demo-root" viewBox="0 0 280 580" width="280" height="580" role="img" aria-labelledby="demo-title demo-description">
+  <title id="demo-title">Native ad format demo</title>
+  <desc id="demo-description">A sponsored card starts below the screen, scrolls into view with the feed, reveals layered artwork, and holds before browsing continues.</desc>
+  <defs><clipPath id="demo-screen-clip"><rect x="10" y="10" width="260" height="560" rx="30"/></clipPath><clipPath id="demo-feed-clip"><rect x="0" y="97" width="260" height="416"/></clipPath></defs>
+  <style>
+  #demo-root { font-family: 'Proxima Nova', Arial, sans-serif; }
+  #demo-root .demo-feed-scroll { animation: demo-scroll 10s ease-in-out infinite; }
+  #demo-root .demo-banner-arrive { animation: demo-arrive 10s ease-in-out infinite; }
+  #demo-root .demo-placement-outline { animation: demo-outline 10s ease-in-out infinite; }
+  #demo-root .demo-interstitial-overlay { animation: demo-takeover 12s ease-in-out infinite; }
+  #demo-root .demo-close-tap { opacity: 0; transform-origin: 237px 43px; animation: demo-tap 12s ease-out infinite; }
+  #demo-root .demo-sun,
+  #demo-root .demo-arch,
+  #demo-root .demo-hill-far,
+  #demo-root .demo-hill-middle,
+  #demo-root .demo-hill-near {
+    transform-box: view-box;
+    transform-origin: 50% 100%;
+    animation-duration: 12s;
+    animation-timing-function: cubic-bezier(.22,.61,.36,1);
+    animation-iteration-count: infinite;
+    animation-fill-mode: both;
+  }
+  #demo-root .demo-sun { transform-origin: 50% 50%; animation-name: demo-journey-sun; }
+  #demo-root .demo-arch { animation-name: demo-journey-arch; }
+  #demo-root .demo-hill-far { animation-name: demo-journey-far; }
+  #demo-root .demo-hill-middle { animation-name: demo-journey-middle; }
+  #demo-root .demo-hill-near { animation-name: demo-journey-near; }
+  #demo-root .demo-scene-reset { opacity: 0; animation: demo-journey-reset 12s ease-in-out infinite; }
+  @keyframes demo-scroll { 0%,20%,100% { transform: translateY(0); } 65%,82% { transform: translateY(-72px); } }
+  @keyframes demo-arrive { 0%,100% { opacity: 0; transform: translateY(10px); } 8%,94% { opacity: 1; transform: translateY(0); } }
+  @keyframes demo-outline { 0%,15%,90%,100% { opacity: .8; } 35%,75% { opacity: .25; } }
+  @keyframes demo-takeover { 0%,3%,88%,100% { opacity: 0; transform: translateY(8px); } 10%,73% { opacity: 1; transform: translateY(0); } }
+  @keyframes demo-tap { 0%,64%,79%,100% { opacity: 0; transform: scale(.75); } 69% { opacity: 1; transform: scale(1); } 76% { opacity: 0; transform: scale(1.35); } }
+  @keyframes demo-journey-sun { 0%,8% { transform: translate(-20px,-12%) scale(.88); } 52%,100% { transform: translate(0,0) scale(1); } }
+  @keyframes demo-journey-arch { 0%,8% { transform: translate(28px,6%) scale(.9); } 52%,100% { transform: translate(0,0) scale(1); } }
+  @keyframes demo-journey-far { 0%,8% { transform: translate(-14px,-10%) scale(1.16); } 54%,100% { transform: translate(0,0) scale(1); } }
+  @keyframes demo-journey-middle { 0%,8% { transform: translate(20px,-24%) scale(1.4); } 54%,100% { transform: translate(0,0) scale(1); } }
+  @keyframes demo-journey-near { 0%,8% { transform: translate(42px,-56%) scale(1.8); } 54%,100% { transform: translate(0,0) scale(1); } }
+  @keyframes demo-journey-reset { 0%,4%,100% { opacity: 1; } 10%,92% { opacity: 0; } }
+
+
+  /* The whole feed moves, so the native card stays part of the app's content. */
+  #demo-root .demo-native-feed { transform: translateY(-352px); animation: demo-native-scroll 12s cubic-bezier(.22,.61,.36,1) infinite, demo-native-feed-fade 12s ease-in-out infinite; }
+  #demo-root .demo-native-reset-feed { opacity: 0; animation: demo-native-reset-feed 12s ease-in-out infinite; }
+  #demo-root .demo-native-card { transform-box: fill-box; transform-origin: center; animation: demo-native-card-settle 12s ease-out infinite; }
+  #demo-root .demo-native-visual { transform-box: view-box; transform-origin: 102px 64px; animation: demo-native-art-reveal 12s ease-out infinite; }
+  #demo-root .demo-native-focus-ring { opacity: .25; animation: demo-native-focus 12s ease-out infinite; }
+  #demo-root .demo-sun { animation-name: demo-native-sun; }
+  #demo-root .demo-arch { animation-name: demo-native-arch; }
+  #demo-root .demo-hill-far { animation-name: demo-native-far; }
+  #demo-root .demo-hill-middle { animation-name: demo-native-middle; }
+  #demo-root .demo-hill-near { animation-name: demo-native-near; }
+  #demo-root .demo-scene-reset { animation-name: demo-native-scene-reset; }
+  @keyframes demo-native-scroll { 0%,10%,100% { transform: translateY(0); } 29% { transform: translateY(-358px); } 32%,82% { transform: translateY(-352px); } 94%,99.99% { transform: translateY(-740px); } }
+  @keyframes demo-native-feed-fade { 0%,100% { opacity: 0; } 5%,93% { opacity: 1; } 99% { opacity: 0; } }
+  @keyframes demo-native-reset-feed { 0%,100% { opacity: 1; } 5%,93% { opacity: 0; } 99% { opacity: 1; } }
+  @keyframes demo-native-card-settle { 0%,27%,100% { transform: scale(.985); } 33% { transform: scale(1.012); } 39%,95% { transform: scale(1); } }
+  @keyframes demo-native-art-reveal { 0%,30%,100% { transform: rotate(-2deg) scale(1.12); } 40% { transform: rotate(.5deg) scale(1.035); } 50%,95% { transform: rotate(0) scale(1); } }
+  @keyframes demo-native-focus { 0%,26%,95%,100% { opacity: 0; } 34% { opacity: .9; } 49%,83% { opacity: .25; } }
+  @keyframes demo-native-sun { 0%,30% { transform: translate(-26px,38%) scale(.55); } 43% { transform: translate(4px,-3%) scale(1.08); } 51%,100% { transform: translate(0,0) scale(1); } }
+  @keyframes demo-native-arch { 0%,30% { transform: translate(32px,20%) scale(.85); } 52%,100% { transform: translate(0,0) scale(1); } }
+  @keyframes demo-native-far { 0%,30% { transform: translate(-14px,-10%) scale(1.16); } 54%,100% { transform: translate(0,0) scale(1); } }
+  @keyframes demo-native-middle { 0%,30% { transform: translate(20px,-24%) scale(1.4); } 54%,100% { transform: translate(0,0) scale(1); } }
+  @keyframes demo-native-near { 0%,30% { transform: translate(42px,-56%) scale(1.8); } 54%,100% { transform: translate(0,0) scale(1); } }
+  @keyframes demo-native-scene-reset { 0%,29%,100% { opacity: 1; } 34%,95% { opacity: 0; } }
+
+  @media (prefers-reduced-motion: reduce) { #demo-root * { animation: none !important; } }
+</style>
+  <rect class="demo-hardware" width="280" height="580" rx="40" fill="#101828"/>
+  <g clip-path="url(#demo-screen-clip)"><g transform="translate(10 10)"><rect width="260" height="560" fill="#F9F7F3"/><g><circle cx="29" cy="64" r="11" fill="#D8DCE2"/><rect x="50" y="57" width="110" height="6" rx="3" fill="#D8DCE2"/><rect x="50" y="71" width="77" height="5" rx="2.5" fill="#D8DCE2"/><circle cx="229" cy="64" r="7" fill="#EAECF0"/></g><g clip-path="url(#demo-feed-clip)"><g transform="translate(0 103)"><g ><g class="demo-native-reset-feed"><g transform="translate(18 0)"><rect width="224" height="104" rx="12" fill="#EAECF0"/><rect x="12" y="12" width="58" height="80" rx="8" fill="#D8DCE2"/><rect x="82" y="24" width="114" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="39" width="88" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="54" width="100" height="6" rx="3" fill="#D8DCE2"/></g><g transform="translate(18 118)"><rect width="224" height="104" rx="12" fill="#EAECF0"/><rect x="12" y="12" width="58" height="80" rx="8" fill="#D8DCE2"/><rect x="82" y="24" width="114" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="39" width="88" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="54" width="100" height="6" rx="3" fill="#D8DCE2"/></g><g transform="translate(18 236)"><rect width="224" height="104" rx="12" fill="#EAECF0"/><rect x="12" y="12" width="58" height="80" rx="8" fill="#D8DCE2"/><rect x="82" y="24" width="114" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="39" width="88" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="54" width="100" height="6" rx="3" fill="#D8DCE2"/></g><g transform="translate(18 354)"><rect width="224" height="66" rx="12" fill="#EAECF0"/><rect x="12" y="12" width="58" height="42" rx="8" fill="#D8DCE2"/><rect x="82" y="24" width="114" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="39" width="88" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="54" width="100" height="6" rx="3" fill="#D8DCE2"/></g></g><g class="demo-native-feed"><g transform="translate(18 0)"><rect width="224" height="104" rx="12" fill="#EAECF0"/><rect x="12" y="12" width="58" height="80" rx="8" fill="#D8DCE2"/><rect x="82" y="24" width="114" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="39" width="88" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="54" width="100" height="6" rx="3" fill="#D8DCE2"/></g><g transform="translate(18 118)"><rect width="224" height="104" rx="12" fill="#EAECF0"/><rect x="12" y="12" width="58" height="80" rx="8" fill="#D8DCE2"/><rect x="82" y="24" width="114" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="39" width="88" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="54" width="100" height="6" rx="3" fill="#D8DCE2"/></g><g transform="translate(18 236)"><rect width="224" height="104" rx="12" fill="#EAECF0"/><rect x="12" y="12" width="58" height="80" rx="8" fill="#D8DCE2"/><rect x="82" y="24" width="114" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="39" width="88" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="54" width="100" height="6" rx="3" fill="#D8DCE2"/></g><g transform="translate(18 354)"><rect width="224" height="66" rx="12" fill="#EAECF0"/><rect x="12" y="12" width="58" height="42" rx="8" fill="#D8DCE2"/><rect x="82" y="24" width="114" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="39" width="88" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="54" width="100" height="6" rx="3" fill="#D8DCE2"/></g><g transform="translate(18 434)"><g class="demo-native-card">
+      <rect width="224" height="246" rx="12" fill="#F9F7F3" stroke="#D8DCE2"/>
+      <rect x="10" y="10" width="23" height="15" rx="4" fill="#DA6EA3"/><text x="21.5" y="21" text-anchor="middle" font-size="8" font-weight="700" fill="white">AD</text><text x="40" y="21" font-size="8" fill="#667085">Sponsored</text>
+      <svg x="10" y="32" width="204" height="128" viewBox="0 0 204 128" overflow="hidden">
+        <defs><clipPath id="demo-native-art-clip"><rect width="204" height="128" rx="8"/></clipPath></defs>
+        <g clip-path="url(#demo-native-art-clip)"><g class="demo-native-visual"><svg x="0" y="0" width="204" height="128" viewBox="0 0 320 140" preserveAspectRatio="xMidYMid slice" overflow="hidden">
+      <rect width="320" height="140" fill="#FCE7EF"/>
+      <g class="demo-sun"><circle cx="132" cy="33.6" r="21" fill="#DA6EA3"/></g>
+      <g class="demo-arch"><path d="M216 140V78.4a49 49 0 0 1 98 0V140h-26.95V78.4a22.05 22.05 0 0 0-44.1 0V140Z" fill="#E587B7"/></g>
+      <g class="demo-hill-far"><path d="M-12 61.6C94 56 158 107.8 340 88.2V420H-12Z" fill="#37B6B7"/></g>
+      <g class="demo-hill-middle"><path d="M-12 100.8C106 63 232 102.2 340 112V420H-12Z" fill="#299C9F"/></g>
+      <g class="demo-hill-near"><path d="M-12 119C110 100.8 185 110.60000000000001 340 137.2V420H-12Z" fill="#32AEB0"/></g>
+      <rect class="demo-scene-reset" width="320" height="140" fill="#32AEB0"/>
+    </svg></g></g>
+      </svg>
+      <text x="10" y="181" font-size="12" font-weight="700" fill="#101828">Find your next horizon</text>
+      <text x="10" y="197" font-size="9" fill="#667085">A little inspiration for every day.</text>
+      <rect x="125" y="208" width="89" height="27" rx="13.5" fill="#101828"/>
+      <text x="169.5" y="225" text-anchor="middle" font-size="9" font-weight="700" fill="white">Learn more →</text>
+      <rect class="demo-native-focus-ring" x="-2" y="-2" width="228" height="250" rx="14" fill="none" stroke="#DA6EA3" stroke-width="1.5"/>
+    </g></g><g transform="translate(18 694)"><rect width="224" height="104" rx="12" fill="#EAECF0"/><rect x="12" y="12" width="58" height="80" rx="8" fill="#D8DCE2"/><rect x="82" y="24" width="114" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="39" width="88" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="54" width="100" height="6" rx="3" fill="#D8DCE2"/></g><g transform="translate(18 812)"><rect width="224" height="104" rx="12" fill="#EAECF0"/><rect x="12" y="12" width="58" height="80" rx="8" fill="#D8DCE2"/><rect x="82" y="24" width="114" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="39" width="88" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="54" width="100" height="6" rx="3" fill="#D8DCE2"/></g><g transform="translate(18 930)"><rect width="224" height="104" rx="12" fill="#EAECF0"/><rect x="12" y="12" width="58" height="80" rx="8" fill="#D8DCE2"/><rect x="82" y="24" width="114" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="39" width="88" height="6" rx="3" fill="#D8DCE2"/><rect x="82" y="54" width="100" height="6" rx="3" fill="#D8DCE2"/></g></g></g></g></g><g><path d="M0 517h260" stroke="#EAECF0"/><path d="m23 533 7-6 7 6v8h-5v-5h-4v5h-5Z" fill="#101828"/><g stroke="#B2B9C3" stroke-width="1.8" fill="none" stroke-linecap="round"><circle cx="81" cy="533" r="4.5"/><path d="m84.5 536.5 3 3"/><rect x="124" y="528" width="11" height="11" rx="3"/><path d="M129.5 531v5m-2.5-2.5h5"/><path d="M175 537h10l-1.5-7h-7Zm4 3h2"/><circle cx="227" cy="531" r="3"/><path d="M221 541v-2a6 6 0 0 1 12 0v2"/></g></g></g></g>
+  <g class="demo-hardware"><rect x="100" y="16" width="80" height="16" rx="8" fill="#101828"/></g>
+</svg>

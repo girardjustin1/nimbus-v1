@@ -1,6 +1,7 @@
 import { Check } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
 import { type GoalId, goals } from "../studio-data";
+import { GoalIllustration } from "./goal-illustration";
 
 /**
  * GoalTiles — the first decision, as four large visual tiles. Each tile names what the
@@ -19,20 +20,20 @@ export const GoalTiles = ({ value, onChange, invalid }: { value?: GoalId; onChan
                     onClick={() => onChange?.(g.id)}
                     className={cx(
                         "group flex flex-col overflow-hidden rounded-2xl bg-primary text-left transition-all duration-150",
-                        on ? "ring-[3px] ring-offset-2" : invalid ? "ring-1 ring-error_subtle" : "ring-1 ring-secondary hover:-translate-y-0.5 hover:shadow-lg",
+                        on ? "ring-[3px] ring-brand ring-offset-2" : invalid ? "ring-1 ring-error_subtle" : "ring-1 ring-secondary hover:-translate-y-0.5 hover:shadow-lg",
                     )}
-                    style={on ? { ["--tw-ring-color" as string]: g.art[0] } : undefined}
                 >
-                    <span className="relative flex aspect-[4/3] items-end overflow-hidden p-4" style={{ background: `linear-gradient(150deg, ${g.art[0]}, ${g.art[1]})` }}>
-                        <span className="absolute top-3 right-3 size-16 rounded-full opacity-30" style={{ background: "radial-gradient(circle, #fff, transparent 70%)" }} />
-                        <span className="absolute -bottom-6 -left-4 h-20 w-40 rotate-[-14deg] rounded-full opacity-25" style={{ background: g.art[0] }} />
-                        {g.badge && <span className="absolute top-3 left-3 rounded-md bg-black/25 px-1.5 py-0.5 text-[11px] font-semibold text-white">{g.badge}</span>}
+                    <span className="relative block w-full border-b border-secondary bg-[#F9F7F3] pt-8">
+                        <span className="block aspect-[13/8] w-full px-2">
+                            <GoalIllustration goal={g.id} active={on} />
+                        </span>
+                        {g.badge && <span className="absolute top-3 left-3 rounded-md bg-white px-2 py-1 text-[11px] font-semibold text-[#101828] ring-1 ring-[#101828]/10">{g.badge}</span>}
                         {on && (
-                            <span className="absolute top-3 right-3 flex size-6 items-center justify-center rounded-full bg-white">
-                                <Check className="size-4" style={{ color: g.art[0] }} aria-hidden="true" />
+                            <span className="absolute top-3 right-3 flex size-6 items-center justify-center rounded-full bg-[#101828] text-white">
+                                <Check className="size-4" aria-hidden="true" />
                             </span>
                         )}
-                        <span className="relative text-xl leading-tight font-bold text-white">{g.title}</span>
+                        <span className="flex h-20 items-end px-3 pb-4 text-lg leading-tight font-bold text-[#101828] sm:px-4 sm:text-xl lg:text-lg xl:text-xl">{g.title}</span>
                     </span>
                     <span className="flex flex-col gap-1 p-4">
                         <span className="text-xs font-semibold text-tertiary uppercase">Judged on</span>

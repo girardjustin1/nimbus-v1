@@ -6,6 +6,7 @@ import { Input } from "@/components/base/input/input";
 import { cx } from "@/utils/cx";
 import { KeywordChip, PINK, TEAL } from "../das-shell";
 import { AdPreview, type PreviewMoment } from "./components/ad-preview";
+import { AdFormatDemo } from "./components/ad-format-demo";
 import { BidRangeField } from "./components/bid-range-field";
 import { BudgetSchedule } from "./components/budget-schedule";
 import { CreativeFields } from "./components/creative-fields";
@@ -13,6 +14,7 @@ import { EstimatePanel } from "./components/estimate-panel";
 import { FormatPicker } from "./components/format-picker";
 import { GoalTiles } from "./components/goal-tiles";
 import { PreviewStage } from "./components/preview-stage";
+import { PreviewModePicker, type PreviewMode } from "./components/preview-mode-picker";
 import { ReviewHero, ReviewSections } from "./components/review-summary";
 import { StepRail, type StepState } from "./components/step-rail";
 import { StudioShell } from "./components/studio-shell";
@@ -244,7 +246,13 @@ export const BudgetScreen = ({ preset = sampleDraft, openCalendar }: { preset?: 
 
 export const CreativeScreen = ({ preset = sampleDraft, moment = "default" }: { preset?: StudioDraft; moment?: PreviewMoment }) => {
     const { draft: d, update, updateCreative } = useStudioDraft(preset);
-    const [m, setM] = useState<PreviewMoment>(moment);
+    const [m, setM] = useState<PreviewMoment>(() => {
+        const requested = new URLSearchParams(typeof window === "undefined" ? "" : window.location.hash.split("?")[1]).get("moment");
+        return requested === "mrec" || requested === "end-card" ? requested : moment;
+    });
+    const [previewMode, setPreviewMode] = useState<PreviewMode>(() =>
+        typeof window !== "undefined" && /[?&]demo=0\b/.test(window.location.hash) ? "creative" : "demo",
+    );
     const moments: { id: PreviewMoment; label: string }[] =
         d.format === "banner"
             ? [
@@ -257,6 +265,7 @@ export const CreativeScreen = ({ preset = sampleDraft, moment = "default" }: { p
                     { id: "end-card", label: "End card" },
                 ]
               : [];
+    const effectiveMoment = moments.some((x) => x.id === m) ? m : "default";
     return (
         <StudioShell
             title="New deal campaign"
@@ -266,32 +275,49 @@ export const CreativeScreen = ({ preset = sampleDraft, moment = "default" }: { p
             aside={
                 <div className="flex flex-col items-center gap-3">
                     <div className="flex w-full items-center justify-between">
-                        <span className="text-sm font-semibold text-primary">Live preview</span>
-                        <a href={stepHref("preview")} className="inline-flex items-center gap-1 text-sm font-semibold" style={{ color: PINK }}>
+                        <span className="text-sm font-semibold text-primary">{previewMode === "demo" ? "App experience" : "Live preview"}</span>
+                        <a
+                            href={`${stepHref("preview")}&demo=${previewMode === "demo" ? "1" : "0"}&from=creative&moment=${effectiveMoment}`}
+                            className="inline-flex items-center gap-1 text-sm font-semibold"
+                            style={{ color: PINK }}
+                        >
                             <Eye className="size-4" aria-hidden="true" /> Full screen
                         </a>
                     </div>
+                    <PreviewModePicker value={previewMode} onChange={setPreviewMode} />
                     {moments.length > 0 && (
                         <div className="flex gap-1 rounded-full bg-secondary p-1 text-xs font-semibold">
                             {moments.map((x) => (
-                                <button key={x.id} type="button" aria-pressed={m === x.id} onClick={() => setM(x.id)} className={cx("rounded-full px-3 py-1", m === x.id ? "bg-primary text-primary shadow-xs" : "text-tertiary")}>
+                                <button
+                                    key={x.id}
+                                    type="button"
+                                    aria-pressed={m === x.id}
+                                    onClick={() => setM(x.id)}
+                                    className={cx("rounded-full px-3 py-1", m === x.id ? "bg-primary text-primary shadow-xs" : "text-tertiary")}
+                                >
                                     {x.label}
                                 </button>
                             ))}
                         </div>
                     )}
-                    <AdPreview format={d.format} creative={d.creative} moment={moments.some((x) => x.id === m) ? m : "default"} scale={1.1} />
-                    <span className="text-xs text-tertiary">Updates as you type</span>
+                    {previewMode === "demo" ? (
+                        <AdFormatDemo key={d.format} format={d.format} moment={effectiveMoment} scale={1.05} fitViewport />
+                    ) : (
+                        <AdPreview format={d.format} creative={d.creative} moment={effectiveMoment} scale={1.05} />
+                    )}
+                    <span className="max-w-[300px] text-center text-xs text-tertiary">
+                        {previewMode === "demo" ? "Illustrated example · placement and timing vary by app." : "Updates as you type"}
+                    </span>
                 </div>
             }
             backHref={stepHref(prev("creative"))}
             nextHref={stepHref(next("creative"))}
             footerNote="Step 5 of 6"
         >
-            <Heading title="Build the creative" description="What you add here is exactly what renders on the right, in a real app screen." />
+            <Heading title="Build the creative" description="Explore how each format appears in an app, or preview your creative as you build it." />
             <div className="flex flex-col gap-4">
                 <Card title="Format">
-                    <FormatPicker value={d.format} onChange={(format) => update({ format })} />
+                    <FormatPicker value={d.format} onChange={(format) => { update({ format }); setM("default"); }} />
                 </Card>
                 <Card>
                     <CreativeFields format={d.format} value={d.creative} onChange={updateCreative} />
@@ -348,9 +374,32 @@ export const ReviewScreen = ({ preset = sampleDraft, attempted = false }: { pres
 
 /* =============================================================== Preview === */
 
-export const PreviewScreen = ({ preset = sampleDraft, device = "phone", moment = 0, status = "ready" }: { preset?: StudioDraft; device?: "phone" | "tablet"; moment?: number; status?: "processing" | "ready" }) => {
+export const PreviewScreen = ({
+    preset = sampleDraft,
+    device = "phone",
+    moment = 0,
+    status = "ready",
+}: {
+    preset?: StudioDraft;
+    device?: "phone" | "tablet";
+    moment?: number;
+    status?: "processing" | "ready";
+}) => {
     const { draft: d } = useStudioDraft(preset);
-    return <PreviewStage format={d.format} creative={d.creative} title={d.campaignName || "Untitled campaign"} initialDevice={device} initialMoment={moment} status={status} closeHref={stepHref("review")} />;
+    const params = new URLSearchParams(typeof window === "undefined" ? "" : window.location.hash.split("?")[1]);
+    const previewMoment = params.get("moment");
+    return (
+        <PreviewStage
+            format={d.format}
+            creative={d.creative}
+            title={d.campaignName || "Untitled campaign"}
+            initialDevice={device}
+            initialMoment={previewMoment === "mrec" || previewMoment === "end-card" ? 1 : moment}
+            initialMode={params.get("demo") === "1" ? "demo" : "creative"}
+            status={status}
+            closeHref={stepHref(params.get("from") === "creative" ? "creative" : "review")}
+        />
+    );
 };
 
 /* ============================================================= Published === */

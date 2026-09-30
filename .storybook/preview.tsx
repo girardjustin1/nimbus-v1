@@ -15,6 +15,9 @@ const preview: Preview = {
                     // 1) Styles / foundations
                     "Styles",
                     ["Color", "Typography", "Icons", "Elevation", "Shape", "Logos"],
+                    // Shared SVG illustrations and animated consumer ad previews.
+                    "Imagery",
+                    ["Assets", ["Goal Illustrations", "Ad Formats"]],
                     // 2) Base components (flat — no sub-folders)
                     "Base Components",
                     // 3) Application UI (complex components) — nav first
