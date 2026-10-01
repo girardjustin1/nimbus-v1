@@ -79,7 +79,7 @@ const HostApp = ({ children, bottom }: { children?: ReactNode; bottom?: ReactNod
     <div className="flex h-full flex-col bg-white text-[#101828]">
         <div className="flex items-center justify-between px-4 pt-7 pb-2">
             <span className="flex items-center gap-1.5 text-[13px] font-bold">
-                <Sun className="size-4 text-[#37B6B7]" aria-hidden="true" /> Pocket Garden
+                <Sun className="size-4 text-[#37B6B7]" aria-hidden="true" /> Sample App
             </span>
             <SearchLg className="size-4 text-[#667085]" aria-hidden="true" />
         </div>

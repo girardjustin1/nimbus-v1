@@ -1,5 +1,5 @@
 import { type KeyboardEvent, type ReactNode, useEffect, useState } from "react";
-import { AlertTriangle, BookOpen01, CheckCircle, Plus, SearchLg } from "@untitledui/icons";
+import { AlertTriangle, BookOpen01, CheckCircle, Plus, SearchLg, XClose } from "@untitledui/icons";
 import type { Selection } from "react-aria-components";
 import { Button } from "@/components/base/buttons/button";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
@@ -49,8 +49,25 @@ export const MatchLogicField = ({ value, onChange, count }: { value: MatchLogic;
  * last chip. Keywords are stored lower-case (matching is case-insensitive). Chips that
  * aren't in the library or haven't been seen in traffic get a warning.
  */
-export const KeywordChipInput = ({ initial = [] as string[], onCountChange }: { initial?: string[]; onCountChange?: (count: number) => void }) => {
-    const [values, setValues] = useState<string[]>(initial);
+export const KeywordChipInput = ({
+    initial = [] as string[],
+    onCountChange,
+    value,
+    onChange,
+}: {
+    initial?: string[];
+    onCountChange?: (count: number) => void;
+    /** Controlled mode — the campaign form owns the keywords. */
+    value?: string[];
+    onChange?: (values: string[]) => void;
+}) => {
+    const [own, setOwn] = useState<string[]>(initial);
+    const values = value ?? own;
+    const setValues = (next: string[] | ((prev: string[]) => string[])) => {
+        const resolved = typeof next === "function" ? next(values) : next;
+        if (onChange) onChange(resolved);
+        else setOwn(resolved);
+    };
     const [draft, setDraft] = useState("");
     useEffect(() => onCountChange?.(values.length), [values.length, onCountChange]);
 
@@ -112,14 +129,28 @@ export const KeywordChipInput = ({ initial = [] as string[], onCountChange }: { 
     );
 };
 
-/** Ad Unit Type — checkbox cards, one or more. */
-export const AdUnitTypeField = ({ initial = ["Interstitial"] as AdUnitType[] }) => {
-    const [selected, setSelected] = useState<AdUnitType[]>(initial);
-    const toggle = (id: AdUnitType) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+/** Ad Unit — which publisher placement the campaign targets. Staging calls this "Ad Unit";
+ * it is NOT staging's "Ad Type", which is how a creative is encoded (HTML / VAST (xml)). */
+export const AdUnitTypeField = ({
+    initial = ["Interstitial"] as AdUnitType[],
+    value,
+    onChange,
+}: {
+    initial?: AdUnitType[];
+    /** Controlled mode — the campaign form owns the selection. */
+    value?: AdUnitType[];
+    onChange?: (v: AdUnitType[]) => void;
+}) => {
+    const [own, setOwn] = useState<AdUnitType[]>(initial);
+    const selected = value ?? own;
+    const toggle = (id: AdUnitType) => {
+        const next = selected.includes(id) ? selected.filter((x) => x !== id) : [...selected, id];
+        if (onChange) onChange(next);
+        else setOwn(next);
+    };
     return (
         <div className="flex flex-col gap-2">
-            <span className="text-sm font-medium text-secondary">Ad unit type</span>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
                 {adUnitTypes.map((unit) => {
                     const isOn = selected.includes(unit.id);
                     return (
@@ -151,8 +182,22 @@ export const AdUnitTypeField = ({ initial = ["Interstitial"] as AdUnitType[] }) 
 };
 
 /** Device Language — ISO 639-1 multi-select; empty means all languages. */
-export const DeviceLanguageField = ({ initial = ["en"] }: { initial?: string[] }) => {
-    const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set(initial));
+export const DeviceLanguageField = ({
+    initial = ["en"],
+    value,
+    onChange,
+}: {
+    initial?: string[];
+    /** Controlled mode — the campaign form owns the selection. */
+    value?: string[];
+    onChange?: (v: string[]) => void;
+}) => {
+    const [own, setOwn] = useState<Selection>(new Set(initial));
+    const selectedKeys: Selection = value ? new Set(value) : own;
+    const setSelectedKeys = (next: Selection) => {
+        if (onChange) onChange(next === "all" ? languages.map((l) => l.id) : [...next].map(String));
+        else setOwn(next);
+    };
     const count = selectedKeys === "all" ? languages.length : selectedKeys.size;
     return (
         <div className="flex max-w-md flex-col gap-1.5">
@@ -181,39 +226,133 @@ export const DeviceLanguageField = ({ initial = ["en"] }: { initial?: string[] }
 
 /* ---------------------------------------------------- Existing targets --- */
 
-export const ExistingTargets = () => (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="flex flex-col gap-2">
-            <span className="text-sm font-medium text-secondary">Geos</span>
-            <div className="flex flex-wrap gap-1.5">
-                {["United States", "Canada"].map((g) => (
-                    <span key={g} className="rounded-md bg-secondary px-2 py-1 text-sm text-secondary">
-                        {g}
+/** A short, obviously-sample country list — enough to show the search working. */
+const GEOS = [
+    "United States",
+    "Canada",
+    "Mexico",
+    "United Kingdom",
+    "Ireland",
+    "France",
+    "Germany",
+    "Spain",
+    "Italy",
+    "Netherlands",
+    "Sweden",
+    "Japan",
+    "Australia",
+    "New Zealand",
+    "Brazil",
+    "India",
+];
+
+/**
+ * Type to filter, click to add, × to remove. No overlay — the point of building this
+ * was to prove the picker survives the one-page layout, which a modal would dodge.
+ */
+export const ChipPicker = ({
+    label,
+    options,
+    value,
+    onChange,
+    placeholder,
+}: {
+    label: string;
+    options: string[];
+    value: string[];
+    onChange: (v: string[]) => void;
+    placeholder: string;
+}) => {
+    const [query, setQuery] = useState("");
+    const q = query.trim().toLowerCase();
+    const matches = q ? options.filter((o) => o.toLowerCase().includes(q) && !value.includes(o)).slice(0, 6) : [];
+    const add = (o: string) => {
+        onChange([...value, o]);
+        setQuery("");
+    };
+    return (
+        <div className="flex flex-col gap-1.5">
+            <div className="flex min-h-11 flex-wrap items-center gap-1.5 rounded-lg bg-primary px-3 py-2 shadow-xs ring-1 ring-primary ring-inset focus-within:ring-2 focus-within:ring-brand">
+                {value.map((v) => (
+                    <span key={v} className="inline-flex items-center gap-1 rounded-md py-0.5 pr-1 pl-2 text-sm" style={{ color: "#1F7F80", backgroundColor: `${TEAL}24` }}>
+                        {v}
+                        <button type="button" aria-label={`Remove ${v}`} onClick={() => onChange(value.filter((x) => x !== v))} className="rounded p-0.5 hover:bg-black/5">
+                            <XClose className="size-3" aria-hidden="true" />
+                        </button>
                     </span>
                 ))}
-                <PinkAction>Edit</PinkAction>
+                <input
+                    aria-label={label}
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter" && matches.length) {
+                            e.preventDefault();
+                            add(matches[0]);
+                        }
+                    }}
+                    placeholder={value.length ? "" : placeholder}
+                    className="min-w-32 flex-1 bg-transparent text-sm text-primary outline-none placeholder:text-placeholder"
+                />
             </div>
+            {matches.length > 0 && (
+                <ul className="flex flex-col overflow-hidden rounded-lg bg-primary shadow-lg ring-1 ring-secondary">
+                    {matches.map((m) => (
+                        <li key={m}>
+                            <button type="button" onClick={() => add(m)} className="w-full px-3 py-2 text-left text-sm text-secondary hover:bg-primary_hover">
+                                {m}
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            )}
+            <p className="text-sm text-tertiary">
+                {value.length === 0 ? "Not Specified — includes everyone." : `${value.length} of ${options.length} selected`}
+                {value.length > 0 && (
+                    <>
+                        {" · "}
+                        <button type="button" onClick={() => onChange([])} className="font-semibold" style={{ color: PINK }}>
+                            Clear all
+                        </button>
+                    </>
+                )}
+            </p>
         </div>
-        <div className="flex flex-col gap-2">
-            <span className="text-sm font-medium text-secondary">Platform</span>
-            <div className="flex gap-6">
-                <Checkbox size="sm" label="iOS" defaultSelected />
-                <Checkbox size="sm" label="Android" defaultSelected />
+    );
+};
+
+/**
+ * Geos, Platform and Apps as three peer modules — the Oct 1 review asked for these to sit
+ * at the same level as Keywords and Ad Unit rather than as loose rows above them.
+ */
+export const ExistingTargets = ({ empty = false }: { empty?: boolean }) => {
+    const [geos, setGeos] = useState<string[]>(empty ? [] : ["United States", "Canada"]);
+    const [platforms, setPlatforms] = useState<string[]>(empty ? [] : ["iOS", "Android"]);
+    const [appList, setAppList] = useState<string[]>(empty ? [] : apps.slice(0, 2));
+    const togglePlatform = (p: string) => setPlatforms((prev) => (prev.includes(p) ? prev.filter((x) => x !== p) : [...prev, p]));
+    const card = "flex flex-col gap-4 rounded-xl p-5 ring-1 ring-secondary";
+    return (
+        <>
+            <div className={card}>
+                <h3 className="text-lg font-semibold text-primary">Geos</h3>
+                <ChipPicker label="Geos" options={GEOS} value={geos} onChange={setGeos} placeholder="Search countries…" />
             </div>
-        </div>
-        <div className="flex flex-col gap-2">
-            <span className="text-sm font-medium text-secondary">Apps</span>
-            <div className="flex flex-wrap gap-1.5">
-                {apps.slice(0, 2).map((a) => (
-                    <span key={a} className="rounded-md bg-secondary px-2 py-1 text-sm text-secondary">
-                        {a}
-                    </span>
-                ))}
-                <PinkAction>Edit</PinkAction>
+            <div className={card}>
+                <h3 className="text-lg font-semibold text-primary">Platform</h3>
+                <div className="flex gap-6">
+                    {["iOS", "Android"].map((p) => (
+                        <Checkbox key={p} size="sm" label={p} isSelected={platforms.includes(p)} onChange={() => togglePlatform(p)} />
+                    ))}
+                </div>
+                <p className="text-sm text-tertiary">{platforms.length === 0 ? "Not Specified — includes every platform." : `${platforms.join(", ")}`}</p>
             </div>
-        </div>
-    </div>
-);
+            <div className={card}>
+                <h3 className="text-lg font-semibold text-primary">Apps</h3>
+                <ChipPicker label="Apps" options={apps} value={appList} onChange={setAppList} placeholder="Search apps…" />
+            </div>
+        </>
+    );
+};
 
 /* =========================================================== Concept A === */
 
@@ -422,7 +561,7 @@ export const AudienceSentence = () => (
     >
         <Section title="Who sees this campaign" description="Tap any highlighted part to change it.">
             <p className="max-w-3xl text-display-xs leading-[1.6] text-primary">
-                Serve to people using <Token>Pocket Garden (iOS)</Token> or <Token>Pocket Garden (Android)</Token> in <Token>United States</Token> or{" "}
+                Serve to people using <Token>Sample App (iOS)</Token> or <Token>Sample App (Android)</Token> in <Token>United States</Token> or{" "}
                 <Token>Canada</Token>, whose app sends <Token tone="pink">any</Token> of <Token>sports</Token>,<Token>power-user</Token>, on{" "}
                 <Token>Interstitial</Token> units, with a device language of <Token>English</Token>.
             </p>

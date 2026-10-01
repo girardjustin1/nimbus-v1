@@ -25,7 +25,7 @@ import { readHashParams } from "./route";
 const justPublished: Campaign = {
     id: "new",
     dealId: "D-10482",
-    dealName: "Summit Sportswear — Fall Launch",
+    dealName: "Test Deal — Fall Launch",
     name: `Sports fans · Interstitial (${shortDay(nextMonth().start).split(" ")[0]})`,
     status: "Scheduled",
     rule: "CPM Priority",
@@ -269,9 +269,9 @@ const EmptyDelivery = ({ c }: { c: Campaign }) => (
 
 const VIEW_SECTIONS = [
     { id: "v-delivery", title: "Delivery" },
-    { id: "v-deal", title: "Deal & campaign" },
+    { id: "v-deal", title: "General" },
     { id: "v-rules", title: "Auction rules" },
-    { id: "v-budget", title: "Budget & flight" },
+    { id: "v-budget", title: "Budget" },
     { id: "v-targeting", title: "Targeting" },
     { id: "v-creative", title: "Creative" },
 ];
@@ -314,7 +314,7 @@ export const ViewOnePage = ({ id = "c1", published = false }: { id?: string; pub
                             </>
                         )}
                     </Section>
-                    <Section id="v-deal" title="Deal & campaign" trailing={<EditLink />}>
+                    <Section id="v-deal" title="General" trailing={<EditLink />}>
                         <dl className="divide-y divide-secondary">
                             <Row label="Deal">
                                 {c.dealName} · {c.dealId}
@@ -328,9 +328,9 @@ export const ViewOnePage = ({ id = "c1", published = false }: { id?: string; pub
                             <Row label="Priority">Even distribution</Row>
                         </dl>
                     </Section>
-                    <Section id="v-budget" title="Budget & flight" trailing={<EditLink />}>
+                    <Section id="v-budget" title="Budget" trailing={<EditLink />}>
                         <dl className="divide-y divide-secondary">
-                            {c.rule !== "Fallback" && <Row label="Total budget">{usd(c.budget)}</Row>}
+                            {c.rule !== "Fallback" && <Row label="Budget">{usd(c.budget)}</Row>}
                             {c.rule !== "Fallback" && <Row label="eCPM (bid)">{usd(c.ecpm, 2)}</Row>}
                             <Row label="Flight">
                                 {c.start} 00:00 – {c.end} 23:59 (UTC)
@@ -344,8 +344,7 @@ export const ViewOnePage = ({ id = "c1", published = false }: { id?: string; pub
                             <Row label="Keywords">
                                 <Keywords c={c} />
                             </Row>
-                            <Row label="Ad unit types">{c.adUnits.join(", ")}</Row>
-                            <Row label="Device language">{c.languages.length ? c.languages.join(", ") : "Any"}</Row>
+                            <Row label="Ad Unit">{c.adUnits.join(", ") || "All units"}</Row>
                         </dl>
                     </Section>
                     <Section id="v-creative" title="Creative" trailing={<EditLink />}>
@@ -648,7 +647,7 @@ export const ViewPerformance = ({ id = "c3" }: { id?: string }) => {
                             ) : (
                                 <p className="text-sm text-tertiary">No keyword targeting on this campaign.</p>
                             )}
-                            <p className="text-xs text-tertiary">{c.match === "ALL" ? "ALL match: every impression carried every keyword. Shares show which keyword was listed first." : "ANY match: an impression counts under the first keyword it matched."}</p>
+                            <p className="text-xs text-tertiary">{"An impression counts under the first keyword it matched."}</p>
                             <PinkAction>Export by keyword (CSV)</PinkAction>
                         </div>
                     </div>

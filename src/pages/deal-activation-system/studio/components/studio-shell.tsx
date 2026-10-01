@@ -11,7 +11,7 @@ import { TEAL } from "../../das-shell";
  */
 export const StudioShell = ({
     title,
-    account = "Pocket Garden Media",
+    account = "Test Publisher",
     rail,
     aside,
     children,

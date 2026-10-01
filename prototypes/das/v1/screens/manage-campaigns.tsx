@@ -352,8 +352,7 @@ const compareFields: { label: string; get: (c: Campaign) => ReactNode; key: (c: 
     { label: "Flight", get: (c) => `${c.start} – ${c.end}`, key: (c) => c.start + c.end },
     { label: "Geos", get: (c) => c.geos, key: (c) => c.geos },
     { label: "Platform", get: (c) => c.platforms, key: (c) => c.platforms },
-    { label: "Ad unit type", get: (c) => c.adUnits.join(", "), key: (c) => c.adUnits.join() },
-    { label: "Device language", get: (c) => c.languages.join(", ") || "All", key: (c) => c.languages.join() },
+    { label: "Ad Unit", get: (c) => c.adUnits.join(", ") || "All units", key: (c) => c.adUnits.join() },
     {
         label: "Keywords",
         get: (c) => (

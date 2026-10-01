@@ -412,7 +412,7 @@ export const SmartTable = ({
                     <div className="flex flex-col gap-1">
                         <p className="text-md font-semibold text-primary">You haven't saved a query yet</p>
                         <p className="text-sm text-secondary">
-                            Save any query from New Query and it lands here with its date range, owner and latest numbers. These four are picked for Pocket Garden Media to get you started.
+                            Save any query from New Query and it lands here with its date range, owner and latest numbers. These four are picked for Test Publisher to get you started.
                         </p>
                     </div>
                 </div>
@@ -832,7 +832,7 @@ export const Cards = ({ type = "All", whyFor, dismissed }: CardsProps) => {
             </div>
 
             {section("Pinned", pinned)}
-            {section("Recommended for you", recs, "Based on what Pocket Garden Media looks at most")}
+            {section("Recommended for you", recs, "Based on what Test Publisher looks at most")}
             {section("Your saved queries", rest)}
             {!pinned.length && !recs.length && !rest.length && (
                 <EmptyBlock
@@ -1188,7 +1188,7 @@ export const SplitPreview = ({ initialId = "exec", loading = false, share = fals
                             <div className="flex flex-col gap-2 text-sm">
                                 <span className="font-medium text-secondary">Who can open it</span>
                                 {[
-                                    { label: "Everyone at Pocket Garden Media", on: true },
+                                    { label: "Everyone at Test Publisher", on: true },
                                     { label: "Only people I add", on: false },
                                 ].map((o) => (
                                     <span key={o.label} className="flex items-center gap-2 text-secondary">

@@ -39,9 +39,9 @@ const rules: { id: AuctionRule; hint: string }[] = [
 ];
 
 const deals = [
-    { id: "D-10482", label: "Summit Sportswear — Fall Launch", supportingText: "D-10482" },
-    { id: "D-10517", label: "Harvest Brewing — 21+", supportingText: "D-10517" },
-    { id: "D-10533", label: "GreenThumb Supply", supportingText: "D-10533" },
+    { id: "D-10482", label: "Test Deal — Fall Launch", supportingText: "D-10482" },
+    { id: "D-10517", label: "Test Deal — 21+", supportingText: "D-10517" },
+    { id: "D-10533", label: "Test Deal — Garden", supportingText: "D-10533" },
 ];
 
 /* ------------------------------------------------------------ Sections --- */
@@ -185,9 +185,9 @@ const TargetingSection = () => {
 };
 
 const creatives = [
-    { name: "Summit_FallLaunch_Interstitial_A", type: "HTML", size: "Full screen" },
-    { name: "Summit_FallLaunch_Interstitial_B", type: "HTML", size: "Full screen" },
-    { name: "Summit_FallLaunch_Video_15s", type: "VAST", size: "N/A" },
+    { name: "SampleApp_Interstitial_A", type: "HTML", size: "Full screen" },
+    { name: "SampleApp_Interstitial_B", type: "HTML", size: "Full screen" },
+    { name: "SampleApp_Video_15s", type: "VAST", size: "N/A" },
 ];
 
 const CreativeSection = ({ state }: { state: SetupState }) => {
@@ -301,7 +301,7 @@ const SummaryRail = ({ state, rule }: { state: SetupState; rule: AuctionRule }) 
             )}
 
             <div className="divide-y divide-secondary border-y border-secondary">
-                <SummaryRow label="Deal">Summit Sportswear — Fall Launch</SummaryRow>
+                <SummaryRow label="Deal">Test Deal — Fall Launch</SummaryRow>
                 <SummaryRow label="Rule">{rule}</SummaryRow>
                 {rule !== "Fallback" && (
                     <SummaryRow label="Budget · eCPM">{state === "errors" ? <span className="text-error-primary">—</span> : "$25,000"} · $8.50</SummaryRow>

@@ -422,7 +422,7 @@ export const AudienceSentence = () => (
     >
         <Section title="Who sees this campaign" description="Tap any highlighted part to change it.">
             <p className="max-w-3xl text-display-xs leading-[1.6] text-primary">
-                Serve to people using <Token>Pocket Garden (iOS)</Token> or <Token>Pocket Garden (Android)</Token> in <Token>United States</Token> or{" "}
+                Serve to people using <Token>Sample App (iOS)</Token> or <Token>Sample App (Android)</Token> in <Token>United States</Token> or{" "}
                 <Token>Canada</Token>, whose app sends <Token tone="pink">any</Token> of <Token>sports</Token>,<Token>power-user</Token>, on{" "}
                 <Token>Interstitial</Token> units, with a device language of <Token>English</Token>.
             </p>

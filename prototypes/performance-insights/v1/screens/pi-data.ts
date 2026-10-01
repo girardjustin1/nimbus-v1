@@ -40,7 +40,7 @@ export const weeks = ["Aug 24", "Aug 31", "Sep 7", "Sep 14"];
 
 export const pivot: { app: string; values: number[]; children: { source: string; values: number[] }[] }[] = [
     {
-        app: "Pocket Garden (iOS)",
+        app: "Sample App (iOS)",
         values: [24180, 25960, 27410, 28840],
         children: [
             { source: "Nimbus+", values: [11020, 11890, 12640, 13380] },
@@ -50,7 +50,7 @@ export const pivot: { app: string; values: number[]; children: { source: string;
             { source: "APS", values: [1250, 1380, 1480, 1580] },
         ],
     },
-    { app: "Pocket Garden (Android)", values: [15320, 15880, 16410, 16020], children: [] },
+    { app: "Sample App (Android)", values: [15320, 15880, 16410, 16020], children: [] },
     { app: "Trail Tracker (iOS)", values: [8740, 9120, 9610, 10230], children: [] },
     { app: "Trail Tracker (Android)", values: [5210, 5090, 5340, 5460], children: [] },
     { app: "Daily Scores", values: [2980, 3350, 3720, 4080], children: [] },

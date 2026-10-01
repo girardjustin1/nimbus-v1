@@ -1,16 +1,37 @@
 import { type ReactNode, useEffect, useState } from "react";
-import type { CalendarDate, Time } from "@internationalized/date";
+import type { CalendarDate } from "@internationalized/date";
 import { AlertCircle, CheckCircle, Circle, CurrencyDollar, FilePlus02, InfoCircle, SearchLg, XClose } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
 import { RadioButton, RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
 import { Select } from "@/components/base/select/select";
-import { END_OF_DAY, START_OF_DAY, nextMonth, todayDate } from "@/pages/deal-activation-system/dates";
+import { END_OF_DAY, START_OF_DAY } from "@/pages/deal-activation-system/dates";
 import { DateTimePicker } from "@/pages/deal-activation-system/round-1-components/datetime-picker";
 import { cx } from "@/utils/cx";
-import type { AuctionRule, MatchLogic } from "./das-data";
+import { currentFillMode, useRegisterPageFill } from "../../../shared/demo-fill";
+import { Fillable } from "../../../shared/demo-fill-ui";
+import type { AuctionRule } from "./das-data";
 import { DasShell, JumpLink, NewFieldBadge, PINK, PinkAction, Section, TEAL } from "./das-shell";
-import { AdUnitTypeField, DeviceLanguageField, ExistingTargets, KeywordChipInput, MatchLogicField } from "./keyword-targeting";
+import { AdUnitTypeField, ExistingTargets, KeywordChipInput } from "./keyword-targeting";
+import {
+    type Issue,
+    SECTIONS,
+    type SectionId,
+    type SetupForm,
+    type SetupPreset,
+    allPresets,
+    deals,
+    fill,
+    fillAll,
+    flightDays,
+    library,
+    rules,
+    spoilAll,
+    started,
+    TODAY,
+    validate,
+} from "./setup-data";
+import { stepHref, useSetupDraft } from "./setup-store";
 
 /**
  * Deal Activation System → Campaign Setup, one page.
@@ -20,176 +41,14 @@ import { AdUnitTypeField, DeviceLanguageField, ExistingTargets, KeywordChipInput
  * scrolling form. Review isn't a page any more: a sticky summary rail tracks what's
  * left, and Publish validates on press — every problem is flagged in place, in the
  * "On this page" rail and in a banner that links to each one.
+ *
+ * Demo fill: every empty text field is clickable and populates itself, and the toolbar
+ * fills the whole page. The walkthrough strip at the top carries the draft from one step
+ * to the next. Both are prototype chrome — see prototypes/shared/demo-fill.ts.
  */
 
-const SECTIONS = [
-    { id: "deal", title: "Deal & campaign" },
-    { id: "rules", title: "Auction rules" },
-    { id: "budget", title: "Budget & flight" },
-    { id: "targeting", title: "Targeting" },
-    { id: "creative", title: "Creative" },
-] as const;
-
-type SectionId = (typeof SECTIONS)[number]["id"];
-
-const rules: { id: AuctionRule; hint: string }[] = [
-    { id: "Guaranteed", hint: "Prioritize this campaign over open-marketplace (OMP) auctions." },
-    { id: "CPM Priority", hint: "Compare this campaign's eCPM to the winning OMP bid and serve whichever is higher." },
-    { id: "Always-on CPM Priority", hint: "Like CPM Priority, always competing. The eCPM is the selling value, not a floor." },
-    { id: "Fallback", hint: "Serve only when OMP has no fill. No budget or eCPM." },
-];
-
-const deals = [
-    { id: "D-10482", label: "Summit Sportswear — Fall Launch", supportingText: "D-10482" },
-    { id: "D-10517", label: "Harvest Brewing — 21+", supportingText: "D-10517" },
-    { id: "D-10533", label: "GreenThumb Supply", supportingText: "D-10533" },
-];
-
-interface Creative {
-    name: string;
-    type: "HTML" | "VAST";
-    size: string;
-}
-
-const library: Creative[] = [
-    { name: "Summit_FallLaunch_Interstitial_A", type: "HTML", size: "Full screen" },
-    { name: "Summit_FallLaunch_Interstitial_B", type: "HTML", size: "Full screen" },
-    { name: "Summit_FallLaunch_Video_15s", type: "VAST", size: "N/A" },
-    { name: "Summit_FallLaunch_Interstitial_C", type: "HTML", size: "Full screen" },
-];
-
-/** Today is the real date; sample flights run next month so they never go stale. */
-const TODAY = todayDate();
-const FLIGHT = nextMonth();
-
-/* ----------------------------------------------------------------- Form --- */
-
-interface SetupForm {
-    dealId?: string;
-    name: string;
-    rule?: AuctionRule;
-    budget: string;
-    ecpm: string;
-    start?: CalendarDate;
-    end?: CalendarDate;
-    /** Start and end times (UTC); default to the whole day. */
-    startTime?: Time;
-    endTime?: Time;
-    /** Keywords the chip input starts with; the live count is tracked separately. */
-    keywords: string[];
-    creatives: Creative[];
-}
-
-
-const presets = {
-    ready: {
-        dealId: "D-10482",
-        name: "Sports fans · Interstitial",
-        rule: "CPM Priority",
-        budget: "25,000.00",
-        ecpm: "8.50",
-        start: FLIGHT.start,
-        end: FLIGHT.end,
-        keywords: ["sports", "power-user"],
-        creatives: library.slice(0, 2),
-    },
-    errors: {
-        dealId: "D-10482",
-        name: "Sports fans · Interstitial",
-        rule: "CPM Priority",
-        budget: "",
-        ecpm: "8.50",
-        start: FLIGHT.start,
-        end: FLIGHT.end,
-        keywords: ["sports", "power-user"],
-        creatives: library.slice(0, 3),
-    },
-    fallback: {
-        dealId: "D-10482",
-        name: "Fallback · Sports fans",
-        rule: "Fallback",
-        budget: "",
-        ecpm: "",
-        start: FLIGHT.start,
-        end: undefined,
-        keywords: ["sports"],
-        creatives: [],
-    },
-    datesInvalid: {
-        dealId: "D-10482",
-        name: "Sports fans · Interstitial",
-        rule: "CPM Priority",
-        budget: "25,000.00",
-        ecpm: "8.50",
-        start: FLIGHT.start.add({ days: 14 }),
-        end: FLIGHT.start.add({ days: 9 }),
-        keywords: ["sports", "power-user"],
-        creatives: library.slice(0, 2),
-    },
-    empty: { name: "", budget: "", ecpm: "", keywords: [], creatives: [] },
-} satisfies Record<string, SetupForm>;
-
-/* Step-by-step progress through the form (empty → ready), and edge cases where exactly
-   one thing is wrong on an otherwise complete form. */
-const ready = presets.ready as SetupForm;
-const stepPresets = {
-    stepDeal: { ...presets.empty, dealId: ready.dealId, name: ready.name },
-    stepRules: { ...presets.empty, dealId: ready.dealId, name: ready.name, rule: ready.rule },
-    stepBudget: { ...ready, keywords: [], creatives: [] },
-    stepTargeting: { ...ready, creatives: [] },
-    noName: { ...ready, name: "" },
-    noBudget: { ...ready, budget: "" },
-    noKeywords: { ...ready, keywords: [] },
-    noCreative: { ...ready, creatives: [] },
-    mixedCreative: { ...ready, creatives: library.slice(0, 3) },
-    fallbackReady: { ...ready, name: "Fallback · Sports fans", rule: "Fallback", budget: "", ecpm: "", creatives: library.slice(0, 2) },
-} satisfies Record<string, SetupForm>;
-
-const allPresets: Record<string, SetupForm> = { ...presets, ...stepPresets };
-
-export type SetupPreset = keyof typeof presets | keyof typeof stepPresets;
-
-interface Issue {
-    section: SectionId;
-    field: string;
-    text: string;
-}
-
-const validate = (f: SetupForm): Issue[] => {
-    const issues: Issue[] = [];
-    if (!f.dealId) issues.push({ section: "deal", field: "deal", text: "Choose a deal" });
-    if (!f.name.trim()) issues.push({ section: "deal", field: "name", text: "Name the campaign" });
-    if (!f.rule) issues.push({ section: "rules", field: "rule", text: "Pick an auction rule" });
-    if (f.rule && f.rule !== "Fallback") {
-        if (!f.budget.trim()) issues.push({ section: "budget", field: "budget", text: "Budget is required" });
-        if (!f.ecpm.trim()) issues.push({ section: "budget", field: "ecpm", text: "eCPM is required" });
-    }
-    const startAt = f.start && { d: f.start, t: f.startTime ?? START_OF_DAY };
-    const endAt = f.end && { d: f.end, t: f.endTime ?? END_OF_DAY };
-    if (!startAt) issues.push({ section: "budget", field: "start", text: "Pick a start date and time" });
-    else if (startAt.d.compare(TODAY) < 0) issues.push({ section: "budget", field: "start", text: "Start is in the past" });
-    if (!endAt) issues.push({ section: "budget", field: "end", text: "Pick an end date and time" });
-    else if (startAt && (endAt.d.compare(startAt.d) < 0 || (endAt.d.compare(startAt.d) === 0 && endAt.t.compare(startAt.t) <= 0)))
-        issues.push({ section: "budget", field: "end", text: "End is before the start" });
-    if (!f.creatives.length) issues.push({ section: "creative", field: "creatives", text: "Add at least one creative" });
-    else if (new Set(f.creatives.map((c) => c.type)).size > 1) issues.push({ section: "creative", field: "creatives", text: "Creatives mix HTML and VAST" });
-    return issues;
-};
-
-/** A section is "started" once any of its inputs has a value — drives the empty-state rail. */
-const started = (f: SetupForm, s: SectionId, keywordCount: number) =>
-    s === "deal"
-        ? Boolean(f.dealId || f.name)
-        : s === "rules"
-          ? Boolean(f.rule)
-          : s === "budget"
-            ? Boolean(f.budget || f.ecpm || f.start || f.end)
-            : s === "targeting"
-              ? keywordCount > 0
-              : f.creatives.length > 0;
-
-type FieldError = (field: string) => string | undefined;
-type Setter = (p: Partial<SetupForm>) => void;
+export type FieldError = (field: string) => string | undefined;
+export type Setter = (p: Partial<SetupForm>) => void;
 
 /* ------------------------------------------------------------ Sections --- */
 
@@ -199,51 +58,62 @@ const FieldMessage = ({ children }: { children: ReactNode }) => (
     </p>
 );
 
-const DealSection = ({ form, set, error }: { form: SetupForm; set: Setter; error: FieldError }) => {
+export const DealSection = ({ form, set, error }: { form: SetupForm; set: Setter; error: FieldError }) => {
     const [mode, setMode] = useState("existing");
     return (
-        <Section id="deal" title="Deal & campaign" description="Campaigns nest under a deal. Budgets belong to the campaign, not the deal.">
+        <Section id="deal" title="General" description="Campaigns nest under a deal. Budgets belong to the campaign, not the deal.">
             <RadioGroup size="sm" value={mode} onChange={setMode} className="gap-4" aria-label="Deal">
                 <RadioButton value="generate" label="New deal, generate ID" />
                 <RadioButton value="create" label="New deal, custom ID" />
                 <div className="flex flex-col gap-3 lg:flex-row lg:items-start">
                     <RadioButton value="existing" label="Add to existing deal" className="lg:mt-2.5 lg:w-52" />
-                    <Select
-                        aria-label="Existing deal"
-                        placeholder="Choose a deal"
-                        items={deals}
-                        selectedKey={form.dealId ?? null}
-                        onSelectionChange={(k) => set({ dealId: k ? String(k) : undefined })}
-                        isDisabled={mode !== "existing"}
-                        isInvalid={Boolean(error("deal"))}
-                        hint={error("deal")}
-                        className="flex-1"
-                    >
-                        {(item) => (
-                            <Select.Item id={item.id} supportingText={item.supportingText}>
-                                {item.label}
-                            </Select.Item>
-                        )}
-                    </Select>
+                    <div className="flex-1">
+                        <Fillable filled={Boolean(form.dealId)} onFill={() => set({ dealId: fill.dealId() })}>
+                            <Select
+                                aria-label="Existing deal"
+                                placeholder="Choose a deal"
+                                items={deals}
+                                selectedKey={form.dealId ?? null}
+                                onSelectionChange={(k) => set({ dealId: k ? String(k) : undefined })}
+                                isDisabled={mode !== "existing"}
+                                isInvalid={Boolean(error("deal"))}
+                                hint={error("deal")}
+                            >
+                                {(item) => (
+                                    <Select.Item id={item.id} supportingText={item.supportingText}>
+                                        {item.label}
+                                    </Select.Item>
+                                )}
+                            </Select>
+                        </Fillable>
+                    </div>
                 </div>
             </RadioGroup>
-            <Input
-                label="Campaign name"
-                size="md"
-                placeholder="e.g. Sports fans · Interstitial"
-                value={form.name}
-                onChange={(name) => set({ name })}
-                isRequired
-                isInvalid={Boolean(error("name"))}
-                hint={error("name")}
-            />
+            <Fillable filled={Boolean(form.name)} onFill={() => set({ name: fill.name() })}>
+                <Input
+                    label="Campaign Name"
+                    size="md"
+                    placeholder="e.g. Sports fans · Interstitial"
+                    value={form.name}
+                    onChange={(name) => set({ name })}
+                    isRequired
+                    isInvalid={Boolean(error("name"))}
+                    hint={error("name")}
+                />
+            </Fillable>
         </Section>
     );
 };
 
-const RulesSection = ({ form, set, error }: { form: SetupForm; set: Setter; error: FieldError }) => (
-    <Section id="rules" title="Auction rules" description="How this campaign competes with open-marketplace auctions.">
-        <RadioGroup size="sm" value={form.rule ?? null} onChange={(v) => set({ rule: v as AuctionRule })} className="grid grid-cols-1 gap-3 md:grid-cols-2" aria-label="Auction rule">
+export const RulesSection = ({ form, set, error }: { form: SetupForm; set: Setter; error: FieldError }) => (
+    <Section id="rules" title="Auction Rules" description="How this campaign competes with open-marketplace auctions.">
+        <RadioGroup
+            size="sm"
+            value={form.rule ?? null}
+            onChange={(v) => set({ rule: v as AuctionRule })}
+            className="grid grid-cols-1 gap-3 md:grid-cols-2"
+            aria-label="Auction rule"
+        >
             {rules.map((r) => (
                 <div
                     key={r.id}
@@ -256,7 +126,7 @@ const RulesSection = ({ form, set, error }: { form: SetupForm; set: Setter; erro
         </RadioGroup>
         {error("rule") && <FieldMessage>{error("rule")}</FieldMessage>}
         <Select
-            label="Priority vs. other live campaigns"
+            label="Priority"
             items={[
                 { id: "even", label: "Even distribution (default)" },
                 { id: "1", label: "1 — highest" },
@@ -271,8 +141,6 @@ const RulesSection = ({ form, set, error }: { form: SetupForm; set: Setter; erro
     </Section>
 );
 
-const flightDays = (f: SetupForm) => (f.start && f.end && f.end.compare(f.start) >= 0 ? f.end.compare(f.start) + 1 : undefined);
-
 /** Start and end as date & time pickers (bold date, muted time), in UTC. */
 const FlightDates = ({ form, set, error, calendarOpen }: { form: SetupForm; set: Setter; error: FieldError; calendarOpen?: boolean }) => {
     const days = flightDays(form);
@@ -284,17 +152,23 @@ const FlightDates = ({ form, set, error, calendarOpen }: { form: SetupForm; set:
                 <span className="text-sm font-medium text-secondary">
                     {isStart ? "Start" : "End"} <span className="text-brand-tertiary">*</span>
                 </span>
-                <DateTimePicker
-                    label={isStart ? "Start" : "End"}
-                    value={{ date: form[which], time: (isStart ? form.startTime : form.endTime) ?? (isStart ? START_OF_DAY : END_OF_DAY) }}
-                    onChange={(v) => set(isStart ? { start: v.date, startTime: v.time } : { end: v.date, endTime: v.time })}
-                    minValue={isStart ? TODAY : (form.start ?? TODAY)}
-                    today={TODAY}
-                    notBefore={!isStart && form.start ? { date: form.start, time: form.startTime ?? START_OF_DAY } : undefined}
-                    invalid={Boolean(err)}
-                    defaultOpen={calendarOpen && isStart}
-                    placeholder={isStart ? "Select start" : "Select end"}
-                />
+                <Fillable
+                    filled={Boolean(form[which])}
+                    onFill={() => set(isStart ? { start: fill.start() } : { end: fill.end() })}
+                    hint={isStart ? "Click to fill" : "Click to fill"}
+                >
+                    <DateTimePicker
+                        label={isStart ? "Start" : "End"}
+                        value={{ date: form[which], time: (isStart ? form.startTime : form.endTime) ?? (isStart ? START_OF_DAY : END_OF_DAY) }}
+                        onChange={(v) => set(isStart ? { start: v.date, startTime: v.time } : { end: v.date, endTime: v.time })}
+                        minValue={isStart ? TODAY : (form.start ?? TODAY)}
+                        today={TODAY}
+                        notBefore={!isStart && form.start ? { date: form.start, time: form.startTime ?? START_OF_DAY } : undefined}
+                        invalid={Boolean(err)}
+                        defaultOpen={calendarOpen && isStart}
+                        placeholder={isStart ? "Select start" : "Select end"}
+                    />
+                </Fillable>
                 {err && <span className="text-sm text-error-primary">{err}</span>}
             </div>
         );
@@ -312,11 +186,11 @@ const FlightDates = ({ form, set, error, calendarOpen }: { form: SetupForm; set:
     );
 };
 
-const BudgetSection = ({ form, set, error, calendarOpen }: { form: SetupForm; set: Setter; error: FieldError; calendarOpen?: boolean }) => {
+export const BudgetSection = ({ form, set, error, calendarOpen }: { form: SetupForm; set: Setter; error: FieldError; calendarOpen?: boolean }) => {
     const flight = <FlightDates form={form} set={set} error={error} calendarOpen={calendarOpen} />;
     if (form.rule === "Fallback") {
         return (
-            <Section id="budget" title="Budget & flight">
+            <Section id="budget" title="Budget">
                 <p className="flex items-center gap-2 text-sm text-tertiary">
                     <InfoCircle className="size-4" aria-hidden="true" /> Fallback campaigns have no budget or eCPM. Set the flight dates only.
                 </p>
@@ -325,63 +199,76 @@ const BudgetSection = ({ form, set, error, calendarOpen }: { form: SetupForm; se
         );
     }
     return (
-        <Section id="budget" title="Budget & flight" description="Pacing is front-loaded hourly: up to 1/24th of the daily budget spends at the start of each hour.">
+        <Section id="budget" title="Budget" description="Pacing is front-loaded hourly: up to 1/24th of the daily budget spends at the start of each hour.">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <Input
-                    label="Total budget"
-                    size="md"
-                    icon={CurrencyDollar}
-                    placeholder="0.00"
-                    value={form.budget}
-                    onChange={(budget) => set({ budget })}
-                    isRequired
-                    isInvalid={Boolean(error("budget"))}
-                    hint={error("budget")}
-                />
-                <Input
-                    label="eCPM (bid amount)"
-                    size="md"
-                    icon={CurrencyDollar}
-                    placeholder="0.00"
-                    value={form.ecpm}
-                    onChange={(ecpm) => set({ ecpm })}
-                    isRequired
-                    isInvalid={Boolean(error("ecpm"))}
-                    hint={error("ecpm") ?? "Selling value, not a floor."}
-                />
-                <Input label="Daily impression cap" size="md" placeholder="No cap" hint="Optional" />
+                <Fillable filled={Boolean(form.budget)} onFill={() => set({ budget: fill.budget() })}>
+                    <Input
+                        label="Budget"
+                        size="md"
+                        icon={CurrencyDollar}
+                        placeholder="0.00"
+                        value={form.budget}
+                        onChange={(budget) => set({ budget })}
+                        isRequired
+                        isInvalid={Boolean(error("budget"))}
+                        hint={error("budget")}
+                    />
+                </Fillable>
+                <Fillable filled={Boolean(form.ecpm)} onFill={() => set({ ecpm: fill.ecpm() })}>
+                    <Input
+                        label="Bid Amount (eCPM)"
+                        size="md"
+                        icon={CurrencyDollar}
+                        placeholder="0.00"
+                        value={form.ecpm}
+                        onChange={(ecpm) => set({ ecpm })}
+                        isRequired
+                        isInvalid={Boolean(error("ecpm"))}
+                        hint={error("ecpm") ?? "Selling value, not a floor."}
+                    />
+                </Fillable>
+                <Input label="Daily Impression Cap" size="md" placeholder="No cap" hint="Optional" />
             </div>
             {flight}
         </Section>
     );
 };
 
-const TargetingSection = ({ form, empty, keywordCount, setKeywordCount }: { form: SetupForm; empty: boolean; keywordCount: number; setKeywordCount: (n: number) => void }) => {
-    const [match, setMatch] = useState<MatchLogic>("ANY");
-    return (
-        <Section id="targeting" title="Targeting" description="Leave a target empty to include everyone.">
-            {!empty && <ExistingTargets />}
-            <div className="flex flex-col gap-5 rounded-xl p-5 ring-1 ring-secondary">
-                <div className="flex items-center gap-2">
-                    <h3 className="text-lg font-semibold text-primary">Keywords</h3>
-                    <NewFieldBadge />
-                </div>
-                <KeywordChipInput initial={form.keywords} onCountChange={setKeywordCount} />
-                <MatchLogicField value={match} onChange={setMatch} count={keywordCount} />
-            </div>
-            <div className="flex flex-col gap-5 rounded-xl p-5 ring-1 ring-secondary">
-                <div className="flex items-center gap-2">
-                    <h3 className="text-lg font-semibold text-primary">Standard targets</h3>
-                    <NewFieldBadge />
-                </div>
-                <AdUnitTypeField initial={empty ? [] : ["Interstitial"]} />
-                <DeviceLanguageField initial={empty ? [] : ["en"]} />
-            </div>
-        </Section>
-    );
-};
+/**
+ * One module per thing you can target on, all at the same level.
+ *
+ * Previously Geos / Platform / Apps were loose rows while Keywords and "Standard targets"
+ * were cards, which made them read as different tiers. They aren't. "Standard targets"
+ * was our invention and is gone; Device language and Match logic are gone too — neither
+ * is in the charter, and matching is exact.
+ */
+const TargetModule = ({ title, added, children }: { title: string; added?: boolean; children: ReactNode }) => (
+    <div className="flex flex-col gap-4 rounded-xl p-5 ring-1 ring-secondary">
+        <div className="flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-primary">{title}</h3>
+            {added && <NewFieldBadge />}
+        </div>
+        {children}
+    </div>
+);
 
-const CreativeSection = ({ form, set, error }: { form: SetupForm; set: Setter; error: FieldError }) => {
+export const TargetingSection = ({ form, set, empty }: { form: SetupForm; set: Setter; empty: boolean }) => (
+    <Section id="targeting" title="Targeting" description="Leave a target empty to include everyone.">
+        <div className="flex flex-col gap-4">
+            <ExistingTargets empty={empty} />
+            <TargetModule title="Ad Unit">
+                <AdUnitTypeField value={form.adUnits} onChange={(adUnits) => set({ adUnits })} />
+            </TargetModule>
+            <TargetModule title="Keywords" added>
+                <Fillable filled={form.keywords.length > 0} onFill={() => set({ keywords: fill.keywords() })}>
+                    <KeywordChipInput value={form.keywords} onChange={(keywords) => set({ keywords })} />
+                </Fillable>
+            </TargetModule>
+        </div>
+    </Section>
+);
+
+export const CreativeSection = ({ form, set, error }: { form: SetupForm; set: Setter; error: FieldError }) => {
     const rows = form.creatives;
     const mixed = new Set(rows.map((c) => c.type)).size > 1;
     const next = library.find((c) => !rows.includes(c) && c.type === "HTML");
@@ -394,23 +281,40 @@ const CreativeSection = ({ form, set, error }: { form: SetupForm; set: Setter; e
             trailing={<PinkAction>Upload new asset</PinkAction>}
         >
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <Input aria-label="Search assets" size="md" icon={SearchLg} placeholder="Search your asset library" wrapperClassName="flex-1" />
+                <Input aria-label="Search assets" size="md" icon={SearchLg} placeholder="Search assets" wrapperClassName="flex-1" />
                 <Button color="primary-pink" className="uppercase" isDisabled={!next} onClick={() => next && set({ creatives: [...rows, next] })}>
                     Add
                 </Button>
             </div>
             {rows.length === 0 ? (
-                <div className={cx("flex flex-col items-center gap-2 rounded-xl border border-dashed px-6 py-8 text-center", err ? "border-error_subtle" : "border-secondary")} style={err ? { backgroundColor: `${PINK}0a` } : undefined}>
-                    <FilePlus02 className="size-6 text-fg-quaternary" aria-hidden="true" />
-                    <p className="text-sm font-semibold text-primary">No creatives yet</p>
-                    <p className="max-w-sm text-sm text-tertiary">Search your asset library above, or upload a new asset. HTML and VAST can't be mixed in one campaign.</p>
-                </div>
+                <Fillable filled={false} onFill={() => set({ creatives: fill.creatives() })} hint="Click to add creatives">
+                    <div
+                        className={cx(
+                            "flex flex-col items-center gap-2 rounded-xl border border-dashed px-6 py-8 text-center",
+                            err ? "border-error_subtle" : "border-secondary",
+                        )}
+                        style={err ? { backgroundColor: `${PINK}0a` } : undefined}
+                    >
+                        <FilePlus02 className="size-6 text-fg-quaternary" aria-hidden="true" />
+                        <p className="text-sm font-semibold text-primary">No creatives yet</p>
+                        <p className="max-w-sm text-sm text-tertiary">
+                            Search your asset library above, or upload a new asset. HTML and VAST can't be mixed in one campaign.
+                        </p>
+                    </div>
+                </Fillable>
             ) : (
                 <div className="overflow-hidden rounded-xl ring-1 ring-secondary">
                     {rows.map((c, i) => {
-                        const bad = mixed && c.type === "VAST";
+                        const bad = mixed && c.type === "VAST (xml)";
                         return (
-                            <div key={c.name} className={cx("flex items-center gap-4 border-b border-secondary px-4 py-3 last:border-b-0", i % 2 === 1 && "bg-secondary/40", bad && "bg-error-primary")}>
+                            <div
+                                key={c.name}
+                                className={cx(
+                                    "flex items-center gap-4 border-b border-secondary px-4 py-3 last:border-b-0",
+                                    i % 2 === 1 && "bg-secondary/40",
+                                    bad && "bg-error-primary",
+                                )}
+                            >
                                 <span className="min-w-0 flex-1 truncate text-sm font-medium text-secondary">{c.name}</span>
                                 <span className={cx("w-20 text-sm", bad ? "font-semibold text-error-primary" : "text-tertiary")}>{c.type}</span>
                                 <span className="hidden w-28 text-sm text-tertiary sm:block">{c.size}</span>
@@ -422,7 +326,7 @@ const CreativeSection = ({ form, set, error }: { form: SetupForm; set: Setter; e
                     })}
                 </div>
             )}
-            {err && <FieldMessage>{err === "Creatives mix HTML and VAST" ? "Mixed creative types. Remove the VAST creative, or publish it as a duplicate campaign." : err}</FieldMessage>}
+            {err && <FieldMessage>{err === "Creatives mix HTML and VAST (xml)" ? "Mixed creative types. Remove the VAST creative, or publish it as a duplicate campaign." : err}</FieldMessage>}
             <details className="rounded-xl bg-secondary/50 px-4 py-3 text-sm text-secondary">
                 <summary className="cursor-pointer font-semibold text-primary">Creative requirements</summary>
                 <ul className="mt-2 list-disc space-y-1 pl-5">
@@ -446,27 +350,28 @@ const SummaryRow = ({ label, children }: { label: string; children: ReactNode })
 
 const Missing = () => <span className="text-quaternary">—</span>;
 
-const fmtDate = (c?: CalendarDate) => (c ? new Date(Date.UTC(c.year, c.month - 1, c.day)).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" }) : undefined);
+const fmtDate = (c?: CalendarDate) =>
+    c ? new Date(Date.UTC(c.year, c.month - 1, c.day)).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" }) : undefined;
 
-interface ProgressProps {
+export interface ProgressProps {
     form: SetupForm;
     issues: Issue[];
     attempted: boolean;
-    keywordCount: number;
 }
 
-const sectionState = ({ form, issues, attempted, keywordCount }: ProgressProps, s: SectionId) => {
+const sectionState = ({ form, issues, attempted }: ProgressProps, s: SectionId) => {
     const bad = issues.some((x) => x.section === s);
-    const blank = SECTIONS.every((x) => !started(form, x.id, keywordCount));
-    const isStarted = started(form, s, keywordCount) || (s === "targeting" && !blank && form.creatives.length > 0);
+    const blank = SECTIONS.every((x) => !started(form, x.id));
+    const isStarted = started(form, s) || (s === "targeting" && !blank && form.creatives.length > 0);
     return bad && attempted ? "error" : bad || !isStarted ? "todo" : "done";
 };
 
-const SummaryRail = (props: ProgressProps & { onPublish: () => void }) => {
-    const { form, issues, attempted, keywordCount, onPublish } = props;
-    const blank = SECTIONS.every((s) => !started(form, s.id, keywordCount));
+export const SummaryRail = (props: ProgressProps & { onPublish: () => void }) => {
+    const { form, issues, attempted, onPublish } = props;
+    const blank = SECTIONS.every((s) => !started(form, s.id));
     const done = SECTIONS.filter((s) => sectionState(props, s.id) === "done").length;
     const deal = deals.find((x) => x.id === form.dealId);
+    const keywordCount = form.keywords.length;
 
     return (
         <aside className="flex flex-col gap-5 rounded-2xl bg-primary p-5 shadow-sm ring-1 ring-secondary xl:sticky xl:top-14">
@@ -480,7 +385,14 @@ const SummaryRail = (props: ProgressProps & { onPublish: () => void }) => {
                 <div className="flex gap-1">
                     {SECTIONS.map((s) => {
                         const st = sectionState(props, s.id);
-                        return <span key={s.id} className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: st === "error" ? PINK : st === "done" ? TEAL : "#EAECF0" }} title={s.title} />;
+                        return (
+                            <span
+                                key={s.id}
+                                className="h-1.5 flex-1 rounded-full"
+                                style={{ backgroundColor: st === "error" ? PINK : st === "done" ? TEAL : "#EAECF0" }}
+                                title={s.title}
+                            />
+                        );
                     })}
                 </div>
             </div>
@@ -490,7 +402,7 @@ const SummaryRail = (props: ProgressProps & { onPublish: () => void }) => {
                     <p className="font-semibold text-primary">Your summary builds here</p>
                     <p className="text-tertiary">As you fill in the form, each choice shows up below and the checklist tells you what's left. Start with the deal.</p>
                     <JumpLink to="deal" className="font-semibold" style={{ color: PINK }}>
-                        Start with Deal &amp; campaign →
+                        Start with General →
                     </JumpLink>
                 </div>
             ) : issues.length > 0 ? (
@@ -501,10 +413,17 @@ const SummaryRail = (props: ProgressProps & { onPublish: () => void }) => {
                             <li key={issue.field + issue.text}>
                                 <JumpLink
                                     to={issue.section}
-                                    className={cx("flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors", attempted ? "text-error-primary" : "bg-secondary/60 text-secondary hover:bg-primary_hover")}
+                                    className={cx(
+                                        "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                                        attempted ? "text-error-primary" : "bg-secondary/60 text-secondary hover:bg-primary_hover",
+                                    )}
                                     style={attempted ? { backgroundColor: `${PINK}14` } : undefined}
                                 >
-                                    {attempted ? <AlertCircle className="size-4 shrink-0" aria-hidden="true" /> : <Circle className="size-4 shrink-0 text-fg-quaternary" aria-hidden="true" />}
+                                    {attempted ? (
+                                        <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
+                                    ) : (
+                                        <Circle className="size-4 shrink-0 text-fg-quaternary" aria-hidden="true" />
+                                    )}
                                     {issue.text}
                                 </JumpLink>
                             </li>
@@ -525,10 +444,16 @@ const SummaryRail = (props: ProgressProps & { onPublish: () => void }) => {
                         {form.budget ? `$${form.budget.replace(/\.00$/, "")}` : <Missing />} · {form.ecpm ? `$${form.ecpm}` : <Missing />}
                     </SummaryRow>
                 )}
-                {form.rule && form.rule !== "Fallback" && form.budget && form.ecpm && flightDays(form) && <SummaryRow label="Est. delivery">≈ 2.9M impressions · $806/day</SummaryRow>}
+                {form.rule && form.rule !== "Fallback" && form.budget && form.ecpm && flightDays(form) && (
+                    <SummaryRow label="Est. delivery">≈ 2.9M impressions · $806/day</SummaryRow>
+                )}
                 <SummaryRow label="Flight">{form.start || form.end ? `${fmtDate(form.start) ?? "?"} – ${fmtDate(form.end) ?? "?"} (UTC)` : <Missing />}</SummaryRow>
-                <SummaryRow label="Keywords">{keywordCount ? `${keywordCount} · ANY match` : <span className="text-tertiary">Everyone</span>}</SummaryRow>
-                <SummaryRow label="Creatives">{form.creatives.length ? `${form.creatives.length} × ${[...new Set(form.creatives.map((c) => c.type))].join(" + ")}` : <Missing />}</SummaryRow>
+                <SummaryRow label="Keywords">
+                    {keywordCount ? `${keywordCount} keyword${keywordCount === 1 ? "" : "s"}` : <span className="text-tertiary">Not Specified</span>}
+                </SummaryRow>
+                <SummaryRow label="Creatives">
+                    {form.creatives.length ? `${form.creatives.length} × ${[...new Set(form.creatives.map((c) => c.type))].join(" + ")}` : <Missing />}
+                </SummaryRow>
             </div>
 
             <div className="flex flex-col gap-2">
@@ -550,8 +475,8 @@ const SummaryRail = (props: ProgressProps & { onPublish: () => void }) => {
 /* ------------------------------------------------------------ Section nav --- */
 
 const SectionNav = ({ current, ...props }: ProgressProps & { current?: SectionId }) => {
-    const { form, issues, attempted, keywordCount } = props;
-    const blank = SECTIONS.every((s) => !started(form, s.id, keywordCount));
+    const { form, issues, attempted } = props;
+    const blank = SECTIONS.every((s) => !started(form, s.id));
     return (
         <nav aria-label="Form sections" className="hidden flex-col gap-1 xl:sticky xl:top-14 xl:flex xl:self-start">
             <span className="mb-2 px-3 text-xs font-semibold text-tertiary uppercase">On this page</span>
@@ -582,11 +507,7 @@ const SectionNav = ({ current, ...props }: ProgressProps & { current?: SectionId
                         )}
                         <span className="flex flex-col">
                             {s.title}
-                            {state === "error" && (
-                                <span className="text-xs font-normal">
-                                    {count} to fix
-                                </span>
-                            )}
+                            {state === "error" && <span className="text-xs font-normal">{count} to fix</span>}
                             {s.id === "targeting" && state === "todo" && <span className="text-xs font-normal">Optional</span>}
                         </span>
                     </JumpLink>
@@ -594,6 +515,64 @@ const SectionNav = ({ current, ...props }: ProgressProps & { current?: SectionId
             })}
             {blank && !attempted && <p className="mt-3 rounded-lg bg-secondary px-3 py-2.5 text-xs text-tertiary">Nothing filled in yet. Sections tick off as you complete them.</p>}
         </nav>
+    );
+};
+
+/* ------------------------------------------------------ Walkthrough strip --- */
+
+/**
+ * Prototype chrome, not product UI. The screens below are one page in the product; this
+ * strip is how a demo steps through the states of it while keeping what was filled in.
+ */
+const WALKTHROUGH: { id: string; label: string }[] = [
+    { id: "setup-empty", label: "Empty" },
+    { id: "step-deal", label: "Deal" },
+    { id: "step-rules", label: "Rules" },
+    { id: "step-budget", label: "Budget" },
+    { id: "step-targeting", label: "Targeting" },
+    { id: "step-creative", label: "Creative" },
+    { id: "setup-ready", label: "Ready" },
+];
+
+const WalkthroughStrip = ({ screenId }: { screenId?: string }) => {
+    const i = WALKTHROUGH.findIndex((s) => s.id === screenId);
+    if (i < 0) return null;
+    const prev = WALKTHROUGH[i - 1];
+    const next = WALKTHROUGH[i + 1];
+    return (
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-xl border border-dashed px-4 py-2.5" style={{ borderColor: `${PINK}66`, backgroundColor: `${PINK}08` }}>
+            <span className="text-xs font-bold tracking-wide uppercase" style={{ color: PINK }}>
+                Walkthrough
+            </span>
+            <ol className="flex flex-wrap items-center gap-1">
+                {WALKTHROUGH.map((s, j) => (
+                    <li key={s.id}>
+                        <a
+                            href={stepHref(s.id)}
+                            className={cx("rounded-md px-2 py-1 text-xs font-semibold transition-colors", j === i ? "text-white" : "text-tertiary hover:bg-primary")}
+                            style={j === i ? { backgroundColor: PINK } : undefined}
+                        >
+                            {j + 1}. {s.label}
+                        </a>
+                    </li>
+                ))}
+            </ol>
+            <div className="ml-auto flex items-center gap-2">
+                {prev && (
+                    <a href={stepHref(prev.id)} className="rounded-md px-2.5 py-1 text-xs font-semibold text-secondary ring-1 ring-secondary hover:bg-primary">
+                        ← {prev.label}
+                    </a>
+                )}
+                {next && (
+                    <a href={stepHref(next.id)} className="rounded-md px-2.5 py-1 text-xs font-semibold text-white" style={{ backgroundColor: PINK }}>
+                        {next.label} →
+                    </a>
+                )}
+            </div>
+            <p className="w-full text-xs text-tertiary">
+                Keeps what you've filled in. The toolbar screen picker and the index start each screen fresh instead.
+            </p>
+        </div>
     );
 };
 
@@ -607,16 +586,25 @@ export interface CampaignSetupOnePageProps {
     calendarOpen?: boolean;
     /** Section to scroll to and mark as current on load (step-by-step walkthrough). */
     focus?: SectionId;
+    /** Screen id, so the walkthrough strip knows where it is. */
+    screenId?: string;
 }
 
-export const CampaignSetupOnePage = ({ preset = "ready", attempted: initialAttempted = false, calendarOpen, focus }: CampaignSetupOnePageProps) => {
-    const [form, setForm] = useState<SetupForm>(allPresets[preset]);
+export const CampaignSetupOnePage = ({ preset = "ready", attempted: initialAttempted = false, calendarOpen, focus, screenId }: CampaignSetupOnePageProps) => {
+    const { form, update } = useSetupDraft(allPresets[preset]);
     const [attempted, setAttempted] = useState(initialAttempted);
-    const [keywordCount, setKeywordCount] = useState(allPresets[preset].keywords.length);
-    const set: Setter = (p) => setForm((f) => ({ ...f, ...p }));
+    const set: Setter = (p) => update(p);
     const issues = validate(form);
     const error: FieldError = (field) => (attempted ? issues.find((i) => i.field === field)?.text : undefined);
-    const progress = { form, issues, attempted, keywordCount };
+    const progress = { form, issues, attempted };
+
+    // The toolbar's "Fill page". In bad mode it also presses Publish for you, so the
+    // error states appear immediately rather than waiting for a second click.
+    useRegisterPageFill(() => {
+        const bad = currentFillMode() === "bad";
+        update(bad ? spoilAll(form) : fillAll(form));
+        if (bad) setAttempted(true);
+    });
 
     // Deep link to an open calendar: bring the flight dates into view first.
     useEffect(() => {
@@ -652,29 +640,35 @@ export const CampaignSetupOnePage = ({ preset = "ready", attempted: initialAttem
         >
             <div className="grid grid-cols-1 gap-8 px-8 py-8 xl:grid-cols-[190px_minmax(0,1fr)_340px]">
                 <SectionNav {...progress} current={focus} />
-                <div className="min-w-0">
-                    {attempted && issues.length > 0 && (
-                        <div role="alert" className="mb-6 flex flex-col gap-3 rounded-xl p-4 ring-1 ring-error_subtle" style={{ backgroundColor: `${PINK}0f` }}>
-                            <p className="flex items-center gap-2 text-sm font-semibold text-error-primary">
-                                <AlertCircle className="size-5" aria-hidden="true" />
-                                Can't publish yet: {issues.length} {issues.length === 1 ? "thing needs" : "things need"} fixing
-                            </p>
-                            <ul className="flex flex-wrap gap-2">
-                                {issues.map((i) => (
-                                    <li key={i.field + i.text}>
-                                        <JumpLink to={i.section} className="inline-flex items-center gap-1 rounded-md bg-primary px-2.5 py-1 text-sm font-medium text-error-primary ring-1 ring-error_subtle">
-                                            {i.text} →
-                                        </JumpLink>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
-                    <DealSection form={form} set={set} error={error} />
-                    <RulesSection form={form} set={set} error={error} />
-                    <BudgetSection form={form} set={set} error={error} calendarOpen={calendarOpen} />
-                    <TargetingSection form={form} empty={preset === "empty"} keywordCount={keywordCount} setKeywordCount={setKeywordCount} />
-                    <CreativeSection form={form} set={set} error={error} />
+                <div className="flex min-w-0 flex-col gap-6">
+                    <WalkthroughStrip screenId={screenId} />
+                    <div>
+                        {attempted && issues.length > 0 && (
+                            <div role="alert" className="mb-6 flex flex-col gap-3 rounded-xl p-4 ring-1 ring-error_subtle" style={{ backgroundColor: `${PINK}0f` }}>
+                                <p className="flex items-center gap-2 text-sm font-semibold text-error-primary">
+                                    <AlertCircle className="size-5" aria-hidden="true" />
+                                    Can't publish yet: {issues.length} {issues.length === 1 ? "thing needs" : "things need"} fixing
+                                </p>
+                                <ul className="flex flex-wrap gap-2">
+                                    {issues.map((i) => (
+                                        <li key={i.field + i.text}>
+                                            <JumpLink
+                                                to={i.section}
+                                                className="inline-flex items-center gap-1 rounded-md bg-primary px-2.5 py-1 text-sm font-medium text-error-primary ring-1 ring-error_subtle"
+                                            >
+                                                {i.text} →
+                                            </JumpLink>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+                        <DealSection form={form} set={set} error={error} />
+                        <RulesSection form={form} set={set} error={error} />
+                        <BudgetSection form={form} set={set} error={error} calendarOpen={calendarOpen} />
+                        <TargetingSection form={form} set={set} empty={preset === "empty"} />
+                        <CreativeSection form={form} set={set} error={error} />
+                    </div>
                 </div>
                 <div>
                     <SummaryRail {...progress} onPublish={publish} />

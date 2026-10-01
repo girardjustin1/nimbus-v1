@@ -26,7 +26,7 @@ const dasNavSections: GlobalNavSection[] = navSections.map((section) =>
               ...section,
               items: [
                   { key: "manage assets", label: "manage assets" },
-                  { key: "keyword library", label: "keyword library", badge: "new" },
+                  { key: "keyword library", label: "manage keywords", badge: "new" },
                   { key: "deal activation setup", label: "deal activation setup" },
                   { key: "manage campaigns", label: "manage campaigns" },
               ],
@@ -57,9 +57,9 @@ export const DasShell = ({ navKey, tabs, footer, concept, children }: DasShellPr
         <main className="flex min-w-0 flex-1 flex-col bg-primary">
             <header className="flex items-center justify-between gap-4 border-b border-secondary px-8 py-5">
                 <div className="flex min-w-0 items-center gap-3">
-                    <h1 className="truncate text-display-xs font-semibold text-primary">Pocket Garden Media</h1>
+                    <h1 className="truncate text-display-xs font-semibold text-primary">Test Publisher</h1>
                     <span className="rounded-md px-2 py-0.5 text-xs font-semibold" style={{ color: TEAL, backgroundColor: `${TEAL}1f` }}>
-                        PGM
+                        TP
                     </span>
                 </div>
                 <button type="button" aria-label="Switch account" className="transition duration-100 ease-linear hover:opacity-80">
@@ -177,10 +177,30 @@ export const PinkAction = ({ children, icon: Icon, onPress }: { children: ReactN
     </button>
 );
 
-/** "NEW" marker for fields added by the Extended Targeting charter. */
+/**
+ * "NEW" marker for fields added by the Extended Targeting charter — a real product
+ * addition, signed off. Teal and solid.
+ */
 export const NewFieldBadge = () => (
     <span className="rounded-full px-2 py-0.5 text-xs font-semibold uppercase" style={{ color: TEAL, backgroundColor: `${TEAL}1f` }}>
         New
+    </span>
+);
+
+/**
+ * "ADDED" marker for wording with no equivalent in the product today — a term we
+ * invented. Deliberately unlike NewFieldBadge: pink and dashed, so a charter field and a
+ * made-up word are never mistaken for each other.
+ *
+ * Every term is catalogued in src/pages/deal-activation-system/terminology.ts.
+ */
+export const AddedTermBadge = ({ title = "Our wording — no equivalent in DAS today" }: { title?: string }) => (
+    <span
+        title={title}
+        className="rounded-full border border-dashed px-2 py-0.5 text-xs font-semibold uppercase"
+        style={{ color: "#A94579", borderColor: `${PINK}99`, backgroundColor: `${PINK}0f` }}
+    >
+        Added
     </span>
 );
 

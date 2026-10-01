@@ -25,19 +25,44 @@ Storybook 10 · Vite**.
 Everything here is generated from one theme, so the brand stays consistent from a
 single button to a full application screen — in both light and dark modes.
 
-<div style={{ background: "#F9FAFB", border: "1px solid #EAECF0", borderRadius: 18, padding: "20px 22px", margin: "8px 0 28px" }}>
+<div style={{ background: "#FFF7FB", border: "1px solid #F7D6E6", borderRadius: 18, padding: "20px 22px", margin: "8px 0 20px" }}>
   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 8 }}>
-    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#475467" }}>Active prototypes</div>
-    <div style={{ fontSize: 13, fontWeight: 600, color: "#101828" }}>September 22, 2026 · Round 1 review</div>
+    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#A94579" }}>Round 2 · current</div>
+    <div style={{ fontSize: 13, fontWeight: 600, color: "#101828" }}>October 1, 2026 review</div>
   </div>
+  <div style={{ display: "flex", flexDirection: "column", background: "#FFFFFF", border: "1px solid #EAECF0", borderTop: "4px solid #A94579", borderRadius: 14, padding: "18px 20px", marginTop: 14 }}>
+    <span style={{ alignSelf: "flex-start", background: "#FCE7F1", color: "#A94579", fontSize: 12, fontWeight: 700, padding: "3px 10px", borderRadius: 999 }}>Deal Activation System · v2</span>
+    <div style={{ fontSize: 20, fontWeight: 700, color: "#101828", margin: "10px 0 6px" }}>One page, one rail, and the libraries behind it</div>
+    <div style={{ fontSize: 14, lineHeight: 1.6, color: "#475467" }}>
+      The duplicated “On this page” rail is gone — the right-hand rail now both summarises the campaign and jumps you to anything that needs fixing, in two variants so the Review-versus-Publish question can go to engineering. Everything you can target on is its own module at the same level, and the geo and app pickers really work. Two sections that the product has but the prototype never did: an <strong>asset library</strong> where a creative is made by pasting its markup, previewed live as you type, and a <strong>keyword library</strong> that mirrors it — both reachable from inside a campaign and returning you to it.
+    </div>
+    <div style={{ fontSize: 13, color: "#667085", margin: "10px 0 6px" }}>Deal activation setup · Right rail concepts · Manage assets · Manage keywords · Manage campaigns · After publishing — 29 screens</div>
+    <div style={{ fontSize: 13, color: "#667085", margin: "0 0 16px" }}>
+      Wording follows the product exactly; anything we invented carries an <span style={{ border: "1px dashed #DA6EA399", color: "#A94579", borderRadius: 999, padding: "1px 7px", fontSize: 11, fontWeight: 700, textTransform: "uppercase" }}>Added</span> chip. Click any empty field to fill it, or press <strong>Fill page</strong> in the toolbar — switch to <strong>Bad</strong> to see the error states.
+    </div>
+    <div style={{ marginTop: "auto", display: "flex", alignItems: "center", flexWrap: "wrap", gap: 14 }}>
+      <a href={protoUrl("das/v2")} target="_top" style={{ background: "#A94579", color: "#FFFFFF", padding: "9px 16px", borderRadius: 999, fontSize: 14, fontWeight: 700, textDecoration: "none" }}>Open prototype →</a>
+      <a href={`${protoUrl("das/v2")}#/asset-setup`} target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Asset Setup</a>
+      <a href={`${protoUrl("das/v2")}#/keyword-setup`} target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Keyword Setup</a>
+      <a href={`${protoUrl("das/v2")}#/rail-summary`} target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Rail: the open question</a>
+    </div>
+  </div>
+</div>
+
+<div style={{ background: "#F9FAFB", border: "1px solid #EAECF0", borderRadius: 18, padding: "20px 22px", margin: "0 0 28px" }}>
+  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 8 }}>
+    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#475467" }}>Round 1 · earlier</div>
+    <div style={{ fontSize: 13, fontWeight: 600, color: "#101828" }}>September 22, 2026 review</div>
+  </div>
+  <div style={{ fontSize: 13, color: "#667085", marginTop: 6 }}>Kept as reviewed. Terminology has been brought in line with Round 2, but the layouts are unchanged.</div>
   <div style={{ display: "flex", flexWrap: "wrap", gap: 16, marginTop: 14 }}>
   <div style={{ flex: "1 1 360px", display: "flex", flexDirection: "column", background: "#FFFFFF", border: "1px solid #EAECF0", borderTop: "4px solid #1F7F80", borderRadius: 14, padding: "18px 20px" }}>
-    <span style={{ alignSelf: "flex-start", background: "#E6F6F6", color: "#1F7F80", fontSize: 12, fontWeight: 700, padding: "3px 10px", borderRadius: 999 }}>Deal Activation System</span>
+    <span style={{ alignSelf: "flex-start", background: "#E6F6F6", color: "#1F7F80", fontSize: 12, fontWeight: 700, padding: "3px 10px", borderRadius: 999 }}>Deal Activation System · v1</span>
     <div style={{ fontSize: 18, fontWeight: 700, color: "#101828", margin: "10px 0 6px" }}>Extended Targeting</div>
-    <div style={{ fontSize: 14, lineHeight: 1.6, color: "#475467" }}>Set up a direct-sold campaign on one page, target it with the publisher's own keywords plus ad unit type and device language, manage keywords in a new library, and see at a glance whether every campaign is on pace to deliver.</div>
-    <div style={{ fontSize: 13, color: "#667085", margin: "10px 0 16px" }}>Campaign setup · Targeting · Keyword library · Manage campaigns · Reporting · View campaign — 35 screens</div>
+    <div style={{ fontSize: 14, lineHeight: 1.6, color: "#475467" }}>Set up a direct-sold campaign on one page, target it with the publisher's own keywords plus geo, platform, app and ad unit, manage keywords in a new library, and see at a glance whether every campaign is on pace to deliver.</div>
+    <div style={{ fontSize: 13, color: "#667085", margin: "10px 0 16px" }}>Campaign setup · Targeting · Keyword library · Manage campaigns · Reporting · View campaign — 49 screens</div>
     <div style={{ marginTop: "auto", display: "flex", alignItems: "center", flexWrap: "wrap", gap: 14 }}>
-      <a href={protoUrl("das")} target="_top" style={{ background: "#1F7F80", color: "#FFFFFF", padding: "9px 16px", borderRadius: 999, fontSize: 14, fontWeight: 700, textDecoration: "none" }}>Open prototype →</a>
+      <a href={protoUrl("das/v1")} target="_top" style={{ background: "#1F7F80", color: "#FFFFFF", padding: "9px 16px", borderRadius: 999, fontSize: 14, fontWeight: 700, textDecoration: "none" }}>Open prototype →</a>
       <a href="./?path=/docs/deal-activation-system-overview--docs" target="_top" style={{ color: "#1F7F80", fontSize: 13, fontWeight: 600 }}>Storybook concepts</a>
     </div>
   </div>
@@ -63,7 +88,7 @@ single button to a full application screen — in both light and dark modes.
   </div>
   </div>
   <div style={{ fontSize: 13, color: "#667085", marginTop: 14 }}>
-    <strong style={{ color: "#344054" }}>Changelog</strong> · Sep 22, 2026: DAS Studio concept and prototype added; DAS gets View campaign pages and Publish error states; Performance Insights gets Saved Queries concepts and a drag-to-build explorer; both earlier prototypes now run as standalone, versioned apps (v1) · Sep 18, 2026: DAS kickoff, <em>Deal Activation System</em> category added.
+    <strong style={{ color: "#344054" }}>Changelog</strong> · Oct 1, 2026: DAS v2 (Round 2) — one rail instead of two, targeting promoted to peer modules, working geo and app pickers, a new asset library and keyword library, click-to-fill on every field, and terminology aligned to the product with ADDED chips on anything invented · Sep 22, 2026: DAS Studio concept and prototype added; DAS gets View campaign pages and Publish error states; Performance Insights gets Saved Queries concepts and a drag-to-build explorer; both earlier prototypes now run as standalone, versioned apps (v1) · Sep 18, 2026: DAS kickoff, <em>Deal Activation System</em> category added.
   </div>
 </div>
 
