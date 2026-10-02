@@ -57,6 +57,27 @@ const MACRO_MARKUP = `<div id="sample-creative">
   <img src="https://track.example.com/imp?id=%%CACHEBUSTER%%" width="1" height="1" />
 </div>`;
 
+/**
+ * Sample tracker URLs. Three of each, because that is what the real form offers and
+ * publishers routinely stack them: their own measurement, the advertiser's verification
+ * vendor, and an agency pixel. None carry macros — the charter forbids those here too.
+ */
+const SAMPLE_IMPRESSION_URLS = [
+    "https://track.example.com/imp?cid=10482&cr=mrec-autumn",
+    "https://verify.example-dsp.com/pixel/imp/9f31c2",
+    "https://agency.example.net/t/i?campaign=fall-launch",
+];
+
+const SAMPLE_CLICK_URLS = [
+    "https://track.example.com/clk?cid=10482&cr=mrec-autumn",
+    "https://verify.example-dsp.com/pixel/clk/9f31c2",
+    "https://agency.example.net/t/c?campaign=fall-launch",
+];
+
+/** In bad mode: one macro, one missing its scheme, one fine — so all three errors show. */
+const BAD_IMPRESSION_URLS = ["https://track.example.com/imp?cb=%%CACHEBUSTER%%", "track.example.com/imp?id=2", "https://agency.example.net/t/i?campaign=fall-launch"];
+const BAD_CLICK_URLS = ["https://track.example.com/clk?ts=[TIMESTAMP]", "clk.example.com/go", ""];
+
 /** Every macro form we reject, with where each one comes from. */
 const MACRO_PATTERNS: { re: RegExp; label: string }[] = [
     { re: /\$\{[A-Z_0-9]+\}/g, label: "${…}" },
@@ -128,8 +149,8 @@ export const AssetSetup = ({ filled = false, invalid = false, macros: withMacros
     const [type, setType] = useState<AdType | undefined>(filled ? "HTML" : undefined);
     const [size, setSize] = useState<AdSize | undefined>(filled ? "Medium Rectangle" : undefined);
     const [markup, setMarkup] = useState(withMacros ? MACRO_MARKUP : invalid ? BAD_MARKUP : filled ? SAMPLE_HTML : "");
-    const [imps, setImps] = useState<string[]>(filled ? ["https://track.example.com/imp?id=new", "", ""] : ["", "", ""]);
-    const [clicks, setClicks] = useState<string[]>(["", "", ""]);
+    const [imps, setImps] = useState<string[]>(filled ? SAMPLE_IMPRESSION_URLS.slice(0, 2).concat("") : ["", "", ""]);
+    const [clicks, setClicks] = useState<string[]>(filled ? [SAMPLE_CLICK_URLS[0], "", ""] : ["", "", ""]);
     const [saved, setSaved] = useState<string | null>(null);
 
     const ret = peekReturn();
@@ -152,7 +173,8 @@ export const AssetSetup = ({ filled = false, invalid = false, macros: withMacros
         setType("HTML");
         setSize("Medium Rectangle");
         setMarkup(bad ? MACRO_MARKUP : SAMPLE_HTML);
-        setImps([bad ? "not-a-url" : "https://track.example.com/imp?id=new", "", ""]);
+        setImps(bad ? BAD_IMPRESSION_URLS : SAMPLE_IMPRESSION_URLS);
+        setClicks(bad ? BAD_CLICK_URLS : SAMPLE_CLICK_URLS);
     };
     useRegisterPageFill(fillForm);
 
@@ -175,12 +197,12 @@ export const AssetSetup = ({ filled = false, invalid = false, macros: withMacros
 
     const preview = previewFor(type ?? "HTML", size ?? "Full screen");
 
-    const urlRow = (values: string[], set: (v: string[]) => void, label: string) => (
+    const urlRow = (values: string[], set: (v: string[]) => void, label: string, samples: string[]) => (
         <div className="flex flex-col gap-2">
             <Label>{label}</Label>
             {values.map((v, i) => (
+                <Fillable key={i} filled={Boolean(v)} onFill={() => set(values.map((x, j) => (j === i ? samples[i % samples.length] : x)))}>
                 <Input
-                    key={i}
                     aria-label={`${label} ${i + 1}`}
                     size="md"
                     value={v}
@@ -194,7 +216,9 @@ export const AssetSetup = ({ filled = false, invalid = false, macros: withMacros
                               : undefined
                     }
                 />
+                </Fillable>
             ))}
+            <span className="text-xs text-tertiary">{values.filter(Boolean).length} of {values.length} used. Macros aren't supported here.</span>
         </div>
     );
 
@@ -270,8 +294,8 @@ export const AssetSetup = ({ filled = false, invalid = false, macros: withMacros
                         </div>
 
                         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                            {urlRow(imps, setImps, "Impression Tracking URL(s)")}
-                            {urlRow(clicks, setClicks, "Click Tracking URL(s)")}
+                            {urlRow(imps, setImps, "Impression Tracking URL(s)", SAMPLE_IMPRESSION_URLS)}
+                            {urlRow(clicks, setClicks, "Click Tracking URL(s)", SAMPLE_CLICK_URLS)}
                         </div>
 
                         <div className="flex flex-wrap gap-3">
