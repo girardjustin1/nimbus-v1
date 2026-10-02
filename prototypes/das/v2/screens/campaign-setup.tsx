@@ -15,6 +15,7 @@ import {
 import { DasShell, JumpLink, PINK, TEAL } from "../../v1/screens/das-shell";
 import { TargetingSectionV2 } from "./targeting-section";
 import { libraryByName, setReturnTo } from "./asset-data";
+import { AssetPicker } from "./asset-picker";
 import { V2_NAV_ITEMS } from "./nav";
 import {
     type Issue,
@@ -342,6 +343,8 @@ const WALKTHROUGH = [
 /* ------------------------------------------------------------------ Page --- */
 
 export interface CampaignSetupProps {
+    /** Open the asset browser on load. */
+    browsing?: boolean;
     preset?: SetupPreset;
     attempted?: boolean;
     calendarOpen?: boolean;
@@ -353,10 +356,11 @@ export interface CampaignSetupProps {
     reviewed?: boolean;
 }
 
-export const CampaignSetup = ({ preset = "ready", attempted: initialAttempted = false, calendarOpen, focus, screenId, rail = "summary", reviewed: initialReviewed = false }: CampaignSetupProps) => {
+export const CampaignSetup = ({ preset = "ready", attempted: initialAttempted = false, calendarOpen, focus, screenId, rail = "summary", reviewed: initialReviewed = false, browsing: initialBrowsing = false }: CampaignSetupProps) => {
     const { form, update } = useSetupDraft(allPresets[preset]);
     const [attempted, setAttempted] = useState(initialAttempted);
     const [reviewing, setReviewing] = useState(initialReviewed);
+    const [browsing, setBrowsing] = useState(initialBrowsing);
     const set: Setter = (p) => {
         update(p);
         setReviewing(false); // any edit invalidates the check
@@ -458,6 +462,7 @@ export const CampaignSetup = ({ preset = "ready", attempted: initialAttempted = 
                             set={set}
                             error={error}
                             extended
+                            onBrowse={() => setBrowsing(true)}
                             onUploadNew={() => {
                                 setReturnTo(`#/${screenId ?? "setup-ready"}`);
                                 window.location.assign("#/asset-setup");
@@ -469,6 +474,14 @@ export const CampaignSetup = ({ preset = "ready", attempted: initialAttempted = 
                     <Rail mode={rail} form={form} issues={issues} attempted={attempted} onPrimary={rail === "summary" ? review : publish} />
                 </div>
             </div>
+            {browsing && (
+                <AssetPicker
+                    chosen={form.creatives}
+                    returnHref={`#/${screenId ?? "setup-ready"}`}
+                    onClose={() => setBrowsing(false)}
+                    onAdd={(added) => update({ creatives: [...form.creatives, ...added] })}
+                />
+            )}
             {reviewing && <ReviewModal form={form} onCancel={() => setReviewing(false)} onPublish={publish} />}
         </DasShell>
     );

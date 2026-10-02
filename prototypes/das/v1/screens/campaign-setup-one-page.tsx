@@ -306,7 +306,7 @@ export const TargetingSection = ({ form, set, empty }: { form: SetupForm; set: S
  * back with the creative attached. Round 1 has no asset library, so it leaves it unset
  * and the action stays inert, exactly as it was reviewed.
  */
-export const CreativeSection = ({ form, set, error, onUploadNew, extended }: { form: SetupForm; set: Setter; error: FieldError; onUploadNew?: () => void; extended?: boolean }) => {
+export const CreativeSection = ({ form, set, error, onUploadNew, extended, onBrowse }: { form: SetupForm; set: Setter; error: FieldError; onUploadNew?: () => void; extended?: boolean; onBrowse?: () => void }) => {
     const rows = form.creatives;
     const mixed = new Set(rows.map((c) => c.type)).size > 1;
     const next = library.find((c) => !rows.includes(c) && c.type === "HTML");
@@ -319,9 +319,20 @@ export const CreativeSection = ({ form, set, error, onUploadNew, extended }: { f
             trailing={<PinkAction onPress={onUploadNew}>Upload new asset</PinkAction>}
         >
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <Input aria-label="Search assets" size="md" icon={SearchLg} placeholder="Search assets" wrapperClassName="flex-1" />
-                <Button color="primary-pink" className="uppercase" isDisabled={!next} onClick={() => next && set({ creatives: [...rows, next] })}>
-                    Add
+                {/* With a browser available the field opens it — you pick by looking at the
+                    creative rather than by already knowing its name. */}
+                <Input
+                    aria-label="Search assets"
+                    size="md"
+                    icon={SearchLg}
+                    placeholder={onBrowse ? "Browse your asset library" : "Search assets"}
+                    wrapperClassName="flex-1"
+                    isReadOnly={Boolean(onBrowse)}
+                    onFocus={onBrowse}
+                    onClick={onBrowse}
+                />
+                <Button color="primary-pink" className="uppercase" isDisabled={!onBrowse && !next} onClick={() => (onBrowse ? onBrowse() : next && set({ creatives: [...rows, next] }))}>
+                    {onBrowse ? "Browse" : "Add"}
                 </Button>
             </div>
             {rows.length === 0 ? (

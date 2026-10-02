@@ -1,8 +1,9 @@
 import type { CSSProperties, MouseEvent, ReactNode } from "react";
 import { useScreenNotes } from "../../../shared/screen-notes";
 import { ChevronDown, Lightbulb02, XClose } from "@untitledui/icons";
-import { type GlobalNavItem, type GlobalNavSection, navSections } from "@/components/application/global-nav/config";
+import type { GlobalNavItem } from "@/components/application/global-nav/config";
 import { GlobalNav } from "@/components/application/global-nav/global-nav";
+import { dasNavSections } from "./das-nav";
 import { cx } from "@/utils/cx";
 import { type Campaign, type CampaignStatus, type PaceState, paceOf } from "./das-data";
 
@@ -19,20 +20,6 @@ export const PINK = "#DA6EA3";
 export const TEAL = "#37B6B7";
 
 /* ------------------------------------------------------------------ Nav --- */
-
-/** Reference nav + the proposed "manage keywords" entry under Deal Activation System. */
-const DAS_NAV_ITEMS: GlobalNavItem[] = [
-    { key: "manage assets", label: "manage assets" },
-    { key: "keyword library", label: "manage keywords", badge: "new" },
-    { key: "deal activation setup", label: "deal activation setup" },
-    { key: "manage campaigns", label: "manage campaigns" },
-];
-
-/** Swap the DAS section's items; everything else in the reference nav stays put. */
-const withDasItems = (items: GlobalNavItem[]): GlobalNavSection[] =>
-    navSections.map((section) => (section.id === "das" ? { ...section, items } : section));
-
-const dasNavSections = withDasItems(DAS_NAV_ITEMS);
 
 export type DasNavKey = "manage assets" | "keyword library" | "deal activation setup" | "manage campaigns" | "performance insights" | "realtime dashboard";
 
@@ -61,7 +48,7 @@ export const DasShell = ({ navKey, tabs, footer, concept, navItems, children }: 
     useScreenNotes(concept ? { label: concept.label, title: concept.title, notes: concept.notes.map(String) } : null);
     return (
     <div className="flex min-h-screen bg-secondary">
-        <GlobalNav sections={navItems ? withDasItems(navItems) : dasNavSections} defaultActiveKey={navKey} />
+        <GlobalNav sections={dasNavSections(navItems)} defaultActiveKey={navKey} />
 
         <main className="flex min-w-0 flex-1 flex-col bg-primary">
             <header className="flex items-center justify-between gap-4 border-b border-secondary px-8 py-5">
