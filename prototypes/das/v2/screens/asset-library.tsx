@@ -42,6 +42,39 @@ const BAD_MARKUP = `<div id="sample-creative"
   <a href=https://example.com/click>
     <img src=</div>`;
 
+/**
+ * Markup that would be rejected for containing macros.
+ *
+ * The charter is unambiguous: static creatives "must not include macros", VAST creatives
+ * "must not include macros", and "macros are not supported in any third-party trackers".
+ * Nimbus does not substitute them — a creative pasted with macros in it serves them as
+ * literal text, so the cachebuster never busts and the click tracker never resolves.
+ */
+const MACRO_MARKUP = `<div id="sample-creative">
+  <a href="https://adserver.example.com/click?cb=\${CACHEBUSTER}&redirect=\${CLICK_URL_ENC}">
+    <img src="https://cdn.example.com/300x250.png?ts=[TIMESTAMP]" alt="" />
+  </a>
+  <img src="https://track.example.com/imp?id=%%CACHEBUSTER%%" width="1" height="1" />
+</div>`;
+
+/** Every macro form we reject, with where each one comes from. */
+const MACRO_PATTERNS: { re: RegExp; label: string }[] = [
+    { re: /\$\{[A-Z_0-9]+\}/g, label: "${…}" },
+    { re: /%%[A-Z_0-9]+%%/g, label: "%%…%%" },
+    { re: /\[(?:TIMESTAMP|CACHEBUSTER|RANDOM|CLICK_URL|CLICK_URL_ENC)\]/gi, label: "[…]" },
+    { re: /\{\{[A-Za-z_0-9.]+\}\}/g, label: "{{…}}" },
+    { re: /__[A-Z_0-9]+__/g, label: "__…__" },
+];
+
+/** The macros present in some markup, de-duplicated and in the order they appear. */
+const findMacros = (markup: string) => {
+    const hits = MACRO_PATTERNS.flatMap(({ re }) => markup.match(re) ?? []);
+    return [...new Set(hits)];
+};
+
+/** A VAST tag that points at another tag instead of carrying the XML inline. */
+const isWrappedVast = (markup: string) => /<VASTAdTagURI|<Wrapper[\s>]/i.test(markup);
+
 const Label = ({ children, required }: { children: React.ReactNode; required?: boolean }) => (
     <span className="text-sm font-semibold text-primary">
         {children}
@@ -86,27 +119,39 @@ export interface AssetSetupProps {
     filled?: boolean;
     /** Show the markup error state. */
     invalid?: boolean;
+    /** Paste markup containing macros, which the charter forbids. */
+    macros?: boolean;
 }
 
-export const AssetSetup = ({ filled = false, invalid = false }: AssetSetupProps) => {
+export const AssetSetup = ({ filled = false, invalid = false, macros: withMacros = false }: AssetSetupProps) => {
     const [name, setName] = useState(filled ? "SampleApp_MREC_Autumn" : "");
     const [type, setType] = useState<AdType | undefined>(filled ? "HTML" : undefined);
     const [size, setSize] = useState<AdSize | undefined>(filled ? "Medium Rectangle" : undefined);
-    const [markup, setMarkup] = useState(invalid ? BAD_MARKUP : filled ? SAMPLE_HTML : "");
+    const [markup, setMarkup] = useState(withMacros ? MACRO_MARKUP : invalid ? BAD_MARKUP : filled ? SAMPLE_HTML : "");
     const [imps, setImps] = useState<string[]>(filled ? ["https://track.example.com/imp?id=new", "", ""] : ["", "", ""]);
     const [clicks, setClicks] = useState<string[]>(["", "", ""]);
     const [saved, setSaved] = useState<string | null>(null);
 
     const ret = peekReturn();
-    const markupLooksWrong = markup.trim().length > 0 && !/^\s*<(\?xml|VAST|div|a|img|span|script|iframe)/i.test(markup.trim());
-    const complete = Boolean(name.trim() && type && size && markup.trim());
+    const macros = findMacros(markup);
+    const notMarkup = markup.trim().length > 0 && !/^\s*<(\?xml|VAST|div|a|img|span|script|iframe)/i.test(markup.trim());
+    const wrapped = type === "VAST (xml)" && isWrappedVast(markup);
+    const markupError = notMarkup
+        ? `This doesn't look like valid ${type === "VAST (xml)" ? "VAST" : "HTML"} markup.`
+        : macros.length > 0
+          ? `Macros aren't supported. Nimbus serves ${macros.length === 1 ? "this" : "these"} as literal text: ${macros.join(", ")}`
+          : wrapped
+            ? "This VAST is wrapped. Paste the raw, unwrapped XML — a tag or URL in place of the XML won't serve."
+            : undefined;
+    const markupLooksWrong = Boolean(markupError);
+    const complete = Boolean(name.trim() && type && size && markup.trim()) && !markupLooksWrong;
 
     const fillForm = () => {
         const bad = currentFillMode() === "bad";
         setName(bad ? "   " : "SampleApp_MREC_Autumn");
         setType("HTML");
         setSize("Medium Rectangle");
-        setMarkup(bad ? BAD_MARKUP : SAMPLE_HTML);
+        setMarkup(bad ? MACRO_MARKUP : SAMPLE_HTML);
         setImps([bad ? "not-a-url" : "https://track.example.com/imp?id=new", "", ""]);
     };
     useRegisterPageFill(fillForm);
@@ -140,8 +185,14 @@ export const AssetSetup = ({ filled = false, invalid = false }: AssetSetupProps)
                     size="md"
                     value={v}
                     onChange={(next) => set(values.map((x, j) => (j === i ? next : x)))}
-                    isInvalid={Boolean(v) && !/^https?:\/\//.test(v)}
-                    hint={v && !/^https?:\/\//.test(v) ? "Must be a full https:// URL" : undefined}
+                    isInvalid={Boolean(v) && (!/^https?:\/\//.test(v) || findMacros(v).length > 0)}
+                    hint={
+                        v && !/^https?:\/\//.test(v)
+                            ? "Must be a full https:// URL"
+                            : v && findMacros(v).length > 0
+                              ? `Macros aren't supported in trackers: ${findMacros(v).join(", ")}`
+                              : undefined
+                    }
                 />
             ))}
         </div>
@@ -214,7 +265,7 @@ export const AssetSetup = ({ filled = false, invalid = false }: AssetSetupProps)
                                     )}
                                 />
                             </Fillable>
-                            {markupLooksWrong && <span className="text-sm text-error-primary">This doesn't look like valid {type === "VAST (xml)" ? "VAST" : "HTML"} markup.</span>}
+                            {markupError && <span className="text-sm text-error-primary">{markupError}</span>}
                             <span className="text-sm text-tertiary">Paste the tag itself. Nimbus doesn't host images, so a file upload isn't accepted.</span>
                         </div>
 

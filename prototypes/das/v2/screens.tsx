@@ -137,6 +137,12 @@ export const screens: ProtoScreen[] = [
         render: () => <AssetSetup filled invalid />,
     }),
     assets({
+        id: "asset-setup-macros",
+        title: "Edge case · markup contains macros",
+        description: "The charter forbids macros in creatives and in trackers — Nimbus never substitutes them, so they would serve as literal text.",
+        render: () => <AssetSetup filled macros />,
+    }),
+    assets({
         id: "asset-view",
         title: "View All Assets",
         description: "The library: status, associated campaigns, Ad Type, Ad Size and tracker counts.",
