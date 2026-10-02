@@ -2,6 +2,8 @@ import { type ReactNode, useState } from "react";
 import { AlertTriangle, ArrowLeft, CheckCircle, ChevronRight, Clock, Copy01, Edit03, PauseCircle, PlayCircle, TrendUp01 } from "@untitledui/icons";
 import { Area, CartesianGrid, ComposedChart, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { ChartTooltipContent } from "@/components/application/charts/charts-base";
+import { AdFormatDemo } from "@/pages/deal-activation-system/studio/components/ad-format-demo";
+import type { FormatId } from "@/pages/deal-activation-system/studio/studio-data";
 import { Button } from "@/components/base/buttons/button";
 import { cx } from "@/utils/cx";
 import { type Campaign, campaigns, compact, paceOf, usd } from "./das-data";
@@ -25,7 +27,7 @@ import { readHashParams } from "./route";
 const justPublished: Campaign = {
     id: "new",
     dealId: "D-10482",
-    dealName: "Summit Sportswear — Fall Launch",
+    dealName: "Test Deal — Fall Launch",
     name: `Sports fans · Interstitial (${shortDay(nextMonth().start).split(" ")[0]})`,
     status: "Scheduled",
     rule: "CPM Priority",
@@ -198,6 +200,20 @@ const Kpi = ({ label, value, sub, tone }: { label: string; value: string; sub?: 
     </div>
 );
 
+
+/**
+ * Which animated preview stands in for a campaign's ad unit. The preview shows the
+ * placement, not the creative itself — the real markup lives in the asset library.
+ */
+const previewFormat = (unit?: string): { format: FormatId; moment: "default" | "mrec" } =>
+    unit === "Rewarded"
+        ? { format: "rewarded", moment: "default" }
+        : unit === "Inline"
+          ? { format: "banner", moment: "mrec" }
+          : unit === "Dynamic Unit"
+            ? { format: "native", moment: "default" }
+            : { format: "interstitial", moment: "default" };
+
 const Row = ({ label, children }: { label: string; children: ReactNode }) => (
     <div className="grid grid-cols-[minmax(88px,180px)_1fr] gap-4 py-2.5 text-sm">
         <dt className="text-tertiary">{label}</dt>
@@ -269,9 +285,9 @@ const EmptyDelivery = ({ c }: { c: Campaign }) => (
 
 const VIEW_SECTIONS = [
     { id: "v-delivery", title: "Delivery" },
-    { id: "v-deal", title: "Deal & campaign" },
+    { id: "v-deal", title: "General" },
     { id: "v-rules", title: "Auction rules" },
-    { id: "v-budget", title: "Budget & flight" },
+    { id: "v-budget", title: "Budget" },
     { id: "v-targeting", title: "Targeting" },
     { id: "v-creative", title: "Creative" },
 ];
@@ -314,7 +330,7 @@ export const ViewOnePage = ({ id = "c1", published = false }: { id?: string; pub
                             </>
                         )}
                     </Section>
-                    <Section id="v-deal" title="Deal & campaign" trailing={<EditLink />}>
+                    <Section id="v-deal" title="General" trailing={<EditLink />}>
                         <dl className="divide-y divide-secondary">
                             <Row label="Deal">
                                 {c.dealName} · {c.dealId}
@@ -328,9 +344,9 @@ export const ViewOnePage = ({ id = "c1", published = false }: { id?: string; pub
                             <Row label="Priority">Even distribution</Row>
                         </dl>
                     </Section>
-                    <Section id="v-budget" title="Budget & flight" trailing={<EditLink />}>
+                    <Section id="v-budget" title="Budget" trailing={<EditLink />}>
                         <dl className="divide-y divide-secondary">
-                            {c.rule !== "Fallback" && <Row label="Total budget">{usd(c.budget)}</Row>}
+                            {c.rule !== "Fallback" && <Row label="Budget">{usd(c.budget)}</Row>}
                             {c.rule !== "Fallback" && <Row label="eCPM (bid)">{usd(c.ecpm, 2)}</Row>}
                             <Row label="Flight">
                                 {c.start} 00:00 – {c.end} 23:59 (UTC)
@@ -344,23 +360,30 @@ export const ViewOnePage = ({ id = "c1", published = false }: { id?: string; pub
                             <Row label="Keywords">
                                 <Keywords c={c} />
                             </Row>
-                            <Row label="Ad unit types">{c.adUnits.join(", ")}</Row>
-                            <Row label="Device language">{c.languages.length ? c.languages.join(", ") : "Any"}</Row>
+                            <Row label="Ad Unit">{c.adUnits.join(", ") || "All units"}</Row>
                         </dl>
                     </Section>
                     <Section id="v-creative" title="Creative" trailing={<EditLink />}>
-                        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                            {Array.from({ length: Math.min(c.creatives, 6) }, (_, i) => (
-                                <div key={i} className="flex flex-col gap-2 rounded-xl p-3 ring-1 ring-secondary">
-                                    <div className="flex aspect-[9/14] items-end rounded-lg p-2 text-xs font-semibold text-white" style={{ background: `linear-gradient(160deg, ${i % 2 ? PINK : TEAL}, #101828)` }}>
-                                        {c.adUnits[0]}
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                            {Array.from({ length: Math.min(c.creatives, 6) }, (_, i) => {
+                                const unit = c.adUnits[i % c.adUnits.length];
+                                const preview = previewFormat(unit);
+                                return (
+                                    <div key={i} className="flex flex-col gap-3 rounded-xl p-4 ring-1 ring-secondary">
+                                        <div className="mx-auto w-full max-w-[190px]">
+                                            <AdFormatDemo format={preview.format} moment={preview.moment} />
+                                        </div>
+                                        <div className="flex flex-col gap-0.5">
+                                            <span className="truncate text-xs font-medium text-secondary">
+                                                SampleApp_{unit.replace(/\s+/g, "")}_{String.fromCharCode(65 + i)}
+                                            </span>
+                                            <span className="text-xs text-tertiary">{unit}</span>
+                                        </div>
                                     </div>
-                                    <span className="truncate text-xs font-medium text-secondary">
-                                        {c.dealName.split(" ")[0]}_{c.adUnits[0]}_{String.fromCharCode(65 + i)}
-                                    </span>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
+                        <p className="text-xs text-tertiary">Approximate placement. Size and position vary by device, screen and app.</p>
                     </Section>
                 </div>
 
@@ -648,7 +671,7 @@ export const ViewPerformance = ({ id = "c3" }: { id?: string }) => {
                             ) : (
                                 <p className="text-sm text-tertiary">No keyword targeting on this campaign.</p>
                             )}
-                            <p className="text-xs text-tertiary">{c.match === "ALL" ? "ALL match: every impression carried every keyword. Shares show which keyword was listed first." : "ANY match: an impression counts under the first keyword it matched."}</p>
+                            <p className="text-xs text-tertiary">{"An impression counts under the first keyword it matched."}</p>
                             <PinkAction>Export by keyword (CSV)</PinkAction>
                         </div>
                     </div>

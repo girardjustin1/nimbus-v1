@@ -45,7 +45,7 @@ const HowItWorks = () => (
                 title: "Add them here",
                 body: "List the words your app sends. Nimbus doesn't interpret them: “plant”, “77541” or any code you've agreed with an advertiser.",
             },
-            { n: "3", title: "Target campaigns", body: "Pick keywords in campaign targeting with ANY or ALL matching. Matching is case-insensitive." },
+            { n: "3", title: "Target campaigns", body: "Pick keywords in campaign targeting. Matching is exact and case-insensitive." },
         ].map((step) => (
             <div key={step.n} className="flex gap-3">
                 <span

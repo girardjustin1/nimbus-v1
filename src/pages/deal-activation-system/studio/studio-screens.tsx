@@ -130,7 +130,7 @@ export const DealScreen = ({ preset = sampleDraft }: { preset?: StudioDraft }) =
                             </span>
                         ))}
                     </div>
-                    <Input label="Deal" size="md" value={d.dealName} onChange={(dealName) => update({ dealName })} placeholder="Search deals by name or ID" hint="D-10482 · 3 other campaigns · Summit Sportswear" />
+                    <Input label="Deal" size="md" value={d.dealName} onChange={(dealName) => update({ dealName })} placeholder="Search deals by name or ID" hint="D-10482 · 3 other campaigns · Test Deal — Fall Launch" />
                 </Card>
                 <Card title="Campaign">
                     <Input label="Campaign name" size="md" value={d.campaignName} onChange={(campaignName) => update({ campaignName: campaignName.slice(0, 60) })} placeholder="e.g. Fall Launch · Sports fans" hint={`${d.campaignName.length}/60`} />

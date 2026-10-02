@@ -117,7 +117,7 @@ export const languages = [
     { id: "hi", label: "Hindi", supportingText: "hi" },
 ];
 
-export const apps = ["Pocket Garden (iOS)", "Pocket Garden (Android)", "Trail Tracker (iOS)", "Trail Tracker (Android)", "Daily Scores"];
+export const apps = ["Sample App (iOS)", "Sample App (Android)", "Trail Tracker (iOS)", "Trail Tracker (Android)", "Daily Scores"];
 
 /* ------------------------------------------------------------------ Campaigns --- */
 
@@ -149,7 +149,7 @@ export const campaigns: Campaign[] = [
     {
         id: "c1",
         dealId: "D-10482",
-        dealName: "Summit Sportswear — Fall Launch",
+        dealName: "Test Deal — Fall Launch",
         name: "Sports fans · Interstitial",
         status: "Running",
         rule: "CPM Priority",
@@ -171,7 +171,7 @@ export const campaigns: Campaign[] = [
     {
         id: "c2",
         dealId: "D-10482",
-        dealName: "Summit Sportswear — Fall Launch",
+        dealName: "Test Deal — Fall Launch",
         name: "Sports fans · Inline (ES)",
         status: "Running",
         rule: "CPM Priority",
@@ -193,7 +193,7 @@ export const campaigns: Campaign[] = [
     {
         id: "c3",
         dealId: "D-10517",
-        dealName: "Harvest Brewing — 21+",
+        dealName: "Test Deal — 21+",
         name: "Over 21 · Midwest",
         status: "Running",
         rule: "Guaranteed",
@@ -215,7 +215,7 @@ export const campaigns: Campaign[] = [
     {
         id: "c4",
         dealId: "D-10533",
-        dealName: "GreenThumb Supply",
+        dealName: "Test Deal — Garden",
         name: "Plant lovers · Always on",
         status: "Paused",
         rule: "Always-on CPM Priority",
@@ -237,7 +237,7 @@ export const campaigns: Campaign[] = [
     {
         id: "c5",
         dealId: "D-10540",
-        dealName: "Evergreen fallback",
+        dealName: "Test Deal — Fallback",
         name: "Fallback · All users",
         status: "Running",
         rule: "Fallback",
@@ -259,7 +259,7 @@ export const campaigns: Campaign[] = [
     {
         id: "c6",
         dealId: "D-10551",
-        dealName: "Trailhead Outfitters",
+        dealName: "Test Deal — Outdoor",
         name: "Runners · Rewarded",
         status: "Scheduled",
         rule: "CPM Priority",

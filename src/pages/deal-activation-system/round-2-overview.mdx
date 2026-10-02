@@ -1,0 +1,108 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { glossary, openCaptures } from "./terminology";
+
+export const proto = (hash = "") =>
+  (typeof window !== "undefined" && window.location.hostname === "localhost" ? "http://localhost:5190/das/v2/" : "../../das/v2/") + hash;
+
+export const S = ({ to, children }) => (
+  <a href={proto(to)} target="_top" style={{ color: "#A94579", fontWeight: 600 }}>{children}</a>
+);
+
+export const Chip = ({ children, tone }) => (
+  <span style={{
+    border: tone === "added" ? "1px dashed #DA6EA399" : "none",
+    background: tone === "added" ? "transparent" : tone === "staging" ? "#E6F6F6" : "#FFF4E5",
+    color: tone === "added" ? "#A94579" : tone === "staging" ? "#1F7F80" : "#B54708",
+    borderRadius: 999, padding: "1px 8px", fontSize: 11, fontWeight: 700, textTransform: "uppercase", whiteSpace: "nowrap",
+  }}>{children}</span>
+);
+
+export const th = { textAlign: "left", fontSize: 12, fontWeight: 700, color: "#475467", padding: "9px 12px", borderBottom: "1px solid #EAECF0", background: "#F9FAFB" };
+export const td = { fontSize: 14, color: "#344054", padding: "10px 12px", borderBottom: "1px solid #EAECF0", verticalAlign: "top" };
+
+<Meta title="Deal Activation System/Round 2 · Oct 1/Overview" />
+
+<div style={{ maxWidth: 920 }}>
+
+# Round 2 · October 1
+
+Round 2 lives in the prototype rather than in Storybook — the whole point of it is the
+loop between the libraries and campaign setup, which only makes sense when you can walk
+it. <S>Open the prototype →</S>
+
+## What changed
+
+**One rail, not two.** The left "On this page" rail repeated what the right rail already
+said and ate the width the form needed. The right rail now does both jobs: it summarises
+the campaign and jumps you to anything that needs fixing.
+
+**Two rail variants, because the answer isn't ours to give.**
+<S to="#/rail-summary">Summary → Review → Publish</S> matches the backend round-trip DAS
+does today; Publish only lights up once the check comes back clean, and any edit resets
+it. <S to="#/rail-validation">Live validation → Publish</S> assumes the client can
+validate on its own. That's the question for engineering.
+
+**Targeting is five modules at one level** — Geos, Platform, Apps, Ad Unit, Keywords —
+and the <S to="#/step-targeting">geo and app pickers actually work</S> rather than being
+states.
+
+**Two sections the product has and the prototype never did.**
+<S to="#/asset-setup">Asset Setup</S> makes a creative by pasting markup, with the format
+animation rendering beside it as you choose a size.
+<S to="#/keyword-health">Keyword Health</S> answers the question the charter implies but
+never addresses: are your keywords actually arriving? Both are reachable from inside a
+campaign and return you to it with the thing you just made attached.
+
+**Click to fill.** Every empty field populates on click, and the toolbar fills a page.
+Switch the toggle to **Bad** and fill again to produce the error states on demand.
+
+**Commentary moved out of the screens.** Concept notes and the walkthrough live behind
+the toolbar's **Info** button, so a screenshot of a screen is a screenshot of the design.
+
+## Terminology
+
+Round 2 uses the product's own words. Where we had to invent one, it carries an
+<Chip tone="added">Added</Chip> chip on screen. The source of every term is recorded in
+`src/pages/deal-activation-system/terminology.ts`.
+
+<div style={{ overflowX: "auto", border: "1px solid #EAECF0", borderRadius: 12, margin: "12px 0 24px" }}>
+  <table style={{ width: "100%", borderCollapse: "collapse", margin: 0 }}>
+    <thead><tr><th style={th}>Term</th><th style={th}>Source</th><th style={th}>Was</th></tr></thead>
+    <tbody>
+      {glossary.filter(({ term }) => term.was || term.origin === "added").slice(0, 22).map(({ term }, i) => (
+        <tr key={i}>
+          <td style={{ ...td, fontWeight: 600 }}>{term.label}</td>
+          <td style={td}>
+            <Chip tone={term.origin}>{term.origin === "staging" ? "Product" : term.origin === "inferred" ? "Inferred" : "Added"}</Chip>
+          </td>
+          <td style={{ ...td, color: "#667085" }}>{term.was ?? "—"}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+**Product** was read verbatim off the real dashboard. **Inferred** came from the Review
+page's read-only row labels, because the input screens were never captured — the wording
+is real, but the input label could differ. **Added** has no equivalent in DAS today.
+
+## The one that needs deciding
+
+`Ad Type` and `Ad Unit` are different things in the product and sit near each other:
+**Ad Type** is how a creative is encoded (`HTML`, `VAST (xml)`) and lives on an asset;
+**Ad Unit** is which placement a campaign targets. Round 1 called the second one "Ad unit
+type", which reads like the first. We've adopted the product's names, but the collision
+is the product's, and it's worth raising.
+
+## Still unverified
+
+{openCaptures.map((c, i) => <p key={i} style={{ fontSize: 14, color: "#475467", margin: "6px 0" }}>· {c}</p>)}
+
+## Round 1 kept what the charter asked for
+
+Match Logic and Device Language were dropped for Round 2 on the 1 Oct instruction, but
+Match Logic is specified in the Extended Targeting charter with a wireframe, so
+<a href={(typeof window !== "undefined" && window.location.hostname === "localhost" ? "http://localhost:5190/das/v1/" : "../../das/v1/")} target="_top" style={{ color: "#1F7F80", fontWeight: 600 }}>Round 1</a> still
+has both. If the charter is amended, Round 1 can follow.
+
+</div>

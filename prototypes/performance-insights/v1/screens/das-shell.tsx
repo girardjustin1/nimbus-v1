@@ -57,9 +57,9 @@ export const DasShell = ({ navKey, tabs, footer, concept, children }: DasShellPr
         <main className="flex min-w-0 flex-1 flex-col bg-primary">
             <header className="flex items-center justify-between gap-4 border-b border-secondary px-8 py-5">
                 <div className="flex min-w-0 items-center gap-3">
-                    <h1 className="truncate text-display-xs font-semibold text-primary">Pocket Garden Media</h1>
+                    <h1 className="truncate text-display-xs font-semibold text-primary">Test Publisher</h1>
                     <span className="rounded-md px-2 py-0.5 text-xs font-semibold" style={{ color: TEAL, backgroundColor: `${TEAL}1f` }}>
-                        PGM
+                        TP
                     </span>
                 </div>
                 <button type="button" aria-label="Switch account" className="transition duration-100 ease-linear hover:opacity-80">

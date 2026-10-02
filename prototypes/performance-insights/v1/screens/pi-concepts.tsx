@@ -289,7 +289,7 @@ export const QuestionBar = ({ draft = false, picker = false, saving = false, sav
                         metric
                     </Slot>{" "}
                     by <Slot>Demand Source</Slot>
-                    <Slot add>breakdown</Slot> for <Slot tone="gray">Last 7 days</Slot> where <Slot tone="gray">App is Pocket Garden (iOS)</Slot>
+                    <Slot add>breakdown</Slot> for <Slot tone="gray">Last 7 days</Slot> where <Slot tone="gray">App is Sample App (iOS)</Slot>
                     <Slot add>filter</Slot>, compared with <Slot tone="gray">the previous 7 days</Slot>.
                 </p>
                 {picker && <MetricPicker />}
@@ -369,7 +369,7 @@ export const QuestionBar = ({ draft = false, picker = false, saving = false, sav
                         <div className="flex flex-col gap-1.5">
                             <span className="font-medium text-secondary">Account</span>
                             <span className="rounded-lg px-3 py-2 ring-1 ring-secondary">
-                                <AccountChip account="Pocket Garden Media" />
+                                <AccountChip account="Test Publisher" />
                             </span>
                         </div>
                         <div className="flex flex-col gap-1.5">

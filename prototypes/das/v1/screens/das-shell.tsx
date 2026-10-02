@@ -1,6 +1,7 @@
 import type { CSSProperties, MouseEvent, ReactNode } from "react";
+import { useScreenNotes } from "../../../shared/screen-notes";
 import { ChevronDown, Lightbulb02, XClose } from "@untitledui/icons";
-import { type GlobalNavSection, navSections } from "@/components/application/global-nav/config";
+import { type GlobalNavItem, type GlobalNavSection, navSections } from "@/components/application/global-nav/config";
 import { GlobalNav } from "@/components/application/global-nav/global-nav";
 import { cx } from "@/utils/cx";
 import { type Campaign, type CampaignStatus, type PaceState, paceOf } from "./das-data";
@@ -19,20 +20,19 @@ export const TEAL = "#37B6B7";
 
 /* ------------------------------------------------------------------ Nav --- */
 
-/** Reference nav + a proposed "keyword library" entry under Deal Activation System. */
-const dasNavSections: GlobalNavSection[] = navSections.map((section) =>
-    section.id === "das"
-        ? {
-              ...section,
-              items: [
-                  { key: "manage assets", label: "manage assets" },
-                  { key: "keyword library", label: "keyword library", badge: "new" },
-                  { key: "deal activation setup", label: "deal activation setup" },
-                  { key: "manage campaigns", label: "manage campaigns" },
-              ],
-          }
-        : section,
-);
+/** Reference nav + the proposed "manage keywords" entry under Deal Activation System. */
+const DAS_NAV_ITEMS: GlobalNavItem[] = [
+    { key: "manage assets", label: "manage assets" },
+    { key: "keyword library", label: "manage keywords", badge: "new" },
+    { key: "deal activation setup", label: "deal activation setup" },
+    { key: "manage campaigns", label: "manage campaigns" },
+];
+
+/** Swap the DAS section's items; everything else in the reference nav stays put. */
+const withDasItems = (items: GlobalNavItem[]): GlobalNavSection[] =>
+    navSections.map((section) => (section.id === "das" ? { ...section, items } : section));
+
+const dasNavSections = withDasItems(DAS_NAV_ITEMS);
 
 export type DasNavKey = "manage assets" | "keyword library" | "deal activation setup" | "manage campaigns" | "performance insights" | "realtime dashboard";
 
@@ -47,19 +47,28 @@ export interface DasShellProps {
     footer?: ReactNode;
     /** Concept annotation shown above the page body. */
     concept?: ConceptNoteProps;
+    /** Override the DAS nav items, e.g. to point them at a version's own screens. */
+    navItems?: GlobalNavItem[];
     children: ReactNode;
 }
 
-export const DasShell = ({ navKey, tabs, footer, concept, children }: DasShellProps) => (
+/**
+ * The concept annotation is registered with the toolbar's Info button rather than
+ * rendered in the page. It is commentary about a design, not part of it — in the page it
+ * ate the width the form needed and baked our notes into every screenshot.
+ */
+export const DasShell = ({ navKey, tabs, footer, concept, navItems, children }: DasShellProps) => {
+    useScreenNotes(concept ? { label: concept.label, title: concept.title, notes: concept.notes.map(String) } : null);
+    return (
     <div className="flex min-h-screen bg-secondary">
-        <GlobalNav sections={dasNavSections} defaultActiveKey={navKey} />
+        <GlobalNav sections={navItems ? withDasItems(navItems) : dasNavSections} defaultActiveKey={navKey} />
 
         <main className="flex min-w-0 flex-1 flex-col bg-primary">
             <header className="flex items-center justify-between gap-4 border-b border-secondary px-8 py-5">
                 <div className="flex min-w-0 items-center gap-3">
-                    <h1 className="truncate text-display-xs font-semibold text-primary">Pocket Garden Media</h1>
+                    <h1 className="truncate text-display-xs font-semibold text-primary">Test Publisher</h1>
                     <span className="rounded-md px-2 py-0.5 text-xs font-semibold" style={{ color: TEAL, backgroundColor: `${TEAL}1f` }}>
-                        PGM
+                        TP
                     </span>
                 </div>
                 <button type="button" aria-label="Switch account" className="transition duration-100 ease-linear hover:opacity-80">
@@ -86,12 +95,6 @@ export const DasShell = ({ navKey, tabs, footer, concept, children }: DasShellPr
                 </div>
             )}
 
-            {concept && (
-                <div className="px-8 pt-6">
-                    <ConceptNote {...concept} />
-                </div>
-            )}
-
             <div className="flex-1">{children}</div>
 
             {footer && (
@@ -101,7 +104,8 @@ export const DasShell = ({ navKey, tabs, footer, concept, children }: DasShellPr
             )}
         </main>
     </div>
-);
+    );
+};
 
 /* --------------------------------------------------------- Concept note --- */
 
@@ -177,10 +181,30 @@ export const PinkAction = ({ children, icon: Icon, onPress }: { children: ReactN
     </button>
 );
 
-/** "NEW" marker for fields added by the Extended Targeting charter. */
+/**
+ * "NEW" marker for fields added by the Extended Targeting charter — a real product
+ * addition, signed off. Teal and solid.
+ */
 export const NewFieldBadge = () => (
     <span className="rounded-full px-2 py-0.5 text-xs font-semibold uppercase" style={{ color: TEAL, backgroundColor: `${TEAL}1f` }}>
         New
+    </span>
+);
+
+/**
+ * "ADDED" marker for wording with no equivalent in the product today — a term we
+ * invented. Deliberately unlike NewFieldBadge: pink and dashed, so a charter field and a
+ * made-up word are never mistaken for each other.
+ *
+ * Every term is catalogued in src/pages/deal-activation-system/terminology.ts.
+ */
+export const AddedTermBadge = ({ title = "Our wording — no equivalent in DAS today" }: { title?: string }) => (
+    <span
+        title={title}
+        className="rounded-full border border-dashed px-2 py-0.5 text-xs font-semibold uppercase"
+        style={{ color: "#A94579", borderColor: `${PINK}99`, backgroundColor: `${PINK}0f` }}
+    >
+        Added
     </span>
 );
 

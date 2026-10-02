@@ -17,9 +17,9 @@ import { DasOverview, QueryBuilder } from "./screens/reporting";
 const s = (area: string) => (screen: Omit<ProtoScreen, "area">): ProtoScreen => ({ area, ...screen });
 
 const start = s("1 · Start: empty form");
-const deal = s("2 · Deal & campaign");
-const rules = s("3 · Auction rules");
-const budget = s("4 · Budget & flight");
+const deal = s("2 · General");
+const rules = s("3 · Auction Rules");
+const budget = s("4 · Budget");
 const targeting = s("5 · Targeting");
 const creative = s("6 · Creative");
 const publish = s("7 · Review & publish");
@@ -34,7 +34,7 @@ export const screens: ProtoScreen[] = [
     start({ id: "setup-empty-errors", title: "Edge case · Publish pressed on an empty form", description: "Every required field is flagged; the banner links to each.", render: () => <CampaignSetupOnePage preset="empty" attempted /> }),
 
     /* 2 · Deal & campaign */
-    deal({ id: "step-deal", title: "Deal chosen and campaign named", description: "Deal & campaign ticks off (1/5). Rules, budget and creative still to do.", render: () => <CampaignSetupOnePage preset="stepDeal" focus="deal" /> }),
+    deal({ id: "step-deal", title: "Deal chosen and campaign named", description: "General ticks off (1/5). Rules, budget and creative still to do.", render: () => <CampaignSetupOnePage preset="stepDeal" focus="deal" /> }),
     deal({ id: "edge-no-name", title: "Edge case · Campaign name left blank", description: "Everything else is complete; Publish flags only the name.", render: () => <CampaignSetupOnePage preset="noName" attempted focus="deal" /> }),
 
     /* 3 · Auction rules */
@@ -44,13 +44,13 @@ export const screens: ProtoScreen[] = [
     rules({ id: "edge-fallback-ready", title: "Edge case · Fallback, complete", description: "A fallback campaign with dates and creative: ready without a budget.", render: () => <CampaignSetupOnePage preset="fallbackReady" focus="budget" /> }),
 
     /* 4 · Budget & flight */
-    budget({ id: "step-budget", title: "Budget, eCPM and flight set", description: "Budget & flight ticks off (3/5); estimated delivery appears in the summary.", render: () => <CampaignSetupOnePage preset="stepBudget" focus="budget" /> }),
+    budget({ id: "step-budget", title: "Budget, eCPM and flight set", description: "Budget ticks off (3/5); estimated delivery appears in the summary.", render: () => <CampaignSetupOnePage preset="stepBudget" focus="budget" /> }),
     budget({ id: "setup-calendar", title: "Start date & time picker open", description: "Calendar with a UTC time field and quick times underneath; past dates can't be picked.", render: () => <CampaignSetupOnePage preset="stepBudget" calendarOpen focus="budget" /> }),
     budget({ id: "edge-no-budget", title: "Edge case · Budget left blank", description: "Everything else is complete; Publish flags only the budget.", render: () => <CampaignSetupOnePage preset="noBudget" attempted focus="budget" /> }),
     budget({ id: "setup-dates-invalid", title: "Edge case · End before start", description: "End date set before the start date is flagged after Publish.", render: () => <CampaignSetupOnePage preset="datesInvalid" attempted focus="budget" /> }),
 
     /* 5 · Targeting */
-    targeting({ id: "step-targeting", title: "Keywords added (ANY match)", description: "Targeting ticks off (4/5). Only creative is left.", render: () => <CampaignSetupOnePage preset="stepTargeting" focus="targeting" /> }),
+    targeting({ id: "step-targeting", title: "Keywords added", description: "Targeting ticks off (4/5). Only creative is left.", render: () => <CampaignSetupOnePage preset="stepTargeting" focus="targeting" /> }),
     targeting({ id: "edge-no-keywords", title: "Edge case · No keywords (everyone)", description: "Targeting is optional: the campaign reaches everyone and can still publish.", render: () => <CampaignSetupOnePage preset="noKeywords" focus="targeting" /> }),
     targeting({ id: "targeting-chips", title: "Alternative A · Inline keyword chips", description: "Type keywords; ANY/ALL match; ad unit type and device language.", render: () => <KeywordTargetingInline /> }),
     targeting({ id: "targeting-warnings", title: "Alternative A · ALL match + warnings", description: "Keywords not seen in traffic, or new to the library.", render: () => <KeywordTargetingInline match="ALL" initial={["over21", "77541", "tailgate"]} /> }),

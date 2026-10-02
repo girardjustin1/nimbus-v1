@@ -211,7 +211,7 @@ export const QuestionBar = ({ draft = false }: { draft?: boolean }) => {
                     Show <Slot tone="pink">Revenue</Slot>
                     <Slot tone="pink">eCPM</Slot>
                     <Slot add>metric</Slot> by <Slot>Demand Source</Slot>
-                    <Slot add>breakdown</Slot> for <Slot tone="gray">Last 7 days</Slot> where <Slot tone="gray">App is Pocket Garden (iOS)</Slot>
+                    <Slot add>breakdown</Slot> for <Slot tone="gray">Last 7 days</Slot> where <Slot tone="gray">App is Sample App (iOS)</Slot>
                     <Slot add>filter</Slot>, compared with <Slot tone="gray">the previous 7 days</Slot>.
                 </p>
                 <div className="flex flex-wrap items-center justify-between gap-3 border-t border-secondary pt-4">
@@ -351,7 +351,7 @@ const Pill = ({ children, tone = "teal" }: { children: ReactNode; tone?: "teal" 
 const tint = (v: number, max: number) => ({ backgroundColor: `rgba(55,182,183,${(0.06 + (v / max) * 0.3).toFixed(2)})` });
 
 export const Explorer = () => {
-    const [open, setOpen] = useState<string[]>(["Pocket Garden (iOS)"]);
+    const [open, setOpen] = useState<string[]>(["Sample App (iOS)"]);
     const colMax = weeks.map((_, i) => Math.max(...pivot.map((r) => r.values[i])));
     return (
         <PiShell

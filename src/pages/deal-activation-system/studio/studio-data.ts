@@ -61,7 +61,7 @@ export const geoOptions = [
     { id: "MX", label: "Mexico", share: 0.06 },
 ];
 
-export const appOptions = ["Pocket Garden (iOS)", "Pocket Garden (Android)", "Trail Tracker (iOS)", "Trail Tracker (Android)", "Daily Scores"];
+export const appOptions = ["Sample App (iOS)", "Sample App (Android)", "Trail Tracker (iOS)", "Trail Tracker (Android)", "Daily Scores"];
 
 export interface Creative {
     brand: string;
@@ -101,7 +101,7 @@ export interface StudioDraft {
 export const emptyCreative: Creative = { brand: "", headline: "", body: "", cta: "Learn more", url: "", palette: ["#37B6B7", "#1F7F80"] };
 
 export const sampleCreative: Creative = {
-    brand: "Summit Sportswear",
+    brand: "Test Deal — Fall Launch",
     headline: "Built for the fourth quarter",
     body: "The Fall Launch jacket. Wind-proof, featherweight, 20% off this week.",
     cta: "Shop now",
@@ -128,11 +128,11 @@ export const emptyDraft: StudioDraft = {
 
 export const sampleDraft: StudioDraft = {
     goal: "priority",
-    dealName: "Summit Sportswear — Fall Launch",
+    dealName: "Test Deal — Fall Launch",
     campaignName: "Fall Launch · Sports fans",
     geos: ["US", "CA"],
     platforms: ["iOS", "Android"],
-    apps: ["Pocket Garden (iOS)", "Pocket Garden (Android)", "Daily Scores"],
+    apps: ["Sample App (iOS)", "Sample App (Android)", "Daily Scores"],
     keywords: ["sports", "power-user"],
     match: "ANY",
     format: "interstitial",

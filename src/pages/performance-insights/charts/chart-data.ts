@@ -40,7 +40,7 @@ export const revenueAndEcpm = Array.from({ length: 30 }, (_, i) => {
 
 /** Revenue by app and platform (grouped / stacked / horizontal bars). */
 export const revenueByApp = [
-    { app: "Pocket Garden", iOS: 28840, Android: 16020 },
+    { app: "Sample App", iOS: 28840, Android: 16020 },
     { app: "Trail Tracker", iOS: 10230, Android: 5460 },
     { app: "Daily Scores", iOS: 2650, Android: 1430 },
     { app: "Meal Prep", iOS: 1920, Android: 2210 },
@@ -84,8 +84,8 @@ export const auctionFunnel = [
 /** Revenue heatmap: app × week. */
 export const heatmapWeeks = ["Aug 24", "Aug 31", "Sep 7", "Sep 14"];
 export const heatmapRows = [
-    { label: "Pocket Garden (iOS)", values: [24180, 25960, 27410, 28840] },
-    { label: "Pocket Garden (Android)", values: [15320, 15880, 16410, 16020] },
+    { label: "Sample App (iOS)", values: [24180, 25960, 27410, 28840] },
+    { label: "Sample App (Android)", values: [15320, 15880, 16410, 16020] },
     { label: "Trail Tracker (iOS)", values: [8740, 9120, 9610, 10230] },
     { label: "Trail Tracker (Android)", values: [5210, 5090, 5340, 5460] },
     { label: "Daily Scores", values: [2980, 3350, 3720, 4080] },

@@ -153,8 +153,10 @@ const DealGroup = ({
     const spend = rows.reduce((s, c) => s + c.spend, 0);
     const behind = rows.filter((c) => c.status === "Running" && paceOf(c) === "behind").length;
     const panelId = `deal-${dealId}`;
+    // A border, not a ring: the list scrolls horizontally, and overflow-x:auto makes
+    // overflow-y:auto too, which clips an outset ring along the top and bottom edges.
     return (
-        <div className="overflow-hidden rounded-xl ring-1 ring-secondary">
+        <div className="overflow-hidden rounded-xl border border-secondary">
             <div className="flex flex-wrap items-center justify-between gap-3 bg-secondary/60 px-5 py-3">
                 <button type="button" aria-expanded={open} aria-controls={panelId} onClick={() => onOpenChange(!open)} className="flex items-center gap-3 rounded-md text-left outline-focus-ring focus-visible:outline-2">
                     <ChevronDown className={cx("size-4 text-fg-quaternary transition-transform duration-150", !open && "-rotate-90")} aria-hidden="true" />
@@ -352,8 +354,7 @@ const compareFields: { label: string; get: (c: Campaign) => ReactNode; key: (c: 
     { label: "Flight", get: (c) => `${c.start} – ${c.end}`, key: (c) => c.start + c.end },
     { label: "Geos", get: (c) => c.geos, key: (c) => c.geos },
     { label: "Platform", get: (c) => c.platforms, key: (c) => c.platforms },
-    { label: "Ad unit type", get: (c) => c.adUnits.join(", "), key: (c) => c.adUnits.join() },
-    { label: "Device language", get: (c) => c.languages.join(", ") || "All", key: (c) => c.languages.join() },
+    { label: "Ad Unit", get: (c) => c.adUnits.join(", ") || "All units", key: (c) => c.adUnits.join() },
     {
         label: "Keywords",
         get: (c) => (
