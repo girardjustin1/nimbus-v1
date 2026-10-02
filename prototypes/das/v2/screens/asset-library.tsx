@@ -9,7 +9,7 @@ import { currentFillMode, useRegisterPageFill } from "../../../shared/demo-fill"
 import { Fillable } from "../../../shared/demo-fill-ui";
 import { DasShell, PINK, PinkAction, TEAL } from "../../v1/screens/das-shell";
 import { V2_NAV_ITEMS } from "./nav";
-import { AD_SIZES, AD_TYPES, type AdSize, type AdType, addAsset, peekReturn, previewFor, useAssets } from "./asset-data";
+import { AD_SIZES, AD_TYPES, type AdSize, type AdType, addAsset, findMacros, isWrappedVast, peekReturn, previewFor, useAssets } from "./asset-data";
 
 /**
  * Manage assets — Asset Setup and View All Assets.
@@ -78,23 +78,6 @@ const SAMPLE_CLICK_URLS = [
 const BAD_IMPRESSION_URLS = ["https://track.example.com/imp?cb=%%CACHEBUSTER%%", "track.example.com/imp?id=2", "https://agency.example.net/t/i?campaign=fall-launch"];
 const BAD_CLICK_URLS = ["https://track.example.com/clk?ts=[TIMESTAMP]", "clk.example.com/go", ""];
 
-/** Every macro form we reject, with where each one comes from. */
-const MACRO_PATTERNS: { re: RegExp; label: string }[] = [
-    { re: /\$\{[A-Z_0-9]+\}/g, label: "${…}" },
-    { re: /%%[A-Z_0-9]+%%/g, label: "%%…%%" },
-    { re: /\[(?:TIMESTAMP|CACHEBUSTER|RANDOM|CLICK_URL|CLICK_URL_ENC)\]/gi, label: "[…]" },
-    { re: /\{\{[A-Za-z_0-9.]+\}\}/g, label: "{{…}}" },
-    { re: /__[A-Z_0-9]+__/g, label: "__…__" },
-];
-
-/** The macros present in some markup, de-duplicated and in the order they appear. */
-const findMacros = (markup: string) => {
-    const hits = MACRO_PATTERNS.flatMap(({ re }) => markup.match(re) ?? []);
-    return [...new Set(hits)];
-};
-
-/** A VAST tag that points at another tag instead of carrying the XML inline. */
-const isWrappedVast = (markup: string) => /<VASTAdTagURI|<Wrapper[\s>]/i.test(markup);
 
 const Label = ({ children, required }: { children: React.ReactNode; required?: boolean }) => (
     <span className="text-sm font-semibold text-primary">
@@ -385,7 +368,11 @@ export const ViewAllAssets = ({ search = "" }: { search?: string }) => {
                                             {a.status}
                                         </span>
                                     </td>
-                                    <td className={cx(td, "font-medium text-primary")}>{a.name}</td>
+                                    <td className={cx(td, "font-medium")}>
+                                        <a href={`#/asset-detail?a=${a.id}`} className="font-semibold hover:underline" style={{ color: TEAL }}>
+                                            {a.name}
+                                        </a>
+                                    </td>
                                     <td className={td}>{a.campaigns.length ? a.campaigns.join(", ") : "None"}</td>
                                     <td className={td}>{a.type}</td>
                                     <td className={cx(td, a.size === "Invalid" && "font-semibold text-error-primary")}>{a.size}</td>
@@ -394,7 +381,9 @@ export const ViewAllAssets = ({ search = "" }: { search?: string }) => {
                                     <td className={cx(td, "whitespace-nowrap")}>
                                         <span className="flex items-center gap-3">
                                             <PinkAction>Test Asset</PinkAction>
-                                            <PinkAction icon={XClose}>Remove</PinkAction>
+                                            <PinkAction icon={XClose} onPress={() => window.location.assign(`#/asset-detail?a=${a.id}${a.campaigns.length ? "&confirm=1" : ""}`)}>
+                                                Delete
+                                            </PinkAction>
                                         </span>
                                     </td>
                                 </tr>

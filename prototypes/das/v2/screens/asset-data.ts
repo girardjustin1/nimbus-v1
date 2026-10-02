@@ -102,6 +102,24 @@ const seed: Asset[] = [
     },
 ];
 
+/** Every macro form we reject, with where each one comes from. */
+const MACRO_PATTERNS: { re: RegExp; label: string }[] = [
+    { re: /\$\{[A-Z_0-9]+\}/g, label: "${…}" },
+    { re: /%%[A-Z_0-9]+%%/g, label: "%%…%%" },
+    { re: /\[(?:TIMESTAMP|CACHEBUSTER|RANDOM|CLICK_URL|CLICK_URL_ENC)\]/gi, label: "[…]" },
+    { re: /\{\{[A-Za-z_0-9.]+\}\}/g, label: "{{…}}" },
+    { re: /__[A-Z_0-9]+__/g, label: "__…__" },
+];
+
+/** The macros present in some markup, de-duplicated and in the order they appear. */
+export const findMacros = (markup: string) => {
+    const hits = MACRO_PATTERNS.flatMap(({ re }) => markup.match(re) ?? []);
+    return [...new Set(hits)];
+};
+
+/** A VAST tag that points at another tag instead of carrying the XML inline. */
+export const isWrappedVast = (markup: string) => /<VASTAdTagURI|<Wrapper[\s>]/i.test(markup);
+
 /* ----------------------------------------------------------------- Store --- */
 
 let assets: Asset[] = seed;
@@ -114,6 +132,18 @@ export const addAsset = (a: Omit<Asset, "id" | "status" | "campaigns">) => {
     emit();
     return asset;
 };
+
+export const updateAsset = (id: string, patch: Partial<Asset>) => {
+    assets = assets.map((a) => (a.id === id ? { ...a, ...patch } : a));
+    emit();
+};
+
+export const deleteAsset = (id: string) => {
+    assets = assets.filter((a) => a.id !== id);
+    emit();
+};
+
+export const assetById = (id: string) => assets.find((a) => a.id === id);
 
 export const resetAssets = () => {
     assets = seed;

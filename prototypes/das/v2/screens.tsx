@@ -1,6 +1,7 @@
 import type { ProtoScreen } from "../../shared/prototype-frame";
 import { ViewDeliveryFirst, ViewOnePage, ViewPerformance, ViewSentence } from "../v1/screens/campaign-view";
 import { CompareCampaigns, ManageCampaignsDelivery } from "../v1/screens/manage-campaigns";
+import { AssetDetail } from "./screens/asset-detail";
 import { AssetSetup, ViewAllAssets } from "./screens/asset-library";
 import { CampaignSetup } from "./screens/campaign-setup";
 import { BulkAddKeywords } from "./screens/keyword-bulk-add";
@@ -153,6 +154,25 @@ export const screens: ProtoScreen[] = [
         title: "View All Assets · searching",
         description: "Filtering the library by name, type or campaign.",
         render: () => <ViewAllAssets search="mrec" />,
+    }),
+
+    assets({
+        id: "asset-detail",
+        title: "Asset detail · edit",
+        description: "Change an asset, or add a tracker to it. Not in the charter — it is in the product, and was asked for on 1 Oct.",
+        render: () => <AssetDetail id="a4" />,
+    }),
+    assets({
+        id: "asset-detail-live",
+        title: "Asset detail · serving now",
+        description: "An asset in a live campaign. Changes take effect on the next ad request; there is no publish step for an asset.",
+        render: () => <AssetDetail id="a1" />,
+    }),
+    assets({
+        id: "asset-delete-guard",
+        title: "Edge case · can't delete a live asset",
+        description: "Blocked, not warned, while a campaign still uses it — the same rule as a keyword in use.",
+        render: () => <AssetDetail id="a1" confirmingDelete />,
     }),
 
     /* 4 · Keywords — the same pattern, deliberately. */
