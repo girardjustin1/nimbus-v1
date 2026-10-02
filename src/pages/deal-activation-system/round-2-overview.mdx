@@ -46,6 +46,22 @@ validate on its own. That's the question for engineering.
 and the <S to="#/step-targeting">geo and app pickers actually work</S> rather than being
 states.
 
+**Geos is a tree, not a list.** Regions are selectable in their own right, so LATAM is
+one click rather than twenty-five, and a part-selected region shows a dash. A region
+whose countries are all in collapses to a single chip. Searching expands only what
+matched, and ticking a region while a search is active takes the rows you can see — not
+the hundred you can't. Region names are the product's own: AFRICA, APAC, EUROPE, LATAM,
+MIDEAST, NORAM, OTHERS.
+
+**Priority and Frequency Cap are sections**, at the same level as Auction Rules and
+Budget, each with the product's Do not enable / Enable pair. Priority runs 1–100 and is
+typeable, because a hundred-row dropdown is a scroll.
+
+**Add Markup checks itself.** <S to="#/asset-setup-invalid">Validate Markup</S> reads the
+paste line by line and names the line that is wrong — an unterminated tag, an unquoted
+attribute, a macro, a `document.write()`. Clicking a problem puts your caret on it.
+<S to="#/asset-setup-checked">A clean tag</S> gets a verdict rather than silence.
+
 **Two sections the product has and the prototype never did.**
 <S to="#/asset-setup">Asset Setup</S> makes a creative by pasting markup, with the format
 animation rendering beside it as you choose a size.
