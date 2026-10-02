@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useState } from "react";
 import type { CalendarDate } from "@internationalized/date";
-import { AlertCircle, CheckCircle, Circle, CurrencyDollar, FilePlus02, InfoCircle, SearchLg, XClose } from "@untitledui/icons";
+import { AlertCircle, CheckCircle, Circle, CurrencyDollar, FilePlus02, InfoCircle, SearchLg, UploadCloud01, XClose } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
 import { RadioButton, RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
@@ -32,6 +32,7 @@ import {
     validate,
 } from "./setup-data";
 import { stepHref, useSetupDraft } from "./setup-store";
+import { FrequencyCapSection, PrioritySection } from "./priority-frequency";
 
 /**
  * Deal Activation System → Campaign Setup, one page.
@@ -132,19 +133,6 @@ export const RulesSection = ({ form, set, error }: { form: SetupForm; set: Sette
             ))}
         </RadioGroup>
         {error("rule") && <FieldMessage>{error("rule")}</FieldMessage>}
-        <Select
-            label="Priority"
-            items={[
-                { id: "even", label: "Even distribution (default)" },
-                { id: "1", label: "1 — highest" },
-                { id: "2", label: "2" },
-                { id: "3", label: "3" },
-            ]}
-            defaultSelectedKey="even"
-            className="max-w-xs"
-        >
-            {(item) => <Select.Item id={item.id}>{item.label}</Select.Item>}
-        </Select>
     </Section>
 );
 
@@ -193,7 +181,7 @@ const FlightDates = ({ form, set, error, calendarOpen }: { form: SetupForm; set:
     );
 };
 
-export const BudgetSection = ({ form, set, error, calendarOpen, extended }: { form: SetupForm; set: Setter; error: FieldError; calendarOpen?: boolean; extended?: boolean }) => {
+export const BudgetSection = ({ form, set, error, calendarOpen }: { form: SetupForm; set: Setter; error: FieldError; calendarOpen?: boolean }) => {
     const flight = <FlightDates form={form} set={set} error={error} calendarOpen={calendarOpen} />;
     if (form.rule === "Fallback") {
         return (
@@ -235,20 +223,6 @@ export const BudgetSection = ({ form, set, error, calendarOpen, extended }: { fo
                     />
                 </Fillable>
                 <Input label="Daily Impression Cap" size="md" placeholder="No cap" hint="Optional" />
-                {extended && (
-                    <Select
-                        label="Frequency Cap"
-                        items={[
-                            { id: "disabled", label: "Disabled" },
-                            { id: "1h", label: "1 per hour" },
-                            { id: "3d", label: "3 per day" },
-                            { id: "5d", label: "5 per day" },
-                        ]}
-                        defaultSelectedKey="disabled"
-                    >
-                        {(item) => <Select.Item id={item.id}>{item.label}</Select.Item>}
-                    </Select>
-                )}
             </div>
             {flight}
         </Section>
@@ -316,7 +290,7 @@ export const CreativeSection = ({ form, set, error, onUploadNew, extended, onBro
             id="creative"
             title="Creative"
             description="Add creatives from your asset library. A campaign can hold many creatives, all of the same type. For another format or language, use Publish & Duplicate."
-            trailing={<PinkAction onPress={onUploadNew}>Upload new asset</PinkAction>}
+            trailing={<PinkAction icon={UploadCloud01} onPress={onUploadNew}>Upload new asset</PinkAction>}
         >
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 {/* With a browser available the field opens it — you pick by looking at the
@@ -715,7 +689,9 @@ export const CampaignSetupOnePage = ({ preset = "ready", attempted: initialAttem
                         )}
                         <DealSection form={form} set={set} error={error} />
                         <RulesSection form={form} set={set} error={error} />
+                        <PrioritySection form={form} set={set} />
                         <BudgetSection form={form} set={set} error={error} calendarOpen={calendarOpen} />
+                        <FrequencyCapSection form={form} set={set} />
                         <TargetingSection form={form} set={set} empty={preset === "empty"} />
                         <CreativeSection form={form} set={set} error={error} />
                     </div>
