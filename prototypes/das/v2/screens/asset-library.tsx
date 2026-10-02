@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { InfoCircle, SearchLg, XClose } from "@untitledui/icons";
+import { InfoCircle, PlayCircle, SearchLg, Trash01 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
 import { Select } from "@/components/base/select/select";
@@ -380,8 +380,8 @@ export const ViewAllAssets = ({ search = "" }: { search?: string }) => {
                                     <td className={td}>{a.clickTrackers.length || "—"}</td>
                                     <td className={cx(td, "whitespace-nowrap")}>
                                         <span className="flex items-center gap-3">
-                                            <PinkAction>Test Asset</PinkAction>
-                                            <PinkAction icon={XClose} onPress={() => window.location.assign(`#/asset-detail?a=${a.id}${a.campaigns.length ? "&confirm=1" : ""}`)}>
+                                            <PinkAction icon={PlayCircle}>Test Asset</PinkAction>
+                                            <PinkAction icon={Trash01} onPress={() => window.location.assign(`#/asset-detail?a=${a.id}${a.campaigns.length ? "&confirm=1" : ""}`)}>
                                                 Delete
                                             </PinkAction>
                                         </span>

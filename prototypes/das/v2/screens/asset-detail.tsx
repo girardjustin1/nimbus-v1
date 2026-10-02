@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AlertTriangle, ArrowLeft, InfoCircle, XClose } from "@untitledui/icons";
+import { AlertTriangle, ArrowLeft, InfoCircle, PlayCircle, Trash01 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
 import { Select } from "@/components/base/select/select";
@@ -171,9 +171,9 @@ export const AssetDetail = ({ id = "a1", confirmingDelete = false }: { id?: stri
                         </span>
                     </div>
                     <div className="flex items-center gap-3">
-                        <PinkAction>Test Asset</PinkAction>
+                        <PinkAction icon={PlayCircle}>Test Asset</PinkAction>
                         <PinkAction
-                            icon={XClose}
+                            icon={Trash01}
                             onPress={() => {
                                 if (live) setGuard(true);
                                 else {
