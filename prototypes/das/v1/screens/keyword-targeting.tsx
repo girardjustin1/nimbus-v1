@@ -10,6 +10,7 @@ import { cx } from "@/utils/cx";
 import { type AdUnitType, type MatchLogic, adUnitTypes, apps, languages, keywords as libraryKeywords, trafficSuggestions } from "./das-data";
 import { DasShell, KeywordChip, NewFieldBadge, PINK, PinkAction, Section, TEAL } from "./das-shell";
 import { GEO_REGIONS } from "./geo-data";
+import { type TaxonomyNode, TaxonomyPicker } from "./taxonomy-picker";
 
 /**
  * Deal Activation System → Targeting concepts.
@@ -381,31 +382,51 @@ export const ChipPicker = ({
  * Geos, Platform and Apps as three peer modules — the Oct 1 review asked for these to sit
  * at the same level as Keywords and Ad Unit rather than as loose rows above them.
  */
+/** Region → country. Ids are the country names, which is what a campaign stores. */
+const GEO_TREE: TaxonomyNode[] = GEO_REGIONS.map((g) => ({ id: g.region, label: g.region, children: g.countries.map((c) => ({ id: c, label: c })) }));
+
+/** Apps are flat: the product documents no grouping above them, so we don't invent one. */
+const APP_NODES: TaxonomyNode[] = apps.map((a) => ({ id: a, label: a }));
+
+/**
+ * A targeting module: title on the left, and Clear all on the right once there is
+ * something to clear.
+ *
+ * The action only appears when it would do something. A permanently visible Clear all
+ * on an empty module is a button that does nothing, and it reads as the way to start
+ * rather than the way to undo.
+ */
+const TargetCard = ({ title, onClear, children }: { title: string; onClear?: () => void; children: ReactNode }) => (
+    <div className="flex flex-col gap-4 rounded-xl p-5 ring-1 ring-secondary">
+        <div className="flex items-center justify-between gap-3">
+            <h3 className="text-lg font-semibold text-primary">{title}</h3>
+            {onClear && <PinkAction onPress={onClear}>Clear all</PinkAction>}
+        </div>
+        {children}
+    </div>
+);
+
 export const ExistingTargets = ({ empty = false }: { empty?: boolean }) => {
     const [geos, setGeos] = useState<string[]>(empty ? [] : ["United States", "Canada"]);
     const [platforms, setPlatforms] = useState<string[]>(empty ? [] : ["iOS", "Android"]);
     const [appList, setAppList] = useState<string[]>(empty ? [] : apps.slice(0, 2));
     const togglePlatform = (p: string) => setPlatforms((prev) => (prev.includes(p) ? prev.filter((x) => x !== p) : [...prev, p]));
-    const card = "flex flex-col gap-4 rounded-xl p-5 ring-1 ring-secondary";
     return (
         <>
-            <div className={card}>
-                <h3 className="text-lg font-semibold text-primary">Geos</h3>
-                <ChipPicker label="Geos" groups={GEO_REGIONS} value={geos} onChange={setGeos} placeholder="Search countries…" noun="countries" />
-            </div>
-            <div className={card}>
-                <h3 className="text-lg font-semibold text-primary">Platform</h3>
+            <TargetCard title="Geos" onClear={geos.length ? () => setGeos([]) : undefined}>
+                <TaxonomyPicker label="Region" nodes={GEO_TREE} value={geos} onChange={setGeos} placeholder="Search countries…" noun="countries" one="country" />
+            </TargetCard>
+            <TargetCard title="Platform" onClear={platforms.length ? () => setPlatforms([]) : undefined}>
                 <div className="flex gap-6">
                     {["iOS", "Android"].map((p) => (
                         <Checkbox key={p} size="sm" label={p} isSelected={platforms.includes(p)} onChange={() => togglePlatform(p)} />
                     ))}
                 </div>
                 <p className="text-sm text-tertiary">{platforms.length === 0 ? "Not Specified — includes every platform." : `${platforms.join(", ")}`}</p>
-            </div>
-            <div className={card}>
-                <h3 className="text-lg font-semibold text-primary">Apps</h3>
-                <ChipPicker label="Apps" groups={[{ region: "", countries: apps }]} value={appList} onChange={setAppList} placeholder="Search apps…" noun="apps" />
-            </div>
+            </TargetCard>
+            <TargetCard title="Apps" onClear={appList.length ? () => setAppList([]) : undefined}>
+                <TaxonomyPicker label="Apps" nodes={APP_NODES} value={appList} onChange={setAppList} placeholder="Search apps…" noun="apps" one="app" />
+            </TargetCard>
         </>
     );
 };
