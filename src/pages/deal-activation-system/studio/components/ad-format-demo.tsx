@@ -32,12 +32,15 @@ export const AdFormatDemo = ({
     moment = "default",
     scale = 1,
     fitViewport = false,
+    bare = false,
 }: {
     format: FormatId;
     device?: PreviewDevice;
     moment?: PreviewMoment;
     scale?: number;
     fitViewport?: boolean;
+    /** Artwork only — no caption, no play controls. For grids where the demo is a thumbnail. */
+    bare?: boolean;
 }) => {
     const id = useId().replace(/[^a-zA-Z0-9_-]/g, "");
     const [paused, setPaused] = useState(false);
@@ -79,12 +82,13 @@ export const AdFormatDemo = ({
                     role="img"
                     aria-label={label}
                     className="aspect-[280/580] max-w-full drop-shadow-[0_18px_24px_rgba(16,24,40,0.18)]"
-                    style={{ width: fitViewport ? `min(${280 * scale}px, calc(max(220px, 100dvh - 400px) * 0.48276))` : 280 * scale }}
+                    style={{ width: bare ? "100%" : fitViewport ? `min(${280 * scale}px, calc(max(220px, 100dvh - 400px) * 0.48276))` : 280 * scale }}
                 >
                     {artwork}
                 </div>
             )}
-            <figcaption className="max-w-[300px] text-center text-xs leading-relaxed text-secondary">{description}</figcaption>
+            {!bare && <figcaption className="max-w-[300px] text-center text-xs leading-relaxed text-secondary">{description}</figcaption>}
+            {!bare && (
             <div className="flex items-center gap-2">
                 {reduce ? (
                     <span className="text-xs text-tertiary">Reduced motion enabled</span>
@@ -112,6 +116,7 @@ export const AdFormatDemo = ({
                     </>
                 )}
             </div>
+            )}
         </figure>
     );
 };

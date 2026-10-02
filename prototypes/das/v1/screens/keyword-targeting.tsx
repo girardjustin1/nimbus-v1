@@ -1,5 +1,5 @@
-import { type KeyboardEvent, type ReactNode, useEffect, useState } from "react";
-import { AlertTriangle, BookOpen01, CheckCircle, Plus, SearchLg, XClose } from "@untitledui/icons";
+import { type KeyboardEvent, type ReactNode, useEffect, useRef, useState } from "react";
+import { AlertTriangle, BookOpen01, CheckCircle, ChevronDown, Plus, SearchLg, XClose } from "@untitledui/icons";
 import type { Selection } from "react-aria-components";
 import { Button } from "@/components/base/buttons/button";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
@@ -9,6 +9,7 @@ import { MultiSelect } from "@/components/base/select/multi-select";
 import { cx } from "@/utils/cx";
 import { type AdUnitType, type MatchLogic, adUnitTypes, apps, languages, keywords as libraryKeywords, trafficSuggestions } from "./das-data";
 import { DasShell, KeywordChip, NewFieldBadge, PINK, PinkAction, Section, TEAL } from "./das-shell";
+import { GEO_REGIONS } from "./geo-data";
 
 /**
  * Deal Activation System → Targeting concepts.
@@ -226,96 +227,151 @@ export const DeviceLanguageField = ({
 
 /* ---------------------------------------------------- Existing targets --- */
 
-/** A short, obviously-sample country list — enough to show the search working. */
-const GEOS = [
-    "United States",
-    "Canada",
-    "Mexico",
-    "United Kingdom",
-    "Ireland",
-    "France",
-    "Germany",
-    "Spain",
-    "Italy",
-    "Netherlands",
-    "Sweden",
-    "Japan",
-    "Australia",
-    "New Zealand",
-    "Brazil",
-    "India",
-];
-
 /**
- * Type to filter, click to add, × to remove. No overlay — the point of building this
- * was to prove the picker survives the one-page layout, which a modal would dodge.
+ * Pick from a list: click the field and every option is there with a checkbox, or type
+ * to narrow it.
+ *
+ * Chips stay in the field rather than living only inside the menu, so what a campaign
+ * targets is readable without opening anything — which was the point of doing this
+ * inline instead of behind an Edit button. Options are grouped where the list is long
+ * enough that alphabetical order stops helping.
  */
 export const ChipPicker = ({
     label,
-    options,
+    groups,
     value,
     onChange,
     placeholder,
+    noun,
 }: {
     label: string;
-    options: string[];
+    /** Grouped options. One group with an empty name renders without headings. */
+    groups: { region: string; countries: string[] }[];
     value: string[];
     onChange: (v: string[]) => void;
     placeholder: string;
+    noun: string;
 }) => {
     const [query, setQuery] = useState("");
+    const [open, setOpen] = useState(false);
+    const box = useRef<HTMLDivElement>(null);
+    const all = groups.flatMap((g) => g.countries);
+
+    useEffect(() => {
+        if (!open) return;
+        const onDown = (e: globalThis.MouseEvent) => {
+            if (box.current && !box.current.contains(e.target as Node)) setOpen(false);
+        };
+        const onKey = (e: globalThis.KeyboardEvent) => e.key === "Escape" && setOpen(false);
+        document.addEventListener("mousedown", onDown);
+        document.addEventListener("keydown", onKey);
+        return () => {
+            document.removeEventListener("mousedown", onDown);
+            document.removeEventListener("keydown", onKey);
+        };
+    }, [open]);
+
     const q = query.trim().toLowerCase();
-    const matches = q ? options.filter((o) => o.toLowerCase().includes(q) && !value.includes(o)).slice(0, 6) : [];
-    const add = (o: string) => {
-        onChange([...value, o]);
-        setQuery("");
-    };
+    const shown = groups
+        .map((g) => ({ ...g, countries: g.countries.filter((c) => !q || c.toLowerCase().includes(q)) }))
+        .filter((g) => g.countries.length > 0);
+    const matches = shown.flatMap((g) => g.countries);
+
+    const toggle = (o: string) => onChange(value.includes(o) ? value.filter((x) => x !== o) : [...value, o]);
+
     return (
-        <div className="flex flex-col gap-1.5">
-            <div className="flex min-h-11 flex-wrap items-center gap-1.5 rounded-lg bg-primary px-3 py-2 shadow-xs ring-1 ring-primary ring-inset focus-within:ring-2 focus-within:ring-brand">
+        <div ref={box} className="relative flex flex-col gap-1.5">
+            <div
+                className="flex min-h-11 cursor-text flex-wrap items-center gap-1.5 rounded-lg bg-primary px-3 py-2 shadow-xs ring-1 ring-primary ring-inset focus-within:ring-2 focus-within:ring-brand"
+                onClick={() => setOpen(true)}
+            >
                 {value.map((v) => (
                     <span key={v} className="inline-flex items-center gap-1 rounded-md py-0.5 pr-1 pl-2 text-sm" style={{ color: "#1F7F80", backgroundColor: `${TEAL}24` }}>
                         {v}
-                        <button type="button" aria-label={`Remove ${v}`} onClick={() => onChange(value.filter((x) => x !== v))} className="rounded p-0.5 hover:bg-black/5">
+                        <button
+                            type="button"
+                            aria-label={`Remove ${v}`}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onChange(value.filter((x) => x !== v));
+                            }}
+                            className="rounded p-0.5 hover:bg-black/5"
+                        >
                             <XClose className="size-3" aria-hidden="true" />
                         </button>
                     </span>
                 ))}
                 <input
                     aria-label={label}
+                    aria-expanded={open}
                     value={query}
-                    onChange={(e) => setQuery(e.target.value)}
+                    onFocus={() => setOpen(true)}
+                    onChange={(e) => {
+                        setQuery(e.target.value);
+                        setOpen(true);
+                    }}
                     onKeyDown={(e) => {
                         if (e.key === "Enter" && matches.length) {
                             e.preventDefault();
-                            add(matches[0]);
+                            toggle(matches[0]);
+                            setQuery("");
                         }
                     }}
                     placeholder={value.length ? "" : placeholder}
                     className="min-w-32 flex-1 bg-transparent text-sm text-primary outline-none placeholder:text-placeholder"
                 />
+                <ChevronDown className={cx("size-4 shrink-0 text-fg-quaternary transition-transform", open && "rotate-180")} aria-hidden="true" />
             </div>
-            {matches.length > 0 && (
-                <ul className="flex flex-col overflow-hidden rounded-lg bg-primary shadow-lg ring-1 ring-secondary">
-                    {matches.map((m) => (
-                        <li key={m}>
-                            <button type="button" onClick={() => add(m)} className="w-full px-3 py-2 text-left text-sm text-secondary hover:bg-primary_hover">
-                                {m}
+
+            {open && (
+                <div className="absolute top-full right-0 left-0 z-30 mt-1 overflow-hidden rounded-lg bg-primary shadow-xl ring-1 ring-secondary">
+                    <div className="flex items-center justify-between gap-3 border-b border-secondary px-3 py-2 text-xs">
+                        <span className="font-semibold text-tertiary">
+                            {value.length} of {all.length} selected
+                        </span>
+                        <span className="flex gap-3">
+                            <button type="button" className="font-semibold" style={{ color: PINK }} onClick={() => onChange(matches)}>
+                                {q ? `Select ${matches.length}` : "Select all"}
                             </button>
-                        </li>
-                    ))}
-                </ul>
+                            {value.length > 0 && (
+                                <button type="button" className="font-semibold text-tertiary" onClick={() => onChange([])}>
+                                    Clear
+                                </button>
+                            )}
+                        </span>
+                    </div>
+                    <div className="max-h-64 overflow-y-auto py-1" role="listbox" aria-multiselectable="true" aria-label={label}>
+                        {matches.length === 0 ? (
+                            <p className="px-3 py-6 text-center text-sm text-tertiary">No {noun} match “{query}”.</p>
+                        ) : (
+                            shown.map((g) => (
+                                <div key={g.region}>
+                                    {g.region && <span className="block px-3 pt-2 pb-1 text-xs font-semibold text-tertiary uppercase">{g.region}</span>}
+                                    {g.countries.map((c) => {
+                                        const on = value.includes(c);
+                                        return (
+                                            <button
+                                                key={c}
+                                                type="button"
+                                                role="option"
+                                                aria-selected={on}
+                                                onClick={() => toggle(c)}
+                                                className="flex w-full items-center gap-2.5 px-3 py-1.5 text-left text-sm text-secondary hover:bg-primary_hover"
+                                            >
+                                                <Checkbox size="sm" isSelected={on} onChange={() => toggle(c)} aria-label={c} />
+                                                {c}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </div>
             )}
+
             <p className="text-sm text-tertiary">
-                {value.length === 0 ? "Not Specified — includes everyone." : `${value.length} of ${options.length} selected`}
-                {value.length > 0 && (
-                    <>
-                        {" · "}
-                        <button type="button" onClick={() => onChange([])} className="font-semibold" style={{ color: PINK }}>
-                            Clear all
-                        </button>
-                    </>
-                )}
+                {value.length === 0 ? `Not Specified — includes every ${noun.replace(/s$/, "")}.` : `${value.length} of ${all.length} selected`}
             </p>
         </div>
     );
@@ -335,7 +391,7 @@ export const ExistingTargets = ({ empty = false }: { empty?: boolean }) => {
         <>
             <div className={card}>
                 <h3 className="text-lg font-semibold text-primary">Geos</h3>
-                <ChipPicker label="Geos" options={GEOS} value={geos} onChange={setGeos} placeholder="Search countries…" />
+                <ChipPicker label="Geos" groups={GEO_REGIONS} value={geos} onChange={setGeos} placeholder="Search countries…" noun="countries" />
             </div>
             <div className={card}>
                 <h3 className="text-lg font-semibold text-primary">Platform</h3>
@@ -348,7 +404,7 @@ export const ExistingTargets = ({ empty = false }: { empty?: boolean }) => {
             </div>
             <div className={card}>
                 <h3 className="text-lg font-semibold text-primary">Apps</h3>
-                <ChipPicker label="Apps" options={apps} value={appList} onChange={setAppList} placeholder="Search apps…" />
+                <ChipPicker label="Apps" groups={[{ region: "", countries: apps }]} value={appList} onChange={setAppList} placeholder="Search apps…" noun="apps" />
             </div>
         </>
     );
