@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { InfoCircle, Plus, SearchLg, XClose } from "@untitledui/icons";
+import { Activity, CheckSquare, ChevronDown, Download01, Edit03, InfoCircle, Plus, SearchLg, Trash01 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
+import { Dropdown } from "@/components/base/dropdown/dropdown";
 import { Input } from "@/components/base/input/input";
 import { cx } from "@/utils/cx";
 import { currentFillMode, useRegisterPageFill } from "../../../shared/demo-fill";
@@ -9,7 +10,9 @@ import { DasShell, KeywordChip, PinkAction, TEAL } from "../../v1/screens/das-sh
 import { V2_NAV_ITEMS } from "./nav";
 import { peekReturn } from "./asset-data";
 import { Card, IntegrationGuide, KeywordTabs } from "./keyword-common";
-import { type Keyword, addKeywords, liveCampaigns, parseKeywordList, useKeywords } from "./keyword-data";
+import { type Keyword, addKeywords, deleteKeyword, liveCampaigns, parseKeywordList, useKeywords } from "./keyword-data";
+import { BatchAction, BatchBar, BatchBlocked, BatchCell, BatchDanger, BatchHeadCell } from "./batch-actions";
+import { downloadCsv, useBatch } from "./batch-data";
 
 /**
  * Manage keywords — Keyword Setup and View All Keywords.
@@ -183,6 +186,13 @@ export const ViewAllKeywords = ({ search = "", empty = false }: { search?: strin
     const [query, setQuery] = useState(search);
     const q = query.trim().toLowerCase();
     const shown = q ? rows.filter((k) => `${k.value} ${k.note}`.toLowerCase().includes(q)) : rows;
+    const batch = useBatch(shown);
+    const visible = batch.onlySelected ? batch.selected : shown;
+    // A keyword on a live campaign can't be removed in bulk — the same guard the single
+    // Remove enforces, applied before the batch rather than after it.
+    const removable = batch.selected.filter((k) => liveCampaigns(k).length === 0);
+    const blocked = batch.selected.filter((k) => liveCampaigns(k).length > 0);
+    const [showBlocked, setShowBlocked] = useState(false);
     const th = "px-3 py-2.5 text-left text-xs font-semibold text-tertiary";
     const td = "px-3 py-3 text-sm text-secondary";
 
@@ -210,9 +220,29 @@ export const ViewAllKeywords = ({ search = "", empty = false }: { search?: strin
                             <h2 className="text-display-xs font-semibold text-primary">Keywords</h2>
                             <div className="flex items-center gap-3">
                                 <Input aria-label="Search Keywords" size="md" icon={SearchLg} placeholder="Search Keywords" value={query} onChange={setQuery} wrapperClassName="w-72" />
-                                <Button color="secondary" className="uppercase" onClick={() => (window.location.hash = "#/keyword-bulk-add")}>
-                                    Bulk Add
-                                </Button>
+                                {/* Everything that acts on the table lives behind Actions, so
+                                    the header carries one verb and one named menu rather than
+                                    a row of competing buttons. Export follows the search —
+                                    exporting 400 keywords when you filtered to 6 is never
+                                    what you meant. */}
+                                <Dropdown.Root>
+                                    <Button color="secondary" className="uppercase" iconTrailing={ChevronDown}>
+                                        Actions
+                                    </Button>
+                                    <Dropdown.Popover className="w-60">
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item icon={CheckSquare} onAction={batch.start}>
+                                                Batch actions
+                                            </Dropdown.Item>
+                                            <Dropdown.Item icon={Download01} onAction={() => keywordCsv(shown)}>
+                                                {q ? `Export ${shown.length} shown (CSV)` : `Export all ${shown.length} (CSV)`}
+                                            </Dropdown.Item>
+                                            <Dropdown.Item icon={Plus} onAction={() => window.location.assign("#/keyword-bulk-add")}>
+                                                Bulk add from a list
+                                            </Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown.Popover>
+                                </Dropdown.Root>
                                 <Button color="primary-pink" className="uppercase" onClick={() => (window.location.hash = "#/keyword-setup")}>
                                     Add Keywords
                                 </Button>
@@ -220,9 +250,31 @@ export const ViewAllKeywords = ({ search = "", empty = false }: { search?: strin
                         </div>
 
                         <div className="overflow-x-auto rounded-xl ring-1 ring-secondary">
+                            {batch.on && (
+                                <BatchBar
+                                    batch={batch}
+                                    actions={
+                                        <BatchAction icon={Download01} onClick={() => keywordCsv(batch.selected)}>
+                                            Export selected
+                                        </BatchAction>
+                                    }
+                                    menu={
+                                        <BatchDanger
+                                            onAction={() => {
+                                                if (blocked.length) return setShowBlocked(true);
+                                                removable.forEach((k) => deleteKeyword(k.id));
+                                                batch.stop();
+                                            }}
+                                        >
+                                            Remove {batch.selected.length} {batch.selected.length === 1 ? "keyword" : "keywords"}
+                                        </BatchDanger>
+                                    }
+                                />
+                            )}
                             <table className="w-full min-w-[900px]">
                                 <thead className="bg-secondary">
                                     <tr>
+                                        {batch.on && <BatchHeadCell batch={batch} />}
                                         {["Status", "Keyword", "Note", "Associated Campaigns", "In Traffic", "Updated", ""].map((h) => (
                                             <th key={h} className={th}>
                                                 {h}
@@ -231,10 +283,11 @@ export const ViewAllKeywords = ({ search = "", empty = false }: { search?: strin
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {shown.map((k) => {
+                                    {visible.map((k) => {
                                         const live = liveCampaigns(k).length;
                                         return (
                                             <tr key={k.id} className="border-t border-secondary">
+                                                {batch.on && <BatchCell batch={batch} id={k.id} label={k.value} />}
                                                 <td className={td}>
                                                     <span className="inline-flex items-center gap-2">
                                                         <span className="size-2 rounded-full" style={{ backgroundColor: live ? TEAL : "#98A2B3" }} aria-hidden="true" />
@@ -251,19 +304,35 @@ export const ViewAllKeywords = ({ search = "", empty = false }: { search?: strin
                                                 <td className={td}>{k.seenInTraffic ? "Seen last 7 days" : <span className="text-warning-primary">Not seen</span>}</td>
                                                 <td className={td}>{k.updated}</td>
                                                 <td className={cx(td, "whitespace-nowrap")}>
-                                                    <span className="flex items-center gap-3">
-                                                        <PinkAction onPress={() => (window.location.hash = `#/keyword-detail?k=${k.id}`)}>Edit</PinkAction>
-                                                        <PinkAction icon={XClose} onPress={() => (window.location.hash = `#/keyword-delete-guard?k=${k.id}`)}>
-                                                            Remove
+                                                    {/* Same shape as the asset table: one action in the open,
+                                                        the destructive one behind the dots. Removing a keyword
+                                                        can quietly narrow a live campaign's targeting, so it
+                                                        shouldn't sit next to the button you press most. */}
+                                                    <span className="flex items-center justify-end gap-3">
+                                                        <PinkAction icon={Activity} onPress={() => (window.location.hash = "#/keyword-health")}>
+                                                            Check Traffic
                                                         </PinkAction>
+                                                        <Dropdown.Root>
+                                                            <Dropdown.DotsButton />
+                                                            <Dropdown.Popover className="w-48">
+                                                                <Dropdown.Menu>
+                                                                    <Dropdown.Item icon={Edit03} onAction={() => window.location.assign(`#/keyword-detail?k=${k.id}`)}>
+                                                                        Edit keyword
+                                                                    </Dropdown.Item>
+                                                                    <Dropdown.Item icon={Trash01} onAction={() => window.location.assign(`#/keyword-delete-guard?k=${k.id}`)}>
+                                                                        Remove
+                                                                    </Dropdown.Item>
+                                                                </Dropdown.Menu>
+                                                            </Dropdown.Popover>
+                                                        </Dropdown.Root>
                                                     </span>
                                                 </td>
                                             </tr>
                                         );
                                     })}
-                                    {shown.length === 0 && (
+                                    {visible.length === 0 && (
                                         <tr>
-                                            <td colSpan={7} className="px-3 py-10 text-center text-sm text-tertiary">
+                                            <td colSpan={batch.on ? 8 : 7} className="px-3 py-10 text-center text-sm text-tertiary">
                                                 No keywords match “{query}”.
                                             </td>
                                         </tr>
@@ -274,6 +343,14 @@ export const ViewAllKeywords = ({ search = "", empty = false }: { search?: strin
                     </>
                 )}
             </div>
+            {showBlocked && (
+                <BatchBlocked
+                    title={`${blocked.length} ${blocked.length === 1 ? "keyword is" : "keywords are"} on a live campaign`}
+                    lead="Removing one would quietly narrow that campaign's targeting while it is serving, so these have to come off their campaigns first. Nothing was removed — deselect them and try again."
+                    names={blocked.map((k) => k.value)}
+                    onClose={() => setShowBlocked(false)}
+                />
+            )}
         </DasShell>
     );
 };
@@ -285,6 +362,17 @@ export const ViewAllKeywords = ({ search = "", empty = false }: { search?: strin
  * all of it: the only way a keyword means anything is if an app is already sending it,
  * so the first screen a publisher sees is about the integration, not about typing.
  */
+/** The columns a keyword export carries. */
+const keywordCsv = (rows: Keyword[]) =>
+    downloadCsv(
+        "keywords",
+        ["Keyword", "Note", "Status", "Associated Campaigns", "Live Campaigns", "In Traffic", "Updated"],
+        rows.map((k) => {
+            const live = liveCampaigns(k).length;
+            return [k.value, k.note || "", live ? "Running" : "Paused", k.campaigns.length, live, k.seenInTraffic ? "Seen last 7 days" : "Not seen", k.updated];
+        }),
+    );
+
 const EmptyLibrary = () => (
     <div className="flex flex-col gap-6">
         <div className="flex flex-col items-start gap-4 rounded-2xl border border-dashed border-secondary p-8">

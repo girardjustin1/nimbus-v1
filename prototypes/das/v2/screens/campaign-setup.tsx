@@ -4,6 +4,7 @@ import { Button } from "@/components/base/buttons/button";
 import { cx } from "@/utils/cx";
 import { currentFillMode, useRegisterPageFill } from "../../../shared/demo-fill";
 import { useScreenNotes } from "../../../shared/screen-notes";
+import { FrequencyCapSection, PrioritySection } from "../../v1/screens/priority-frequency";
 import {
     BudgetSection,
     CreativeSection,
@@ -192,12 +193,14 @@ const Rail = ({
             <div className="divide-y divide-secondary border-y border-secondary">
                 <Row label="Deal Name">{deal?.label ?? <Missing />}</Row>
                 <Row label="Auction Rules">{form.rule ?? <Missing />}</Row>
+                <Row label="Priority">{form.priority ? `${form.priority}${form.priority === 1 ? " — highest" : ""}` : "Even distribution"}</Row>
                 {form.rule !== "Fallback" && (
                     <>
                         <Row label="Budget">{form.budget ? `$${form.budget.replace(/\.00$/, "")}` : <Missing />}</Row>
                         <Row label="Bid Amount (eCPM)">{form.ecpm ? `$${form.ecpm}` : <Missing />}</Row>
                     </>
                 )}
+                <Row label="Frequency Cap">{form.freqCap ? `${form.freqCap} per user / 24h` : "No cap"}</Row>
                 <Row label="Flight Dates">{form.start || form.end ? `${fmtDate(form.start) ?? "?"} – ${fmtDate(form.end) ?? "?"} (UTC)` : <Missing />}</Row>
                 <Row label="Ad Unit">{form.adUnits.length ? form.adUnits.join(", ") : "All units"}</Row>
                 <Row label="Keywords">{form.keywords.length ? `${form.keywords.length}` : <Missing />}</Row>
@@ -257,6 +260,10 @@ const advisoriesFor = (f: SetupForm): string[] => {
     if (!f.keywords.length) out.push("No keywords — this campaign isn't keyword-targeted, so it can serve to anyone the other targets allow.");
     if (!f.adUnits.length) out.push("No ad unit chosen — it will serve on all units.");
     if (f.rule !== "Fallback" && !f.end) out.push("No end date — it runs until you pause it.");
+    // Both are off by default, and the default is a behaviour worth stating out loud.
+    if (f.priority === undefined) out.push("Priority not set — this campaign gets even distribution against other active campaigns.");
+    else if (f.priority === 1) out.push("Priority 1 — this campaign is served ahead of every other active campaign.");
+    if (f.freqCap === undefined) out.push("No frequency cap — one user can see this campaign any number of times a day.");
     const days = flightDays(f);
     if (f.rule !== "Fallback" && f.budget && days)
         out.push(`${f.creatives.length} creative${f.creatives.length === 1 ? "" : "s"} over a ${days}-day flight. Pacing is front-loaded hourly.`);
@@ -455,7 +462,9 @@ export const CampaignSetup = ({ preset = "ready", attempted: initialAttempted = 
                         )}
                         <DealSection form={form} set={set} error={error} extended />
                         <RulesSection form={form} set={set} error={error} />
-                        <BudgetSection form={form} set={set} error={error} calendarOpen={calendarOpen} extended />
+                        <PrioritySection form={form} set={set} />
+                        <BudgetSection form={form} set={set} error={error} calendarOpen={calendarOpen} />
+                        <FrequencyCapSection form={form} set={set} />
                         <TargetingSectionV2 form={form} set={set} empty={preset === "empty"} />
                         <CreativeSection
                             form={form}

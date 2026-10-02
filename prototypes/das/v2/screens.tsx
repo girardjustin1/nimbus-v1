@@ -132,9 +132,15 @@ export const screens: ProtoScreen[] = [
         render: () => <AssetSetup filled />,
     }),
     assets({
+        id: "asset-setup-checked",
+        title: "Validation · markup checks out",
+        description: "Validate Markup reads the paste line by line. A clean tag gets a verdict rather than silence.",
+        render: () => <AssetSetup filled checked />,
+    }),
+    assets({
         id: "asset-setup-invalid",
-        title: "Edge case · markup that doesn't parse",
-        description: "The paste doesn't look like HTML or VAST.",
+        title: "Validation · four faults, located by line",
+        description: "An unterminated tag, an unquoted href, a macro over http://, and a document.write(). Each is reported against the line it is on; click one to put the caret there.",
         render: () => <AssetSetup filled invalid />,
     }),
     assets({
