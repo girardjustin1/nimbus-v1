@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AlertTriangle, CheckCircle, Plus, SearchLg, XClose } from "@untitledui/icons";
+import { AlertTriangle, CheckCircle, InfoCircle, Plus, SearchLg, XClose } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
 import { AdFormatDemo } from "@/pages/deal-activation-system/studio/components/ad-format-demo";
@@ -25,6 +25,48 @@ import { type Asset, previewFor, setReturnTo, useAssets } from "./asset-data";
 
 const asCreative = (a: Asset): Creative => ({ name: a.name, type: a.type, size: a.size === "Invalid" ? "N/A" : a.size });
 
+
+/**
+ * Leaving the campaign to make an asset.
+ *
+ * The copy says what actually happens rather than asking a question the publisher can't
+ * answer. They are not choosing whether to save — the draft is kept either way — they are
+ * deciding whether to break off now, so the one thing worth telling them is that nothing
+ * is lost and they land back where they were.
+ */
+const LeaveToCreate = ({ onStay, onGo }: { onStay: () => void; onGo: () => void }) => {
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => e.key === "Escape" && onStay();
+        document.addEventListener("keydown", onKey);
+        return () => document.removeEventListener("keydown", onKey);
+    }, [onStay]);
+    return (
+        <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/40 px-4" onClick={onStay}>
+            <div role="dialog" aria-modal="true" aria-label="Create a new asset" onClick={(e) => e.stopPropagation()} className="w-full max-w-md overflow-hidden rounded-2xl bg-primary shadow-2xl">
+                <div className="flex flex-col gap-3 px-6 py-5">
+                    <h2 className="text-lg font-semibold text-primary">Create a new asset?</h2>
+                    <p className="text-sm text-secondary">
+                        Your campaign is kept as a draft. You'll go to Asset Setup to paste the markup, and come straight back here with the new creative already
+                        attached.
+                    </p>
+                    <p className="flex items-start gap-2 rounded-xl px-4 py-3 text-sm" style={{ backgroundColor: `${TEAL}0f`, color: "#1F7F80" }}>
+                        <InfoCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+                        Nothing you've filled in is lost.
+                    </p>
+                </div>
+                <div className="flex justify-end gap-3 border-t border-secondary px-6 py-4">
+                    <Button color="secondary" className="uppercase" onClick={onStay}>
+                        Stay here
+                    </Button>
+                    <Button color="primary-pink" className="uppercase" onClick={onGo}>
+                        Go to Asset Setup
+                    </Button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 export const AssetPicker = ({
     chosen,
     onClose,
@@ -41,6 +83,7 @@ export const AssetPicker = ({
     const assets = useAssets();
     const [query, setQuery] = useState("");
     const [picked, setPicked] = useState<string[]>([]);
+    const [leaving, setLeaving] = useState(false);
 
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -90,14 +133,7 @@ export const AssetPicker = ({
 
                 <div className="flex flex-wrap items-center gap-3 border-b border-secondary px-6 py-3">
                     <Input aria-label="Search assets" size="md" icon={SearchLg} placeholder="Search assets" value={query} onChange={setQuery} wrapperClassName="flex-1 min-w-56" />
-                    <Button
-                        color="secondary"
-                        iconLeading={Plus}
-                        onClick={() => {
-                            setReturnTo(returnHref);
-                            window.location.assign("#/asset-setup");
-                        }}
-                    >
+                    <Button color="secondary" iconLeading={Plus} onClick={() => setLeaving(true)}>
                         New asset
                     </Button>
                 </div>
@@ -166,6 +202,15 @@ export const AssetPicker = ({
                     </div>
                 </div>
             </div>
+            {leaving && (
+                <LeaveToCreate
+                    onStay={() => setLeaving(false)}
+                    onGo={() => {
+                        setReturnTo(returnHref);
+                        window.location.assign("#/asset-setup");
+                    }}
+                />
+            )}
         </div>
     );
 };
