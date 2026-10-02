@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AlertTriangle, ArrowLeft, InfoCircle, PlayCircle, Trash01 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
+import { Dropdown } from "@/components/base/dropdown/dropdown";
 import { Input } from "@/components/base/input/input";
 import { Select } from "@/components/base/select/select";
 import { AdFormatDemo } from "@/pages/deal-activation-system/studio/components/ad-format-demo";
@@ -172,18 +173,25 @@ export const AssetDetail = ({ id = "a1", confirmingDelete = false }: { id?: stri
                     </div>
                     <div className="flex items-center gap-3">
                         <PinkAction icon={PlayCircle}>Test Asset</PinkAction>
-                        <PinkAction
-                            icon={Trash01}
-                            onPress={() => {
-                                if (live) setGuard(true);
-                                else {
-                                    deleteAsset(asset.id);
-                                    window.location.assign("#/asset-view");
-                                }
-                            }}
-                        >
-                            Delete
-                        </PinkAction>
+                        <Dropdown.Root>
+                            <Dropdown.DotsButton />
+                            <Dropdown.Popover className="w-48">
+                                <Dropdown.Menu>
+                                    <Dropdown.Item
+                                        icon={Trash01}
+                                        onAction={() => {
+                                            if (live) setGuard(true);
+                                            else {
+                                                deleteAsset(asset.id);
+                                                window.location.assign("#/asset-view");
+                                            }
+                                        }}
+                                    >
+                                        Delete
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown.Popover>
+                        </Dropdown.Root>
                     </div>
                 </div>
 

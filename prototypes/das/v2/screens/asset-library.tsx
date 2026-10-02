@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { InfoCircle, PlayCircle, SearchLg, Trash01 } from "@untitledui/icons";
+import { Edit03, InfoCircle, PlayCircle, SearchLg, Trash01 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
+import { Dropdown } from "@/components/base/dropdown/dropdown";
 import { Input } from "@/components/base/input/input";
 import { Select } from "@/components/base/select/select";
 import { AdFormatDemo } from "@/pages/deal-activation-system/studio/components/ad-format-demo";
@@ -379,11 +380,27 @@ export const ViewAllAssets = ({ search = "" }: { search?: string }) => {
                                     <td className={td}>{a.impressionTrackers.length || "—"}</td>
                                     <td className={td}>{a.clickTrackers.length || "—"}</td>
                                     <td className={cx(td, "whitespace-nowrap")}>
-                                        <span className="flex items-center gap-3">
+                                        {/* Delete sits behind the menu: it is one click from
+                                            stopping a live creative, and it was previously a
+                                            neighbour of the button you press most. */}
+                                        <span className="flex items-center justify-end gap-3">
                                             <PinkAction icon={PlayCircle}>Test Asset</PinkAction>
-                                            <PinkAction icon={Trash01} onPress={() => window.location.assign(`#/asset-detail?a=${a.id}${a.campaigns.length ? "&confirm=1" : ""}`)}>
-                                                Delete
-                                            </PinkAction>
+                                            <Dropdown.Root>
+                                                <Dropdown.DotsButton />
+                                                <Dropdown.Popover className="w-48">
+                                                    <Dropdown.Menu>
+                                                        <Dropdown.Item icon={Edit03} onAction={() => window.location.assign(`#/asset-detail?a=${a.id}`)}>
+                                                            Edit asset
+                                                        </Dropdown.Item>
+                                                        <Dropdown.Item
+                                                            icon={Trash01}
+                                                            onAction={() => window.location.assign(`#/asset-detail?a=${a.id}${a.campaigns.length ? "&confirm=1" : ""}`)}
+                                                        >
+                                                            Delete
+                                                        </Dropdown.Item>
+                                                    </Dropdown.Menu>
+                                                </Dropdown.Popover>
+                                            </Dropdown.Root>
                                         </span>
                                     </td>
                                 </tr>
