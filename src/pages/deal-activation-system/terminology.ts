@@ -61,15 +61,18 @@ export const setup = {
     dealName: s("Deal Name"),
     campaignName: i("Campaign Name", "Campaign name", "Review row label; the input screen was not captured."),
     auctionRules: s("Auction Rules", "Auction rules"),
-    priority: i("Priority", "Priority vs. other live campaigns", "Staging shows a bare integer."),
+    priority: s("Priority", "Priority vs. other live campaigns", "Its own section: Do not enable / Enable, then 1–100. Captured 2 Oct."),
 
     budgetAmount: i("Budget", "Total budget"),
     bidAmount: i("Bid Amount (eCPM)", "eCPM (bid amount)", "Staging inverts ours."),
     flightDates: i("Flight Dates", "Start / End", "One row with a hyphen-joined range."),
     dailyImpressionCap: i("Daily Impression Cap", "Daily impression cap"),
-    frequencyCap: i("Frequency Cap", undefined, "Exists in the product; we had no equivalent."),
+    frequencyCap: s("Frequency Cap", undefined, "Its own section, same Do not enable / Enable shape as Priority. Captured 2 Oct."),
 
-    geos: s("Geos"),
+    geos: s("Geos", undefined, "Region and Country are two columns in the product; we show one tree."),
+    geoRegions: s("AFRICA / APAC / EUROPE / LATAM / MIDEAST / NORAM / OTHERS", "Our own regional grouping", "The product's seven regions, read off the Geos selector. Replaces the grouping we invented."),
+    selectAll: s("Select All"),
+    clearFilter: s("Clear Filter"),
     platform: s("Platform"),
     apps: s("Apps"),
     adUnit: s("Ad Unit", "Ad unit type", "NOT “Ad Type” — that is the creative encoding on an asset."),
@@ -164,7 +167,7 @@ export const glossary: { area: string; term: Term }[] = [
 /** What still needs a screenshot before we can call it verified. */
 export const openCaptures = [
     "The Ad Type dropdown, open — we have the values HTML and VAST (xml) from the asset table, but not the option list.",
-    "Setup steps 1–3 (/create/1, /2, /3) — the real input labels for campaign name, budget, bid amount, flight dates, priority and the targeting pickers. Everything marked “inferred” comes from the Review page's read-only rows instead.",
+    "Setup steps 1–3 (/create/1, /2, /3) — the real input labels for campaign name, budget, bid amount and flight dates. Everything marked “inferred” comes from the Review page's read-only rows instead. Priority, Frequency Cap and the Geos selector were captured on 2 Oct and are no longer guesses.",
     "The manage campaigns page — no capture exists, so every string on our Campaigns screen is unverified.",
     "A non-test account, to confirm whether Transparent Publisher Exchange, Finance and advanced reporting are real nav groups.",
 ];

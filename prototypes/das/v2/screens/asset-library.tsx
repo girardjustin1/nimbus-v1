@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Edit03, InfoCircle, PlayCircle, SearchLg, Trash01 } from "@untitledui/icons";
+import { useRef, useState } from "react";
+import { AlertTriangle, CheckCircle, CheckDone01, CheckSquare, ChevronDown, Download01, Edit03, InfoCircle, PlayCircle, SearchLg, Trash01, XCircle } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { Dropdown } from "@/components/base/dropdown/dropdown";
 import { Input } from "@/components/base/input/input";
@@ -10,7 +10,9 @@ import { currentFillMode, useRegisterPageFill } from "../../../shared/demo-fill"
 import { Fillable } from "../../../shared/demo-fill-ui";
 import { DasShell, PINK, PinkAction, TEAL } from "../../v1/screens/das-shell";
 import { V2_NAV_ITEMS } from "./nav";
-import { AD_SIZES, AD_TYPES, type AdSize, type AdType, addAsset, findMacros, isWrappedVast, peekReturn, previewFor, useAssets } from "./asset-data";
+import { BatchAction, BatchBar, BatchBlocked, BatchCell, BatchDanger, BatchHeadCell } from "./batch-actions";
+import { downloadCsv, useBatch } from "./batch-data";
+import { AD_SIZES, AD_TYPES, type AdSize, type AdType, type Asset, type MarkupIssue, addAsset, deleteAsset, findMacros, isWrappedVast, peekReturn, previewFor, useAssets, validateMarkup } from "./asset-data";
 
 /**
  * Manage assets — Asset Setup and View All Assets.
@@ -24,9 +26,16 @@ import { AD_SIZES, AD_TYPES, type AdSize, type AdType, addAsset, findMacros, isW
  * before you save it. It is an approximation of the placement, not a render of the markup.
  */
 
-const SAMPLE_HTML = `<div id="sample-creative">
-  <a href="https://example.com/click">
-    <img src="https://cdn.example.com/sample-300x250.png" alt="" />
+/**
+ * The good scenario: a tag that passes every check.
+ *
+ * Every attribute quoted, every URL https, nothing that needs substituting, and the
+ * elements balanced — so Validate Markup comes back clean and you can see what clean
+ * looks like before you see what broken looks like.
+ */
+const SAMPLE_HTML = `<div id="autumn-mrec" style="width:300px;height:250px">
+  <a href="https://example.com/click?cid=10482&cr=mrec-autumn" target="_blank">
+    <img src="https://cdn.example.com/creative/300x250-autumn.png" width="300" height="250" alt="Autumn sale" />
   </a>
 </div>`;
 
@@ -39,9 +48,32 @@ const SAMPLE_VAST = `<VAST version="4.0">
   </Ad>
 </VAST>`;
 
-const BAD_MARKUP = `<div id="sample-creative"
-  <a href=https://example.com/click>
-    <img src=</div>`;
+/** The bad VAST scenario: no version, wrapped rather than inline, and a macro. */
+const BAD_VAST = `<VAST>
+  <Ad id="autumn-15s">
+    <Wrapper>
+      <VASTAdTagURI>https://adserver.example.com/vast?cb=[CACHEBUSTER]</VASTAdTagURI>
+    </Wrapper>
+  </Ad>
+</VAST>`;
+
+/**
+ * The bad scenario: five distinct faults, each on its own line.
+ *
+ * Deliberately not gibberish. Every one of these is a real mistake that arrives in a
+ * pasted tag, and each is on a different line so the report has something to point at:
+ *
+ *   1  the <div> is never closed with ">", so the rest is swallowed into the tag
+ *   2  href isn't quoted, so the URL is truncated at the "&"
+ *   3  loaded over http:// (blocked as mixed content) and carries a macro
+ *   5  document.write(), which silently does nothing once a webview has loaded
+ */
+const BAD_MARKUP = `<div id="autumn-mrec"
+  <a href=https://example.com/click?cid=10482&cr=mrec-autumn>
+    <img src="http://cdn.example.com/300x250.png?cb=\${CACHEBUSTER}" alt="Autumn sale" />
+  </a>
+  <script>document.write('<img src="https://track.example.com/imp" />');</script>
+</div>`;
 
 /**
  * Markup that would be rejected for containing macros.
@@ -117,6 +149,230 @@ const Tabs = ({ active }: { active: "setup" | "view" }) => (
     </div>
 );
 
+/* ------------------------------------------------------ Add Markup field --- */
+
+/** The gutter, the stripes and the textarea all have to agree on this. */
+const LINE_HEIGHT = 20;
+
+const RED = "#D92D20";
+const AMBER = "#B54708";
+
+export interface MarkupReport {
+    /** The exact text this report was produced from, so we can tell when it goes stale. */
+    at: string;
+    issues: MarkupIssue[];
+}
+
+/**
+ * The Add Markup field: line-located feedback, without pretending to be a code editor.
+ *
+ * Two kinds of checking, deliberately separated.
+ *
+ * **Live, as you type** — only the properties of a *paste*: macros, a wrapped VAST tag,
+ * VAST sitting in an HTML slot. Each is true the instant the text lands and doesn't
+ * depend on the markup being finished.
+ *
+ * **On demand, via Validate Markup** — the structural pass that reads line by line.
+ * Running that on every keystroke would be hostile, because markup is malformed for as
+ * long as you are halfway through typing it. It also runs on blur, so you find out
+ * without having to know the button is there.
+ *
+ * A report is tied to the exact text it ran against. Edit afterwards and it is marked
+ * stale rather than leaving a green tick over markup that has since changed.
+ */
+const MarkupField = ({
+    value,
+    onChange,
+    type,
+    liveError,
+    report,
+    onReport,
+}: {
+    value: string;
+    onChange: (next: string) => void;
+    type: AdType | undefined;
+    /** The live, paste-level problem, if any. */
+    liveError?: string;
+    report: MarkupReport | null;
+    onReport: (r: MarkupReport | null) => void;
+}) => {
+    const taRef = useRef<HTMLTextAreaElement>(null);
+    const gutterRef = useRef<HTMLDivElement>(null);
+    const stripesRef = useRef<HTMLDivElement>(null);
+
+    const lines = value.split("\n");
+    const stale = report !== null && report.at !== value;
+    const issues = report && !stale ? report.issues : [];
+    const errors = issues.filter((i) => i.severity === "error");
+    const warnings = issues.filter((i) => i.severity === "warning");
+
+    const toneOf = (line: number) =>
+        issues.some((i) => i.line === line && i.severity === "error") ? "error" : issues.some((i) => i.line === line) ? "warning" : null;
+
+    // Keep the gutter and the highlight stripes locked to the textarea's own scrolling.
+    const syncScroll = () => {
+        const top = taRef.current?.scrollTop ?? 0;
+        if (gutterRef.current) gutterRef.current.scrollTop = top;
+        if (stripesRef.current) stripesRef.current.style.transform = `translateY(${-top}px)`;
+    };
+
+    const run = () => onReport({ at: value, issues: validateMarkup(value, type ?? "HTML") });
+
+    /** Put the caret on the offending line and select it, so the report is actionable. */
+    const jumpTo = (line: number) => {
+        const ta = taRef.current;
+        if (!ta) return;
+        const start = lines.slice(0, line - 1).reduce((n, l) => n + l.length + 1, 0);
+        ta.focus();
+        ta.setSelectionRange(start, start + (lines[line - 1]?.length ?? 0));
+        ta.scrollTop = Math.max(0, (line - 1) * LINE_HEIGHT - LINE_HEIGHT * 3);
+        syncScroll();
+    };
+
+    const sample = (kind: "good" | "bad") => {
+        const isVast = type === "VAST (xml)";
+        onChange(kind === "good" ? (isVast ? SAMPLE_VAST : SAMPLE_HTML) : isVast ? BAD_VAST : BAD_MARKUP);
+        onReport(null);
+    };
+
+    const bad = Boolean(liveError) || errors.length > 0;
+
+    return (
+        <div className="flex flex-col gap-1.5">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+                <Label required>Add Markup</Label>
+                <span className="flex items-center gap-1.5 text-xs text-tertiary">
+                    Load a sample:
+                    <button type="button" onClick={() => sample("good")} className="rounded-md px-1.5 py-0.5 font-semibold hover:bg-secondary" style={{ color: "#1F7F80" }}>
+                        valid
+                    </button>
+                    <span aria-hidden="true">/</span>
+                    <button type="button" onClick={() => sample("bad")} className="rounded-md px-1.5 py-0.5 font-semibold hover:bg-secondary" style={{ color: AMBER }}>
+                        with errors
+                    </button>
+                </span>
+            </div>
+
+            <Fillable filled={Boolean(value)} onFill={() => sample("good")} hint="Click to paste sample markup">
+                <div
+                    className={cx(
+                        "relative flex overflow-hidden rounded-lg bg-primary shadow-xs ring-1 ring-inset",
+                        bad ? "ring-error_subtle" : "ring-primary focus-within:ring-2 focus-within:ring-brand",
+                    )}
+                >
+                    <div
+                        ref={gutterRef}
+                        aria-hidden="true"
+                        className="w-11 shrink-0 overflow-hidden border-r border-secondary bg-secondary py-3 text-right font-mono text-sm select-none"
+                        style={{ lineHeight: `${LINE_HEIGHT}px` }}
+                    >
+                        {lines.map((_, i) => {
+                            const tone = toneOf(i + 1);
+                            return (
+                                <div key={i} className="pr-2" style={{ height: LINE_HEIGHT, color: tone === "error" ? RED : tone === "warning" ? AMBER : "#98A2B3", fontWeight: tone ? 700 : 400 }}>
+                                    {i + 1}
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    {/* Behind the text: one stripe per flagged line, scrolled with it. */}
+                    <div className="pointer-events-none absolute inset-y-0 right-0 left-11 overflow-hidden" aria-hidden="true">
+                        <div ref={stripesRef} className="py-3">
+                            {lines.map((_, i) => {
+                                const tone = toneOf(i + 1);
+                                return <div key={i} style={{ height: LINE_HEIGHT, backgroundColor: tone === "error" ? `${RED}14` : tone === "warning" ? `${AMBER}14` : "transparent" }} />;
+                            })}
+                        </div>
+                    </div>
+
+                    <textarea
+                        ref={taRef}
+                        aria-label="Add Markup"
+                        value={value}
+                        onChange={(e) => onChange(e.target.value)}
+                        onScroll={syncScroll}
+                        onBlur={() => value.trim() && run()}
+                        rows={Math.min(20, Math.max(8, lines.length + 1))}
+                        spellCheck={false}
+                        wrap="off"
+                        placeholder={type === "VAST (xml)" ? "Paste raw, unwrapped VAST XML" : "Paste the HTML markup"}
+                        className="relative w-full resize-none overflow-auto bg-transparent px-3 pt-3 pb-14 font-mono text-sm text-primary outline-none"
+                        style={{ lineHeight: `${LINE_HEIGHT}px` }}
+                    />
+
+                    {/* Inside the editor, bottom right — where you look after reading the
+                        last line, rather than in a row below the field. */}
+                    <div className="pointer-events-none absolute right-3 bottom-3 z-10">
+                        <span className="pointer-events-auto">
+                            <Button size="sm" color="secondary" iconLeading={CheckDone01} onClick={run} isDisabled={!value.trim()}>
+                                Validate Markup
+                            </Button>
+                        </span>
+                    </div>
+                </div>
+            </Fillable>
+
+            {/* Once a current report is on screen it supersedes the live line — the same
+                problem stated twice, once without a line number, just reads as noise. */}
+            {liveError && (!report || stale) && <span className="text-sm text-error-primary">{liveError}</span>}
+
+            <span className="text-sm text-tertiary">Paste the tag itself. Nimbus doesn’t host images, so a file upload isn’t accepted.</span>
+
+            {report && (
+                <div className="mt-1 overflow-hidden rounded-xl ring-1 ring-secondary">
+                    {stale ? (
+                        <p className="flex items-center gap-2 px-4 py-3 text-sm" style={{ backgroundColor: `${AMBER}0f`, color: AMBER }}>
+                            <AlertTriangle className="size-4 shrink-0" aria-hidden="true" />
+                            The markup changed since the last check. Validate again.
+                        </p>
+                    ) : errors.length === 0 && warnings.length === 0 ? (
+                        <p className="flex items-center gap-2 px-4 py-3 text-sm font-medium" style={{ backgroundColor: `${TEAL}0f`, color: "#1F7F80" }}>
+                            <CheckCircle className="size-4 shrink-0" aria-hidden="true" />
+                            Markup checks out — {lines.length} {lines.length === 1 ? "line" : "lines"} of {type ?? "HTML"}, nothing to fix.
+                        </p>
+                    ) : (
+                        <>
+                            <p
+                                className="flex items-center gap-2 px-4 py-3 text-sm font-semibold"
+                                style={errors.length ? { backgroundColor: `${RED}0f`, color: RED } : { backgroundColor: `${AMBER}0f`, color: AMBER }}
+                            >
+                                {errors.length ? <XCircle className="size-4 shrink-0" aria-hidden="true" /> : <AlertTriangle className="size-4 shrink-0" aria-hidden="true" />}
+                                {errors.length > 0 && `${errors.length} ${errors.length === 1 ? "problem" : "problems"} to fix`}
+                                {errors.length > 0 && warnings.length > 0 && ", "}
+                                {warnings.length > 0 && `${warnings.length} ${warnings.length === 1 ? "thing" : "things"} worth checking`}
+                                {errors.length === 0 && " — this will still serve"}
+                            </p>
+                            <ul className="divide-y divide-secondary border-t border-secondary">
+                                {issues.map((issue, i) => (
+                                    <li key={i}>
+                                        <button
+                                            type="button"
+                                            onClick={() => jumpTo(issue.line)}
+                                            className="flex w-full items-start gap-3 px-4 py-2.5 text-left hover:bg-secondary"
+                                        >
+                                            <span
+                                                className="mt-px shrink-0 rounded px-1.5 py-0.5 font-mono text-xs font-bold"
+                                                style={{ color: issue.severity === "error" ? RED : AMBER, backgroundColor: issue.severity === "error" ? `${RED}14` : `${AMBER}14` }}
+                                            >
+                                                {issue.line}
+                                            </span>
+                                            <span className="flex min-w-0 flex-col gap-0.5">
+                                                <span className="text-sm text-primary">{issue.message}</span>
+                                                {issue.excerpt && <code className="truncate font-mono text-xs text-tertiary">{issue.excerpt}</code>}
+                                            </span>
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+};
+
 /* ------------------------------------------------------------ Asset Setup --- */
 
 export interface AssetSetupProps {
@@ -126,9 +382,11 @@ export interface AssetSetupProps {
     invalid?: boolean;
     /** Paste markup containing macros, which the charter forbids. */
     macros?: boolean;
+    /** Land with Validate Markup already run, so the verdict is on screen. */
+    checked?: boolean;
 }
 
-export const AssetSetup = ({ filled = false, invalid = false, macros: withMacros = false }: AssetSetupProps) => {
+export const AssetSetup = ({ filled = false, invalid = false, macros: withMacros = false, checked = false }: AssetSetupProps) => {
     const [name, setName] = useState(filled ? "SampleApp_MREC_Autumn" : "");
     const [type, setType] = useState<AdType | undefined>(filled ? "HTML" : undefined);
     const [size, setSize] = useState<AdSize | undefined>(filled ? "Medium Rectangle" : undefined);
@@ -136,6 +394,11 @@ export const AssetSetup = ({ filled = false, invalid = false, macros: withMacros
     const [imps, setImps] = useState<string[]>(filled ? SAMPLE_IMPRESSION_URLS.slice(0, 2).concat("") : ["", "", ""]);
     const [clicks, setClicks] = useState<string[]>(filled ? [SAMPLE_CLICK_URLS[0], "", ""] : ["", "", ""]);
     const [saved, setSaved] = useState<string | null>(null);
+    // Deep links to the error states arrive already checked, so the report is on screen.
+    const [report, setReport] = useState<MarkupReport | null>(() => {
+        const initial = withMacros ? MACRO_MARKUP : invalid ? BAD_MARKUP : checked && filled ? SAMPLE_HTML : null;
+        return initial ? { at: initial, issues: validateMarkup(initial, "HTML") } : null;
+    });
 
     const ret = peekReturn();
     const macros = findMacros(markup);
@@ -156,9 +419,11 @@ export const AssetSetup = ({ filled = false, invalid = false, macros: withMacros
         setName(bad ? "   " : "SampleApp_MREC_Autumn");
         setType("HTML");
         setSize("Medium Rectangle");
-        setMarkup(bad ? MACRO_MARKUP : SAMPLE_HTML);
+        setMarkup(bad ? BAD_MARKUP : SAMPLE_HTML);
         setImps(bad ? BAD_IMPRESSION_URLS : SAMPLE_IMPRESSION_URLS);
         setClicks(bad ? BAD_CLICK_URLS : SAMPLE_CLICK_URLS);
+        const pasted = bad ? BAD_MARKUP : SAMPLE_HTML;
+        setReport({ at: pasted, issues: validateMarkup(pasted, "HTML") });
     };
     useRegisterPageFill(fillForm);
 
@@ -170,10 +435,16 @@ export const AssetSetup = ({ filled = false, invalid = false, macros: withMacros
         setImps(["", "", ""]);
         setClicks(["", "", ""]);
         setSaved(null);
+        setReport(null);
     };
 
     const save = () => {
         if (!complete || !type || !size) return;
+        // The live pass only sees paste-level faults. Check the structure before saving,
+        // so a tag that never closes can't reach the library.
+        const issues = validateMarkup(markup, type);
+        setReport({ at: markup, issues });
+        if (issues.some((i) => i.severity === "error")) return;
         addAsset({ name, type, size, markup, impressionTrackers: imps.filter(Boolean), clickTrackers: clicks.filter(Boolean) });
         setSaved(name);
         if (ret) window.location.hash = `${ret.href}?keep=1&added=${encodeURIComponent(name)}`;
@@ -257,25 +528,14 @@ export const AssetSetup = ({ filled = false, invalid = false, macros: withMacros
                             </div>
                         </div>
 
-                        <div className="flex flex-col gap-1.5">
-                            <Label required>Add Markup</Label>
-                            <Fillable filled={Boolean(markup)} onFill={() => setMarkup(type === "VAST (xml)" ? SAMPLE_VAST : SAMPLE_HTML)} hint="Click to paste sample markup">
-                                <textarea
-                                    aria-label="Add Markup"
-                                    value={markup}
-                                    onChange={(e) => setMarkup(e.target.value)}
-                                    rows={10}
-                                    spellCheck={false}
-                                    placeholder={type === "VAST (xml)" ? "Paste raw, unwrapped VAST XML" : "Paste the HTML markup"}
-                                    className={cx(
-                                        "w-full rounded-lg bg-primary px-3.5 py-3 font-mono text-sm text-primary shadow-xs ring-1 ring-inset outline-none focus:ring-2",
-                                        markupLooksWrong ? "ring-error_subtle" : "ring-primary focus:ring-brand",
-                                    )}
-                                />
-                            </Fillable>
-                            {markupError && <span className="text-sm text-error-primary">{markupError}</span>}
-                            <span className="text-sm text-tertiary">Paste the tag itself. Nimbus doesn't host images, so a file upload isn't accepted.</span>
-                        </div>
+                        <MarkupField
+                            value={markup}
+                            onChange={setMarkup}
+                            type={type}
+                            liveError={markupError}
+                            report={report}
+                            onReport={setReport}
+                        />
 
                         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                             {urlRow(imps, setImps, "Impression Tracking URL(s)", SAMPLE_IMPRESSION_URLS)}
@@ -331,6 +591,20 @@ export const ViewAllAssets = ({ search = "" }: { search?: string }) => {
     const [query, setQuery] = useState(search);
     const q = query.trim().toLowerCase();
     const rows = q ? assets.filter((a) => `${a.name} ${a.type} ${a.size} ${a.campaigns.join(" ")}`.toLowerCase().includes(q)) : assets;
+    const batch = useBatch(rows);
+    const visible = batch.onlySelected ? batch.selected : rows;
+    // An asset on a campaign can't be deleted in bulk either — same guard as the single
+    // Delete, applied before the batch rather than after it.
+    const deletable = batch.selected.filter((a) => a.campaigns.length === 0);
+    const blocked = batch.selected.filter((a) => a.campaigns.length > 0);
+    const [showBlocked, setShowBlocked] = useState(false);
+
+    const assetCsv = (list: Asset[]) =>
+        downloadCsv(
+            "assets",
+            ["Asset Name", "Status", "Associated Campaigns", "Ad Type", "Ad Size", "Impression Trackers", "Click Trackers"],
+            list.map((a) => [a.name, a.status, a.campaigns.join("; "), a.type, a.size, a.impressionTrackers.length, a.clickTrackers.length]),
+        );
 
     const th = "px-3 py-2.5 text-left text-xs font-semibold text-tertiary";
     const td = "px-3 py-3 text-sm text-secondary";
@@ -343,6 +617,24 @@ export const ViewAllAssets = ({ search = "" }: { search?: string }) => {
                     <h2 className="text-display-xs font-semibold text-primary">Assets</h2>
                     <div className="flex items-center gap-3">
                         <Input aria-label="Search Assets" size="md" icon={SearchLg} placeholder="Search Assets" value={query} onChange={setQuery} wrapperClassName="w-72" />
+                        {/* Same Actions menu as manage keywords, so the two libraries behave
+                            identically: one named menu for what acts on the table, one pink
+                            button for the thing you came to do. */}
+                        <Dropdown.Root>
+                            <Button color="secondary" className="uppercase" iconTrailing={ChevronDown}>
+                                Actions
+                            </Button>
+                            <Dropdown.Popover className="w-60">
+                                <Dropdown.Menu>
+                                    <Dropdown.Item icon={CheckSquare} onAction={batch.start}>
+                                        Batch actions
+                                    </Dropdown.Item>
+                                    <Dropdown.Item icon={Download01} onAction={() => assetCsv(rows)}>
+                                        {q ? `Export ${rows.length} shown (CSV)` : `Export all ${rows.length} (CSV)`}
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown.Popover>
+                        </Dropdown.Root>
                         <Button color="primary-pink" className="uppercase" onClick={() => (window.location.hash = "#/asset-setup")}>
                             Add Creative
                         </Button>
@@ -350,9 +642,31 @@ export const ViewAllAssets = ({ search = "" }: { search?: string }) => {
                 </div>
 
                 <div className="overflow-x-auto rounded-xl ring-1 ring-secondary">
+                    {batch.on && (
+                        <BatchBar
+                            batch={batch}
+                            actions={
+                                <BatchAction icon={Download01} onClick={() => assetCsv(batch.selected)}>
+                                    Export selected
+                                </BatchAction>
+                            }
+                            menu={
+                                <BatchDanger
+                                    onAction={() => {
+                                        if (blocked.length) return setShowBlocked(true);
+                                        deletable.forEach((a) => deleteAsset(a.id));
+                                        batch.stop();
+                                    }}
+                                >
+                                    Delete {batch.selected.length} {batch.selected.length === 1 ? "asset" : "assets"}
+                                </BatchDanger>
+                            }
+                        />
+                    )}
                     <table className="w-full min-w-[1040px]">
                         <thead className="bg-secondary">
                             <tr>
+                                {batch.on && <BatchHeadCell batch={batch} />}
                                 {["Status", "Asset Name", "Associated Campaigns", "Ad Type", "Ad Size", "Impression Trackers", "Click Trackers", ""].map((h) => (
                                     <th key={h} className={th}>
                                         {h}
@@ -361,8 +675,9 @@ export const ViewAllAssets = ({ search = "" }: { search?: string }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {rows.map((a) => (
+                            {visible.map((a) => (
                                 <tr key={a.id} className="border-t border-secondary">
+                                    {batch.on && <BatchCell batch={batch} id={a.id} label={a.name} />}
                                     <td className={td}>
                                         <span className="inline-flex items-center gap-2">
                                             <span className="size-2 rounded-full" style={{ backgroundColor: a.status === "Running" ? TEAL : "#98A2B3" }} aria-hidden="true" />
@@ -405,9 +720,9 @@ export const ViewAllAssets = ({ search = "" }: { search?: string }) => {
                                     </td>
                                 </tr>
                             ))}
-                            {rows.length === 0 && (
+                            {visible.length === 0 && (
                                 <tr>
-                                    <td colSpan={8} className="px-3 py-10 text-center text-sm text-tertiary">
+                                    <td colSpan={batch.on ? 9 : 8} className="px-3 py-10 text-center text-sm text-tertiary">
                                         No assets match “{query}”.
                                     </td>
                                 </tr>
@@ -416,6 +731,14 @@ export const ViewAllAssets = ({ search = "" }: { search?: string }) => {
                     </table>
                 </div>
             </div>
+            {showBlocked && (
+                <BatchBlocked
+                    title={`${blocked.length} ${blocked.length === 1 ? "asset is" : "assets are"} on a campaign`}
+                    lead="Deleting one would stop a creative that is serving, so these have to come off their campaigns first. Nothing was deleted — deselect them and try again."
+                    names={blocked.map((a) => a.name)}
+                    onClose={() => setShowBlocked(false)}
+                />
+            )}
         </DasShell>
     );
 };

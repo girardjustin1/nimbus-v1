@@ -19,7 +19,9 @@ import type { AdUnitType, AuctionRule, MatchLogic } from "./das-data";
 export const SECTIONS = [
     { id: "deal", title: "General" },
     { id: "rules", title: "Auction Rules" },
+    { id: "priority", title: "Priority" },
     { id: "budget", title: "Budget" },
+    { id: "freqcap", title: "Frequency Cap" },
     { id: "targeting", title: "Targeting" },
     { id: "creative", title: "Creative" },
 ] as const;
@@ -76,6 +78,10 @@ export interface SetupForm {
     adUnits: AdUnitType[];
     languages: string[];
     creatives: Creative[];
+    /** 1 (highest) to 100. Undefined means "Do not enable" — even distribution. */
+    priority?: number;
+    /** Impressions per user per 24h, as typed. Undefined means "Do not enable" — no cap. */
+    freqCap?: string;
 }
 
 const base = { match: "ANY" as MatchLogic, adUnits: [] as AdUnitType[], languages: [] as string[] };
@@ -177,22 +183,34 @@ export const validate = (f: SetupForm): Issue[] => {
     if (!endAt) issues.push({ section: "budget", field: "end", text: "Pick an end date and time" });
     else if (startAt && (endAt.d.compare(startAt.d) < 0 || (endAt.d.compare(startAt.d) === 0 && endAt.t.compare(startAt.t) <= 0)))
         issues.push({ section: "budget", field: "end", text: "End is before the start" });
+    if (f.priority !== undefined && !(f.priority >= 1 && f.priority <= 100)) {
+        issues.push({ section: "priority", field: "priority", text: "Pick a priority from 1 to 100" });
+    }
+    if (f.freqCap !== undefined && !(Number(f.freqCap) >= 1)) {
+        issues.push({ section: "freqcap", field: "freqCap", text: "Set a frequency cap of 1 or more" });
+    }
     if (!f.creatives.length) issues.push({ section: "creative", field: "creatives", text: "Add at least one creative" });
     else if (new Set(f.creatives.map((c) => c.type)).size > 1) issues.push({ section: "creative", field: "creatives", text: "Creatives mix HTML and VAST (xml)" });
     return issues;
 };
 
-/** A section is "started" once any of its inputs has a value — drives the empty-state rail. */
-export const started = (f: SetupForm, s: SectionId) =>
-    s === "deal"
-        ? Boolean(f.dealId || f.name)
-        : s === "rules"
-          ? Boolean(f.rule)
-          : s === "budget"
-            ? Boolean(f.budget || f.ecpm || f.start || f.end)
-            : s === "targeting"
-              ? f.keywords.length > 0 || f.adUnits.length > 0 || f.languages.length > 0
-              : f.creatives.length > 0;
+/**
+ * A section is "started" once any of its inputs has a value — drives the empty-state rail.
+ *
+ * Priority and Frequency Cap count as started the moment they are enabled, even before a
+ * number is typed: choosing Enable is itself the decision the rail is tracking.
+ */
+const STARTED: Record<SectionId, (f: SetupForm) => boolean> = {
+    deal: (f) => Boolean(f.dealId || f.name),
+    rules: (f) => Boolean(f.rule),
+    priority: (f) => f.priority !== undefined,
+    budget: (f) => Boolean(f.budget || f.ecpm || f.start || f.end),
+    freqcap: (f) => f.freqCap !== undefined,
+    targeting: (f) => f.keywords.length > 0 || f.adUnits.length > 0 || f.languages.length > 0,
+    creative: (f) => f.creatives.length > 0,
+};
+
+export const started = (f: SetupForm, s: SectionId) => STARTED[s](f);
 
 export const flightDays = (f: SetupForm) => (f.start && f.end && f.end.compare(f.start) >= 0 ? f.end.compare(f.start) + 1 : undefined);
 
@@ -220,6 +238,9 @@ export const fill = {
     languages: () => byMode(["en"], ["en"]),
     /** Bad: HTML plus a VAST video in one campaign. */
     creatives: () => byMode(library.slice(0, 2), [library[0], library[2]]),
+    priority: () => byMode(rotate([1, 5, 12]), 0),
+    /** Bad: a cap of zero, which reads as "no cap" but would stop the campaign serving. */
+    freqCap: () => byMode(rotate(["3", "5", "2"]), "0"),
 };
 
 /** Everything a blank form needs, in one go. Used by the toolbar's "Fill page". */
@@ -239,6 +260,8 @@ export const fillAll = (f: SetupForm): Partial<SetupForm> => {
     if (!f.adUnits.length) next.adUnits = fill.adUnits();
     if (!f.languages.length) next.languages = fill.languages();
     if (!f.creatives.length) next.creatives = fill.creatives();
+    if (f.priority === undefined) next.priority = fill.priority();
+    if (f.freqCap === undefined) next.freqCap = fill.freqCap();
     return next;
 };
 
@@ -249,4 +272,6 @@ export const spoilAll = (f: SetupForm): Partial<SetupForm> => ({
     start: fill.start(),
     end: fill.end(),
     creatives: fill.creatives(),
+    priority: fill.priority(),
+    freqCap: fill.freqCap(),
 });

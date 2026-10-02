@@ -180,3 +180,204 @@ export const takeReturn = () => {
     return r;
 };
 export const peekReturn = () => returnTo;
+
+/* ------------------------------------------------- Markup validation --- */
+
+/**
+ * A single problem found in pasted markup, located at a line.
+ *
+ * The line number is the whole point: "this doesn't look like HTML" tells a publisher
+ * nothing they can act on, whereas "line 2: the value of href isn't quoted" tells them
+ * exactly where to put their cursor.
+ */
+export interface MarkupIssue {
+    /** 1-indexed, matching the gutter beside the field. */
+    line: number;
+    severity: "error" | "warning";
+    message: string;
+    /** The offending source line, trimmed, for the report. */
+    excerpt: string;
+}
+
+/** Elements that never have a closing tag, so they must not go on the nesting stack. */
+const VOID_ELEMENTS = new Set(["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"]);
+
+const lineOf = (src: string, index: number) => src.slice(0, index).split("\n").length;
+
+interface ScannedTag {
+    start: number;
+    raw: string;
+    /** No `>` before the next `<` — the tag was never finished. */
+    unterminated: boolean;
+}
+
+/**
+ * Pull the tags out of a document, keeping each one's offset.
+ *
+ * This is deliberately not a real HTML parser. It is a lint pass over a pasted tag,
+ * looking for the handful of mistakes that actually reach us, and it reports what it
+ * is unsure about rather than guessing.
+ */
+const scanTags = (src: string): ScannedTag[] => {
+    const tags: ScannedTag[] = [];
+    let i = 0;
+    while (i < src.length) {
+        const lt = src.indexOf("<", i);
+        if (lt === -1) break;
+        const after = src[lt + 1];
+
+        // A comment or doctype: skip to its own terminator, not the next ">".
+        if (after === "!") {
+            const isComment = src.startsWith("<!--", lt);
+            const end = isComment ? src.indexOf("-->", lt) : src.indexOf(">", lt);
+            if (end === -1) {
+                tags.push({ start: lt, raw: src.slice(lt), unterminated: true });
+                break;
+            }
+            i = end + (isComment ? 3 : 1);
+            continue;
+        }
+
+        // A bare "<" in text content is not a tag.
+        if (!after || !/[A-Za-z/?]/.test(after)) {
+            i = lt + 1;
+            continue;
+        }
+
+        const gt = src.indexOf(">", lt);
+        const nextLt = src.indexOf("<", lt + 1);
+        if (gt === -1 || (nextLt !== -1 && nextLt < gt)) {
+            tags.push({ start: lt, raw: src.slice(lt, nextLt === -1 ? undefined : nextLt), unterminated: true });
+            i = nextLt === -1 ? src.length : nextLt;
+            continue;
+        }
+
+        tags.push({ start: lt, raw: src.slice(lt, gt + 1), unterminated: false });
+        i = gt + 1;
+    }
+    return tags;
+};
+
+/**
+ * Split a tag's attribute region into attributes, without ever looking inside a quoted
+ * value — otherwise the query string of href="...?cid=10482" reads as an attribute of
+ * its own, and a correct tag gets reported as broken.
+ */
+const attributesOf = (inner: string): { name: string; value?: string }[] => {
+    const out: { name: string; value?: string }[] = [];
+    const re = /\s*([A-Za-z_:][-A-Za-z0-9_:.]*)(?:\s*=\s*("[^"]*"|'[^']*'|[^\s>]+))?/g;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(inner)) !== null) out.push({ name: m[1], value: m[2] });
+    return out;
+};
+
+const tagName = (raw: string) => (raw.match(/^<\/?\s*([A-Za-z][A-Za-z0-9:-]*)/)?.[1] ?? "").toLowerCase();
+
+/**
+ * Check pasted markup and report every problem with the line it is on.
+ *
+ * Errors block the creative; warnings do not. The split matters: an unquoted attribute
+ * silently truncates a click URL at the first space and is fatal, while an http:// image
+ * is merely likely to be blocked, which is the publisher's call to make.
+ */
+export const validateMarkup = (markup: string, type: AdType): MarkupIssue[] => {
+    const issues: MarkupIssue[] = [];
+    const lines = markup.split("\n");
+    const at = (index: number, severity: MarkupIssue["severity"], message: string) =>
+        issues.push({ line: lineOf(markup, index), severity, message, excerpt: (lines[lineOf(markup, index) - 1] ?? "").trim() });
+    const atLine = (line: number, severity: MarkupIssue["severity"], message: string) =>
+        issues.push({ line, severity, message, excerpt: (lines[line - 1] ?? "").trim() });
+
+    if (!markup.trim()) return [{ line: 1, severity: "error", message: "Nothing to check — paste the creative's markup first.", excerpt: "" }];
+
+    const tags = scanTags(markup);
+    const isVast = type === "VAST (xml)";
+
+    /* --- Does it even look like the type that was chosen? --- */
+    const first = tags[0];
+    if (!first) {
+        return [{ line: 1, severity: "error", message: `No tags found. This doesn't look like ${isVast ? "VAST XML" : "HTML"} — paste the tag itself, not a URL or a filename.`, excerpt: lines[0].trim() }];
+    }
+    if (isVast && !/^<(\?xml|VAST)/i.test(markup.trim())) {
+        atLine(1, "error", "VAST has to start with <VAST> (or an XML declaration). This looks like HTML in a VAST slot.");
+    }
+    if (!isVast && /^<(\?xml|VAST)/i.test(markup.trim())) {
+        atLine(1, "error", "This is VAST XML, but Ad Type is set to HTML. Change the Ad Type, or paste HTML.");
+    }
+
+    /* --- Structure. --- */
+    let unterminated = false;
+    let mismatched = false;
+    const stack: { name: string; start: number }[] = [];
+
+    for (const tag of tags) {
+        if (tag.raw.startsWith("<?")) continue; // an XML declaration is not an element
+        const name = tagName(tag.raw);
+
+        if (tag.unterminated) {
+            unterminated = true;
+            at(tag.start, "error", `<${name || "?"}> is never closed with “>”, so everything after it is swallowed into the tag.`);
+            continue;
+        }
+
+        const closing = tag.raw.startsWith("</");
+        const selfClosing = /\/\s*>$/.test(tag.raw);
+
+        // Unquoted attribute values: fatal, because the value ends at the first space.
+        if (!closing) {
+            const inner = tag.raw.replace(/^<\s*[A-Za-z][A-Za-z0-9:-]*/, "").replace(/\/?>$/, "");
+            for (const a of attributesOf(inner)) {
+                if (a.value !== undefined && !/^["']/.test(a.value)) {
+                    at(tag.start, "error", `The value of ${a.name} isn't in quotes (${a.name}=${a.value}). It will be cut off at the first space or “>”.`);
+                }
+            }
+        }
+
+        if (closing) {
+            const open = stack.pop();
+            // Once a tag is unterminated the stack is fiction, so don't pile on from it.
+            if (!open) {
+                if (!unterminated) at(tag.start, "error", `</${name}> closes a tag that was never opened.`);
+                mismatched = true;
+            } else if (open.name !== name) {
+                if (!unterminated) at(tag.start, "error", `</${name}> doesn't match <${open.name}>, opened on line ${lineOf(markup, open.start)}.`);
+                mismatched = true;
+                stack.push(open);
+            }
+        } else if (!selfClosing && (isVast || !VOID_ELEMENTS.has(name))) {
+            stack.push({ name, start: tag.start });
+        }
+    }
+
+    // Report what is still open only when the stack is trustworthy. After an unterminated
+    // tag or a mismatch, every remaining entry is a consequence of that first error, and
+    // listing them buries the one line the publisher actually has to fix.
+    if (!unterminated && !mismatched) {
+        for (const open of stack) at(open.start, "error", `<${open.name}> is opened but never closed.`);
+    }
+
+    /* --- Macros. Not supported anywhere; they serve as literal text. --- */
+    lines.forEach((text, i) => {
+        const found = findMacros(text);
+        if (found.length) atLine(i + 1, "error", `Macros aren't supported. Nimbus serves ${found.length === 1 ? "this" : "these"} as literal text: ${found.join(", ")}`);
+    });
+
+    /* --- VAST specifics. --- */
+    if (isVast) {
+        // <Wrapper> and <VASTAdTagURI> are the same problem, so report it once, where it starts.
+        const wrapAt = lines.findIndex((l) => /<VASTAdTagURI|<Wrapper[\s>]/i.test(l));
+        if (wrapAt !== -1) atLine(wrapAt + 1, "error", "This VAST is wrapped — it points at another tag instead of carrying the XML. Paste the raw, unwrapped XML.");
+        if (/<VAST\b/i.test(markup) && !/<VAST[^>]*\bversion\s*=/i.test(markup)) {
+            atLine(lines.findIndex((l) => /<VAST\b/i.test(l)) + 1, "warning", "<VAST> has no version attribute. Players that require one will drop the ad.");
+        }
+        if (!/<Ad\b/i.test(markup)) atLine(1, "error", "No <Ad> element — there is nothing for the player to serve.");
+    }
+
+    /* --- Things that break inside an in-app webview. --- */
+    lines.forEach((text, i) => {
+        if (/document\.write\s*\(/.test(text)) atLine(i + 1, "error", "document.write() does nothing once the webview has loaded. Inject the node instead.");
+        if (/\bsrc\s*=\s*["']?http:\/\//i.test(text)) atLine(i + 1, "warning", "Loaded over http://. iOS and Android block mixed content by default, so this asset may not appear.");
+    });
+
+    return issues.sort((a, b) => a.line - b.line || (a.severity === b.severity ? 0 : a.severity === "error" ? -1 : 1));
+};

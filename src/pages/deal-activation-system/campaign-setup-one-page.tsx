@@ -1,5 +1,5 @@
 import { type ReactNode, useState } from "react";
-import { AlertCircle, CheckCircle, CurrencyDollar, InfoCircle, SearchLg, XClose } from "@untitledui/icons";
+import { AlertCircle, CheckCircle, CurrencyDollar, InfoCircle, SearchLg, UploadCloud01, XClose } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
 import { RadioButton, RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
@@ -197,7 +197,7 @@ const CreativeSection = ({ state }: { state: SetupState }) => {
             id="creative"
             title="Creative"
             description="Add creatives from your asset library. A campaign can hold many creatives, all of the same type. For another format or language, use Publish & Duplicate."
-            trailing={<PinkAction>Upload new asset</PinkAction>}
+            trailing={<PinkAction icon={UploadCloud01}>Upload new asset</PinkAction>}
         >
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Input aria-label="Search assets" size="md" icon={SearchLg} placeholder="Search your asset library" wrapperClassName="flex-1" />
