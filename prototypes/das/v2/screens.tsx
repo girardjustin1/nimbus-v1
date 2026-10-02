@@ -74,8 +74,8 @@ export const screens: ProtoScreen[] = [
     }),
     setup({
         id: "setup-reviewed",
-        title: "Reviewed, ready to publish",
-        description: "The check came back clean, so Publish is live. Editing anything resets it.",
+        title: "Review modal",
+        description: "Review is the only button in the rail, and only goes pink when nothing is missing. Pressing it opens what the check came back with; Publish lives in there.",
         render: () => <CampaignSetup preset="ready" reviewed screenId="setup-ready" />,
     }),
     setup({
