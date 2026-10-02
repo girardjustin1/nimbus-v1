@@ -8,6 +8,7 @@ import { cx } from "@/utils/cx";
 import { currentFillMode, useRegisterPageFill } from "../../../shared/demo-fill";
 import { Fillable } from "../../../shared/demo-fill-ui";
 import { DasShell, PINK, PinkAction, TEAL } from "../../v1/screens/das-shell";
+import { V2_NAV_ITEMS } from "./nav";
 import { AD_SIZES, AD_TYPES, type AdSize, type AdType, addAsset, peekReturn, previewFor, useAssets } from "./asset-data";
 
 /**
@@ -147,7 +148,7 @@ export const AssetSetup = ({ filled = false, invalid = false }: AssetSetupProps)
     );
 
     return (
-        <DasShell navKey="manage assets">
+        <DasShell navItems={V2_NAV_ITEMS} navKey="manage assets">
             <Tabs active="setup" />
             <div className="flex flex-col gap-6 px-8 py-8">
                 {ret && (
@@ -276,7 +277,7 @@ export const ViewAllAssets = ({ search = "" }: { search?: string }) => {
     const td = "px-3 py-3 text-sm text-secondary";
 
     return (
-        <DasShell navKey="manage assets">
+        <DasShell navItems={V2_NAV_ITEMS} navKey="manage assets">
             <Tabs active="view" />
             <div className="flex flex-col gap-5 px-8 py-8">
                 <div className="flex flex-wrap items-center justify-between gap-3">

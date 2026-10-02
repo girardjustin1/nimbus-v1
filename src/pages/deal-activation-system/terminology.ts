@@ -127,6 +127,30 @@ export const AD_TYPES = ["HTML", "VAST (xml)"] as const;
 /** Targeting Ad Unit values. Not confirmed against staging — the picker was never captured. */
 export const AD_UNITS = ["Interstitial", "Inline", "Rewarded", "Dynamic Unit"] as const;
 
+/* ------------------------------------------------------------- Keywords --- */
+
+/**
+ * Manage keywords. Keywords have no equivalent anywhere in the product, so every term
+ * here is invented and the page carries a banner saying so. Where a word exists on the
+ * asset screens we reuse it exactly, so the two libraries read as one pattern.
+ */
+export const keywords = {
+    keywordSetup: a("Keyword Setup", undefined, "Mirrors staging's “Asset Setup”."),
+    viewAllKeywords: a("View All Keywords", undefined, "Mirrors staging's “View All Assets”."),
+    keywordHealth: a("Keyword Health", undefined, "No asset equivalent. A keyword can be valid and still never match, and nothing else in DAS would say so."),
+    bulkAdd: a("Bulk add", undefined, "Sub-page of Keyword Setup for pasting a list out of a remote config."),
+    addKeywords: a("Add Keywords", undefined, "Mirrors staging's “ADD CREATIVE”."),
+    deleteKeyword: a("Delete Keyword"),
+    keywordValue: a("Value", undefined, "The keyword itself, stored lower-case. Read-only once saved — campaigns match on it."),
+    keywordNote: a("Note", undefined, "For the publisher's team. Nimbus never interprets it."),
+    inTraffic: a("In Traffic", undefined, "Whether any app has sent this keyword in the last 7 days."),
+    arrivingOn: a("Arriving on", undefined, "Which of user.keywords / app.keywords / content.keywords carried it. Diagnostic only — the backend collapses all three."),
+    howPopulated: a("How they're populated", undefined, "The charter's three integration patterns, inferred from behaviour rather than configured."),
+    definedNotArriving: a("Defined, but not arriving", undefined, "In the library, but no app is sending it."),
+    arrivingNotDefined: a("Arriving, but not defined", undefined, "Sent by an app, but not in the library, so no campaign can target it."),
+    exportCsv: a("Export CSV", undefined, "The charter's reporting guardrail: per-keyword detail leaves by CSV or API, never as an on-screen chart."),
+};
+
 /* ------------------------------------------------------------ Glossary --- */
 
 /** Everything above, flattened, for the Storybook glossary page. */
@@ -134,6 +158,7 @@ export const glossary: { area: string; term: Term }[] = [
     ...Object.values(chrome).map((term) => ({ area: "Navigation", term })),
     ...Object.values(setup).map((term) => ({ area: "Campaign setup", term })),
     ...Object.values(assets).map((term) => ({ area: "Assets", term })),
+    ...Object.values(keywords).map((term) => ({ area: "Keywords", term })),
 ];
 
 /** What still needs a screenshot before we can call it verified. */

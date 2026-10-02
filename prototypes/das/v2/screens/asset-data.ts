@@ -120,6 +120,16 @@ export const resetAssets = () => {
     emit();
 };
 
+/**
+ * Find a just-created asset by name, shaped as the campaign form's Creative. The two
+ * models differ: an Asset carries markup and trackers, a Creative is the row a campaign
+ * shows.
+ */
+export const libraryByName = (name: string): { name: string; type: "HTML" | "VAST (xml)"; size: "Full screen" | "Medium Rectangle" | "Banner" | "N/A" } | undefined => {
+    const a = assets.find((x) => x.name === name);
+    return a ? { name: a.name, type: a.type, size: a.size === "Invalid" ? "N/A" : a.size } : undefined;
+};
+
 export const useAssets = () => useSyncExternalStore((l) => (listeners.add(l), () => listeners.delete(l)), () => assets);
 
 /**

@@ -3,6 +3,7 @@ import { AlertCircle, CheckCircle, Circle } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { cx } from "@/utils/cx";
 import { currentFillMode, useRegisterPageFill } from "../../../shared/demo-fill";
+import { useScreenNotes } from "../../../shared/screen-notes";
 import {
     BudgetSection,
     CreativeSection,
@@ -10,9 +11,11 @@ import {
     type FieldError,
     RulesSection,
     type Setter,
-    TargetingSection,
 } from "../../v1/screens/campaign-setup-one-page";
 import { DasShell, JumpLink, PINK, TEAL } from "../../v1/screens/das-shell";
+import { TargetingSectionV2 } from "./targeting-section";
+import { libraryByName, setReturnTo } from "./asset-data";
+import { V2_NAV_ITEMS } from "./nav";
 import {
     type Issue,
     SECTIONS,
@@ -27,7 +30,7 @@ import {
     started,
     validate,
 } from "../../v1/screens/setup-data";
-import { stepHref, useSetupDraft } from "../../v1/screens/setup-store";
+import { useSetupDraft } from "../../v1/screens/setup-store";
 
 /**
  * Round 2 — Campaign Setup.
@@ -241,6 +244,7 @@ const Rail = ({
 
 /* ------------------------------------------------------- Walkthrough --- */
 
+/** Steps through the flow. Rendered by the toolbar's Info button, not in the page. */
 const WALKTHROUGH = [
     { id: "setup-empty", label: "Empty" },
     { id: "step-general", label: "General" },
@@ -251,40 +255,6 @@ const WALKTHROUGH = [
     { id: "setup-ready", label: "Ready" },
 ];
 
-const WalkthroughStrip = ({ screenId }: { screenId?: string }) => {
-    const i = WALKTHROUGH.findIndex((s) => s.id === screenId);
-    if (i < 0) return null;
-    const next = WALKTHROUGH[i + 1];
-    const prev = WALKTHROUGH[i - 1];
-    return (
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-xl border border-dashed px-4 py-2.5" style={{ borderColor: `${PINK}66`, backgroundColor: `${PINK}08` }}>
-            <span className="text-xs font-bold tracking-wide uppercase" style={{ color: PINK }}>
-                Walkthrough
-            </span>
-            <ol className="flex flex-wrap items-center gap-1">
-                {WALKTHROUGH.map((s, j) => (
-                    <li key={s.id}>
-                        <a href={stepHref(s.id)} className={cx("rounded-md px-2 py-1 text-xs font-semibold", j === i ? "text-white" : "text-tertiary hover:bg-primary")} style={j === i ? { backgroundColor: PINK } : undefined}>
-                            {j + 1}. {s.label}
-                        </a>
-                    </li>
-                ))}
-            </ol>
-            <div className="ml-auto flex gap-2">
-                {prev && (
-                    <a href={stepHref(prev.id)} className="rounded-md px-2.5 py-1 text-xs font-semibold text-secondary ring-1 ring-secondary hover:bg-primary">
-                        ← {prev.label}
-                    </a>
-                )}
-                {next && (
-                    <a href={stepHref(next.id)} className="rounded-md px-2.5 py-1 text-xs font-semibold text-white" style={{ backgroundColor: PINK }}>
-                        {next.label} →
-                    </a>
-                )}
-            </div>
-        </div>
-    );
-};
 
 /* ------------------------------------------------------------------ Page --- */
 
@@ -311,12 +281,39 @@ export const CampaignSetup = ({ preset = "ready", attempted: initialAttempted = 
     const issues = validate(form);
     const error: FieldError = (field) => (attempted ? issues.find((i) => i.field === field)?.text : undefined);
 
+    // Commentary lives in the toolbar's Info button, not in the screen.
+    useScreenNotes({
+        label: "Round 2",
+        title: rail === "summary" ? "One page, with a summary rail that ends in Review" : "One page, with a validation rail that ends in Publish",
+        notes: [
+            "The “On this page” rail is gone — it repeated the right rail. The right rail now jumps between sections and to anything that needs fixing.",
+            rail === "summary"
+                ? "Review sends the campaign to the backend to be checked, the way DAS works today. Publish only lights up once that comes back clean, and any edit resets it."
+                : "Everything validates as you type and Publish is always live. This assumes the client can validate on its own — the open question for engineering.",
+            "Geos, Platform, Apps, Ad Unit and Keywords are five modules at the same level. Wording follows the product; anything we invented carries an ADDED chip.",
+        ],
+        walkthrough: WALKTHROUGH,
+        currentStep: screenId,
+    });
+
     useRegisterPageFill(() => {
         const bad = currentFillMode() === "bad";
         update(bad ? spoilAll(form) : fillAll(form));
         if (bad) setAttempted(true);
         setReviewed(false);
     });
+
+    // Coming back from Asset Setup: attach the creative that was just made.
+    useEffect(() => {
+        const name = new URLSearchParams(window.location.hash.split("?")[1] ?? "").get("added");
+        if (!name) return;
+        const made = libraryByName(name);
+        if (made && !form.creatives.some((c) => c.name === made.name)) update({ creatives: [...form.creatives, made] });
+        // Drop the param so a refresh doesn't attach it twice.
+        window.history.replaceState(null, "", window.location.hash.replace(/([?&])added=[^&]*/, "$1").replace(/[?&]$/, ""));
+        // Runs once per arrival.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // Deep-linking to a step opens the page at that section.
     useEffect(() => {
@@ -340,26 +337,15 @@ export const CampaignSetup = ({ preset = "ready", attempted: initialAttempted = 
 
     return (
         <DasShell
+            navItems={V2_NAV_ITEMS}
             navKey="deal activation setup"
             tabs={[
                 { label: "Campaign Setup", active: true, href: "#/setup-empty" },
                 { label: "View All Campaigns", href: "#/campaigns" },
             ]}
-            concept={{
-                label: "Round 2",
-                title: rail === "summary" ? "One page, with a summary rail that ends in Review" : "One page, with a validation rail that ends in Publish",
-                notes: [
-                    "The “On this page” rail is gone — it repeated the right rail. The right rail now jumps between sections and to anything that needs fixing.",
-                    rail === "summary"
-                        ? "Review sends the campaign to the backend to be checked, the way DAS works today. Publish only lights up once that comes back clean, and any edit resets it."
-                        : "Everything validates as you type and Publish is always live. This assumes the client can validate on its own — the open question for engineering.",
-                    "Geos, Platform, Apps, Ad Unit and Keywords are five modules at the same level. Wording follows the product; anything we invented carries an ADDED chip.",
-                ],
-            }}
         >
             <div className="grid grid-cols-1 gap-8 px-8 py-8 xl:grid-cols-[minmax(0,1fr)_360px]">
                 <div className="flex min-w-0 flex-col gap-6">
-                    <WalkthroughStrip screenId={screenId} />
                     <div>
                         {attempted && issues.length > 0 && (
                             <div role="alert" className="mb-6 flex flex-col gap-3 rounded-xl p-4 ring-1 ring-error_subtle" style={{ backgroundColor: `${PINK}0f` }}>
@@ -378,11 +364,20 @@ export const CampaignSetup = ({ preset = "ready", attempted: initialAttempted = 
                                 </ul>
                             </div>
                         )}
-                        <DealSection form={form} set={set} error={error} />
+                        <DealSection form={form} set={set} error={error} extended />
                         <RulesSection form={form} set={set} error={error} />
-                        <BudgetSection form={form} set={set} error={error} calendarOpen={calendarOpen} />
-                        <TargetingSection form={form} set={set} empty={preset === "empty"} />
-                        <CreativeSection form={form} set={set} error={error} />
+                        <BudgetSection form={form} set={set} error={error} calendarOpen={calendarOpen} extended />
+                        <TargetingSectionV2 form={form} set={set} empty={preset === "empty"} />
+                        <CreativeSection
+                            form={form}
+                            set={set}
+                            error={error}
+                            extended
+                            onUploadNew={() => {
+                                setReturnTo(`#/${screenId ?? "setup-ready"}`);
+                                window.location.assign("#/asset-setup");
+                            }}
+                        />
                     </div>
                 </div>
                 <div>

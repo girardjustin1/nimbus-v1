@@ -3,6 +3,9 @@ import { ViewDeliveryFirst, ViewOnePage, ViewPerformance, ViewSentence } from ".
 import { CompareCampaigns, ManageCampaignsDelivery } from "../v1/screens/manage-campaigns";
 import { AssetSetup, ViewAllAssets } from "./screens/asset-library";
 import { CampaignSetup } from "./screens/campaign-setup";
+import { BulkAddKeywords } from "./screens/keyword-bulk-add";
+import { KeywordDetail } from "./screens/keyword-detail";
+import { KeywordHealth } from "./screens/keyword-health";
 import { KeywordSetup, ViewAllKeywords } from "./screens/keyword-library-v2";
 
 /**
@@ -162,8 +165,56 @@ export const screens: ProtoScreen[] = [
     keywords({
         id: "keyword-view",
         title: "View All Keywords",
-        description: "The library, laid out like View All Assets.",
+        description: "The library, laid out like View All Assets. Every row opens.",
         render: () => <ViewAllKeywords />,
+    }),
+    keywords({
+        id: "keyword-empty",
+        title: "View All Keywords · nothing yet",
+        description: "The first screen a publisher sees: what a keyword is, the three ways to send one, and the request Nimbus reads it from.",
+        render: () => <ViewAllKeywords empty />,
+    }),
+    keywords({
+        id: "keyword-detail",
+        title: "Keyword detail",
+        description: "One keyword: its note, the campaigns matching on it, whether it's arriving, and its history.",
+        render: () => <KeywordDetail id="k1" />,
+    }),
+    keywords({
+        id: "keyword-detail-unseen",
+        title: "Keyword detail · never arrived",
+        description: "Defined, spelled fine, and no app has ever sent it — so it can't match. Why, and where to look.",
+        render: () => <KeywordDetail id="k5" />,
+    }),
+    keywords({
+        id: "keyword-bulk-add",
+        title: "Bulk add",
+        description: "Paste a list out of your remote config and see what happens to every line before anything saves.",
+        render: () => <BulkAddKeywords preset="good" />,
+    }),
+    keywords({
+        id: "keyword-bulk-add-problems",
+        title: "Edge case · a paste with problems",
+        description: "Duplicates, a casing collision, bad characters, over length, already in the library, and one nothing is sending.",
+        render: () => <BulkAddKeywords preset="problems" />,
+    }),
+    keywords({
+        id: "keyword-delete-guard",
+        title: "Edge case · delete blocked by a live campaign",
+        description: "A keyword a running campaign targets can't be deleted — it would narrow that campaign with nothing to say why.",
+        render: () => <KeywordDetail id="k1" confirmDelete />,
+    }),
+    keywords({
+        id: "keyword-delete-ok",
+        title: "Delete · nothing live is using it",
+        description: "The same guard when the keyword is free. Reporting already written keeps it.",
+        render: () => <KeywordDetail id="k5" confirmDelete />,
+    }),
+    keywords({
+        id: "keyword-health",
+        title: "Keyword Health",
+        description: "What your apps actually send against what you've defined. Aggregates only — no per-keyword charts.",
+        render: () => <KeywordHealth />,
     }),
 
     /* 5 · Campaigns — shared with v1 so the wording can't drift. */

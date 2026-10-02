@@ -32,6 +32,7 @@ const preview: Preview = {
                     "Deal Activation System",
                     [
                         "Overview",
+                        "Round 2 · Oct 1",
                         "Round 1 Concepts",
                         ["Campaign Setup (One Page)", "Targeting", "Keyword Library", "Manage Campaigns", "Reporting", "Components"],
                         "Studio Concept",

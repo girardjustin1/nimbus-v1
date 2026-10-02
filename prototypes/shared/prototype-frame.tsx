@@ -2,6 +2,7 @@ import { type ReactNode, useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, BookOpen01, Grid01 } from "@untitledui/icons";
 import { runPageFill } from "./demo-fill";
 import { DemoFillControls } from "./demo-fill-ui";
+import { ScreenInfoButton } from "./screen-notes-ui";
 
 /**
  * Prototype frame — shared chrome for every standalone prototype version.
@@ -125,6 +126,7 @@ const Toolbar = ({ meta, screens, activeId }: { meta: ProtoMeta; screens: ProtoS
             )}
 
             <div className="ml-auto flex items-center gap-3">
+                {activeId && <ScreenInfoButton />}
                 {activeId && <DemoFillControls onFillPage={runPageFill} />}
                 <a href="#/" className="inline-flex items-center gap-1.5 opacity-80 hover:opacity-100">
                     <Grid01 className="size-4" aria-hidden="true" /> All screens
