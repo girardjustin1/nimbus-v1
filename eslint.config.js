@@ -32,9 +32,10 @@ export default tseslint.config(
         rules: { "react-hooks/rules-of-hooks": "off" },
     },
     {
-        // Vendored Untitled UI components and hooks, synced from upstream
-        // (.github/workflows/sync-components.yml). Findings are reported as warnings
-        // rather than fixed locally, so a sync doesn't overwrite local edits.
+        // Vendored from the Untitled UI React kit. Findings are reported as warnings
+        // rather than errors so the files stay close to their originals and remain
+        // recognisable against upstream; prefer wrapping or composing over editing
+        // them in place.
         files: ["src/components/**", "src/hooks/**", "src/utils/**", "src/providers/**"],
         rules: {
             "@typescript-eslint/no-explicit-any": "warn",
