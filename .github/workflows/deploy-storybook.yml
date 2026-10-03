@@ -16,21 +16,24 @@ concurrency:
     group: pages
     cancel-in-progress: true
 
+# Runner pinned rather than ubuntu-latest: that label moves to Ubuntu 26 on
+# 19 Oct 2026, and a runner image changing under us is a thing to do
+# deliberately, on a branch, not on whichever push lands that morning.
 jobs:
     build:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v7
 
             - name: Configure GitHub Pages
-              uses: actions/configure-pages@v5
+              uses: actions/configure-pages@v6
               with:
                   # Auto-enable Pages (source = GitHub Actions) if it isn't already.
                   enablement: true
 
             - name: Setup Node
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v7
               with:
                   node-version: 22
                   cache: npm
@@ -56,17 +59,17 @@ jobs:
                   UNTITLEDUI_PRO_TOKEN: ${{ secrets.UNTITLEDUI_PRO_TOKEN }}
 
             - name: Upload artifact
-              uses: actions/upload-pages-artifact@v3
+              uses: actions/upload-pages-artifact@v5
               with:
                   path: storybook-static
 
     deploy:
         needs: build
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         environment:
             name: github-pages
             url: ${{ steps.deployment.outputs.page_url }}
         steps:
             - name: Deploy to GitHub Pages
               id: deployment
-              uses: actions/deploy-pages@v4
+              uses: actions/deploy-pages@v5
