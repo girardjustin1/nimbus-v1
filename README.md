@@ -277,9 +277,10 @@ shows under the repo's **Actions** tab.
 - **The Pages site is public.** Anyone with a link can open Storybook and the
   prototypes. Keep data fictional, and keep internal material (briefs, PDFs, staging
   screenshots) out of the repo. `reference/das-system/` is gitignored for this reason.
-- **Vendored components.** `src/components/` started from the Untitled UI React kit.
-  [`sync-components.yml`](.github/workflows/sync-components.yml) can pull upstream
-  updates, which may overwrite local fixes. Review sync PRs carefully.
+- **Vendored components.** `src/components/`, `src/hooks/`, `src/utils/` and
+  `src/providers/` started from the Untitled UI React kit and are treated as vendored:
+  lint reports findings there as warnings rather than errors, so the originals stay
+  recognisable. Prefer wrapping or composing over editing them in place.
 - **PRO icons (optional).** `@untitledui-pro/icons` isn't installed. To add it, put
   `UNTITLEDUI_PRO_TOKEN` in a local `.env` (read by `.npmrc`) and as a repository
   secret for CI.
