@@ -17,24 +17,28 @@ on:
                     - all
                     - existing-only
 
+# Runner pinned rather than ubuntu-latest: that label moves to Ubuntu 26 on
+# 19 Oct 2026, and a runner image changing under us is a thing to do
+# deliberately, on a branch, not on whichever push lands that morning.
 jobs:
     sync-components:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         permissions:
             contents: write
             pull-requests: write
 
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v7
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   fetch-depth: 0
 
             - name: Setup Node.js
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v7
               with:
-                  node-version: "18"
+                  # Was 18, which is past end of life. Matches the other workflows.
+                  node-version: "22"
 
             - name: Configure git
               run: |
