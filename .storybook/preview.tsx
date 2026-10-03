@@ -12,6 +12,9 @@ const preview: Preview = {
                 order: [
                     // 0) Welcome / overview page (always first)
                     "Introduction",
+                    // 0b) Research on the live product, directly under the introduction.
+                    //     These document another application and change nothing here.
+                    "Audits",
                     // 1) Styles / foundations
                     "Styles",
                     ["Color", "Typography", "Icons", "Elevation", "Shape", "Logos"],

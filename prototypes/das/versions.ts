@@ -16,6 +16,13 @@ export const versions: ProtoVersion[] = [
         summary:
             "The one-page setup, with the duplicated “On this page” rail removed so the right-hand rail does both jobs: it summarises the campaign and jumps you to anything that needs fixing. Everything you can target on — Geos, Platform, Apps, Ad Unit, Keywords — is now its own module at the same level, and the geo and app pickers really work. Creative gains a live preview of how the ad renders. Two new sections round out the structure the product already has: an asset library where a creative is created by pasting its markup, and a keyword library that mirrors it, both reachable from inside a campaign and returning you to it. Wording follows the product exactly; anything we invented carries an ADDED chip.",
     },
+    {
+        id: "v3",
+        label: "Round 3",
+        date: "October 2, 2026",
+        summary:
+            "The 2 Oct review, built. Everything you choose from a library you already made — deal, priority, frequency cap, geos, apps, keywords, creative — now behaves the same way: click or press Down for the whole list alphabetically, type to narrow it, arrows and Enter to pick, with the page held still until you choose. Apps and keywords end in a table rather than chips. Deal asks only for what each option needs, and Campaign Name and Flight Dates are sections of their own. The rail counts the product's five steps and Publish & Duplicate is back, in the Review modal. Rounds 1 and 2 stay frozen as the versions that were reviewed.",
+    },
 ];
 
 export const latest = versions[versions.length - 1].id;

@@ -127,7 +127,7 @@ const Toolbar = ({ meta, screens, activeId }: { meta: ProtoMeta; screens: ProtoS
 
             <div className="ml-auto flex items-center gap-3">
                 {activeId && <ScreenInfoButton />}
-                {activeId && <DemoFillControls onFillPage={runPageFill} />}
+                {activeId && <DemoFillControls onFillPage={runPageFill} clickToFill={meta.current === "v3"} />}
                 <a href="#/" className="inline-flex items-center gap-1.5 opacity-80 hover:opacity-100">
                     <Grid01 className="size-4" aria-hidden="true" /> All screens
                 </a>
