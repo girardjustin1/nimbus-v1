@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { AlertTriangle, Zap } from "@untitledui/icons";
-import { type FillMode, setFillMode, useCanFillPage, useFillMode } from "./demo-fill";
+import { type FillMode, setClickToFill, setFillMode, useCanFillPage, useClickToFill, useFillMode } from "./demo-fill";
 
 /**
  * Demo fill — the clickable chrome.
@@ -8,6 +8,10 @@ import { type FillMode, setFillMode, useCanFillPage, useFillMode } from "./demo-
  * <Fillable> wraps a control that is still empty. The first click fills it and is
  * swallowed, so the field populates instead of opening a menu or placing a caret; once
  * filled the wrapper gets out of the way entirely and the control behaves normally.
+ *
+ * With click-to-fill switched off in the toolbar it never wraps anything: no ring, no
+ * badge, no swallowed click, just the control. That is the mode for testing what a
+ * field does with something you typed rather than something we chose.
  */
 
 const PINK = "#DA6EA3";
@@ -26,7 +30,8 @@ export const Fillable = ({
     hint?: string;
 }) => {
     const mode = useFillMode();
-    if (filled) return <>{children}</>;
+    const enabled = useClickToFill();
+    if (filled || !enabled) return <>{children}</>;
     const tone = mode === "bad" ? AMBER : PINK;
     return (
         <span
@@ -64,10 +69,22 @@ const modes: { id: FillMode; label: string; title: string }[] = [
     { id: "bad", label: "Bad", title: "Fill data that breaks a rule — shows the error states" },
 ];
 
-/** Lives in the dark prototype toolbar: fill the page, and choose what gets filled. */
-export const DemoFillControls = ({ onFillPage }: { onFillPage: () => void }) => {
+const entryModes: { on: boolean; label: string; title: string }[] = [
+    { on: true, label: "Fill", title: "Click an empty field to fill it with sample data" },
+    { on: false, label: "Type", title: "Type into fields yourself — click-to-fill is off" },
+];
+
+/**
+ * Lives in the dark prototype toolbar: fill the page, and choose what gets filled.
+ *
+ * `clickToFill` is opt-in per prototype. Round 3 shows it; the earlier rounds were
+ * reviewed with the toolbar they had, and a control appearing in them now would be a
+ * change to a thing that is meant to stay still.
+ */
+export const DemoFillControls = ({ onFillPage, clickToFill = false }: { onFillPage: () => void; clickToFill?: boolean }) => {
     const mode = useFillMode();
     const canFill = useCanFillPage();
+    const fillOnClick = useClickToFill();
     return (
         <div className="flex items-center gap-2">
             <button
@@ -101,6 +118,25 @@ export const DemoFillControls = ({ onFillPage }: { onFillPage: () => void }) => 
                     </button>
                 ))}
             </div>
+            {clickToFill && (
+                <div className="flex items-center gap-0.5 rounded-md bg-white/10 p-0.5" role="radiogroup" aria-label="Field entry">
+                    {entryModes.map((e) => (
+                        <button
+                            key={e.label}
+                            type="button"
+                            role="radio"
+                            aria-checked={fillOnClick === e.on}
+                            title={e.title}
+                            onClick={() => setClickToFill(e.on)}
+                            className={`rounded px-2 py-0.5 text-xs font-semibold transition-colors ${
+                                fillOnClick === e.on ? "bg-white text-[#101828]" : "text-white/60 hover:text-white"
+                            }`}
+                        >
+                            {e.label}
+                        </button>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

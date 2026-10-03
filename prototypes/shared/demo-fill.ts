@@ -12,6 +12,13 @@ import { useEffect, useRef, useSyncExternalStore } from "react";
  * breaks a rule — an end date before the start, a blank budget, mixed creative types —
  * so the error states can be shown on demand rather than by luck.
  *
+ * Click-to-fill can also be switched off entirely. Swallowing the first click is what
+ * makes a walkthrough fast, and it is exactly what gets in the way when the thing you
+ * are testing is the typing: whether a field accepts what you give it, what the
+ * validation says, how a type-ahead behaves on a real query. Off, every field is an
+ * ordinary field. "Fill page" still works either way, because that is an explicit
+ * press rather than a click taken out of your hands.
+ *
  * This is prototype chrome, not product UI. Nothing here ships in a real screen.
  */
 
@@ -41,6 +48,23 @@ export const useFillMode = () => useSyncExternalStore(subscribeMode, () => mode)
 
 /** Pick one of two values by the active mode. Used all over the fill data. */
 export const byMode = <T,>(good: T, bad: T): T => (mode === "bad" ? bad : good);
+
+/* ----------------------------------------------------- Click-to-fill on/off --- */
+
+let clickToFill = true;
+const enabledListeners = new Set<() => void>();
+
+export const setClickToFill = (next: boolean) => {
+    clickToFill = next;
+    enabledListeners.forEach((l) => l());
+};
+
+const subscribeEnabled = (l: () => void) => {
+    enabledListeners.add(l);
+    return () => enabledListeners.delete(l);
+};
+
+export const useClickToFill = () => useSyncExternalStore(subscribeEnabled, () => clickToFill);
 
 /* -------------------------------------------------------------- Page fill --- */
 
