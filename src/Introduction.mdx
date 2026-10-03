@@ -27,9 +27,43 @@ single button to a full application screen — in both light and dark modes.
 
 <div style={{ background: "#FFF7FB", border: "1px solid #F7D6E6", borderRadius: 18, padding: "20px 22px", margin: "8px 0 20px" }}>
   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 8 }}>
-    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#A94579" }}>Round 2 · current</div>
+    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#A94579" }}>Round 3 · current</div>
+    <div style={{ fontSize: 13, fontWeight: 600, color: "#101828" }}>October 2, 2026 review, built</div>
+  </div>
+  <div style={{ display: "flex", flexDirection: "column", background: "#FFFFFF", border: "1px solid #EAECF0", borderTop: "4px solid #A94579", borderRadius: 14, padding: "18px 20px", marginTop: 14 }}>
+    <span style={{ alignSelf: "flex-start", background: "#FCE7F1", color: "#A94579", fontSize: 12, fontWeight: 700, padding: "3px 10px", borderRadius: 999 }}>Deal Activation System · v3</span>
+    <div style={{ fontSize: 20, fontWeight: 700, color: "#101828", margin: "10px 0 6px" }}>One way to pick something, used seven times</div>
+    <div style={{ fontSize: 14, lineHeight: 1.6, color: "#475467" }}>
+      The review was blunt about the premise: <em>“I'm not going to look through any list at all. I'm going to do a type ahead and then it's going to filter down my giant list for me.”</em> Round 2 assumed you would browse. Everything you choose from a library you already built now behaves identically — click the field or press <strong>↓</strong> for the whole list alphabetically, type to narrow it, <strong>↑ ↓</strong> and <strong>Enter</strong> to take one — and the page holds still until you have chosen.
+    </div>
+    <ul style={{ fontSize: 14, lineHeight: 1.65, color: "#475467", margin: "12px 0 6px", paddingLeft: 18 }}>
+      <li><strong>Apps and Keywords end in a table, not chips.</strong> A column can say which of two identically-named apps you are looking at, and whether a keyword is actually arriving in traffic. A chip cannot.</li>
+      <li><strong>Deal asks only for what each option needs</strong> — a name to generate an ID, a name and an ID to create one, or a search that fills both in. Campaign Name and Flight Dates are sections of their own now, level with Auction Rules; Daily Impression Cap is gone.</li>
+      <li><strong>The rail counts the product's five steps</strong> — General, Budget, Targeting, Creative, Review — instead of nine headings. Review turns pink when nothing is missing, and <strong>Publish &amp; Duplicate</strong> is back, in the Review modal, with the confirm the review asked for.</li>
+      <li><strong>Geos keeps its tree</strong>, because taking a whole region is the common case: the checkbox selects, a click opens a region, a double-click rolls it up, and nothing moves while you work.</li>
+      <li><strong>Creative previews are bounded by the search</strong> — they render once you are down to twelve or fewer — and any chosen creative opens full size.</li>
+      <li><strong>Ad Unit has a ?</strong> that shows what each of the four units looks like in an app, and auction rule cards are clickable end to end rather than on the dot.</li>
+    </ul>
+    <div style={{ fontSize: 13, color: "#667085", margin: "8px 0 6px" }}>43 screens · libraries grown to 50 deals, 50 keywords, 50 assets and 52 apps, each spanning A–Z so no first keystroke dead-ends</div>
+    <div style={{ fontSize: 13, color: "#667085", margin: "0 0 16px" }}>
+      Click any empty field to fill it, or press <strong>Fill page</strong>. New in the toolbar: a <strong>Fill / Type</strong> switch that turns click-to-fill off so you can type into fields yourself.
+    </div>
+    <div style={{ marginTop: "auto", display: "flex", alignItems: "center", flexWrap: "wrap", gap: 14 }}>
+      <a href={protoUrl("das/v3")} target="_top" style={{ background: "#A94579", color: "#FFFFFF", padding: "9px 16px", borderRadius: 999, fontSize: 14, fontWeight: 700, textDecoration: "none" }}>Open prototype →</a>
+      <a href="./?path=/docs/prototype-3-overview--docs" target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Prototype 3 in Storybook</a>
+      <a href={`${protoUrl("das/v3")}#/setup-empty`} target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Empty form</a>
+      <a href={`${protoUrl("das/v3")}#/setup-ready`} target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Review &amp; Publish &amp; Duplicate</a>
+      <a href={`${protoUrl("das/v3")}#/keyword-health`} target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Keyword Health</a>
+    </div>
+  </div>
+</div>
+
+<div style={{ background: "#F9FAFB", border: "1px solid #EAECF0", borderRadius: 18, padding: "20px 22px", margin: "8px 0 20px" }}>
+  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 8 }}>
+    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#475467" }}>Round 2 · reviewed, frozen</div>
     <div style={{ fontSize: 13, fontWeight: 600, color: "#101828" }}>October 1, 2026 review</div>
   </div>
+  <div style={{ fontSize: 13, color: "#667085", marginTop: 6 }}>The version Round 3 was reviewed against on 2 Oct. Kept exactly as it was.</div>
   <div style={{ display: "flex", flexDirection: "column", background: "#FFFFFF", border: "1px solid #EAECF0", borderTop: "4px solid #A94579", borderRadius: 14, padding: "18px 20px", marginTop: 14 }}>
     <span style={{ alignSelf: "flex-start", background: "#FCE7F1", color: "#A94579", fontSize: 12, fontWeight: 700, padding: "3px 10px", borderRadius: 999 }}>Deal Activation System · v2</span>
     <div style={{ fontSize: 20, fontWeight: 700, color: "#101828", margin: "10px 0 6px" }}>One page, one rail, and the libraries behind it</div>
@@ -88,8 +122,38 @@ single button to a full application screen — in both light and dark modes.
     </div>
   </div>
   </div>
+</div>
+
+<div style={{ background: "#F5F8FF", border: "1px solid #D6E0FF", borderRadius: 18, padding: "20px 22px", margin: "0 0 20px" }}>
+  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 8 }}>
+    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#3538CD" }}>Audits · research on the live product</div>
+    <div style={{ fontSize: 13, fontWeight: 600, color: "#101828" }}>October 2026</div>
+  </div>
+  <div style={{ fontSize: 13, color: "#667085", marginTop: 6 }}>Findings from the production dashboard. These document another application and change nothing in this design system.</div>
+  <div style={{ display: "flex", flexDirection: "column", background: "#FFFFFF", border: "1px solid #EAECF0", borderTop: "4px solid #3538CD", borderRadius: 14, padding: "18px 20px", marginTop: 14 }}>
+    <span style={{ alignSelf: "flex-start", background: "#EEF4FF", color: "#3538CD", fontSize: 12, fontWeight: 700, padding: "3px 10px", borderRadius: 999 }}>Typography</span>
+    <div style={{ fontSize: 20, fontWeight: 700, color: "#101828", margin: "10px 0 6px" }}>93 text styles where a system needs 10</div>
+    <div style={{ fontSize: 14, lineHeight: 1.6, color: "#475467" }}>
+      Every visible text element across all 22 pages of the publisher dashboard, read from the browser's computed style — 2,885 of them. Three things stand out: every native <code>&lt;button&gt;</code> renders in <strong>Arial</strong> because the global rule never sets a font-family; the <strong>200 and 300 weights</strong> the CSS asks for aren't in the font kit, so roughly 1,600 elements silently fall back to 400 and nothing designed in Light ships as drawn; and the pink, teal and blue link colours <strong>fail WCAG AA</strong> at the sizes they're used.
+    </div>
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 10, margin: "14px 0" }}>
+      {[["93 → 10", "text styles"], ["14 → 7", "font sizes"], ["7 → 3", "weights"], ["25 → 7", "line-heights"], ["19 → 9", "text colours"], ["4 → 1", "typefaces"]].map(([n, l]) => (
+        <span key={l} style={{ background: "#F9FAFB", border: "1px solid #EAECF0", borderRadius: 10, padding: "6px 12px", fontSize: 13, color: "#344054" }}>
+          <strong style={{ color: "#101828" }}>{n}</strong> {l}
+        </span>
+      ))}
+    </div>
+    <div style={{ fontSize: 13, color: "#667085", margin: "0 0 16px" }}>
+      13 findings with the rendered HTML and CSS · patterns by element · a page-by-page index · the proposed 10-token system as live specimens · text-colour roles with contrast ratios · a rollout plan · the full 93-row inventory
+    </div>
+    <div style={{ marginTop: "auto", display: "flex", alignItems: "center", flexWrap: "wrap", gap: 14 }}>
+      <a href="./?path=/docs/audits-typography-audit--docs" target="_top" style={{ background: "#3538CD", color: "#FFFFFF", padding: "9px 16px", borderRadius: 999, fontSize: 14, fontWeight: 700, textDecoration: "none" }}>Read the audit →</a>
+      <a href="./?path=/docs/audits-typography-audit--docs" target="_top" style={{ color: "#3538CD", fontSize: 13, fontWeight: 600 }}>The 10 tokens</a>
+    </div>
+  </div>
+
   <div style={{ fontSize: 13, color: "#667085", marginTop: 14 }}>
-    <strong style={{ color: "#344054" }}>Changelog</strong> · Oct 1, 2026: DAS v2 (Round 2) — one rail instead of two ending in a single Review button and a publish modal, targeting promoted to peer modules, working geo and app pickers, a new asset library (with macro and wrapped-VAST validation) and keyword library (with Keyword Health), click-to-fill on every field, and terminology aligned to the product with ADDED chips on anything invented · Sep 22, 2026: DAS Studio concept and prototype added; DAS gets View campaign pages and Publish error states; Performance Insights gets Saved Queries concepts and a drag-to-build explorer; both earlier prototypes now run as standalone, versioned apps (v1) · Sep 18, 2026: DAS kickoff, <em>Deal Activation System</em> category added.
+    <strong style={{ color: "#344054" }}>Changelog</strong> · Oct 3, 2026: DAS v3 (Round 3) built from the 2 Oct review — one search-and-select behaviour across all seven pickers, Apps and Keywords as tables, the Deal section rebuilt around its three options, Campaign Name and Flight Dates promoted to sections, a five-step rail, Publish &amp; Duplicate in the Review modal, and a Fill / Type toggle in the toolbar; typography audit of the production dashboard added under Audits · Oct 1, 2026: DAS v2 (Round 2) — one rail instead of two ending in a single Review button and a publish modal, targeting promoted to peer modules, working geo and app pickers, a new asset library (with macro and wrapped-VAST validation) and keyword library (with Keyword Health), click-to-fill on every field, and terminology aligned to the product with ADDED chips on anything invented · Sep 22, 2026: DAS Studio concept and prototype added; DAS gets View campaign pages and Publish error states; Performance Insights gets Saved Queries concepts and a drag-to-build explorer; both earlier prototypes now run as standalone, versioned apps (v1) · Sep 18, 2026: DAS kickoff, <em>Deal Activation System</em> category added.
   </div>
 </div>
 
