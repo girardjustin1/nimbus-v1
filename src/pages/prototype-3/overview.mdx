@@ -1,0 +1,89 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { framing, items } from "./feedback";
+
+<Meta title="Prototype 3/Overview" />
+
+export const Chip = ({ children, tone }) => (
+  <span style={{
+    background: tone === "Applied" ? "#E6F6F6" : tone === "Proposed" ? "#FFF4E5" : "#FBE9F1",
+    color: tone === "Applied" ? "#1F7F80" : tone === "Proposed" ? "#B54708" : "#A94579",
+    borderRadius: 999, padding: "1px 8px", fontSize: 11, fontWeight: 700, textTransform: "uppercase", whiteSpace: "nowrap",
+  }}>{children}</span>
+);
+
+export const th = { textAlign: "left", fontSize: 12, fontWeight: 700, color: "#475467", padding: "9px 12px", borderBottom: "1px solid #EAECF0", background: "#F9FAFB" };
+export const td = { fontSize: 14, color: "#344054", padding: "10px 12px", borderBottom: "1px solid #EAECF0", verticalAlign: "top" };
+
+<div style={{ maxWidth: 920 }}>
+
+# Prototype 3 · October 2
+
+Round 2 was reviewed on 2 October. This category holds what came out of it: the changes
+that were decided outright, and the ones where there is a real choice to make, shown as
+the original beside two proposals you can actually drive.
+
+## The thing everything else follows from
+
+> “{framing.quote}”
+>
+> — Product, Oct 2 review
+
+{framing.decision}
+
+Round 2 assumed you would browse. Every picker in it opens a list and invites you to look
+through it, which works at five rows and does not work at a hundred and fifty. So the
+library behind every story here holds **50 keywords and 50 apps** — the number asked for
+on the call, and enough to make browsing obviously the wrong answer.
+
+## What's in here
+
+<div style={{ overflowX: "auto", border: "1px solid #EAECF0", borderRadius: 12, margin: "12px 0 24px" }}>
+  <table style={{ width: "100%", borderCollapse: "collapse", margin: 0 }}>
+    <thead><tr><th style={th}>Theme</th><th style={th}>Status</th><th style={th}>What it decides</th></tr></thead>
+    <tbody>
+      {items.map((i) => (
+        <tr key={i.slug}>
+          <td style={{ ...td, fontWeight: 600 }}>{i.title}</td>
+          <td style={td}><Chip tone={i.status}>{i.status}</Chip></td>
+          <td style={{ ...td, color: "#667085" }}>{i.decision[0]}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+**Asked for** means there is a choice to make and two proposals to compare.
+**Applied** means it was decided on the call and is already in prototype 3 — recorded
+here anyway, because removing something is much easier to reverse when you can still see
+what was removed.
+
+## The two proposals, in one sentence each
+
+**A — the search sits on the page.** Fewest clicks, and what you are building stays
+visible while you build it. Costs vertical space on a form that already has seven
+sections.
+
+**B — the search is a modal.** The section stays short whatever happens, there is room
+for checkboxes so several things go in at once, and the Add button answers the other
+complaint from the call: that clicking away to commit is a strange way to save.
+
+Both end in the same table, so whichever is chosen the other costs nothing to abandon.
+
+## Deliberately not in this round
+
+- **Geos.** Only the click-to-commit was objected to, and the right fix is whatever
+  keywords and creative settle on. Changing it twice would be worse than changing it late.
+- **Batch actions.** The product stages bulk edits — *“Preparing 1,988 changes”* — and
+  reviews them before committing, where ours apply immediately. Worth reconciling, not
+  this round.
+- **Manage campaigns grouped by campaign rather than by deal.** Flagged on the call as
+  the next session's subject.
+- **Categories or folders for keywords.** Asked directly, answered directly: *“For V1, no.”*
+
+## Rounds 1 and 2 are untouched
+
+Everything here changes prototype 3 only. Round 1 is the record of what the Extended
+Targeting charter asked for; Round 2 is what was reviewed on 1 and 2 October. Where a
+change needed a shared file, prototype 3 got its own copy rather than editing theirs.
+
+</div>
