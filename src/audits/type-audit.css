@@ -1,0 +1,109 @@
+/* ==========================================================================
+   Nimbus Dashboard typography audit — specimen styles.
+
+   This is the style sheet from section 13 of the audit, with one change: every
+   rule is nested under `.type-audit` so the specimens on the audit page render
+   in the proposed system without any of it reaching the Nimbus design system.
+   The audit is a record of what the production dashboard does today; adopting
+   any of it is a separate decision, so nothing here is global and nothing here
+   touches theme.css, typography.css or globals.css.
+
+   The custom properties are prefixed `--ta-` for the same reason: a token named
+   `--text-primary` sitting in the same document as the real theme is an
+   accident waiting to happen.
+   ========================================================================== */
+
+.type-audit {
+    /* Family ---------------------------------------------------------------- */
+    --ta-font-sans: "proxima-nova", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+    /* Weights: only these three --------------------------------------------- */
+    --ta-fw-regular: 400;
+    --ta-fw-bold: 700;
+    --ta-fw-heavy: 800;
+
+    /* Tracking -------------------------------------------------------------- */
+    --ta-tracking-tight: -0.01em;
+    --ta-tracking-caps: 0.06em;
+
+    /* Scale (size / line-height) -------------------------------------------- */
+    --ta-size-display: 2.5rem;      --ta-lh-display: 3rem;
+    --ta-size-headline: 1.75rem;    --ta-lh-headline: 2.25rem;
+    --ta-size-title: 1.25rem;       --ta-lh-title: 1.75rem;
+    --ta-size-subtitle: 1rem;       --ta-lh-subtitle: 1.5rem;
+    --ta-size-body-lg: 1rem;        --ta-lh-body-lg: 1.5rem;
+    --ta-size-body: 0.875rem;       --ta-lh-body: 1.375rem;
+    --ta-size-caption: 0.75rem;     --ta-lh-caption: 1rem;
+    --ta-size-label: 0.6875rem;     --ta-lh-label: 1rem;
+    --ta-size-button: 0.75rem;      --ta-lh-button: 1rem;
+    --ta-size-badge: 0.6875rem;     --ta-lh-badge: 0.75rem;
+
+    /* Text color roles ------------------------------------------------------ */
+    --ta-text-primary: #000000;
+    --ta-text-secondary: #666666;
+    --ta-text-tertiary: #767676;
+    --ta-text-disabled: #aaaaaa;
+    --ta-text-inverse: #ffffff;
+    --ta-text-inverse-muted: #bbbbbb;
+    --ta-text-action: #b84d83;
+    --ta-text-active: #007a7c;
+    --ta-text-info: #0275af;
+}
+
+/* The ten tokens --------------------------------------------------------- */
+.type-audit .type-display {
+    font: var(--ta-fw-bold) var(--ta-size-display) / var(--ta-lh-display) var(--ta-font-sans);
+    letter-spacing: var(--ta-tracking-tight);
+    font-variant-numeric: tabular-nums;
+    color: var(--ta-text-primary);
+}
+.type-audit .type-headline {
+    font: var(--ta-fw-bold) var(--ta-size-headline) / var(--ta-lh-headline) var(--ta-font-sans);
+    letter-spacing: var(--ta-tracking-tight);
+    color: var(--ta-text-primary);
+}
+.type-audit .type-title {
+    font: var(--ta-fw-bold) var(--ta-size-title) / var(--ta-lh-title) var(--ta-font-sans);
+    color: var(--ta-text-primary);
+}
+.type-audit .type-subtitle {
+    font: var(--ta-fw-bold) var(--ta-size-subtitle) / var(--ta-lh-subtitle) var(--ta-font-sans);
+    color: var(--ta-text-primary);
+}
+.type-audit .type-body-lg {
+    font: var(--ta-fw-regular) var(--ta-size-body-lg) / var(--ta-lh-body-lg) var(--ta-font-sans);
+    color: var(--ta-text-secondary);
+}
+.type-audit .type-body {
+    font: var(--ta-fw-regular) var(--ta-size-body) / var(--ta-lh-body) var(--ta-font-sans);
+    color: var(--ta-text-secondary);
+}
+.type-audit .type-caption {
+    font: var(--ta-fw-regular) var(--ta-size-caption) / var(--ta-lh-caption) var(--ta-font-sans);
+    color: var(--ta-text-tertiary);
+}
+.type-audit .type-label {
+    font: var(--ta-fw-bold) var(--ta-size-label) / var(--ta-lh-label) var(--ta-font-sans);
+    letter-spacing: var(--ta-tracking-caps);
+    text-transform: uppercase;
+    color: var(--ta-text-tertiary);
+}
+.type-audit .type-button {
+    font: var(--ta-fw-heavy) var(--ta-size-button) / var(--ta-lh-button) var(--ta-font-sans);
+    letter-spacing: var(--ta-tracking-caps);
+    text-transform: uppercase;
+    color: var(--ta-text-primary);
+}
+.type-audit .type-badge {
+    font: var(--ta-fw-heavy) var(--ta-size-badge) / var(--ta-lh-badge) var(--ta-font-sans);
+    letter-spacing: var(--ta-tracking-caps);
+    text-transform: uppercase;
+    color: var(--ta-text-primary);
+}
+
+.type-audit .type-strong { font-weight: var(--ta-fw-bold); color: var(--ta-text-primary); }
+.type-audit .type-numeric { font-variant-numeric: tabular-nums; }
+
+/* Page furniture ---------------------------------------------------------- */
+.type-audit table { font-variant-numeric: tabular-nums; }
+.type-audit .ta-before { font-family: var(--ta-font-sans); }
