@@ -13,18 +13,20 @@ Storybook 10 · Vite.**
 
 ## 🔗 Open it
 
-| What | Live (GitHub Pages) | Local |
-| --- | --- | --- |
-| **Storybook** (design system) | [girardjustin1.github.io/nimbus-v1](https://girardjustin1.github.io/nimbus-v1/) | `npm run storybook` → http://localhost:6006 |
-| **Prototype: Deal Activation System** | […/nimbus-v1/das/](https://girardjustin1.github.io/nimbus-v1/das/) | `npm run proto:dev` → http://localhost:5190/das/ |
-| **Prototype: Performance Insights** | […/nimbus-v1/performance-insights/](https://girardjustin1.github.io/nimbus-v1/performance-insights/) | `npm run proto:dev` → http://localhost:5190/performance-insights/ |
-| **Prototype: DAS Studio** | […/nimbus-v1/das-studio/](https://girardjustin1.github.io/nimbus-v1/das-studio/) | `npm run proto:dev` → http://localhost:5190/das-studio/ |
+| What | GitHub Pages (primary) | Netlify (backup) | Local |
+| --- | --- | --- | --- |
+| **Storybook** (design system) | [girardjustin1.github.io/nimbus-v1](https://girardjustin1.github.io/nimbus-v1/) | [nimbus-ds-v1.netlify.app](https://nimbus-ds-v1.netlify.app/) | `npm run storybook` → http://localhost:6006 |
+| **Prototype: Deal Activation System** | […/nimbus-v1/das/](https://girardjustin1.github.io/nimbus-v1/das/) | […netlify.app/das/](https://nimbus-ds-v1.netlify.app/das/) | `npm run proto:dev` → http://localhost:5190/das/ |
+| **Prototype: Performance Insights** | […/nimbus-v1/performance-insights/](https://girardjustin1.github.io/nimbus-v1/performance-insights/) | […netlify.app/performance-insights/](https://nimbus-ds-v1.netlify.app/performance-insights/) | `npm run proto:dev` → http://localhost:5190/performance-insights/ |
+| **Prototype: DAS Studio** | […/nimbus-v1/das-studio/](https://girardjustin1.github.io/nimbus-v1/das-studio/) | […netlify.app/das-studio/](https://nimbus-ds-v1.netlify.app/das-studio/) | `npm run proto:dev` → http://localhost:5190/das-studio/ |
 
 Start with the **[Introduction](https://girardjustin1.github.io/nimbus-v1/?path=/docs/introduction--docs)**
 page in Storybook. It gives a guided overview and links to every prototype.
 
-Everything on `main` deploys automatically. Merge to `main`, and a couple of minutes
-later the links above show the new version.
+Everything on `main` deploys automatically to both hosts. Merge to `main`, and a couple
+of minutes later the links above show the new version. GitHub Pages is the primary;
+Netlify builds the same site and is the backup. If one is behind (for example during a
+GitHub Actions outage), use the other.
 
 ---
 
@@ -40,8 +42,8 @@ older versions stay live (`…/das/v1/`, `…/das/v2/`, …).
 **Round 3 is current** (built from the 2 Oct review, updated from the 5 Oct review).
 Rounds 1 (22 Sep) and 2 (1 Oct) stay live, unchanged, at `…/das/v1/` and `…/das/v2/`.
 
-[Open prototype →](https://girardjustin1.github.io/nimbus-v1/das/) ·
-[Campaign Setup spec](https://girardjustin1.github.io/nimbus-v1/?path=/docs/deal-activation-system-campaign-setup-spec--docs)
+[Open prototype →](https://girardjustin1.github.io/nimbus-v1/das/) ([backup](https://nimbus-ds-v1.netlify.app/das/)) ·
+[Campaign Setup spec](https://girardjustin1.github.io/nimbus-v1/?path=/docs/deal-activation-system-campaign-setup-spec--docs) ([backup](https://nimbus-ds-v1.netlify.app/?path=/docs/deal-activation-system-campaign-setup-spec--docs))
 
 > **The experience.** A publisher sets up a direct-sold campaign on one page. Everything
 > they choose from a library they already built (deal, priority, frequency cap, geos,
@@ -71,7 +73,7 @@ Rounds 1 (22 Sep) and 2 (1 Oct) stay live, unchanged, at `…/das/v1/` and `…/
 
 ### Performance Insights: Reporting redesign
 
-[Open prototype →](https://girardjustin1.github.io/nimbus-v1/performance-insights/) ·
+[Open prototype →](https://girardjustin1.github.io/nimbus-v1/performance-insights/) ([backup](https://nimbus-ds-v1.netlify.app/performance-insights/)) ·
 [Storybook concepts](https://girardjustin1.github.io/nimbus-v1/?path=/docs/performance-insights-overview--docs)
 
 > **The experience.** A publisher opens Performance Insights and starts from a template
@@ -94,7 +96,7 @@ Rounds 1 (22 Sep) and 2 (1 Oct) stay live, unchanged, at `…/das/v1/` and `…/
 
 ### DAS Studio: build with the result in view
 
-[Open prototype →](https://girardjustin1.github.io/nimbus-v1/das-studio/) ·
+[Open prototype →](https://girardjustin1.github.io/nimbus-v1/das-studio/) ([backup](https://nimbus-ds-v1.netlify.app/das-studio/)) ·
 [Storybook concept](https://girardjustin1.github.io/nimbus-v1/?path=/docs/deal-activation-system-studio-concept-overview--docs)
 
 > **The experience.** A publisher builds a deal campaign in a focused, full-screen
@@ -274,9 +276,11 @@ tests, Storybook tests, and both builds. Run the same thing locally with
 
 ## 🌐 Deployment
 
-[`deploy-storybook.yml`](.github/workflows/deploy-storybook.yml) runs on every push to
-`main`. It builds Storybook and the prototypes into one site and publishes it to
-GitHub Pages:
+Every push to `main` deploys the same site, Storybook with the prototypes beside it, to
+two hosts.
+
+**GitHub Pages (primary).** [`deploy-storybook.yml`](.github/workflows/deploy-storybook.yml)
+builds and publishes it. Progress shows under the repo's **Actions** tab.
 
 ```
 https://girardjustin1.github.io/nimbus-v1/                        Storybook
@@ -285,13 +289,25 @@ https://girardjustin1.github.io/nimbus-v1/performance-insights/   PI prototype (
 https://girardjustin1.github.io/nimbus-v1/das-studio/             DAS Studio prototype (latest)
 ```
 
-No extra setup is needed. Pages is configured to deploy from GitHub Actions. Progress
-shows under the repo's **Actions** tab.
+**Netlify (backup).** [`netlify.toml`](netlify.toml) holds the build: the same commands,
+publishing `storybook-static/`, on Node 22. Netlify builds on its own machines, so it
+stays current when GitHub Actions is delayed. Progress shows in the Netlify project's
+**Deploys** tab.
+
+```
+https://nimbus-ds-v1.netlify.app/                        Storybook
+https://nimbus-ds-v1.netlify.app/das/                    DAS prototype (latest)
+https://nimbus-ds-v1.netlify.app/performance-insights/   PI prototype (latest)
+https://nimbus-ds-v1.netlify.app/das-studio/             DAS Studio prototype (latest)
+```
+
+Every link inside the site is relative, so it works the same on either host.
 
 ## ⚠️ Good to know
 
-- **The Pages site is public.** Anyone with a link can open Storybook and the
-  prototypes. Keep data fictional, and keep internal material (briefs, PDFs, staging
+- **Both hosts are public.** Anyone with a link can open Storybook and the prototypes,
+  on GitHub Pages or Netlify. By default Netlify also publishes a preview for each pull
+  request. Keep data fictional, and keep internal material (briefs, PDFs, staging
   screenshots) out of the repo. `reference/das-system/` is gitignored for this reason.
 - **Vendored components.** `src/components/`, `src/hooks/`, `src/utils/` and
   `src/providers/` started from the Untitled UI React kit and are treated as vendored:

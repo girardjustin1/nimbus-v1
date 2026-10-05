@@ -4,11 +4,14 @@ Clickable product prototypes that live outside Storybook, each with its own URL 
 own version history. They're built from the same design system (`src/`), so they stay
 on-brand automatically.
 
-| Prototype | Local | GitHub Pages |
-| --- | --- | --- |
-| Deal Activation System | http://localhost:5190/das/ | https://girardjustin1.github.io/nimbus-v1/das/ |
-| Performance Insights | http://localhost:5190/performance-insights/ | https://girardjustin1.github.io/nimbus-v1/performance-insights/ |
-| DAS Studio | http://localhost:5190/das-studio/ | https://girardjustin1.github.io/nimbus-v1/das-studio/ |
+| Prototype | Local | GitHub Pages (primary) | Netlify (backup) |
+| --- | --- | --- | --- |
+| Deal Activation System | http://localhost:5190/das/ | https://girardjustin1.github.io/nimbus-v1/das/ | https://nimbus-ds-v1.netlify.app/das/ |
+| Performance Insights | http://localhost:5190/performance-insights/ | https://girardjustin1.github.io/nimbus-v1/performance-insights/ | https://nimbus-ds-v1.netlify.app/performance-insights/ |
+| DAS Studio | http://localhost:5190/das-studio/ | https://girardjustin1.github.io/nimbus-v1/das-studio/ | https://nimbus-ds-v1.netlify.app/das-studio/ |
+| Storybook (design system) | http://localhost:6006/ | https://girardjustin1.github.io/nimbus-v1/ | https://nimbus-ds-v1.netlify.app/ |
+
+Both hosts deploy from `main` and serve the same build. If one is behind, use the other.
 
 The bare URL always opens the **latest** version. Every version stays live at its own
 path (`…/das/v1/`, `…/das/v2/`) so earlier rounds can be compared.
@@ -54,7 +57,7 @@ link and the static build works on GitHub Pages without server rewrites.
 
 ## Notes
 
-- Sample data is fictional. The Pages site is **public**, so don't add real publisher
+- Sample data is fictional. Both hosts are **public**, so don't add real publisher
   data, internal figures or people's names.
 - **Frozen rounds.** Once a round has been reviewed, its folder doesn't change. When a
   later round needs a shared file, fork it into that round (DAS v3 has its own
