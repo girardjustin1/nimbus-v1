@@ -1,0 +1,15 @@
+# Netlify — backup host for Storybook and the prototypes.
+#
+# GitHub Pages (.github/workflows/deploy-storybook.yml) is the primary host. This builds
+# the same site the same way, so if Pages is behind (a GitHub Actions outage, say) the
+# Netlify copy is current. Both deploy from main. Settings here override the Netlify UI.
+#
+#   Primary  https://girardjustin1.github.io/nimbus-v1/
+#   Backup   https://nimbus-ds-v1.netlify.app/
+
+[build]
+  command = "npm run build-storybook && npm run proto:build && cp -R dist-prototypes/. storybook-static/"
+  publish = "storybook-static"
+
+[build.environment]
+  NODE_VERSION = "22"
