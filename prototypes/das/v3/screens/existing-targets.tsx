@@ -26,7 +26,7 @@ import { AppTargetBlock } from "./app-target";
 
 const GEO_TREE: TaxonomyNode[] = GEO_REGIONS.map((g) => ({ id: g.region, label: g.region, children: g.countries.map((c) => ({ id: c, label: c })) }));
 
-const TargetCard = ({ title, onClear, children }: { title: string; onClear?: () => void; children: React.ReactNode }) => (
+export const TargetCard = ({ title, onClear, children }: { title: string; onClear?: () => void; children: React.ReactNode }) => (
     <div className="flex flex-col gap-4 rounded-xl p-5 ring-1 ring-secondary has-[[data-intro]]:gap-1">
         <div className="flex items-center justify-between gap-3">
             <h3 className="text-lg font-bold text-primary">
@@ -42,24 +42,34 @@ const TargetCard = ({ title, onClear, children }: { title: string; onClear?: () 
     </div>
 );
 
+export const GeoTarget = ({ value, onChange }: { value: string[]; onChange: (next: string[]) => void }) => (
+    <TargetCard title="Geos" onClear={value.length ? () => onChange([]) : undefined}>
+        <TaxonomyPicker label="Region" nodes={GEO_TREE} value={value} onChange={onChange} placeholder="Search countries…" noun="countries" one="country" />
+    </TargetCard>
+);
+
+export const PlatformTarget = ({ value, onChange }: { value: string[]; onChange: (next: string[]) => void }) => {
+    const toggle = (p: string) => onChange(value.includes(p) ? value.filter((x) => x !== p) : [...value, p]);
+    return (
+        <TargetCard title="Platform" onClear={value.length ? () => onChange([]) : undefined}>
+            <div className="flex gap-6">
+                {["iOS", "Android"].map((p) => (
+                    <Checkbox key={p} size="md" label={<span className={LABEL}>{p}</span>} isSelected={value.includes(p)} onChange={() => toggle(p)} />
+                ))}
+            </div>
+            <p className="text-md text-tertiary">{value.length === 0 ? <Copy>Not Specified — includes every platform.</Copy> : value.join(", ")}</p>
+        </TargetCard>
+    );
+};
+
 export const ExistingTargetsV3 = ({ empty = false }: { empty?: boolean }) => {
     const [geos, setGeos] = useState<string[]>(empty ? [] : ["United States", "Canada"]);
     const [platforms, setPlatforms] = useState<string[]>(empty ? [] : ["iOS", "Android"]);
     const [appList, setAppList] = useState<string[]>(empty ? [] : APP_LIST.slice(0, 2).map((a) => a.id));
-    const togglePlatform = (p: string) => setPlatforms((prev) => (prev.includes(p) ? prev.filter((x) => x !== p) : [...prev, p]));
     return (
         <>
-            <TargetCard title="Geos" onClear={geos.length ? () => setGeos([]) : undefined}>
-                <TaxonomyPicker label="Region" nodes={GEO_TREE} value={geos} onChange={setGeos} placeholder="Search countries…" noun="countries" one="country" />
-            </TargetCard>
-            <TargetCard title="Platform" onClear={platforms.length ? () => setPlatforms([]) : undefined}>
-                <div className="flex gap-6">
-                    {["iOS", "Android"].map((p) => (
-                        <Checkbox key={p} size="md" label={<span className={LABEL}>{p}</span>} isSelected={platforms.includes(p)} onChange={() => togglePlatform(p)} />
-                    ))}
-                </div>
-                <p className="text-md text-tertiary">{platforms.length === 0 ? <Copy>Not Specified — includes every platform.</Copy> : platforms.join(", ")}</p>
-            </TargetCard>
+            <GeoTarget value={geos} onChange={setGeos} />
+            <PlatformTarget value={platforms} onChange={setPlatforms} />
             <AppTargetBlock value={appList} onChange={setAppList} />
         </>
     );

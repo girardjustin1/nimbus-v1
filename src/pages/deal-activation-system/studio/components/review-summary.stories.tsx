@@ -3,7 +3,7 @@ import { studioPresets } from "../studio-data";
 import { ReviewHero, ReviewSections } from "./review-summary";
 
 /** Studio · Review summary — hero card with a small render, then one section per step. */
-const meta = { title: "Deal Activation System/Studio Concept/Components/Review Summary" } satisfies Meta;
+const meta = { title: "Deal Activation System/Studio Concept/Components/Review Summary", tags: ["!dev"] } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

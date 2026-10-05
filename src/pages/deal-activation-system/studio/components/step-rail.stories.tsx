@@ -4,6 +4,7 @@ import { StepRail } from "./step-rail";
 /** Studio · Step rail — nested Deal › Campaign › Creative outline with done, current, to-do and error states. */
 const meta = {
     title: "Deal Activation System/Studio Concept/Components/Step Rail",
+    tags: ["!dev"],
     component: StepRail,
     args: { current: "budget", states: { goal: "done", deal: "done", audience: "done" }, dealName: "Test Deal — Fall Launch", campaignName: "Fall Launch · Sports fans" },
     decorators: [(Story) => <div className="w-56">{Story()}</div>],

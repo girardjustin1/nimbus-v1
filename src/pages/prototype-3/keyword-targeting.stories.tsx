@@ -16,6 +16,7 @@ const item = bySlug("keyword-targeting");
 
 const meta = {
     title: "Prototype 3/Keyword Targeting",
+    tags: ["!dev"],
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

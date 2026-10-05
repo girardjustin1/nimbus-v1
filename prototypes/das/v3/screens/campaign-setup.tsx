@@ -82,6 +82,28 @@ const Added = () => (
     </span>
 );
 
+/* -------------------------------------------------------------- Creative --- */
+
+/**
+ * Creative and Keywords use the same search-and-select shape. The 2 Oct review was
+ * explicit that the two should behave alike — "I want the two sections to kind of be
+ * similar" — and having one of them browse while the other searches is the exact
+ * inconsistency that prompted it.
+ */
+export const CreativeSection = ({ form, set, entry, screenId }: { form: SetupForm; set: Setter; entry?: CreativeEntry; screenId?: string }) => (
+    <Section
+        id="creative"
+        /* Staging's Creative step is headed "Add Existing Asset", with its own instruction line. */
+        title={<Copy original={ORIGINAL.creativeTitle}>Creative</Copy>}
+        /* "For another format or language, use Publish & Duplicate." was cut in the 5 Oct review (C6). */
+        description={
+            <Copy original={ORIGINAL.creativeDescription}>Add creatives from your asset library. A campaign can hold many creatives, all of the same type.</Copy>
+        }
+    >
+        <CreativeTargetBlock value={form.creatives} onChange={(creatives) => set({ creatives })} entry={entry} screenId={screenId} />
+    </Section>
+);
+
 /* ------------------------------------------------------------------ Rail --- */
 
 const ProblemList = ({ issues, attempted }: { issues: IssueV3[]; attempted: boolean }) => (
@@ -141,7 +163,7 @@ const MilestoneList = ({ form, deal, issues, attempted }: { form: SetupForm; dea
     </ul>
 );
 
-const Rail = ({
+export const Rail = ({
     mode,
     form,
     deal,
@@ -298,7 +320,7 @@ const advisoriesFor = (f: SetupForm): string[] => {
     return out;
 };
 
-const ReviewModal = ({
+export const ReviewModal = ({
     form,
     onCancel,
     onPublish,
@@ -457,19 +479,22 @@ export const CampaignSetup = ({
 
     // Commentary lives in the toolbar's Info button, not in the screen.
     useScreenNotes({
-        label: "Round 3",
+        label: "Round 3 · final spec",
         title: rail === "summary" ? "One page, with a summary rail that ends in Review" : "One page, with a validation rail that ends in Publish",
+        // The spec as it stands after Product's 5 Oct review.
         notes: [
-            "The rail counts the product's five steps — General, Budget, Targeting, Creative, Review — not the nine headings on the page. It also jumps you to anything that needs fixing. The left “On this page” rail is gone; it said the same thing twice.",
+            "The rail counts the product's five steps — General, Budget, Targeting, Creative, Review — not the nine headings on the page, and jumps you to anything that needs fixing.",
             rail === "summary"
                 ? "Review sends the campaign to the backend to be checked, the way DAS works today. Publish only lights up once that comes back clean, and any edit resets it."
                 : "Everything validates as you type and Publish is always live. This assumes the client can validate on its own — the open question for engineering.",
-            "Deal asks only for what the option needs: a name to generate an ID, a name and an ID to create one, or a search to join an existing deal, which fills both in. Campaign Name and Flight Dates are sections of their own now, level with Auction Rules.",
-            "Six places pull from a library you already built — deal, priority, frequency cap, geos, apps, keywords, creative — and they all behave the same way. Click or press ↓ to see the whole list alphabetically, type to narrow it, ↑ ↓ and Enter to pick. The header counts what matched, and the page holds still until you choose.",
-            "Apps and Keywords both end in a table rather than chips, because a column can say which of two identically-named apps you are looking at and whether a keyword is arriving in traffic. Chips cannot.",
-            "Geos keeps a tree, since taking a whole region is the common case. The checkbox selects and opens the region; double-click a row to open or close it. Creative previews render once a search is down to twelve or fewer, and any chosen creative can be opened full size.",
-            "Auction rule cards are clickable end to end, not just the dot. Ad Unit has a ? that shows what each of the four units looks like in an app.",
-            "Wording follows the product; anything we invented carries an ADDED chip. Daily Impression Cap has been removed — as a dollar amount it was a spend cap, and it needs a decision about what it counts before it comes back.",
+            "Type: Proxima Nova. Headlines are extra bold, labels are bold and black, and nothing is smaller than 15px.",
+            "Instructions sit under their heading or label, above the control, so an open list can't cover them. Errors stay under the field they're about.",
+            "Deal asks only for what the option needs: a name to generate an ID, a name and an ID to create one, or a search to join an existing deal, which fills both in. Campaign Name and Flight Dates are sections of their own. Flight Dates are dates only, in UTC.",
+            "Seven fields pull from a list — deal, priority, frequency cap, geos, apps, keywords, creative — and behave the same way: click or press ↓ for the whole list A–Z, type to narrow, ↑ ↓ and Enter to pick. Geos, Apps, Keywords and Creative close with Done, Escape or a click away.",
+            "Apps, Keywords and Creative end in a table rather than chips, because a column can say which of two same-named apps you mean and whether a keyword is arriving in traffic. Geos keeps a tree, since taking a whole region is the common case; double-click a region to open or close it.",
+            "Auction Rule and Ad Unit cards are clickable end to end and sit two across. Ad Unit's ? shows what each of the four units looks like in an app.",
+            "Publish and Publish & Duplicate live in the Review modal. Once a campaign is published it offers Duplicate.",
+            "The toolbar's Copy switch shows staging's original wording, or Prototype 3's with new copy highlighted or hidden. Daily Impression Cap is removed until there's a decision about what it counts.",
         ],
         walkthrough: WALKTHROUGH,
         currentStep: screenId,
@@ -542,7 +567,7 @@ export const CampaignSetup = ({
     // list are two halves of one thing. Deal activation setup is setup.
     return (
         <DasShell navItems={V3_NAV_ITEMS} navKey="deal activation setup">
-            <div className="grid grid-cols-1 gap-8 px-8 py-8 xl:grid-cols-[minmax(0,1fr)_360px]">
+            <div className="grid grid-cols-1 gap-8 px-8 py-8 xl:grid-cols-[minmax(0,1fr)_300px]">
                 <div className="flex min-w-0 flex-col gap-6">
                     <div>
                         {attempted && issues.length > 0 && (
@@ -570,30 +595,7 @@ export const CampaignSetup = ({
                         <FlightDatesSection form={form} set={set} error={error} calendarOpen={calendarOpen} />
                         <FrequencyCapSection form={form} set={set} />
                         <TargetingSectionV3 form={form} set={set} empty={preset === "empty"} keywordEntry={keywordEntry} screenId={screenId} />
-                        {/* Creative and Keywords use the same search-and-select shape.
-                            The 2 Oct review was explicit that the two should behave
-                            alike — "I want the two sections to kind of be similar" —
-                            and having one of them browse while the other searches is
-                            the exact inconsistency that prompted it. */}
-                        <Section
-                            id="creative"
-                            /* Staging's Creative step is headed "Add Existing Asset", with its own instruction line. */
-                            title={<Copy original={ORIGINAL.creativeTitle}>Creative</Copy>}
-                            /* "For another format or language, use Publish & Duplicate." was cut
-                               in the 5 Oct review (C6). */
-                            description={
-                                <Copy original={ORIGINAL.creativeDescription}>
-                                    Add creatives from your asset library. A campaign can hold many creatives, all of the same type.
-                                </Copy>
-                            }
-                        >
-                            <CreativeTargetBlock
-                                value={form.creatives}
-                                onChange={(creatives) => set({ creatives })}
-                                entry={creativeEntry}
-                                screenId={screenId}
-                            />
-                        </Section>
+                        <CreativeSection form={form} set={set} entry={creativeEntry} screenId={screenId} />
                         {/* Proposal: staging keeps both publish actions in a footer under
                             the form rather than behind Review. */}
                         {publishMode === "staging" && (

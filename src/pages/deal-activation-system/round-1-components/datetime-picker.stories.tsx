@@ -12,6 +12,7 @@ import { type DateTimeValue, DateTimePicker } from "./datetime-picker";
  */
 const meta = {
     title: "Deal Activation System/Round 1 Concepts/Components/Date & Time Picker",
+    tags: ["!dev"],
     parameters: { layout: "padded" },
     decorators: [(Story) => <div className="min-h-[520px]">{Story()}</div>],
 } satisfies Meta;

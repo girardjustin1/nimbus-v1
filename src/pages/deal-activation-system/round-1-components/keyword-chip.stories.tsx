@@ -4,6 +4,7 @@ import { KeywordChip } from "../das-shell";
 /** Round 1 · Keyword chip — mono, teal, optionally removable. Used in Targeting, Keyword Library and Manage Campaigns. */
 const meta = {
     title: "Deal Activation System/Round 1 Concepts/Components/Keyword Chip",
+    tags: ["!dev"],
     component: KeywordChip,
     args: { value: "sports" },
 } satisfies Meta<typeof KeywordChip>;

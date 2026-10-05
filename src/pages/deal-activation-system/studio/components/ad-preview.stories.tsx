@@ -5,6 +5,7 @@ import { AdPreview } from "./ad-preview";
 /** Studio · Ad preview — the creative rendered in a device running a sample app, per format and moment. */
 const meta = {
     title: "Deal Activation System/Studio Concept/Components/Ad Preview",
+    tags: ["!dev"],
     component: AdPreview,
     args: { format: "interstitial", creative: sampleCreative, device: "phone", moment: "default" },
     argTypes: {

@@ -9,6 +9,7 @@ import { KeywordChipInput, MatchLogicField } from "../keyword-targeting";
  */
 const meta = {
     title: "Deal Activation System/Round 1 Concepts/Components/Keyword Fields",
+    tags: ["!dev"],
     decorators: [(Story) => <div className="max-w-2xl">{Story()}</div>],
 } satisfies Meta;
 

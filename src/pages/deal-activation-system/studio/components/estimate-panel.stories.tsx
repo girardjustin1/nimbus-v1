@@ -5,6 +5,7 @@ import { EstimatePanel, LikelihoodMeter } from "./estimate-panel";
 /** Studio · Estimate panel — delivery likelihood plus impressions, reach, eCPM and spend by period. */
 const meta = {
     title: "Deal Activation System/Studio Concept/Components/Estimate Panel",
+    tags: ["!dev"],
     component: EstimatePanel,
     args: { estimate: estimate(studioPresets.sample) },
     decorators: [(Story) => <div className="w-80">{Story()}</div>],

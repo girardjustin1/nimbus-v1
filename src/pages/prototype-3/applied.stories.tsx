@@ -17,6 +17,7 @@ import { bySlug } from "./feedback";
  */
 const meta = {
     title: "Prototype 3/Applied Changes",
+    tags: ["!dev"],
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

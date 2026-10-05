@@ -9,6 +9,7 @@ import { DasOverview, QueryBuilder } from "./reporting";
  */
 const meta = {
     title: "Deal Activation System/Round 1 Concepts/Reporting",
+    tags: ["!dev"],
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

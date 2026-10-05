@@ -8,6 +8,7 @@ import { KeywordLibrary } from "./keyword-library";
  */
 const meta = {
     title: "Deal Activation System/Round 1 Concepts/Keyword Library",
+    tags: ["!dev"],
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

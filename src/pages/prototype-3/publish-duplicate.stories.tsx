@@ -16,6 +16,7 @@ const item = bySlug("publish-duplicate");
 
 const meta = {
     title: "Prototype 3/Publish & Duplicate",
+    tags: ["!dev"],
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

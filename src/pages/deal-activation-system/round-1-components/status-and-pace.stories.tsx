@@ -4,6 +4,7 @@ import { PaceLabel, StatusDot } from "../das-shell";
 /** Round 1 · Campaign status dot and pace label. */
 const meta = {
     title: "Deal Activation System/Round 1 Concepts/Components/Status & Pace",
+    tags: ["!dev"],
 } satisfies Meta;
 
 export default meta;

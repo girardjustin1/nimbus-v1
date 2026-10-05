@@ -31,10 +31,11 @@ prototypes/
 ├── das/
 │   ├── index.html            # redirects to the latest version
 │   ├── versions.ts           # version list: id, label, date, experience summary
-│   └── v1/
+│   ├── v1/ v2/               # earlier rounds, frozen as reviewed
+│   └── v3/                   # current round
 │       ├── index.html, main.tsx
 │       ├── screens.tsx       # screen registry (order = prev/next order)
-│       └── screens/          # this version's screen code (frozen once published)
+│       └── screens/          # this version's screen code
 ├── performance-insights/     # same shape
 └── das-studio/               # same shape; screens and components live in
                               # src/pages/deal-activation-system/studio (also in Storybook)
@@ -55,8 +56,19 @@ link and the static build works on GitHub Pages without server rewrites.
 
 - Sample data is fictional. The Pages site is **public**, so don't add real publisher
   data, internal figures or people's names.
-- The Round 1 concepts also remain in Storybook (Deal Activation System and Performance
-  Insights categories) as a reference. The copies here are independent.
+- **Frozen rounds.** Once a round has been reviewed, its folder doesn't change. When a
+  later round needs a shared file, fork it into that round (DAS v3 has its own
+  `das-shell`, `campaign-view` and `date-picker`) rather than editing an earlier one.
+- **DAS v3 extras:**
+  - `screens/type-rules.tsx` holds the type rules: extra-bold headlines, bold black
+    labels, a 15px minimum.
+  - `screens/copy-deck.ts` holds staging's wording for the toolbar's **Copy** switch.
+  - The shared frame takes an optional `toolbarExtras` for controls like this. Other
+    versions don't pass it.
+- **In Storybook.** DAS v3's setup page is itemized in Storybook under *Deal Activation
+  System › Campaign Setup*, rendered from these files. The Round 1 concepts and
+  Performance Insights reference copies also live in Storybook; those copies are
+  independent of the ones here.
 - Components a prototype needs that the design system lacks should graduate into `src/`
   (and Storybook) once approved.
 

@@ -34,6 +34,21 @@ const preview: Preview = {
                     // 6) Active project — DAS screen concepts
                     "Deal Activation System",
                     [
+                        // Prototype 3's setup page, itemised top to bottom. The rounds and
+                        // the Studio concept below are hidden from the sidebar (tag !dev)
+                        // but still open by direct link.
+                        "Campaign Setup Spec",
+                        "Campaign Setup",
+                        [
+                            "Page",
+                            "Sections",
+                            ["Deal", "Campaign Name", "Auction Rules", "Priority", "Budget", "Flight Dates", "Frequency Cap", "Targeting", "Creative"],
+                            "Targeting",
+                            ["Geos", "Platform", "Apps", "Ad Unit", "Keywords"],
+                            "Controls",
+                            "Rail",
+                            ["Campaign Summary", "Review Modal"],
+                        ],
                         "Overview",
                         "Round 2 · Oct 1",
                         "Round 1 Concepts",

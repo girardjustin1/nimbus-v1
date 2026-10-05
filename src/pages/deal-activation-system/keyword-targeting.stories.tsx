@@ -9,6 +9,7 @@ import { AudienceSentence, KeywordTargetingInline, KeywordTargetingLibrary } fro
  */
 const meta = {
     title: "Deal Activation System/Round 1 Concepts/Targeting",
+    tags: ["!dev"],
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

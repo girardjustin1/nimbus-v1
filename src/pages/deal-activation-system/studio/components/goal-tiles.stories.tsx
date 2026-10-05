@@ -4,7 +4,7 @@ import type { GoalId } from "../studio-data";
 import { GoalTiles } from "./goal-tiles";
 
 /** Studio · Goal tiles — the first decision, as four visual tiles. */
-const meta = { title: "Deal Activation System/Studio Concept/Components/Goal Tiles" } satisfies Meta;
+const meta = { title: "Deal Activation System/Studio Concept/Components/Goal Tiles", tags: ["!dev"] } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

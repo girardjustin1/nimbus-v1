@@ -8,6 +8,7 @@ import { DeliveryBar } from "../das-shell";
  */
 const meta = {
     title: "Deal Activation System/Round 1 Concepts/Components/Delivery Bar",
+    tags: ["!dev"],
     component: DeliveryBar,
     args: { campaign: campaigns[0] },
     decorators: [(Story) => <div className="w-72">{Story()}</div>],

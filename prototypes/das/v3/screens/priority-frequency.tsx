@@ -56,7 +56,7 @@ const freqCapLabel = (n: number) => (n === 1 ? "1 — once a day" : `${n} a day`
  * The product's controls are a plain select and a plain input. Filtering is ours, which
  * is why the section carries an Added chip.
  */
-const NumberPicker = ({
+export const NumberPicker = ({
     name,
     labelFor,
     value,
@@ -179,7 +179,7 @@ const NumberPicker = ({
  * The control sits on the Enable row rather than below it, so the radio and the thing it
  * switches on read as one decision.
  */
-const EnableChoice = ({
+export const EnableChoice = ({
     enabled,
     onToggle,
     label,
