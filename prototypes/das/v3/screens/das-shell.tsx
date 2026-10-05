@@ -5,7 +5,7 @@ import type { GlobalNavItem } from "@/components/application/global-nav/config";
 import { GlobalNav } from "@/components/application/global-nav/global-nav";
 import { dasNavSections } from "../../v1/screens/das-nav";
 import { cx } from "@/utils/cx";
-import { FIELD_TYPE, HEADLINE } from "./type-rules";
+import { FIELD_TYPE, HEADLINE, LABEL } from "./type-rules";
 import { type Campaign, type CampaignStatus, type PaceState, paceOf } from "../../v1/screens/das-data";
 
 /**
@@ -157,6 +157,26 @@ export const Section = ({
         </div>
         {children}
     </section>
+);
+
+/**
+ * A field's label, its instruction directly underneath, then the control — the order
+ * staging uses ("Budget *" / "Total campaign spend." / field). Product's 5 Oct review
+ * (C1): instructions go above the control, where an open dropdown can't cover them.
+ * Errors still go under the control, next to the thing they are about — pass them as
+ * the control's own hint.
+ */
+export const Field = ({ label, required, hint, children }: { label?: ReactNode; required?: boolean; hint?: ReactNode; children: ReactNode }) => (
+    <div className="flex flex-col gap-1.5">
+        {label && (
+            <span className={LABEL}>
+                {label}
+                {required && <span className="ml-0.5 text-brand-tertiary">*</span>}
+            </span>
+        )}
+        {hint && <p className="text-md text-tertiary">{hint}</p>}
+        {children}
+    </div>
 );
 
 /** Pink uppercase text action (Edit, Remove, Clear all). */

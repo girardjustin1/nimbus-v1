@@ -219,7 +219,12 @@ export const PrioritySection = ({ form, set }: { form: SetupForm; set: Setter })
     <Section
         id="priority"
         title={<Copy>Priority</Copy>}
-        description={<Copy>Set the priority of this campaign versus other active campaigns. 1 is served first.</Copy>}
+        description={
+            <>
+                <Copy>Set the priority of this campaign versus other active campaigns. 1 is served first.</Copy>{" "}
+                <Copy>1 to 100. Type to jump to a number, or ↑ ↓ to step through them.</Copy>
+            </>
+        }
     >
         <EnableChoice
             enabled={form.priority !== undefined}
@@ -229,11 +234,6 @@ export const PrioritySection = ({ form, set }: { form: SetupForm; set: Setter })
             <Fillable filled={form.priority !== undefined} onFill={() => set({ priority: 1 })}>
                 <NumberPicker name="Priority" labelFor={priorityLabel} value={form.priority} onChange={(priority) => set({ priority })} disabled={form.priority === undefined} />
             </Fillable>
-            {/* Always present: a hint that appears only once the radio is on makes the
-                row reflow at the moment you are reading it. */}
-            <span className="text-md text-tertiary">
-                <Copy>1 to 100. Type to jump to a number, or ↑ ↓ to step through them.</Copy>
-            </span>
         </EnableChoice>
     </Section>
 );
@@ -250,7 +250,10 @@ export const FrequencyCapSection = ({ form, set }: { form: SetupForm; set: Sette
             id="freqcap"
             title={<Copy original={ORIGINAL.freqCapTitle}>Frequency Cap</Copy>}
             description={
-                <Copy original={ORIGINAL.freqCapDescription}>Maximum number of times an ad from this campaign is shown to an individual user over a 24hr period.</Copy>
+                <>
+                    <Copy original={ORIGINAL.freqCapDescription}>Maximum number of times an ad from this campaign is shown to an individual user over a 24hr period.</Copy>{" "}
+                    <Copy>Impressions per user, per 24 hours. Type to jump to a number, or ↑ ↓ to step through them.</Copy>
+                </>
             }
         >
             <EnableChoice
@@ -267,9 +270,6 @@ export const FrequencyCapSection = ({ form, set }: { form: SetupForm; set: Sette
                         disabled={!on}
                     />
                 </Fillable>
-                <span className="text-md text-tertiary">
-                    <Copy>Impressions per user, per 24 hours. Type to jump to a number, or ↑ ↓ to step through them.</Copy>
-                </span>
             </EnableChoice>
         </Section>
     );

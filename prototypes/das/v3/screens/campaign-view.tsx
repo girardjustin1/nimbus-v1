@@ -99,7 +99,7 @@ const ViewShell = ({ c, concept, children, published }: { c: Campaign; concept: 
                     <span className="inline-flex items-center gap-2">
                         <CheckCircle className="size-5" aria-hidden="true" />
                         <span>
-                            <strong>Published.</strong> {c.name} is scheduled and starts {c.start} at 00:00 UTC. You can still edit anything until then.
+                            <strong>Published.</strong> {c.name} is scheduled and starts {c.start} (UTC). You can still edit anything until then.
                         </span>
                     </span>
                     <a href="#/setup-duplicate" className="font-semibold uppercase" style={{ color: PINK }}>
@@ -332,7 +332,7 @@ export const ViewOnePage = ({ id = "c1", published = false }: { id?: string; pub
                             {c.rule !== "Fallback" && <Row label="Budget">{usd(c.budget)}</Row>}
                             {c.rule !== "Fallback" && <Row label="eCPM (bid)">{usd(c.ecpm, 2)}</Row>}
                             <Row label="Flight">
-                                {c.start} 00:00 – {c.end} 23:59 (UTC)
+                                {c.start} – {c.end} (UTC)
                             </Row>
                         </dl>
                     </Section>

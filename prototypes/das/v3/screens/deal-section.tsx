@@ -6,7 +6,7 @@ import { Fillable } from "../../../shared/demo-fill-ui";
 import { ORIGINAL, useCopy } from "./copy-deck";
 import { Copy } from "./copy-deck-ui";
 import type { FieldError, Setter } from "../../v1/screens/campaign-setup-one-page";
-import { Section } from "./das-shell";
+import { Field, Section } from "./das-shell";
 import { LABEL } from "./type-rules";
 import type { SetupForm } from "../../v1/screens/setup-data";
 import { deals } from "./deal-data";
@@ -91,10 +91,11 @@ export const DealSectionV3 = ({
      * retype it would be the form forgetting something you already told it.
      */
     const nameField = (mode: DealMode) => (
+        <Field label={<Copy original={ORIGINAL.dealName}>Deal Name</Copy>} required hint={<Copy>How you'll find this deal later.</Copy>}>
         <Fillable filled={Boolean(deal.name)} onFill={() => setDeal({ ...deal, mode, name: "Autumn Drive" })}>
             <Input
-                label={copy.text("Deal Name", ORIGINAL.dealName)}
-                className={copy.mark({ label: ["Deal Name", ORIGINAL.dealName], placeholder: ["e.g. Autumn Drive"] })}
+                aria-label="Deal Name"
+                className={copy.mark({ placeholder: ["e.g. Autumn Drive"] })}
                 size="md"
                 placeholder={copy.text("e.g. Autumn Drive")}
                 value={deal.name}
@@ -102,9 +103,10 @@ export const DealSectionV3 = ({
                 isDisabled={deal.mode !== mode}
                 isRequired
                 isInvalid={deal.mode === mode && Boolean(error("dealName"))}
-                hint={<Copy>{(deal.mode === mode && error("dealName")) || "How you'll find this deal later."}</Copy>}
+                hint={deal.mode === mode && error("dealName") ? <Copy>{error("dealName")}</Copy> : undefined}
             />
         </Fillable>
+        </Field>
     );
 
     return (
@@ -118,25 +120,27 @@ export const DealSectionV3 = ({
                     <div className="min-w-0 flex-1">{nameField("generate")}</div>
                     <div className="min-w-0 flex-1">
                         {/* Staging's Generate row has no ID field at all. */}
-                        <Input
-                            label={copy.text("Deal ID")}
-                            className={copy.mark({ label: ["Deal ID"], placeholder: ["Assigned by Nimbus"] })}
-                            size="md"
-                            value=""
-                            isDisabled
-                            placeholder={copy.text("Assigned by Nimbus")}
-                            hint={<Copy>Created with the deal.</Copy>}
-                        />
+                        <Field label={<Copy>Deal ID</Copy>} hint={<Copy>Created with the deal.</Copy>}>
+                            <Input
+                                aria-label="Deal ID"
+                                className={copy.mark({ placeholder: ["Assigned by Nimbus"] })}
+                                size="md"
+                                value=""
+                                isDisabled
+                                placeholder={copy.text("Assigned by Nimbus")}
+                            />
+                        </Field>
                     </div>
                 </ModeRow>
 
                 <ModeRow value="create" label={<Copy original={ORIGINAL.dealCreate}>Create new ID</Copy>} active={deal.mode === "create"}>
                     <div className="min-w-0 flex-1">{nameField("create")}</div>
                     <div className="min-w-0 flex-1">
+                        <Field label={<Copy original={ORIGINAL.dealId}>Deal ID</Copy>} required hint={<Copy>Must be unique across your deals.</Copy>}>
                         <Fillable filled={Boolean(deal.id)} onFill={() => setDeal({ ...deal, mode: "create", id: "D-11204" })}>
                             <Input
-                                label={copy.text("Deal ID", ORIGINAL.dealId)}
-                                className={copy.mark({ label: ["Deal ID", ORIGINAL.dealId], placeholder: ["e.g. D-11204"] })}
+                                aria-label="Deal ID"
+                                className={copy.mark({ placeholder: ["e.g. D-11204"] })}
                                 size="md"
                                 placeholder={copy.text("e.g. D-11204")}
                                 value={deal.id}
@@ -144,14 +148,16 @@ export const DealSectionV3 = ({
                                 isDisabled={deal.mode !== "create"}
                                 isRequired
                                 isInvalid={deal.mode === "create" && Boolean(error("dealCustomId"))}
-                                hint={<Copy>{(deal.mode === "create" && error("dealCustomId")) || "Must be unique across your deals."}</Copy>}
+                                hint={deal.mode === "create" && error("dealCustomId") ? <Copy>{error("dealCustomId")}</Copy> : undefined}
                             />
                         </Fillable>
+                        </Field>
                     </div>
                 </ModeRow>
 
                 <ModeRow value="existing" label={<Copy original={ORIGINAL.dealExisting}>Add to existing</Copy>} active={deal.mode === "existing"}>
                     <div className="flex min-w-0 flex-1 flex-col gap-3">
+                        <Field hint={<Copy>Its name and ID are already set.</Copy>}>
                         <Fillable filled={Boolean(form.dealId)} onFill={() => set({ dealId: deals[0].id })}>
                             <SingleSearchSelect
                                 label={copy.text("Existing deal") ?? ""}
@@ -162,32 +168,23 @@ export const DealSectionV3 = ({
                                 onChange={(dealId) => set({ dealId })}
                                 isDisabled={deal.mode !== "existing"}
                                 isInvalid={Boolean(error("deal"))}
-                                hint={<Copy>{error("deal") ?? "Its name and ID are already set."}</Copy>}
+                                hint={error("deal") ? <Copy>{error("deal")}</Copy> : undefined}
                             />
                         </Fillable>
+                        </Field>
                         {/* Settled, not editable — and shown so you can check you took
                             the right one before the campaign gets named after it. */}
                         {chosen && (
                             <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
                                 <div className="min-w-0 flex-1">
-                                    <Input
-                                        label={copy.text("Deal Name", ORIGINAL.dealName)}
-                                        className={copy.mark({ label: ["Deal Name", ORIGINAL.dealName] })}
-                                        size="md"
-                                        value={chosen.label}
-                                        isDisabled
-                                        hint={<Copy>Set on the deal, not here.</Copy>}
-                                    />
+                                    <Field label={<Copy original={ORIGINAL.dealName}>Deal Name</Copy>} hint={<Copy>Set on the deal, not here.</Copy>}>
+                                        <Input aria-label="Deal Name" size="md" value={chosen.label} isDisabled />
+                                    </Field>
                                 </div>
                                 <div className="min-w-0 flex-1">
-                                    <Input
-                                        label={copy.text("Deal ID", ORIGINAL.dealId)}
-                                        className={copy.mark({ label: ["Deal ID", ORIGINAL.dealId] })}
-                                        size="md"
-                                        value={chosen.id}
-                                        isDisabled
-                                        hint={<Copy>Set on the deal, not here.</Copy>}
-                                    />
+                                    <Field label={<Copy original={ORIGINAL.dealId}>Deal ID</Copy>} hint={<Copy>Set on the deal, not here.</Copy>}>
+                                        <Input aria-label="Deal ID" size="md" value={chosen.id} isDisabled />
+                                    </Field>
                                 </div>
                             </div>
                         )}
@@ -223,7 +220,8 @@ export const CampaignNameSection = ({ form, set, error }: { form: SetupForm; set
                 onChange={(name) => set({ name })}
                 isRequired
                 isInvalid={Boolean(error("name"))}
-                hint={<Copy>{error("name") ?? "Used in the campaign list, reporting and Publish & Duplicate."}</Copy>}
+                // The helper that sat here repeated the description above word for word (5 Oct, C1).
+                hint={error("name") ? <Copy>{error("name")}</Copy> : undefined}
             />
         </Fillable>
     </Section>

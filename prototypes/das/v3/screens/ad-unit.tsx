@@ -153,6 +153,11 @@ export const AdUnitTypeFieldV3 = ({
     };
     return (
         <div className="flex flex-col gap-2">
+            {/* Instruction above the cards, under the module title (C1); the requirement
+                stays below them, where the choice is. */}
+            <p className="text-md text-tertiary">
+                <Copy>Targets the publisher's ad units, not creative sizes.</Copy>
+            </p>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
                 {adUnitTypes.map((unit) => {
                     const isOn = selected.includes(unit.id);
@@ -181,14 +186,11 @@ export const AdUnitTypeFieldV3 = ({
                     );
                 })}
             </div>
-            <p className="text-md text-tertiary">
-                <Copy>Targets the publisher's ad units, not creative sizes.</Copy>{" "}
-                {selected.length === 0 && (
-                    <span className="text-error-primary">
-                        <Copy>Select at least one.</Copy>
-                    </span>
-                )}
-            </p>
+            {selected.length === 0 && (
+                <p className="text-md text-error-primary">
+                    <Copy>Select at least one.</Copy>
+                </p>
+            )}
         </div>
     );
 };

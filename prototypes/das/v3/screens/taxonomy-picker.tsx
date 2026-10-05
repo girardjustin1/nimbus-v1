@@ -8,7 +8,7 @@ import { KeywordChip, PINK } from "./das-shell";
 import { activeRowStyle, resultCount, useListCursor } from "./arrow-keys";
 import { usePanelPlacement } from "./panel-placement";
 import { useScrollLock } from "./scroll-lock";
-import { KeyHint } from "./search-select";
+import { DoneButton, KeyHint } from "./search-select";
 
 /**
  * Taxonomy picker — pick leaves out of a parent/child tree.
@@ -573,8 +573,9 @@ export const TaxonomyPicker = ({
                                 ))
                             )}
                         </div>
-                        <div className="border-t border-secondary px-3 py-2">
+                        <div className="flex items-center justify-between gap-3 border-t border-secondary px-3 py-2">
                             <KeyHint extra="click a country to add it · click a region to open it, double-click to close · → ← also work" />
+                            <DoneButton onPress={() => setOpen(false)} />
                         </div>
                     </div>
                 )}

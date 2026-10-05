@@ -203,6 +203,17 @@ const Results = ({
 };
 
 /** The one line everybody needs and nobody is told: the keys work. */
+/**
+ * Closes a picker panel — the same as clicking away or pressing Escape, as a button you
+ * can see. Product's 5 Oct review (C3), on all four pickers: Geos, Apps, Keywords and
+ * Creative.
+ */
+export const DoneButton = ({ onPress }: { onPress: () => void }) => (
+    <Button size="sm" color="primary-pink" className="shrink-0 uppercase" onClick={onPress}>
+        <Copy>Done</Copy>
+    </Button>
+);
+
 export const KeyHint = ({ className, extra }: { className?: string; extra?: string }) => (
     <span className={cx("text-md text-quaternary", className)}>
         <Copy>{`↑ ↓ to move · Enter to select · Esc to close${extra ? ` · ${extra}` : ""}`}</Copy>
@@ -338,6 +349,15 @@ export const InlineSearchSelect = ({
 
     return (
         <div ref={box} className="flex flex-col gap-2">
+            {/* Above the search, under the block title (C1): the results panel opens
+                downward and used to cover this line. */}
+            <span className="text-md text-tertiary">
+                <Copy>
+                    {q
+                        ? `${hits.length} of ${rows.length} ${noun} match “${query}”.`
+                        : `${rows.length} ${noun} in your library. Type to filter, or press ↓ to see them all.`}
+                </Copy>
+            </span>
             <div className="flex flex-wrap items-end gap-3">
                 <div className="relative min-w-56 flex-1" onKeyDownCapture={cursor.onKeyDown}>
                     <Input
@@ -368,11 +388,14 @@ export const InlineSearchSelect = ({
                             />
                             <div className="flex items-center justify-between gap-3 border-t border-secondary px-4 py-2">
                                 <KeyHint />
-                                {createLabel && onCreate && (
-                                    <button type="button" onClick={onCreate} className="text-md font-semibold uppercase" style={{ color: PINK }}>
-                                        <Copy>{createLabel}</Copy>
-                                    </button>
-                                )}
+                                <div className="flex shrink-0 items-center gap-4">
+                                    {createLabel && onCreate && (
+                                        <button type="button" onClick={onCreate} className="text-md font-semibold uppercase" style={{ color: PINK }}>
+                                            <Copy>{createLabel}</Copy>
+                                        </button>
+                                    )}
+                                    <DoneButton onPress={() => setOpen(false)} />
+                                </div>
                             </div>
                         </div>
                     )}
@@ -383,13 +406,6 @@ export const InlineSearchSelect = ({
                     </Button>
                 )}
             </div>
-            <span className="text-md text-tertiary">
-                <Copy>
-                    {q
-                        ? `${hits.length} of ${rows.length} ${noun} match “${query}”.`
-                        : `${rows.length} ${noun} in your library. Type to filter, or press ↓ to see them all.`}
-                </Copy>
-            </span>
         </div>
     );
 };
