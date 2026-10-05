@@ -351,7 +351,7 @@ export const InlineSearchSelect = ({
         <div ref={box} className="flex flex-col gap-2">
             {/* Above the search, under the block title (C1): the results panel opens
                 downward and used to cover this line. */}
-            <span className="text-md text-tertiary">
+            <span data-intro className="mb-1 text-md text-tertiary">
                 <Copy>
                     {q
                         ? `${hits.length} of ${rows.length} ${noun} match “${query}”.`
@@ -741,8 +741,13 @@ export const ModalSearchSelect = ({
 };
 
 /** Shared chrome so both proposals sit in an identically-titled block. */
+/**
+ * A targeting card. When its content opens with an instruction (marked `data-intro`),
+ * the gap under the title closes up so the two read as heading and description — the
+ * same pairing as a Section's headline and the line under it.
+ */
 export const TargetBlock = ({ title, trailing, children }: { title: string; trailing?: ReactNode; children: ReactNode }) => (
-    <div className="flex flex-col gap-4 rounded-xl p-5 ring-1 ring-secondary">
+    <div className="flex flex-col gap-4 rounded-xl p-5 ring-1 ring-secondary has-[[data-intro]]:gap-1">
         <div className="flex flex-wrap items-center justify-between gap-3">
             <h3 className="text-lg font-bold text-primary">
                 <Copy>{title}</Copy>

@@ -60,12 +60,14 @@ const FlightDates = ({ form, set, error, calendarOpen }: { form: SetupForm; set:
         );
     };
     return (
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-4">
-            {field("start")}
-            <span className="hidden pt-9 text-quaternary sm:block">→</span>
-            {field("end")}
+        // Two equal columns, like Budget and Bid Amount above, with the length underneath.
+        <div className="flex flex-col gap-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {field("start")}
+                {field("end")}
+            </div>
             {days && (
-                <span className="text-md text-tertiary sm:pt-9">
+                <span className="text-md text-tertiary">
                     <Copy>{`${days}-day flight`}</Copy>
                 </span>
             )}

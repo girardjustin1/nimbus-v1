@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { CalendarDate } from "@internationalized/date";
-import { Calendar as CalendarIcon } from "@untitledui/icons";
+import { Calendar as CalendarIcon, ChevronDown } from "@untitledui/icons";
 import {
     Button as AriaButton,
     DateField as AriaDateField,
@@ -22,8 +22,10 @@ import { Button } from "./type-rules";
  * dates only." A flight runs from the start of its first day to the end of its last, in
  * UTC, which is what validation already assumes when no time is set.
  *
- * Same trigger, calendar and footer (typed date, Today, Cancel, Apply), so it reads as
- * the control that was reviewed, minus the column of times.
+ * Laid out as the design system's own date picker: a full-width field that opens a
+ * calendar with the typed date and Today above the grid, and Cancel / Apply as two equal
+ * buttons below. Round 1 put those in a footer beside its times column; with the column
+ * gone that footer was cramped and the panel came out narrow and tall.
  */
 
 const PINK = "#DA6EA3";
@@ -66,7 +68,7 @@ export const DatePicker = ({
                 aria-label={`${label}: ${value ? longDay(value) : "not set"}`}
                 className={({ isFocusVisible, isHovered }) =>
                     cx(
-                        "inline-flex h-11 items-center gap-2.5 rounded-lg bg-primary px-3.5 text-md shadow-xs ring-1 transition duration-100 ease-linear ring-inset outline-hidden",
+                        "flex h-11 w-full items-center gap-2.5 rounded-lg bg-primary px-3.5 text-md shadow-xs ring-1 transition duration-100 ease-linear ring-inset outline-hidden",
                         invalid ? "ring-error_subtle" : open || isFocusVisible ? "ring-2" : "ring-primary",
                         isHovered && !open && !invalid && "bg-primary_hover",
                     )
@@ -79,6 +81,7 @@ export const DatePicker = ({
                 ) : (
                     <span className="font-medium text-placeholder">{placeholder}</span>
                 )}
+                <ChevronDown className="ml-auto size-5 shrink-0 text-fg-quaternary" aria-hidden="true" />
             </AriaButton>
             <AriaPopover placement="bottom start" offset={8}>
                 {/* The popover renders outside the page shell, so the 15px minimum is
@@ -88,37 +91,49 @@ export const DatePicker = ({
                         <>
                             <div className="px-6 py-5">
                                 <Calendar aria-label={`${label} date`} value={draft ?? null} onChange={(d) => setDraft(d as CalendarDate)} minValue={minValue}>
-                                    {/* The typed date and Today live in the footer instead of above the grid. */}
-                                    <span hidden />
+                                    {/* The design system's row above the grid — a typed date and
+                                        Today — with Today pinned to the prototype's date. */}
+                                    <div className="flex gap-3">
+                                        <AriaDateField
+                                            aria-label={`${label} date`}
+                                            value={draft ?? null}
+                                            onChange={(d) => d && setDraft(d as CalendarDate)}
+                                            minValue={minValue}
+                                            className="flex-1"
+                                        >
+                                            <AriaDateInput className="flex h-10 w-full items-center rounded-lg bg-primary px-3 text-md text-primary shadow-xs ring-1 ring-primary ring-inset focus-within:ring-2 focus-within:[--tw-ring-color:#DA6EA3]">
+                                                {(segment) => <AriaDateSegment segment={segment} className={({ isFocused, isPlaceholder }) => segmentClass({ isFocused, isPlaceholder, type: segment.type })} />}
+                                            </AriaDateInput>
+                                        </AriaDateField>
+                                        <Button
+                                            // Not one of the calendar's previous/next slots.
+                                            slot={null}
+                                            size="sm"
+                                            color="secondary"
+                                            isDisabled={Boolean(minValue && today.compare(minValue) < 0)}
+                                            onClick={() => setDraft(today)}
+                                        >
+                                            <Copy>Today</Copy>
+                                        </Button>
+                                    </div>
                                 </Calendar>
                             </div>
-                            <div className="flex items-center justify-between gap-3 border-t border-secondary p-4">
-                                <div className="flex items-center gap-3">
-                                    <AriaDateField aria-label={`${label} date`} value={draft ?? null} onChange={(d) => d && setDraft(d as CalendarDate)} minValue={minValue}>
-                                        <AriaDateInput className="flex h-10 w-36 items-center rounded-lg bg-primary px-3 text-md text-primary shadow-xs ring-1 ring-primary ring-inset focus-within:ring-2 focus-within:[--tw-ring-color:#DA6EA3]">
-                                            {(segment) => <AriaDateSegment segment={segment} className={({ isFocused, isPlaceholder }) => segmentClass({ isFocused, isPlaceholder, type: segment.type })} />}
-                                        </AriaDateInput>
-                                    </AriaDateField>
-                                    <Button size="sm" color="secondary" isDisabled={Boolean(minValue && today.compare(minValue) < 0)} onClick={() => setDraft(today)}>
-                                        <Copy>Today</Copy>
-                                    </Button>
-                                </div>
-                                <div className="flex gap-3">
-                                    <Button size="sm" color="secondary" onClick={close}>
-                                        <Copy>Cancel</Copy>
-                                    </Button>
-                                    <Button
-                                        size="sm"
-                                        color="primary-pink"
-                                        isDisabled={!draft}
-                                        onClick={() => {
-                                            if (draft) onChange(draft);
-                                            close();
-                                        }}
-                                    >
-                                        <Copy>Apply</Copy>
-                                    </Button>
-                                </div>
+                            {/* Two equal buttons, as in the design system's picker. */}
+                            <div className="grid grid-cols-2 gap-3 border-t border-secondary p-4">
+                                <Button size="md" color="secondary" onClick={close}>
+                                    <Copy>Cancel</Copy>
+                                </Button>
+                                <Button
+                                    size="md"
+                                    color="primary-pink"
+                                    isDisabled={!draft}
+                                    onClick={() => {
+                                        if (draft) onChange(draft);
+                                        close();
+                                    }}
+                                >
+                                    <Copy>Apply</Copy>
+                                </Button>
                             </div>
                         </>
                     )}

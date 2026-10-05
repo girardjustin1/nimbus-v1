@@ -27,7 +27,7 @@ import { AppTargetBlock } from "./app-target";
 const GEO_TREE: TaxonomyNode[] = GEO_REGIONS.map((g) => ({ id: g.region, label: g.region, children: g.countries.map((c) => ({ id: c, label: c })) }));
 
 const TargetCard = ({ title, onClear, children }: { title: string; onClear?: () => void; children: React.ReactNode }) => (
-    <div className="flex flex-col gap-4 rounded-xl p-5 ring-1 ring-secondary">
+    <div className="flex flex-col gap-4 rounded-xl p-5 ring-1 ring-secondary has-[[data-intro]]:gap-1">
         <div className="flex items-center justify-between gap-3">
             <h3 className="text-lg font-bold text-primary">
                 <Copy>{title}</Copy>
