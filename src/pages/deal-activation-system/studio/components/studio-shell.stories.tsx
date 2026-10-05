@@ -3,7 +3,7 @@ import { StepRail } from "./step-rail";
 import { StudioShell } from "./studio-shell";
 
 /** Studio · Shell — focused full-screen frame: top bar, step rail, form, optional right panel, sticky footer. */
-const meta = { title: "Deal Activation System/Studio Concept/Components/Studio Shell", parameters: { layout: "fullscreen" } } satisfies Meta;
+const meta = { title: "Deal Activation System/Studio Concept/Components/Studio Shell", tags: ["!dev"], parameters: { layout: "fullscreen" } } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

@@ -1,0 +1,134 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+export const th = { textAlign: "left", fontSize: 13, fontWeight: 700, color: "#475467", padding: "10px 14px", borderBottom: "1px solid #EAECF0", background: "#F9FAFB" };
+export const td = { fontSize: 15, color: "#344054", padding: "10px 14px", borderBottom: "1px solid #EAECF0", verticalAlign: "top" };
+export const Table = ({ head, rows }) => (
+  <div style={{ overflowX: "auto", border: "1px solid #EAECF0", borderRadius: 12, margin: "12px 0 24px" }}>
+    <table style={{ width: "100%", borderCollapse: "collapse", margin: 0 }}>
+      <thead><tr>{head.map((h) => <th key={h} style={th}>{h}</th>)}</tr></thead>
+      <tbody>{rows.map((r, i) => <tr key={i}>{r.map((c, j) => <td key={j} style={td}>{c}</td>)}</tr>)}</tbody>
+    </table>
+  </div>
+);
+export const S = ({ id, children }) => <a href={`./?path=/story/deal-activation-system-campaign-setup-${id}`} target="_top" style={{ color: "#1F7F80", fontWeight: 600 }}>{children}</a>;
+export const prototypeUrl = () => (typeof window !== "undefined" && window.location.hostname === "localhost" ? "http://localhost:5190/das/v3/#/setup-empty" : "./das/v3/#/setup-empty");
+
+<Meta title="Deal Activation System/Campaign Setup Spec" />
+
+<div style={{ maxWidth: 920 }}>
+
+<div style={{ fontSize: 13, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#1F7F80" }}>Prototype 3 · final spec after the 5 Oct review</div>
+
+# Campaign Setup
+
+One page where a publisher sets up a direct-sold campaign: the deal it belongs to, how it
+competes in the auction, what it costs, when it runs, who it reaches and what it shows. A
+rail on the right summarises the campaign as it fills in and ends in Review.
+
+<a href={prototypeUrl()} target="_top" style={{ color: "#A94579", fontWeight: 700 }}>Open the page in the prototype →</a>
+
+Every entry in the **Campaign Setup** folder renders the prototype's own components, so what
+you see there is what is on the page.
+
+## The page, top to bottom
+
+<Table
+  head={["Section", "What it asks", "Story"]}
+  rows={[
+    ["Deal", "Generate an ID (name only), create one (name and ID), or add to an existing deal (search; name and ID fill in).", <S id="sections-deal--generate-new-id">Deal</S>],
+    ["Campaign Name", "The name used in the campaign list and reporting.", <S id="sections-campaign-name--empty">Campaign Name</S>],
+    ["Auction Rules", "Guaranteed, CPM Priority, Always-on CPM Priority or Fallback, as four cards.", <S id="sections-auction-rules--empty">Auction Rules</S>],
+    ["Priority", "Off by default (even distribution); on, a number from 1 to 100.", <S id="sections-priority--off">Priority</S>],
+    ["Budget", "Budget and Bid Amount (eCPM). Fallback campaigns have neither.", <S id="sections-budget--empty">Budget</S>],
+    ["Flight Dates", "Start and end dates, in UTC. No times.", <S id="sections-flight-dates--empty">Flight Dates</S>],
+    ["Frequency Cap", "Off by default (no cap); on, impressions per user per 24 hours.", <S id="sections-frequency-cap--off">Frequency Cap</S>],
+    ["Targeting", "Geos, Platform, Apps, Ad Unit and Keywords. Empty means everyone.", <S id="sections-targeting--empty">Targeting</S>],
+    ["Creative", "Creatives from the asset library, all of one type.", <S id="sections-creative--empty">Creative</S>],
+    ["Campaign summary (rail)", "The five steps, what has been chosen, and Review.", <S id="rail-campaign-summary--empty">Campaign Summary</S>],
+  ]}
+/>
+
+## Rules
+
+**Type**
+
+- Proxima Nova throughout.
+- Headlines are extra bold (800).
+- Labels are bold (700) and black: field labels, radio and checkbox options, and the
+  titles of targeting cards.
+- Nothing is smaller than 15px.
+
+**Layout**
+
+- An instruction sits under its heading or label, **above** the control, so an open list
+  can't cover it. Errors go **under** the control they're about.
+- A field reads label, instruction, control: <S id="controls-field--default">Field</S>.
+- Option cards (Auction Rules, Ad Unit) sit two across and are clickable end to end. They
+  share the text fields' edge: a light ring and a small shadow.
+- Targeting cards close up under their title when they open with an instruction:
+  <S id="controls-target-card--with-instruction">Target Card</S>.
+- The summary rail is 300px wide and stays in view while the form scrolls.
+
+**Behaviour**
+
+- Seven fields pull from a list: deal, priority, frequency cap, geos, apps, keywords and
+  creative. They behave the same way:
+  - click or press ↓ for the whole list, A–Z;
+  - type to narrow it;
+  - ↑ ↓ and Enter to pick.
+- Geos, Apps, Keywords and Creative panels close with **Done**, Escape or a click away.
+- Picks land in a table, not chips. Geos keeps a tree, because taking a whole region is
+  the common case.
+- Dates only. A flight runs from the start of its first day to the end of its last, UTC.
+- Review checks the campaign. Publish and Publish & Duplicate live in the Review modal.
+  Once a campaign is published, it offers **Duplicate**.
+
+## Components
+
+<Table
+  head={["Component", "Used for", "Story"]}
+  rows={[
+    ["Section header", "Every section's headline and the line under it", <S id="controls-section-header--with-description">Section Header</S>],
+    ["Field", "Deal, Budget and Flight Dates fields", <S id="controls-field--default">Field</S>],
+    ["Target card", "The frame around each targeting module", <S id="controls-target-card--with-instruction">Target Card</S>],
+    ["Rule card", "Auction Rules", <S id="controls-rule-card--unselected">Rule Card</S>],
+    ["Ad unit card", "Ad Unit", <S id="controls-ad-unit-card--off">Ad Unit Card</S>],
+    ["Enable choice", "Priority and Frequency Cap", <S id="controls-enable-choice--off">Enable Choice</S>],
+    ["Number picker", "Priority and Frequency Cap values", <S id="controls-number-picker--empty">Number Picker</S>],
+    ["Date picker", "Flight Dates", <S id="controls-date-picker--empty">Date Picker</S>],
+    ["Deal search", "Add to existing deal", <S id="controls-deal-search--empty">Deal Search</S>],
+    ["Geo tree picker", "Geos", <S id="controls-geo-tree-picker--empty">Geo Tree Picker</S>],
+    ["Library search", "Apps, Keywords, Creative", <S id="controls-library-search--default">Library Search</S>],
+    ["Chosen table", "Where Apps, Keywords and Creative picks land", <S id="controls-chosen-table--with-rows">Chosen Table</S>],
+    ["Done, pink action, key hint, traffic badge", "Picker panels and tables", <S id="controls-actions-hints--done">Actions & Hints</S>],
+    ["Review modal", "After Review: Publish or Publish & Duplicate", <S id="rail-review-modal--default">Review Modal</S>],
+  ]}
+/>
+
+Base components underneath (Input, Radio, Checkbox, Button) come from the design system,
+unchanged. Prototype 3 restyles their labels and hints from the page, not by editing them.
+
+## Copy
+
+Staging's wording is transcribed in `prototypes/das/v3/screens/copy-deck.ts`. In the
+prototype, the toolbar's **Copy** switch shows:
+
+- **Original:** staging's wording only. Anything staging has no copy for is left out, so
+  gaps show.
+- **New:** Prototype 3's wording, as built. You can highlight what is new or hide it.
+
+Final wording is Product's to write.
+
+## Open
+
+- **Which rail.** Summary → Review → Publish matches today's backend check. Live
+  validation → Publish assumes the client can validate on its own. That is an engineering
+  question. Both rails are in <S id="page--empty">Page</S> and <S id="rail-campaign-summary--empty">Campaign Summary</S>.
+- **Daily Impression Cap** is removed until there's a decision about what it counts.
+- **Copy volume** is still to be cut, by Product.
+- **Manage campaigns** is being designed separately.
+
+Earlier rounds and the Studio concept are hidden from this sidebar but still open by
+direct link.
+
+</div>

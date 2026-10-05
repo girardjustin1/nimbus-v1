@@ -17,6 +17,7 @@ const item = bySlug("creative-selection");
 
 const meta = {
     title: "Prototype 3/Creative Selection",
+    tags: ["!dev"],
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

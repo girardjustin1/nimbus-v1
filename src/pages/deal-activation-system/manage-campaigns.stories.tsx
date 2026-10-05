@@ -9,6 +9,7 @@ import { CompareCampaigns, ManageCampaignsDelivery } from "./manage-campaigns";
  */
 const meta = {
     title: "Deal Activation System/Round 1 Concepts/Manage Campaigns",
+    tags: ["!dev"],
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

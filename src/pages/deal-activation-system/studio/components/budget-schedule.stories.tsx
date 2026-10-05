@@ -4,7 +4,7 @@ import { nextMonth } from "../../dates";
 import { type BudgetScheduleValue, BudgetSchedule } from "./budget-schedule";
 
 /** Studio · Budget & schedule — daily or lifetime budget, calendar pickers, optional end date. */
-const meta = { title: "Deal Activation System/Studio Concept/Components/Budget & Schedule" } satisfies Meta;
+const meta = { title: "Deal Activation System/Studio Concept/Components/Budget & Schedule", tags: ["!dev"] } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

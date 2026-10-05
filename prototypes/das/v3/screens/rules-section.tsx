@@ -36,6 +36,35 @@ const STAGING_RULE: Partial<Record<AuctionRule, { label: string; hint: string }>
  * place you would never think to test.
  */
 
+/**
+ * One auction rule as a card. The whole card is the target, not just the dot. Must sit
+ * inside a RadioGroup, which owns the selection.
+ */
+export const RuleCard = ({ rule, selected, invalid }: { rule: (typeof rules)[number]; selected: boolean; invalid?: boolean }) => (
+    <RadioButton
+            value={rule.id}
+        className={({ isSelected, isFocusVisible }) =>
+            cx(
+                // Same edge as the text fields: shadow-xs with an inset ring-primary.
+                "cursor-pointer rounded-xl p-4 shadow-xs ring-1 transition-colors ring-inset",
+                isSelected ? "ring-transparent" : invalid ? "ring-error_subtle hover:bg-primary_hover" : "ring-primary hover:bg-primary_hover",
+                isFocusVisible && "outline-2 outline-offset-2 outline-focus-ring",
+            )
+        }
+        style={selected ? { boxShadow: `inset 0 0 0 2px ${TEAL}, var(--shadow-xs)`, backgroundColor: `${TEAL}0a` } : undefined}
+        label={
+            <span className="flex flex-col gap-0.5">
+                <span className={LABEL}>
+                    <Copy original={STAGING_RULE[rule.id]?.label}>{rule.id}</Copy>
+                </span>
+                <span className="text-md font-normal text-tertiary">
+                    <Copy original={STAGING_RULE[rule.id]?.hint}>{rule.hint}</Copy>
+                </span>
+            </span>
+        }
+    />
+);
+
 export const RulesSectionV3 = ({ form, set, error }: { form: SetupForm; set: Setter; error: FieldError }) => {
     const invalid = Boolean(error("rule"));
     return (
@@ -52,29 +81,7 @@ export const RulesSectionV3 = ({ form, set, error }: { form: SetupForm; set: Set
                 aria-label="Auction rule"
             >
                 {rules.map((r) => (
-                    <RadioButton
-                        key={r.id}
-                        value={r.id}
-                        className={({ isSelected, isFocusVisible }) =>
-                            cx(
-                                // Same edge as the text fields: shadow-xs with an inset ring-primary.
-                                "cursor-pointer rounded-xl p-4 shadow-xs ring-1 transition-colors ring-inset",
-                                isSelected ? "ring-transparent" : invalid ? "ring-error_subtle hover:bg-primary_hover" : "ring-primary hover:bg-primary_hover",
-                                isFocusVisible && "outline-2 outline-offset-2 outline-focus-ring",
-                            )
-                        }
-                        style={form.rule === r.id ? { boxShadow: `inset 0 0 0 2px ${TEAL}, var(--shadow-xs)`, backgroundColor: `${TEAL}0a` } : undefined}
-                        label={
-                            <span className="flex flex-col gap-0.5">
-                                <span className={LABEL}>
-                                    <Copy original={STAGING_RULE[r.id]?.label}>{r.id}</Copy>
-                                </span>
-                                <span className="text-md font-normal text-tertiary">
-                                    <Copy original={STAGING_RULE[r.id]?.hint}>{r.hint}</Copy>
-                                </span>
-                            </span>
-                        }
-                    />
+                    <RuleCard key={r.id} rule={r} selected={form.rule === r.id} invalid={invalid} />
                 ))}
             </RadioGroup>
             {invalid && (

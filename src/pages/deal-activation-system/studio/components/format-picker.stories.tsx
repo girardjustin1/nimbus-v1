@@ -4,7 +4,7 @@ import type { FormatId } from "../studio-data";
 import { FormatPicker } from "./format-picker";
 
 /** Studio · Format picker — ad formats as chips, with size notes. */
-const meta = { title: "Deal Activation System/Studio Concept/Components/Format Picker" } satisfies Meta;
+const meta = { title: "Deal Activation System/Studio Concept/Components/Format Picker", tags: ["!dev"] } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

@@ -9,6 +9,7 @@ import { CampaignSetupOnePage } from "./campaign-setup-one-page";
  */
 const meta = {
     title: "Deal Activation System/Round 1 Concepts/Campaign Setup (One Page)",
+    tags: ["!dev"],
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

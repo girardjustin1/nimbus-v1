@@ -8,6 +8,7 @@ import { AudienceScreen, BudgetScreen, CreativeScreen, DealScreen, GoalScreen, P
  */
 const meta = {
     title: "Deal Activation System/Studio Concept/Screens",
+    tags: ["!dev"],
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

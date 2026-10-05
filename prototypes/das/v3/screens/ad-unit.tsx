@@ -134,6 +134,30 @@ export const AdUnitGuideModal = ({ onClose }: { onClose: () => void }) => {
     );
 };
 
+/** One ad unit type as a checkbox card. The whole card toggles it. */
+export const AdUnitCard = ({ unit, on, onToggle }: { unit: (typeof adUnitTypes)[number]; on: boolean; onToggle: () => void }) => (
+    <label
+            className={cx(
+            // Same edge as the text fields and the Auction Rules cards.
+            "flex cursor-pointer items-start gap-3 rounded-xl p-4 shadow-xs ring-1 transition-colors duration-100 ring-inset",
+            on ? "ring-2" : "ring-primary hover:bg-primary_hover",
+        )}
+        style={
+            on ? { boxShadow: `inset 0 0 0 1px ${TEAL}, var(--shadow-xs)`, backgroundColor: `${TEAL}0f`, ["--tw-ring-color" as string]: TEAL } : undefined
+        }
+    >
+        <Checkbox size="sm" isSelected={on} onChange={onToggle} aria-label={unit.id} />
+        <span className="flex flex-col">
+            <span className={LABEL}>
+                <Copy>{unit.id}</Copy>
+            </span>
+            <span className="text-md text-tertiary">
+                <Copy>{unit.hint}</Copy>
+            </span>
+        </span>
+    </label>
+);
+
 export const AdUnitTypeFieldV3 = ({
     initial = ["Interstitial"] as AdUnitType[],
     value,
@@ -158,33 +182,11 @@ export const AdUnitTypeFieldV3 = ({
             <p data-intro className="mb-1 text-md text-tertiary">
                 <Copy>Targets the publisher's ad units, not creative sizes.</Copy>
             </p>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                {adUnitTypes.map((unit) => {
-                    const isOn = selected.includes(unit.id);
-                    return (
-                        <label
-                            key={unit.id}
-                            className={cx(
-                                // Same edge as the text fields and the Auction Rules cards.
-                                "flex cursor-pointer items-start gap-3 rounded-xl p-4 shadow-xs ring-1 transition-colors duration-100 ring-inset",
-                                isOn ? "ring-2" : "ring-primary hover:bg-primary_hover",
-                            )}
-                            style={
-                                isOn ? { boxShadow: `inset 0 0 0 1px ${TEAL}, var(--shadow-xs)`, backgroundColor: `${TEAL}0f`, ["--tw-ring-color" as string]: TEAL } : undefined
-                            }
-                        >
-                            <Checkbox size="sm" isSelected={isOn} onChange={() => toggle(unit.id)} aria-label={unit.id} />
-                            <span className="flex flex-col">
-                                <span className={LABEL}>
-                                    <Copy>{unit.id}</Copy>
-                                </span>
-                                <span className="text-md text-tertiary">
-                                    <Copy>{unit.hint}</Copy>
-                                </span>
-                            </span>
-                        </label>
-                    );
-                })}
+            {/* Same grid as the Auction Rules cards: two across, never four squeezed into a row. */}
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                {adUnitTypes.map((unit) => (
+                    <AdUnitCard key={unit.id} unit={unit} on={selected.includes(unit.id)} onToggle={() => toggle(unit.id)} />
+                ))}
             </div>
             {selected.length === 0 && (
                 <p className="text-md text-error-primary">

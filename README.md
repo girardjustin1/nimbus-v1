@@ -30,8 +30,6 @@ later the links above show the new version.
 
 ## 🧪 Active prototypes
 
-**Round 1 review · September 22, 2026**
-
 Prototypes are standalone apps, separate from Storybook, built from the same
 components. Each has its own URL, a toolbar to switch screens and versions, and a
 shareable link for every screen. The bare URL always opens the **latest** version;
@@ -39,26 +37,37 @@ older versions stay live (`…/das/v1/`, `…/das/v2/`, …).
 
 ### Deal Activation System: Extended Targeting
 
+**Round 3 is current** (built from the 2 Oct review, updated from the 5 Oct review).
+Rounds 1 (22 Sep) and 2 (1 Oct) stay live, unchanged, at `…/das/v1/` and `…/das/v2/`.
+
 [Open prototype →](https://girardjustin1.github.io/nimbus-v1/das/) ·
-[Storybook concepts](https://girardjustin1.github.io/nimbus-v1/?path=/docs/deal-activation-system-overview--docs)
+[Campaign Setup spec](https://girardjustin1.github.io/nimbus-v1/?path=/docs/deal-activation-system-campaign-setup-spec--docs)
 
-> **The experience.** A publisher sets up a direct-sold campaign on a single page
-> instead of a five-step wizard, with flight dates on calendar pickers. Pressing Publish
-> checks everything and flags each problem on the page, in the "On this page" rail and
-> in a banner that links to it. They target the campaign with their own keywords
-> (words their app already sends, like "sports" or "over21") plus ad unit type and
-> device language, and manage those keywords in a new Keyword Library. After launch,
-> every campaign shows at a glance whether it's on pace to deliver what was promised
-> (with a View campaign page drawn in each concept's style), and DAS results are reported separately from Open Marketplace revenue.
+> **The experience.** A publisher sets up a direct-sold campaign on one page. Everything
+> they choose from a library they already built (deal, priority, frequency cap, geos,
+> apps, keywords, creative) works the same way: click or press ↓ for the whole list
+> A–Z, type to narrow, Enter to pick. Apps, keywords and creative land in tables rather
+> than chips. A rail on the right counts the product's five steps and ends in Review,
+> which opens a modal with Publish and Publish & Duplicate. Two libraries sit behind the
+> form: assets (markup pasted and previewed live) and keywords (with Keyword Health,
+> which shows whether keywords are actually arriving).
 
-| Area | Screens |
+**From the 5 Oct review:**
+- **Type:** Proxima Nova, extra-bold headlines, bold black labels, and nothing under 15px.
+- **Layout:** instructions sit above the control, and errors below it.
+- **Pickers:** Flight Dates are dates only, and every picker has a Done button.
+- **Published campaigns** offer Duplicate, and the setup tabs are gone.
+- **Copy switch:** a toolbar control shows staging's original wording, or ours with new
+  copy highlighted or hidden.
+
+| Area | Screens (43) |
 | --- | --- |
-| Campaign Setup (one page) | Ready to publish · Empty form · Empty form, Publish pressed · Flight calendar open · Invalid flight dates · With errors · Fallback rule · Fallback, Publish pressed · Published |
-| Targeting | A: Inline keyword chips · A: ALL match + warnings · B: Pick from library · C: Audience sentence |
-| Keyword Library | Default · Add keywords · Delete keyword in use · Empty state |
-| Manage Campaigns | A: Delivery view · A: Selected for compare · B: Compare |
-| Reporting | A: DAS overview · B: Query builder · B: Breakdown picker open |
-| View Campaign | A: One page (running · behind · paused · scheduled · fallback) · B: Delivery first (running · behind · scheduled) · C: Campaign sentence (running · fallback) · D: Performance vs open marketplace (data · no data yet) |
+| Deal activation setup (14) | Empty form · General · Auction Rules · Budget · Targeting · Creative · Ready to review · Keywords in a modal · Publish & Duplicate in a footer · After Publish & Duplicate · Review modal · Review found problems · End before the start · Published |
+| Right rail: two concepts (3) | Summary → Review → Publish · Live validation → Publish · Live validation, with problems |
+| Manage assets (10) | Asset Setup (empty · filled) · markup validation (clean · four faults · macros) · View All Assets (· searching) · Asset detail (edit · serving now) · Can't delete a live asset |
+| Manage keywords (9) | Keyword Setup (empty · filled) · View All Keywords (· nothing yet) · Keyword detail (· never arrived) · Delete blocked · Delete OK · Keyword Health |
+| Manage campaigns (3) | Delivery view · Searching · Compare |
+| After publishing (4) | A: One page · B: Delivery first · C: Campaign as one sentence · D: Performance |
 
 ### Performance Insights: Reporting redesign
 
@@ -127,7 +136,7 @@ then components, then full screens, then active prototype work.
 | **Application UI** (23) | App Navigation – Sidebar · Alerts · Breadcrumbs · Carousel · Charts · Code Snippet · Command Menu · Date Picker · Dividers · Empty State · File Upload · Filter Bars · Loading Indicator · Metrics · Modal · Notifications · Pagination · Pie Charts · Progress Steps · Radar Charts · Slideout Menu · Table · Tabs |
 | **Account Login** (4) | Sign up · Log in · Forgot Password · Verify Email |
 | **App Screens** (17) | Full Nimbus product screens built from the system (see below) |
-| **Deal Activation System** | Overview, then one folder per concept: **Round 1 Concepts** (screens + Components) and **Studio Concept** (Overview, Screens, 11 Components) |
+| **Deal Activation System** | **Campaign Setup Spec** (the setup page's rules and open questions), then **Campaign Setup**: every component on Round 3's setup page, rendered from the prototype's own code. It runs Page → Sections (9) → Targeting (5) → Controls (13) → Rail (2), 82 stories. Round 1, Round 2, the Studio concept and the Prototype 3 review pages are hidden from the sidebar (tag `!dev`) but still open by direct link |
 | **Performance Insights** | Overview, Round 1 concepts (reference copy), and **Charts**: 14 Nimbus-styled chart types (every Untitled UI chart plus combo, heatmap, funnel, scatter and treemap) with a Gallery and an Overview |
 
 **App Screens**, grouped by area:
@@ -204,19 +213,21 @@ Storybook tests need Playwright's Chromium once per machine:
 │   ├── pages/
 │   │   ├── auth/                 # Account Login templates
 │   │   ├── app-screens/          # App Screens
-│   │   ├── deal-activation-system/   # DAS concepts: Round 1 + round-1-components/,
-│   │   │                             # studio/ (Studio Concept screens + components)
+│   │   ├── deal-activation-system/   # campaign-setup-spec.mdx + campaign-setup/ (Round 3
+│   │   │                             # setup inventory); Round 1, round-1-components/ and
+│   │   │                             # studio/ are kept but hidden from the sidebar
+│   │   ├── prototype-3/              # Round 3 review pages (hidden from the sidebar)
 │   │   └── performance-insights/     # PI concepts (Storybook category)
 │   ├── styles/                   # theme.css (Nimbus tokens), globals, typography
 │   └── Introduction.mdx          # Storybook landing page
 ├── prototypes/                   # standalone, versioned prototype apps
 │   ├── vite.config.ts            # one multi-page build; finds every version
 │   ├── shared/                   # prototype toolbar/index frame + styles
-│   ├── das/                      # index.html (→ latest) · versions.ts · v1/
+│   ├── das/                      # index.html (→ latest) · versions.ts · v1/ v2/ v3/
 │   ├── performance-insights/     # same shape
 │   └── das-studio/               # same shape; screens come from src/…/studio
 ├── .storybook/                   # Storybook config + sidebar order (preview.tsx)
-├── .github/workflows/            # CI, Pages deploy, component sync
+├── .github/workflows/            # CI, Pages deploy
 ├── reference/                    # design sources: token export, screen exports
 └── logos/
 ```
@@ -241,6 +252,11 @@ Storybook tests need Playwright's Chromium once per machine:
   every screen can use it.
 - **Keep the Introduction current.** When a prototype round ships, update the date and
   changelog on the Introduction tile and the prototype's `versions.ts`.
+- **Hide, don't delete.** To take a Storybook page out of the sidebar but keep it
+  linkable, add `tags: ["!dev"]` to its meta (or `tags={["!dev"]}` on an MDX `<Meta>`).
+- **Prototype 3's setup inventory** (`src/pages/deal-activation-system/campaign-setup/`)
+  imports the prototype's own components through `harness.tsx`. Change the component in
+  `prototypes/das/v3/screens/` and the story follows.
 
 ## ✅ Quality checks
 

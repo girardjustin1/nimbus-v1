@@ -5,7 +5,7 @@ import { AdPreview } from "./ad-preview";
 import { CreativeFields } from "./creative-fields";
 
 /** Studio · Creative fields — uploads and message, shown here next to the live preview they drive. */
-const meta = { title: "Deal Activation System/Studio Concept/Components/Creative Fields" } satisfies Meta;
+const meta = { title: "Deal Activation System/Studio Concept/Components/Creative Fields", tags: ["!dev"] } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
