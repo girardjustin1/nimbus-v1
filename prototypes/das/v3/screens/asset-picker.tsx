@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { AlertTriangle, CheckCircle, InfoCircle, Plus, SearchLg, XClose } from "@untitledui/icons";
-import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
-import { AdFormatDemo } from "@/pages/deal-activation-system/studio/components/ad-format-demo";
 import { cx } from "@/utils/cx";
-import { TEAL } from "../../v1/screens/das-shell";
 import type { Creative } from "../../v1/screens/setup-data";
 import { type Asset, previewFor, setReturnTo, useAssets } from "./asset-data";
+import { ORIGINAL, useCopy } from "./copy-deck";
+import { Copy } from "./copy-deck-ui";
+import { TEAL } from "./das-shell";
+import { Button } from "./type-rules";
+import { AdFormatDemo } from "./type-rules";
 
 /**
  * Browse the asset library and pick creatives for a campaign.
@@ -25,7 +27,6 @@ import { type Asset, previewFor, setReturnTo, useAssets } from "./asset-data";
 
 const asCreative = (a: Asset): Creative => ({ name: a.name, type: a.type, size: a.size === "Invalid" ? "N/A" : a.size });
 
-
 /**
  * Leaving the campaign to make an asset.
  *
@@ -42,24 +43,34 @@ const LeaveToCreate = ({ onStay, onGo }: { onStay: () => void; onGo: () => void 
     }, [onStay]);
     return (
         <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/40 px-4" onClick={onStay}>
-            <div role="dialog" aria-modal="true" aria-label="Create a new asset" onClick={(e) => e.stopPropagation()} className="w-full max-w-md overflow-hidden rounded-2xl bg-primary shadow-2xl">
+            <div
+                role="dialog"
+                aria-modal="true"
+                aria-label="Create a new asset"
+                onClick={(e) => e.stopPropagation()}
+                className="w-full max-w-md overflow-hidden rounded-2xl bg-primary shadow-2xl"
+            >
                 <div className="flex flex-col gap-3 px-6 py-5">
-                    <h2 className="text-lg font-semibold text-primary">Create a new asset?</h2>
-                    <p className="text-sm text-secondary">
-                        Your campaign is kept as a draft. You'll go to Asset Setup to paste the markup, and come straight back here with the new creative already
-                        attached.
+                    <h2 className="text-lg font-extrabold text-primary">
+                        <Copy>Create a new asset?</Copy>
+                    </h2>
+                    <p className="text-md text-secondary">
+                        <Copy>
+                            Your campaign is kept as a draft. You'll go to Asset Setup to paste the markup, and come straight back here with the new creative
+                            already attached.
+                        </Copy>
                     </p>
-                    <p className="flex items-start gap-2 rounded-xl px-4 py-3 text-sm" style={{ backgroundColor: `${TEAL}0f`, color: "#1F7F80" }}>
+                    <p className="flex items-start gap-2 rounded-xl px-4 py-3 text-md" style={{ backgroundColor: `${TEAL}0f`, color: "#1F7F80" }}>
                         <InfoCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                        Nothing you've filled in is lost.
+                        <Copy>Nothing you've filled in is lost.</Copy>
                     </p>
                 </div>
                 <div className="flex justify-end gap-3 border-t border-secondary px-6 py-4">
                     <Button color="secondary" className="uppercase" onClick={onStay}>
-                        Stay here
+                        <Copy>Stay here</Copy>
                     </Button>
                     <Button color="primary-pink" className="uppercase" onClick={onGo}>
-                        Go to Asset Setup
+                        <Copy>Go to Asset Setup</Copy>
                     </Button>
                 </div>
             </div>
@@ -81,6 +92,7 @@ export const AssetPicker = ({
     returnHref: string;
 }) => {
     const assets = useAssets();
+    const copy = useCopy();
     const [query, setQuery] = useState("");
     const [picked, setPicked] = useState<string[]>([]);
     const [leaving, setLeaving] = useState(false);
@@ -121,9 +133,15 @@ export const AssetPicker = ({
             >
                 <div className="flex items-start justify-between gap-4 border-b border-secondary px-6 py-4">
                     <div className="flex flex-col gap-0.5">
-                        <h2 className="text-lg font-semibold text-primary">Add Existing Asset</h2>
-                        <p className="text-sm text-tertiary">
-                            {lockedType ? `This campaign is ${lockedType}. Only ${lockedType} assets can be added.` : "A campaign holds creatives of one type."}
+                        <h2 className="text-lg font-extrabold text-primary">
+                            <Copy original={ORIGINAL.creativeTitle}>Add Existing Asset</Copy>
+                        </h2>
+                        <p className="text-md text-tertiary">
+                            <Copy>
+                                {lockedType
+                                    ? `This campaign is ${lockedType}. Only ${lockedType} assets can be added.`
+                                    : "A campaign holds creatives of one type."}
+                            </Copy>
                         </p>
                     </div>
                     <button type="button" aria-label="Close" onClick={onClose} className="rounded-md p-1.5 text-fg-quaternary hover:bg-secondary">
@@ -132,15 +150,26 @@ export const AssetPicker = ({
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3 border-b border-secondary px-6 py-3">
-                    <Input aria-label="Search assets" size="md" icon={SearchLg} placeholder="Search assets" value={query} onChange={setQuery} wrapperClassName="flex-1 min-w-56" />
+                    <Input
+                        aria-label="Search assets"
+                        size="md"
+                        icon={SearchLg}
+                        placeholder={copy.text("Search assets")}
+                        className={copy.mark({ placeholder: ["Search assets"] })}
+                        value={query}
+                        onChange={setQuery}
+                        wrapperClassName="flex-1 min-w-56"
+                    />
                     <Button color="secondary" iconLeading={Plus} onClick={() => setLeaving(true)}>
-                        New asset
+                        <Copy>New asset</Copy>
                     </Button>
                 </div>
 
                 <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
                     {rows.length === 0 ? (
-                        <p className="py-10 text-center text-sm text-tertiary">No assets match “{query}”.</p>
+                        <p className="py-10 text-center text-md text-tertiary">
+                            <Copy>{`No assets match “${query}”.`}</Copy>
+                        </p>
                     ) : (
                         <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-5">
                             {rows.map((a) => {
@@ -155,7 +184,7 @@ export const AssetPicker = ({
                                         onClick={() => toggle(a)}
                                         aria-pressed={on}
                                         disabled={already || no}
-                                        title={already ? "Already on this campaign" : no ? `This campaign is ${lockedType}` : undefined}
+                                        title={already ? copy.text("Already on this campaign") : no ? copy.text(`This campaign is ${lockedType}`) : undefined}
                                         className={cx(
                                             "flex flex-col gap-2 rounded-xl p-3 text-left ring-1 transition-colors",
                                             on ? "ring-2" : "ring-secondary",
@@ -171,14 +200,18 @@ export const AssetPicker = ({
                                                 </span>
                                             )}
                                         </span>
-                                        <span className="truncate text-xs font-semibold text-primary">{a.name}</span>
-                                        <span className="flex flex-wrap items-center gap-1 text-xs text-tertiary">
+                                        <span className="truncate text-md font-semibold text-primary">{a.name}</span>
+                                        <span className="flex flex-wrap items-center gap-1 text-md text-tertiary">
                                             {a.type} · {a.size}
                                         </span>
-                                        {already && <span className="text-xs font-semibold text-tertiary">Already added</span>}
+                                        {already && (
+                                            <span className="text-md font-semibold text-tertiary">
+                                                <Copy>Already added</Copy>
+                                            </span>
+                                        )}
                                         {no && (
-                                            <span className="flex items-center gap-1 text-xs font-semibold" style={{ color: "#B54708" }}>
-                                                <AlertTriangle className="size-3" aria-hidden="true" /> Wrong type
+                                            <span className="flex items-center gap-1 text-md font-semibold" style={{ color: "#B54708" }}>
+                                                <AlertTriangle className="size-3" aria-hidden="true" /> <Copy>Wrong type</Copy>
                                             </span>
                                         )}
                                     </button>
@@ -189,15 +222,17 @@ export const AssetPicker = ({
                 </div>
 
                 <div className="flex items-center justify-between gap-3 border-t border-secondary px-6 py-4">
-                    <span className="text-sm text-tertiary">
-                        {picked.length ? `${picked.length} selected` : `${rows.length} asset${rows.length === 1 ? "" : "s"} in your library`}
+                    <span className="text-md text-tertiary">
+                        <Copy>{picked.length ? `${picked.length} selected` : `${rows.length} asset${rows.length === 1 ? "" : "s"} in your library`}</Copy>
                     </span>
                     <div className="flex gap-3">
+                        {/* Staging's picker buttons. Written in capitals to match it word for
+                            word; the button is uppercase either way. */}
                         <Button color="secondary" className="uppercase" onClick={onClose}>
-                            Cancel
+                            <Copy original={ORIGINAL.creativeCancel}>CANCEL</Copy>
                         </Button>
                         <Button color="primary-pink" className="uppercase" isDisabled={!picked.length} onClick={add}>
-                            Add {picked.length || ""}
+                            <Copy original={ORIGINAL.creativeAdd}>{picked.length ? `ADD ${picked.length}` : "ADD"}</Copy>
                         </Button>
                     </div>
                 </div>

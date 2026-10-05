@@ -1,10 +1,12 @@
 import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, Plus, SearchLg, XClose } from "@untitledui/icons";
-import { Button } from "@/components/base/buttons/button";
+import { Button } from "./type-rules";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Input } from "@/components/base/input/input";
 import { cx } from "@/utils/cx";
-import { PINK, TEAL } from "../../v1/screens/das-shell";
+import { useCopy } from "./copy-deck";
+import { Copy } from "./copy-deck-ui";
+import { PINK, TEAL } from "./das-shell";
 import { type ListCursor, activeRowStyle, resultCount, useListCursor } from "./arrow-keys";
 import { usePanelPlacement } from "./panel-placement";
 import { useScrollLock } from "./scroll-lock";
@@ -117,8 +119,12 @@ const useClickAway = (open: boolean, close: () => void) => {
 /** The count lives here, in the panel's own header, where it answers "how long is this?". */
 const PanelHeader = ({ label, matched, total, noun, filtering }: { label: string; matched: number; total: number; noun: string; filtering: boolean }) => (
     <div className="flex items-center justify-between gap-3 border-b border-secondary px-4 py-2">
-        <span className="text-xs font-semibold text-tertiary uppercase">{label}</span>
-        <span className="text-xs font-medium text-tertiary tabular-nums">{resultCount(matched, total, noun, filtering)}</span>
+        <span className="text-md font-semibold text-tertiary uppercase">
+            <Copy>{label}</Copy>
+        </span>
+        <span className="text-md font-medium text-tertiary tabular-nums">
+            <Copy>{resultCount(matched, total, noun, filtering)}</Copy>
+        </span>
     </div>
 );
 
@@ -143,7 +149,13 @@ const Results = ({
     listRef: React.RefObject<HTMLDivElement | null>;
     showTrailing?: boolean;
 }) => {
-    if (shown.length === 0) return <div className="px-4 py-6 text-center text-sm text-tertiary">Nothing matches “{query}”.</div>;
+    const copy = useCopy();
+    if (shown.length === 0)
+        return (
+            <div className="px-4 py-6 text-center text-md text-tertiary">
+                <Copy>{`Nothing matches “${query}”.`}</Copy>
+            </div>
+        );
     return (
         <>
             <div ref={listRef} className="max-h-72 overflow-y-auto overscroll-contain">
@@ -158,7 +170,7 @@ const Results = ({
                                     type="button"
                                     data-active={active}
                                     disabled={already || blocked}
-                                    title={row.disabledReason}
+                                    title={row.disabledReason && copy.text(row.disabledReason)}
                                     onMouseMove={() => cursor.move(i)}
                                     onClick={() => onPick(row)}
                                     style={active ? activeRowStyle(PINK) : undefined}
@@ -168,12 +180,12 @@ const Results = ({
                                     )}
                                 >
                                     <span className="flex min-w-0 flex-1 flex-col">
-                                        <span className="truncate text-sm font-medium text-primary">{row.label}</span>
-                                        {row.meta && <span className="truncate text-xs text-tertiary">{row.meta}</span>}
+                                        <span className="truncate text-md font-medium text-primary">{row.label}</span>
+                                        {row.meta && <span className="truncate text-md text-tertiary">{row.meta}</span>}
                                     </span>
                                     {showTrailing && row.trailing}
-                                    <span className="shrink-0 text-xs font-semibold" style={{ color: already ? "#98A2B3" : PINK }}>
-                                        {already ? "Added" : blocked ? "—" : "Add"}
+                                    <span className="shrink-0 text-md font-semibold" style={{ color: already ? "#98A2B3" : PINK }}>
+                                        {already ? <Copy>Added</Copy> : blocked ? "—" : <Copy>Add</Copy>}
                                     </span>
                                 </button>
                             </li>
@@ -182,8 +194,8 @@ const Results = ({
                 </ul>
             </div>
             {hits.length > shown.length && (
-                <p className="border-t border-secondary px-4 py-2 text-xs text-tertiary">
-                    Showing the first {shown.length} of {hits.length}. Keep typing to narrow it.
+                <p className="border-t border-secondary px-4 py-2 text-md text-tertiary">
+                    <Copy>{`Showing the first ${shown.length} of ${hits.length}. Keep typing to narrow it.`}</Copy>
                 </p>
             )}
         </>
@@ -192,8 +204,8 @@ const Results = ({
 
 /** The one line everybody needs and nobody is told: the keys work. */
 export const KeyHint = ({ className, extra }: { className?: string; extra?: string }) => (
-    <span className={cx("text-xs text-quaternary", className)}>
-        ↑ ↓ to move · Enter to select · Esc to close{extra ? ` · ${extra}` : ""}
+    <span className={cx("text-md text-quaternary", className)}>
+        <Copy>{`↑ ↓ to move · Enter to select · Esc to close${extra ? ` · ${extra}` : ""}`}</Copy>
     </span>
 );
 
@@ -210,15 +222,22 @@ export const ChosenTable = ({
     onRemove: (id: string) => void;
     empty: ReactNode;
 }) => {
-    if (rows.length === 0) return <div className="rounded-xl border border-dashed border-secondary px-6 py-8 text-center text-sm text-tertiary">{empty}</div>;
+    if (rows.length === 0)
+        return (
+            <div className="rounded-xl border border-dashed border-secondary px-6 py-8 text-center text-md text-tertiary">
+                {/* Callers pass a literal or their own <Copy>; only the literal is wrapped here, so nothing is marked twice. */}
+                {typeof empty === "string" ? <Copy>{empty}</Copy> : empty}
+            </div>
+        );
     return (
         <div className="overflow-x-auto rounded-xl ring-1 ring-secondary">
             <table className="w-full">
                 <thead className="bg-secondary">
                     <tr>
-                        {columns.map((c) => (
-                            <th key={c} className="px-4 py-2.5 text-left text-xs font-semibold text-tertiary">
-                                {c}
+                        {columns.map((c, i) => (
+                            // By position: headers can repeat (one is blank) and callers may pass "" when copy is hidden.
+                            <th key={i} className="px-4 py-2.5 text-left text-md font-semibold text-tertiary">
+                                <Copy>{c}</Copy>
                             </th>
                         ))}
                         <th className="w-10 px-4 py-2.5" />
@@ -228,7 +247,7 @@ export const ChosenTable = ({
                     {rows.map((r) => (
                         <tr key={r.id} className={cx("border-t border-secondary", r.invalid && "bg-error-primary")}>
                             {r.cells.map((cell, i) => (
-                                <td key={i} className="px-4 py-3 text-sm text-secondary">
+                                <td key={i} className="px-4 py-3 text-md text-secondary">
                                     {cell}
                                 </td>
                             ))}
@@ -293,6 +312,7 @@ export const InlineSearchSelect = ({
 }) => {
     const [query, setQuery] = useState("");
     const [open, setOpen] = useState(false);
+    const copy = useCopy();
     const chosen = useMemo(() => new Set(chosenIds), [chosenIds]);
     const box = useClickAway(open, () => setOpen(false));
     const listRef = useRef<HTMLDivElement>(null);
@@ -324,7 +344,8 @@ export const InlineSearchSelect = ({
                         aria-label={label}
                         size="md"
                         icon={SearchLg}
-                        placeholder={placeholder}
+                        className={copy.mark({ placeholder: [placeholder] })}
+                        placeholder={copy.text(placeholder)}
                         value={query}
                         onFocus={() => setOpen(true)}
                         onChange={(next) => {
@@ -348,8 +369,8 @@ export const InlineSearchSelect = ({
                             <div className="flex items-center justify-between gap-3 border-t border-secondary px-4 py-2">
                                 <KeyHint />
                                 {createLabel && onCreate && (
-                                    <button type="button" onClick={onCreate} className="text-xs font-semibold uppercase" style={{ color: PINK }}>
-                                        {createLabel}
+                                    <button type="button" onClick={onCreate} className="text-md font-semibold uppercase" style={{ color: PINK }}>
+                                        <Copy>{createLabel}</Copy>
                                     </button>
                                 )}
                             </div>
@@ -358,12 +379,16 @@ export const InlineSearchSelect = ({
                 </div>
                 {createLabel && onCreate && (
                     <Button color="secondary" iconLeading={Plus} className="uppercase" onClick={onCreate}>
-                        {createLabel}
+                        <Copy>{createLabel}</Copy>
                     </Button>
                 )}
             </div>
-            <span className="text-sm text-tertiary">
-                {q ? `${hits.length} of ${rows.length} ${noun} match “${query}”.` : `${rows.length} ${noun} in your library. Type to filter, or press ↓ to see them all.`}
+            <span className="text-md text-tertiary">
+                <Copy>
+                    {q
+                        ? `${hits.length} of ${rows.length} ${noun} match “${query}”.`
+                        : `${rows.length} ${noun} in your library. Type to filter, or press ↓ to see them all.`}
+                </Copy>
             </span>
         </div>
     );
@@ -399,10 +424,11 @@ export const SingleSearchSelect = ({
     noun: string;
     isDisabled?: boolean;
     isInvalid?: boolean;
-    hint?: string;
+    hint?: ReactNode;
 }) => {
     const [query, setQuery] = useState("");
     const [open, setOpen] = useState(false);
+    const copy = useCopy();
     const box = useClickAway(open, () => setOpen(false));
     const listRef = useRef<HTMLDivElement>(null);
     const panelRef = useRef<HTMLDivElement>(null);
@@ -445,7 +471,8 @@ export const SingleSearchSelect = ({
                     icon={SearchLg}
                     isDisabled={isDisabled}
                     isInvalid={isInvalid}
-                    placeholder={placeholder}
+                    className={copy.mark({ placeholder: [placeholder] })}
+                    placeholder={copy.text(placeholder)}
                     value={open ? query : (current?.label ?? "")}
                     onChange={(next) => {
                         setQuery(next);
@@ -459,7 +486,9 @@ export const SingleSearchSelect = ({
                     <div ref={panelRef} className="absolute top-full right-0 left-0 z-30 mt-1 overflow-hidden rounded-xl bg-primary shadow-lg ring-1 ring-secondary">
                         <PanelHeader label={label} matched={hits.length} total={rows.length} noun={noun} filtering={Boolean(q)} />
                         {shown.length === 0 ? (
-                            <div className="px-4 py-6 text-center text-sm text-tertiary">Nothing matches “{query}”.</div>
+                            <div className="px-4 py-6 text-center text-md text-tertiary">
+                                <Copy>{`Nothing matches “${query}”.`}</Copy>
+                            </div>
                         ) : (
                             <div ref={listRef} className="max-h-72 overflow-y-auto overscroll-contain py-1">
                                 {shown.map((row, i) => {
@@ -475,10 +504,10 @@ export const SingleSearchSelect = ({
                                             style={active ? activeRowStyle(PINK) : undefined}
                                             className={cx("flex w-full flex-col items-start px-4 py-2 text-left", !active && "hover:bg-secondary")}
                                         >
-                                            <span className={cx("text-sm text-primary", chosenOne && "font-semibold")} style={chosenOne ? { color: TEAL } : undefined}>
+                                            <span className={cx("text-md text-primary", chosenOne && "font-semibold")} style={chosenOne ? { color: TEAL } : undefined}>
                                                 {row.label}
                                             </span>
-                                            {row.meta && <span className="text-xs text-tertiary">{row.meta}</span>}
+                                            {row.meta && <span className="text-md text-tertiary">{row.meta}</span>}
                                         </button>
                                     );
                                 })}
@@ -494,16 +523,16 @@ export const SingleSearchSelect = ({
                                         setQuery("");
                                         setOpen(false);
                                     }}
-                                    className="text-xs font-semibold text-secondary uppercase hover:text-primary"
+                                    className="text-md font-semibold text-secondary uppercase hover:text-primary"
                                 >
-                                    Clear
+                                    <Copy>Clear</Copy>
                                 </button>
                             )}
                         </div>
                     </div>
                 )}
             </div>
-            {hint && <span className={cx("text-sm", isInvalid ? "text-error-primary" : "text-tertiary")}>{hint}</span>}
+            {hint && <span className={cx("text-md", isInvalid ? "text-error-primary" : "text-tertiary")}>{hint}</span>}
         </div>
     );
 };
@@ -547,6 +576,7 @@ export const ModalSearchSelect = ({
 }) => {
     const [query, setQuery] = useState("");
     const [picked, setPicked] = useState<string[]>([]);
+    const copy = useCopy();
     const inputRef = useRef<HTMLInputElement>(null);
     const listRef = useRef<HTMLDivElement>(null);
     const chosen = useMemo(() => new Set(chosenIds), [chosenIds]);
@@ -586,9 +616,11 @@ export const ModalSearchSelect = ({
             >
                 <div className="flex items-start justify-between gap-4 border-b border-secondary px-6 py-4">
                     <div className="flex flex-col gap-0.5">
-                        <h2 className="text-lg font-semibold text-primary">{title}</h2>
-                        <p className="text-sm text-tertiary">
-                            {q ? `${hits.length} of ${rows.length} ${noun} match “${query}”.` : `${rows.length} ${noun} in your library.`}
+                        <h2 className="text-lg font-extrabold text-primary">
+                            <Copy>{title}</Copy>
+                        </h2>
+                        <p className="text-md text-tertiary">
+                            <Copy>{q ? `${hits.length} of ${rows.length} ${noun} match “${query}”.` : `${rows.length} ${noun} in your library.`}</Copy>
                         </p>
                     </div>
                     <button type="button" aria-label="Close" onClick={onClose} className="rounded-md p-1.5 text-fg-quaternary hover:bg-secondary">
@@ -597,12 +629,23 @@ export const ModalSearchSelect = ({
                 </div>
 
                 <div className="border-b border-secondary px-6 py-3">
-                    <Input ref={inputRef} aria-label={title} size="md" icon={SearchLg} placeholder={placeholder} value={query} onChange={setQuery} />
+                    <Input
+                        ref={inputRef}
+                        aria-label={title}
+                        size="md"
+                        icon={SearchLg}
+                        className={copy.mark({ placeholder: [placeholder] })}
+                        placeholder={copy.text(placeholder)}
+                        value={query}
+                        onChange={setQuery}
+                    />
                 </div>
 
                 <div ref={listRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
                     {shown.length === 0 ? (
-                        <p className="px-6 py-10 text-center text-sm text-tertiary">Nothing matches “{query}”.</p>
+                        <p className="px-6 py-10 text-center text-md text-tertiary">
+                            <Copy>{`Nothing matches “${query}”.`}</Copy>
+                        </p>
                     ) : (
                         <ul className="divide-y divide-secondary">
                             {shown.map((row, i) => {
@@ -625,14 +668,18 @@ export const ModalSearchSelect = ({
                                             onChange={() => toggle(row.id)}
                                         />
                                         <span className="flex min-w-0 flex-1 flex-col">
-                                            <span className="truncate text-sm font-medium text-primary">{row.label}</span>
-                                            {row.meta && <span className="truncate text-xs text-tertiary">{row.meta}</span>}
+                                            <span className="truncate text-md font-medium text-primary">{row.label}</span>
+                                            {row.meta && <span className="truncate text-md text-tertiary">{row.meta}</span>}
                                         </span>
                                         {(maxTrailing === undefined || hits.length <= maxTrailing) && row.trailing}
-                                        {already && <span className="shrink-0 text-xs font-semibold text-tertiary">Already added</span>}
+                                        {already && (
+                                            <span className="shrink-0 text-md font-semibold text-tertiary">
+                                                <Copy>Already added</Copy>
+                                            </span>
+                                        )}
                                         {blocked && (
-                                            <span className="shrink-0 text-xs font-semibold" style={{ color: "#B54708" }}>
-                                                {row.disabledReason}
+                                            <span className="shrink-0 text-md font-semibold" style={{ color: "#B54708" }}>
+                                                <Copy>{row.disabledReason}</Copy>
                                             </span>
                                         )}
                                     </li>
@@ -641,8 +688,8 @@ export const ModalSearchSelect = ({
                         </ul>
                     )}
                     {hits.length > shown.length && (
-                        <p className="border-t border-secondary px-6 py-2 text-xs text-tertiary">
-                            Showing the first {shown.length} of {hits.length}. Keep typing to narrow it.
+                        <p className="border-t border-secondary px-6 py-2 text-md text-tertiary">
+                            <Copy>{`Showing the first ${shown.length} of ${hits.length}. Keep typing to narrow it.`}</Copy>
                         </p>
                     )}
                 </div>
@@ -650,14 +697,14 @@ export const ModalSearchSelect = ({
                 <div className="flex items-center justify-between gap-3 border-t border-secondary px-6 py-4">
                     {createLabel && onCreate ? (
                         <Button color="link-color" iconLeading={Plus} onClick={onCreate}>
-                            {createLabel}
+                            <Copy>{createLabel}</Copy>
                         </Button>
                     ) : (
                         <KeyHint />
                     )}
                     <div className="flex gap-3">
                         <Button color="secondary" className="uppercase" onClick={onClose}>
-                            Cancel
+                            <Copy>Cancel</Copy>
                         </Button>
                         <Button
                             color="primary-pink"
@@ -668,7 +715,7 @@ export const ModalSearchSelect = ({
                                 onClose();
                             }}
                         >
-                            Add {picked.length || ""}
+                            <Copy>{picked.length ? `Add ${picked.length}` : "Add"}</Copy>
                         </Button>
                     </div>
                 </div>
@@ -681,7 +728,9 @@ export const ModalSearchSelect = ({
 export const TargetBlock = ({ title, trailing, children }: { title: string; trailing?: ReactNode; children: ReactNode }) => (
     <div className="flex flex-col gap-4 rounded-xl p-5 ring-1 ring-secondary">
         <div className="flex flex-wrap items-center justify-between gap-3">
-            <h3 className="text-lg font-semibold text-primary">{title}</h3>
+            <h3 className="text-lg font-bold text-primary">
+                <Copy>{title}</Copy>
+            </h3>
             {trailing}
         </div>
         {children}
@@ -690,9 +739,9 @@ export const TargetBlock = ({ title, trailing, children }: { title: string; trai
 
 export const TrafficBadge = ({ seen }: { seen: boolean }) => (
     <span
-        className="shrink-0 rounded-md px-2 py-0.5 text-xs font-semibold whitespace-nowrap"
+        className="shrink-0 rounded-md px-2 py-0.5 text-md font-semibold whitespace-nowrap"
         style={seen ? { color: "#1F7F80", backgroundColor: `${TEAL}1f` } : { color: "#B54708", backgroundColor: "#FEF0C7" }}
     >
-        {seen ? "In traffic" : "Not seen"}
+        <Copy>{seen ? "In traffic" : "Not seen"}</Copy>
     </span>
 );

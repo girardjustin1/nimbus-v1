@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import { Button } from "@/components/base/buttons/button";
 import { Eye, UploadCloud01, XClose } from "@untitledui/icons";
-import { AdFormatDemo } from "@/pages/deal-activation-system/studio/components/ad-format-demo";
-import { PinkAction } from "../../v1/screens/das-shell";
 import type { Creative } from "../../v1/screens/setup-data";
 import { type Asset, previewFor, setReturnTo, useAssets } from "./asset-data";
-import { ChosenTable, InlineSearchSelect, ModalSearchSelect, type SelectableRow, TargetBlock } from "./search-select";
+import { useCopy } from "./copy-deck";
+import { Copy } from "./copy-deck-ui";
+import { PinkAction } from "./das-shell";
 import { useScrollLock } from "./scroll-lock";
+import { ChosenTable, InlineSearchSelect, ModalSearchSelect, type SelectableRow, TargetBlock } from "./search-select";
+import { Button } from "./type-rules";
+import { AdFormatDemo } from "./type-rules";
 
 /**
  * Adding creatives to a campaign.
@@ -78,8 +80,8 @@ const CreativePreview = ({ creative, onClose }: { creative: Creative; onClose: (
             >
                 <div className="flex items-start justify-between gap-4 border-b border-secondary px-6 py-4">
                     <div className="flex flex-col gap-0.5">
-                        <h2 className="text-lg font-semibold text-primary">{creative.name}</h2>
-                        <p className="text-sm text-tertiary">
+                        <h2 className="text-lg font-extrabold text-primary">{creative.name}</h2>
+                        <p className="text-md text-tertiary">
                             {creative.type} · {creative.size}
                         </p>
                     </div>
@@ -94,9 +96,11 @@ const CreativePreview = ({ creative, onClose }: { creative: Creative; onClose: (
                 </div>
                 <div className="flex items-center justify-between gap-3 border-t border-secondary px-6 py-4">
                     {/* Say what it is, so nobody takes the animation for the asset. */}
-                    <span className="text-xs text-quaternary">How this format behaves in an app — not a render of the markup.</span>
+                    <span className="text-md text-quaternary">
+                        <Copy>How this format behaves in an app — not a render of the markup.</Copy>
+                    </span>
                     <Button color="secondary" className="uppercase" onClick={onClose}>
-                        Close
+                        <Copy>Close</Copy>
                     </Button>
                 </div>
             </div>
@@ -116,19 +120,26 @@ export const CreativeTargetBlock = ({
     screenId?: string;
 }) => {
     const assets = useAssets();
+    const copy = useCopy();
     const [browsing, setBrowsing] = useState(false);
     const [previewing, setPreviewing] = useState<Creative | null>(null);
 
     // One type per campaign — whichever is in first decides what else is allowed.
     const lockedType = value[0]?.type;
 
-    const rows: SelectableRow[] = assets.map((a) => ({
-        id: a.name,
-        label: a.name,
-        meta: `${a.type} · ${a.size}${a.campaigns.length ? ` · ${a.campaigns.length} campaign${a.campaigns.length === 1 ? "" : "s"}` : ""}`,
-        trailing: <Thumb asset={a} />,
-        disabledReason: lockedType && a.type !== lockedType ? `Campaign is ${lockedType}` : a.size === "Invalid" ? "Invalid size" : undefined,
-    }));
+    const rows: SelectableRow[] = assets.map((a) => {
+        // Type and size are data; only the campaign count is copy.
+        const usedBy = a.campaigns.length ? copy.text(`${a.campaigns.length} campaign${a.campaigns.length === 1 ? "" : "s"}`) : undefined;
+        return {
+            id: a.name,
+            label: a.name,
+            meta: `${a.type} · ${a.size}${usedBy ? ` · ${usedBy}` : ""}`,
+            trailing: <Thumb asset={a} />,
+            // Doubles as the disabled flag, so it stays a raw string: hiding the copy
+            // must not make a blocked row pickable. search-select renders it.
+            disabledReason: lockedType && a.type !== lockedType ? `Campaign is ${lockedType}` : a.size === "Invalid" ? "Invalid size" : undefined,
+        };
+    });
 
     const add = (names: string[]) => {
         const picked = assets.filter((a) => names.includes(a.name) && !value.some((c) => c.name === a.name));
@@ -144,23 +155,23 @@ export const CreativeTargetBlock = ({
 
     return (
         <TargetBlock
-            title="Creative"
+            title={copy.text("Creative") ?? ""}
             trailing={
                 entry === "modal" ? (
                     <Button color="secondary" className="uppercase" onClick={() => setBrowsing(true)}>
-                        Find creatives
+                        <Copy>Find creatives</Copy>
                     </Button>
                 ) : (
                     <PinkAction icon={UploadCloud01} onPress={uploadNew}>
-                        Upload new asset
+                        <Copy>Upload new asset</Copy>
                     </PinkAction>
                 )
             }
         >
             {entry === "inline" && (
                 <InlineSearchSelect
-                    label="Search assets"
-                    placeholder="Search your asset library"
+                    label={copy.text("Search assets") ?? ""}
+                    placeholder={copy.text("Search your asset library") ?? ""}
                     rows={rows}
                     chosenIds={value.map((c) => c.name)}
                     onPick={(row) => add([row.id])}
@@ -170,7 +181,7 @@ export const CreativeTargetBlock = ({
             )}
 
             <ChosenTable
-                columns={["Creative", "Ad Type", "Ad Size", ""]}
+                columns={[copy.text("Creative") ?? "", copy.text("Ad Type") ?? "", copy.text("Ad Size") ?? "", ""]}
                 rows={value.map((c) => ({
                     id: c.name,
                     invalid: mixed && c.type === "VAST (xml)",
@@ -181,28 +192,36 @@ export const CreativeTargetBlock = ({
                         c.type,
                         c.size,
                         <PinkAction key="p" icon={Eye} onPress={() => setPreviewing(c)}>
-                            Preview
+                            <Copy>Preview</Copy>
                         </PinkAction>,
                     ],
                 }))}
                 onRemove={(name) => onChange(value.filter((c) => c.name !== name))}
-                empty={entry === "inline" ? "No creatives yet. Search above, or upload a new asset." : "No creatives yet. Find creatives to add one."}
+                empty={
+                    <Copy>
+                        {entry === "inline" ? "No creatives yet. Search above, or upload a new asset." : "No creatives yet. Find creatives to add one."}
+                    </Copy>
+                }
             />
 
-            {mixed && <p className="text-sm text-error-primary">A campaign can't mix HTML and VAST (xml). Remove one type.</p>}
+            {mixed && (
+                <p className="text-md text-error-primary">
+                    <Copy>A campaign can't mix HTML and VAST (xml). Remove one type.</Copy>
+                </p>
+            )}
 
             {previewing && <CreativePreview creative={previewing} onClose={() => setPreviewing(null)} />}
 
             {browsing && (
                 <ModalSearchSelect
-                    title="Find creatives"
-                    placeholder="Search your asset library"
+                    title={copy.text("Find creatives") ?? ""}
+                    placeholder={copy.text("Search your asset library") ?? ""}
                     rows={rows}
                     chosenIds={value.map((c) => c.name)}
                     noun="assets"
                     onAdd={(picked) => add(picked.map((p) => p.id))}
                     onClose={() => setBrowsing(false)}
-                    createLabel="Upload a new asset instead"
+                    createLabel={copy.text("Upload a new asset instead")}
                     onCreate={uploadNew}
                     maxTrailing={PREVIEW_LIMIT}
                 />

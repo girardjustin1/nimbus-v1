@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { HelpCircle, XClose } from "@untitledui/icons";
-import { Button } from "@/components/base/buttons/button";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
-import { AdFormatDemo } from "@/pages/deal-activation-system/studio/components/ad-format-demo";
-import type { FormatId } from "@/pages/deal-activation-system/studio/studio-data";
 import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
+import type { FormatId } from "@/pages/deal-activation-system/studio/studio-data";
 import { cx } from "@/utils/cx";
 import { type AdUnitType, adUnitTypes } from "../../v1/screens/das-data";
-import { TEAL } from "../../v1/screens/das-shell";
+import { Copy } from "./copy-deck-ui";
+import { TEAL } from "./das-shell";
 import { useScrollLock } from "./scroll-lock";
+import { Button } from "./type-rules";
+import { AdFormatDemo } from "./type-rules";
+import { LABEL } from "./type-rules";
 
 /**
  * Ad Unit, with a way to find out what the four words mean.
@@ -85,9 +87,11 @@ export const AdUnitGuideModal = ({ onClose }: { onClose: () => void }) => {
             >
                 <div className="flex items-start justify-between gap-4 border-b border-secondary px-6 py-4">
                     <div className="flex flex-col gap-0.5">
-                        <h2 className="text-lg font-semibold text-primary">Ad unit types</h2>
-                        <p className="text-sm text-tertiary">
-                            What each unit looks like to someone using the app. You are targeting the publisher's units, not your creative's size.
+                        <h2 className="text-lg font-extrabold text-primary">
+                            <Copy>Ad unit types</Copy>
+                        </h2>
+                        <p className="text-md text-tertiary">
+                            <Copy>What each unit looks like to someone using the app. You are targeting the publisher's units, not your creative's size.</Copy>
                         </p>
                     </div>
                     <button type="button" aria-label="Close" onClick={onClose} className="rounded-md p-1.5 text-fg-quaternary hover:bg-secondary">
@@ -103,11 +107,15 @@ export const AdUnitGuideModal = ({ onClose }: { onClose: () => void }) => {
                                     <RotatingDemo formats={UNIT_DEMOS[unit.id]} />
                                 </div>
                                 <div className="flex flex-col gap-1">
-                                    <span className="text-sm font-semibold text-primary">{unit.id}</span>
-                                    <span className="text-sm text-tertiary">{UNIT_COPY[unit.id]}</span>
+                                    <span className="text-md font-semibold text-primary">
+                                        <Copy>{unit.id}</Copy>
+                                    </span>
+                                    <span className="text-md text-tertiary">
+                                        <Copy>{UNIT_COPY[unit.id]}</Copy>
+                                    </span>
                                     {unit.id === "Dynamic Unit" && (
-                                        <span className="text-xs text-quaternary">
-                                            No animation yet — that is all the spec says about it. This cycles the three units it sits alongside.
+                                        <span className="text-md text-quaternary">
+                                            <Copy>No animation yet — that is all the spec says about it. This cycles the three units it sits alongside.</Copy>
                                         </span>
                                     )}
                                 </div>
@@ -118,7 +126,7 @@ export const AdUnitGuideModal = ({ onClose }: { onClose: () => void }) => {
 
                 <div className="flex justify-end border-t border-secondary px-6 py-4">
                     <Button color="secondary" className="uppercase" onClick={onClose}>
-                        Close
+                        <Copy>Close</Copy>
                     </Button>
                 </div>
             </div>
@@ -152,22 +160,34 @@ export const AdUnitTypeFieldV3 = ({
                         <label
                             key={unit.id}
                             className={cx(
-                                "flex cursor-pointer items-start gap-3 rounded-xl p-4 ring-1 transition-colors duration-100",
-                                isOn ? "ring-2" : "ring-secondary hover:bg-primary_hover",
+                                // Same edge as the text fields and the Auction Rules cards.
+                                "flex cursor-pointer items-start gap-3 rounded-xl p-4 shadow-xs ring-1 transition-colors duration-100 ring-inset",
+                                isOn ? "ring-2" : "ring-primary hover:bg-primary_hover",
                             )}
-                            style={isOn ? { boxShadow: `inset 0 0 0 1px ${TEAL}`, backgroundColor: `${TEAL}0f`, ["--tw-ring-color" as string]: TEAL } : undefined}
+                            style={
+                                isOn ? { boxShadow: `inset 0 0 0 1px ${TEAL}, var(--shadow-xs)`, backgroundColor: `${TEAL}0f`, ["--tw-ring-color" as string]: TEAL } : undefined
+                            }
                         >
                             <Checkbox size="sm" isSelected={isOn} onChange={() => toggle(unit.id)} aria-label={unit.id} />
                             <span className="flex flex-col">
-                                <span className="text-sm font-semibold text-primary">{unit.id}</span>
-                                <span className="text-sm text-tertiary">{unit.hint}</span>
+                                <span className={LABEL}>
+                                    <Copy>{unit.id}</Copy>
+                                </span>
+                                <span className="text-md text-tertiary">
+                                    <Copy>{unit.hint}</Copy>
+                                </span>
                             </span>
                         </label>
                     );
                 })}
             </div>
-            <p className="text-sm text-tertiary">
-                Targets the publisher's ad units, not creative sizes. {selected.length === 0 && <span className="text-error-primary">Select at least one.</span>}
+            <p className="text-md text-tertiary">
+                <Copy>Targets the publisher's ad units, not creative sizes.</Copy>{" "}
+                {selected.length === 0 && (
+                    <span className="text-error-primary">
+                        <Copy>Select at least one.</Copy>
+                    </span>
+                )}
             </p>
         </div>
     );
@@ -184,8 +204,13 @@ export const AdUnitHelp = () => {
     return (
         <>
             <Tooltip
-                title="What these ad units look like"
-                description="An animation of each unit — Interstitial, Inline, Rewarded and Dynamic Unit — as someone using the app would see it. Click to learn more."
+                title={<Copy>What these ad units look like</Copy>}
+                description={
+                    <Copy>
+                        An animation of each unit — Interstitial, Inline, Rewarded and Dynamic Unit — as someone using the app would see it. Click to learn
+                        more.
+                    </Copy>
+                }
                 placement="top"
             >
                 <TooltipTrigger

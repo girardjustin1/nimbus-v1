@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { AlertTriangle, CheckCircle, ClockRewind, InfoCircle, Trash01 } from "@untitledui/icons";
-import { Button } from "@/components/base/buttons/button";
+import { Button } from "./type-rules";
 import { cx } from "@/utils/cx";
 import { useRegisterPageFill } from "../../../shared/demo-fill";
-import { DasShell, KeywordChip, PINK, PinkAction, TEAL } from "../../v1/screens/das-shell";
+import { DasShell, KeywordChip, PINK, PinkAction, TEAL } from "./das-shell";
 import { V3_NAV_ITEMS } from "./nav";
 import { BackLink, Card, ExportCsv, KeywordTabs, ReportingGuardrail, SourceChips } from "./keyword-common";
 import { type Keyword, deleteKeyword, fmtInt, getKeyword, liveCampaigns, useKeywords } from "./keyword-data";
@@ -68,7 +68,7 @@ export const KeywordDetail = ({ id = "k1", confirmDelete = false }: KeywordDetai
         >
                 <KeywordTabs active="view" />
                 <div className="flex flex-col gap-5 px-8 py-8">
-                    <p className="rounded-xl border border-dashed border-secondary p-10 text-center text-sm text-tertiary">
+                    <p className="rounded-xl border border-dashed border-secondary p-10 text-center text-md text-tertiary">
                         That keyword is no longer in the library. <a href="#/keyword-view" className="font-semibold" style={{ color: TEAL }}>View All Keywords</a>
                     </p>
                 </div>
@@ -89,7 +89,7 @@ const Detail = ({ keyword, confirmDelete }: { keyword: Keyword; confirmDelete: b
     useRegisterPageFill(null);
 
 
-    const label = "text-xs font-semibold tracking-wide text-tertiary uppercase";
+    const label = "text-md font-semibold tracking-wide text-tertiary uppercase";
 
     return (
         <DasShell
@@ -111,8 +111,8 @@ const Detail = ({ keyword, confirmDelete }: { keyword: Keyword; confirmDelete: b
 
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
-                        <h2 className="font-mono text-display-xs font-semibold text-primary">{keyword.value}</h2>
-                        <span className="inline-flex items-center gap-2 text-sm text-secondary">
+                        <h2 className="font-mono text-display-xs font-extrabold text-primary">{keyword.value}</h2>
+                        <span className="inline-flex items-center gap-2 text-md text-secondary">
                             <span className="size-2 rounded-full" style={{ backgroundColor: live.length ? TEAL : "#98A2B3" }} aria-hidden="true" />
                             {live.length ? `Running in ${live.length} campaign${live.length === 1 ? "" : "s"}` : "Not in a live campaign"}
                         </span>
@@ -132,12 +132,12 @@ const Detail = ({ keyword, confirmDelete }: { keyword: Keyword; confirmDelete: b
                                 <span className={label}>Value</span>
                                 <div className="flex flex-wrap items-center gap-3">
                                     <KeywordChip value={keyword.value} />
-                                    <span className="text-sm text-tertiary">
+                                    <span className="text-md text-tertiary">
                                         Stored lower-case. Matching is exact and case-insensitive, so{" "}
-                                        <code className="font-mono text-xs">{keyword.value.toUpperCase()}</code> in a request matches this too.
+                                        <code className="font-mono text-md">{keyword.value.toUpperCase()}</code> in a request matches this too.
                                     </span>
                                 </div>
-                                <span className="text-sm text-tertiary">
+                                <span className="text-md text-tertiary">
                                     The value can't be edited — every campaign below matches on it. To change it, add the new keyword and remove this one.
                                 </span>
                             </div>
@@ -145,7 +145,7 @@ const Detail = ({ keyword, confirmDelete }: { keyword: Keyword; confirmDelete: b
 
                         <Card title={`Campaigns using this keyword (${keyword.campaigns.length})`} trailing={<PinkAction>Add to a campaign</PinkAction>}>
                             {keyword.campaigns.length === 0 ? (
-                                <p className="rounded-xl border border-dashed border-secondary p-6 text-center text-sm text-tertiary">
+                                <p className="rounded-xl border border-dashed border-secondary p-6 text-center text-md text-tertiary">
                                     No campaign targets this keyword yet, so it is not changing what serves.
                                 </p>
                             ) : (
@@ -153,12 +153,12 @@ const Detail = ({ keyword, confirmDelete }: { keyword: Keyword; confirmDelete: b
                                     {keyword.campaigns.map((c) => (
                                         <li key={c.name} className="flex flex-wrap items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
                                             <span className="flex min-w-0 flex-col">
-                                                <a href="#/campaigns" className="truncate text-sm font-semibold" style={{ color: TEAL }}>
+                                                <a href="#/campaigns" className="truncate text-md font-semibold" style={{ color: TEAL }}>
                                                     {c.name}
                                                 </a>
-                                                <span className="truncate text-xs text-tertiary">{c.deal}</span>
+                                                <span className="truncate text-md text-tertiary">{c.deal}</span>
                                             </span>
-                                            <span className="inline-flex items-center gap-2 text-sm whitespace-nowrap text-secondary">
+                                            <span className="inline-flex items-center gap-2 text-md whitespace-nowrap text-secondary">
                                                 <span className="size-2 rounded-full" style={{ backgroundColor: c.live ? TEAL : "#98A2B3" }} aria-hidden="true" />
                                                 {c.live ? "Running" : "Paused"}
                                             </span>
@@ -181,8 +181,8 @@ const Detail = ({ keyword, confirmDelete }: { keyword: Keyword; confirmDelete: b
                                     <li key={`${e.when}-${i}`} className="flex gap-3 border-l border-secondary pb-4 pl-4 last:pb-0">
                                         <span className="-ml-[21px] mt-1.5 size-2 shrink-0 rounded-full bg-quaternary" aria-hidden="true" />
                                         <span className="flex min-w-0 flex-col">
-                                            <span className="text-sm text-primary">{e.what}</span>
-                                            <span className="text-xs text-tertiary">
+                                            <span className="text-md text-primary">{e.what}</span>
+                                            <span className="text-md text-tertiary">
                                                 {e.when} · {e.who}
                                             </span>
                                         </span>
@@ -196,7 +196,7 @@ const Detail = ({ keyword, confirmDelete }: { keyword: Keyword; confirmDelete: b
                         <Card title="In traffic" className="xl:sticky xl:top-14">
                             {keyword.seenInTraffic ? (
                                 <>
-                                    <p className="inline-flex items-center gap-2 text-sm font-medium" style={{ color: "#1F7F80" }}>
+                                    <p className="inline-flex items-center gap-2 text-md font-medium" style={{ color: "#1F7F80" }}>
                                         <CheckCircle className="size-4 shrink-0" aria-hidden="true" />
                                         Arriving. Last seen {keyword.lastSeen}.
                                     </p>
@@ -213,29 +213,29 @@ const Detail = ({ keyword, confirmDelete }: { keyword: Keyword; confirmDelete: b
                                         </div>
                                         <div className="flex flex-col gap-1">
                                             <dt className={label}>From</dt>
-                                            <dd className="text-sm text-secondary">{keyword.apps.join(", ")}</dd>
+                                            <dd className="text-md text-secondary">{keyword.apps.join(", ")}</dd>
                                         </div>
                                     </dl>
-                                    <p className="text-xs text-tertiary">
+                                    <p className="text-md text-tertiary">
                                         All three fields are collapsed into one list before matching, so where it arrives makes no difference to what serves.
                                     </p>
                                 </>
                             ) : (
                                 <>
-                                    <p className="inline-flex items-start gap-2 text-sm font-medium text-warning-primary">
+                                    <p className="inline-flex items-start gap-2 text-md font-medium text-warning-primary">
                                         <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
                                         No app has sent this keyword in the last 7 days.
                                     </p>
-                                    <p className="text-sm text-tertiary">
+                                    <p className="text-md text-tertiary">
                                         A campaign targeting it will never match until one does. The usual causes, in order:
                                     </p>
-                                    <ul className="list-disc space-y-1 pl-5 text-sm text-tertiary">
+                                    <ul className="list-disc space-y-1 pl-5 text-md text-tertiary">
                                         <li>It isn't in your remote config yet, or the change hasn't propagated.</li>
                                         <li>It's hardcoded in a build your users haven't installed.</li>
                                         <li>Your server sets it for a cohort no one is in right now.</li>
                                         <li>It's spelled differently in the app — matching is exact.</li>
                                     </ul>
-                                    <a href="#/keyword-health" className="text-sm font-semibold" style={{ color: TEAL }}>
+                                    <a href="#/keyword-health" className="text-md font-semibold" style={{ color: TEAL }}>
                                         Check Keyword Health →
                                     </a>
                                 </>
@@ -244,11 +244,11 @@ const Detail = ({ keyword, confirmDelete }: { keyword: Keyword; confirmDelete: b
                         </Card>
 
                         <Card title="Deleting this keyword">
-                            <p className="text-sm text-tertiary">
+                            <p className="text-md text-tertiary">
                                 Campaigns stop matching on it immediately. Reporting already written keeps it — impression data can't be removed after it's processed.
                             </p>
                             {live.length > 0 && (
-                                <p className="flex items-start gap-2 rounded-xl p-3 text-sm" style={{ backgroundColor: `${PINK}0f`, color: "#A94579" }}>
+                                <p className="flex items-start gap-2 rounded-xl p-3 text-md" style={{ backgroundColor: `${PINK}0f`, color: "#A94579" }}>
                                     <InfoCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
                                     {live.length} live campaign{live.length === 1 ? "" : "s"} still target{live.length === 1 ? "s" : ""} it, so it can't be deleted yet.
                                 </p>
@@ -285,15 +285,15 @@ const DeleteGuard = ({ keyword, onClose }: { keyword: Keyword; onClose: () => vo
                         {blocked ? <AlertTriangle className="size-5" aria-hidden="true" /> : <Trash01 className="size-5" aria-hidden="true" />}
                     </span>
                     <div className="flex min-w-0 flex-col gap-1">
-                        <h2 className="text-lg font-semibold text-primary">
+                        <h2 className="text-lg font-extrabold text-primary">
                             {blocked ? "This keyword is in a live campaign" : "Delete "}
                             {!blocked && <span className="font-mono">{keyword.value}</span>}
                             {!blocked && "?"}
                         </h2>
-                        <p className="text-sm text-tertiary">
+                        <p className="text-md text-tertiary">
                             {blocked ? (
                                 <>
-                                    <span className="font-mono text-xs">{keyword.value}</span> can't be deleted while a running campaign targets it. Deleting it would quietly
+                                    <span className="font-mono text-md">{keyword.value}</span> can't be deleted while a running campaign targets it. Deleting it would quietly
                                     narrow what that campaign matches, with nothing on the campaign to say why.
                                 </>
                             ) : (
@@ -308,19 +308,19 @@ const DeleteGuard = ({ keyword, onClose }: { keyword: Keyword; onClose: () => vo
 
                 {blocked && (
                     <div className="flex flex-col gap-2 rounded-xl bg-secondary p-4">
-                        <span className="text-xs font-semibold tracking-wide text-tertiary uppercase">Remove it from these first</span>
+                        <span className="text-md font-semibold tracking-wide text-tertiary uppercase">Remove it from these first</span>
                         <ul className="flex flex-col gap-2">
                             {live.map((c) => (
                                 <li key={c.name} className="flex items-center justify-between gap-3">
-                                    <a href="#/campaigns" className="truncate text-sm font-semibold" style={{ color: TEAL }}>
+                                    <a href="#/campaigns" className="truncate text-md font-semibold" style={{ color: TEAL }}>
                                         {c.name}
                                     </a>
-                                    <span className="text-xs whitespace-nowrap text-tertiary">{c.deal}</span>
+                                    <span className="text-md whitespace-nowrap text-tertiary">{c.deal}</span>
                                 </li>
                             ))}
                         </ul>
                         {keyword.campaigns.length > live.length && (
-                            <span className="text-xs text-tertiary">
+                            <span className="text-md text-tertiary">
                                 {keyword.campaigns.length - live.length} paused campaign{keyword.campaigns.length - live.length === 1 ? "" : "s"} also target it. Those don't
                                 block the delete.
                             </span>

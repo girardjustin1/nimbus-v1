@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useState } from "react";
 import { AlertCircle, CheckCircle, Circle, InfoCircle, XClose } from "@untitledui/icons";
-import { Button } from "@/components/base/buttons/button";
+import { Button } from "./type-rules";
 import { cx } from "@/utils/cx";
 import { currentFillMode, useRegisterPageFill } from "../../../shared/demo-fill";
 import { useScreenNotes } from "../../../shared/screen-notes";
@@ -11,7 +11,7 @@ import { BudgetSectionV3, FlightDatesSection } from "./budget-section";
 import { CampaignNameSection, DealSectionV3 } from "./deal-section";
 import { type DealDraft, dealDisplayId, dealDisplayName, dealDraftFor } from "./deal-draft";
 import { MILESTONES_V3, type IssueV3, milestoneState, milestoneTarget, validateV3 } from "./setup-sections";
-import { DasShell, JumpLink, PINK, Section, TEAL } from "../../v1/screens/das-shell";
+import { DasShell, JumpLink, PINK, Section, TEAL } from "./das-shell";
 import { TargetingSectionV3 } from "./targeting-section";
 import type { KeywordEntry } from "./keyword-target";
 import { type CreativeEntry, CreativeTargetBlock } from "./creative-target";
@@ -19,6 +19,8 @@ import { DuplicateHandoff, PublishFooter, type PublishMode } from "./publish-dup
 import { libraryByName } from "./asset-data";
 import { AssetPicker } from "./asset-picker";
 import { V3_NAV_ITEMS } from "./nav";
+import { ORIGINAL } from "./copy-deck";
+import { Copy } from "./copy-deck-ui";
 import {
     type SetupForm,
     type SetupPreset,
@@ -50,10 +52,20 @@ export type RailMode = "summary" | "validation";
 const fmtDate = (c?: { year: number; month: number; day: number }) =>
     c ? new Date(Date.UTC(c.year, c.month - 1, c.day)).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" }) : undefined;
 
-const Missing = () => <span className="text-quaternary">Not Specified</span>;
+const Missing = () => (
+    <span className="text-quaternary">
+        <Copy>Not Specified</Copy>
+    </span>
+);
 
-const Row = ({ label, children }: { label: string; children: ReactNode }) => (
-    <div className="flex items-start justify-between gap-3 py-2 text-sm">
+/** Staging's only validation message is the one about creatives. */
+const issueOriginal = (issue: IssueV3) => (issue.text === "Add at least one creative" ? ORIGINAL.creativeRequired : undefined);
+
+/** The rail's step names that staging also uses, word for word. */
+const STAGING_STEP: Partial<Record<string, string>> = { general: ORIGINAL.reviewGeneral, budget: ORIGINAL.reviewBudget };
+
+const Row = ({ label, children }: { label: ReactNode; children: ReactNode }) => (
+    <div className="flex items-start justify-between gap-3 py-2 text-md">
         <span className="shrink-0 text-tertiary">{label}</span>
         <span className="text-right font-medium text-primary">{children}</span>
     </div>
@@ -63,7 +75,7 @@ const Row = ({ label, children }: { label: string; children: ReactNode }) => (
 const Added = () => (
     <span
         title="Our wording — no equivalent in DAS today"
-        className="ml-1.5 rounded-full border border-dashed px-1.5 py-px text-[10px] font-bold uppercase"
+        className="ml-1.5 rounded-full border border-dashed px-1.5 py-px text-md font-bold uppercase"
         style={{ color: "#A94579", borderColor: `${PINK}99` }}
     >
         Added
@@ -79,13 +91,13 @@ const ProblemList = ({ issues, attempted }: { issues: IssueV3[]; attempted: bool
                 <JumpLink
                     to={issue.section}
                     className={cx(
-                        "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                        "flex items-center gap-2 rounded-lg px-3 py-2 text-md font-medium transition-colors",
                         attempted ? "text-error-primary" : "bg-secondary/60 text-secondary hover:bg-primary_hover",
                     )}
                     style={attempted ? { backgroundColor: `${PINK}14` } : undefined}
                 >
                     {attempted ? <AlertCircle className="size-4 shrink-0" aria-hidden="true" /> : <Circle className="size-4 shrink-0 text-fg-quaternary" aria-hidden="true" />}
-                    {issue.text}
+                    <Copy original={issueOriginal(issue)}>{issue.text}</Copy>
                 </JumpLink>
             </li>
         ))}
@@ -105,23 +117,23 @@ const MilestoneList = ({ form, deal, issues, attempted }: { form: SetupForm; dea
             const state = bad && attempted ? "error" : done ? "done" : "todo";
             const target = milestoneTarget(m);
             const className = cx(
-                "flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm font-medium",
+                "flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-md font-medium",
                 state === "error" ? "text-error-primary" : state === "done" ? "text-primary" : "text-tertiary",
                 target && "transition-colors hover:bg-primary_hover",
             );
             const body = (
                 <>
                     {state === "error" ? (
-                        <AlertCircle className="size-4 shrink-0 text-fg-error-secondary" aria-hidden="true" />
+                        <AlertCircle className="size-5 shrink-0 text-fg-error-secondary" aria-hidden="true" />
                     ) : state === "done" ? (
-                        <CheckCircle className="size-4 shrink-0" style={{ color: TEAL }} aria-hidden="true" />
+                        <CheckCircle className="size-5 shrink-0" style={{ color: TEAL }} aria-hidden="true" />
                     ) : (
-                        <span className="flex size-4 shrink-0 items-center justify-center rounded-full border-[1.5px] border-dashed border-fg-quaternary text-[9px] font-bold text-quaternary" aria-hidden="true">
+                        <span className="flex size-5 shrink-0 items-center justify-center rounded-full border-[1.5px] border-dashed border-fg-quaternary text-md leading-none font-bold text-quaternary" aria-hidden="true">
                             {i + 1}
                         </span>
                     )}
-                    {m.title}
-                    {state === "error" && <span className="ml-auto text-xs">{bad}</span>}
+                    <Copy original={STAGING_STEP[m.id]}>{m.title}</Copy>
+                    {state === "error" && <span className="ml-auto text-md">{bad}</span>}
                 </>
             );
             return <li key={m.id}>{target ? <JumpLink to={target} className={className}>{body}</JumpLink> : <span className={className}>{body}</span>}</li>;
@@ -152,8 +164,10 @@ const Rail = ({
         <aside className="flex flex-col gap-5 rounded-2xl bg-primary p-5 shadow-sm ring-1 ring-secondary xl:sticky xl:top-14">
             <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-semibold text-primary">{mode === "summary" ? "Campaign summary" : "Ready to publish?"}</h2>
-                    <span className="text-sm font-semibold" style={{ color: issues.length ? PINK : TEAL }}>
+                    <h2 className="text-lg font-extrabold text-primary">
+                        <Copy>{mode === "summary" ? "Campaign summary" : "Ready to publish?"}</Copy>
+                    </h2>
+                    <span className="text-md font-semibold" style={{ color: issues.length ? PINK : TEAL }}>
                         {done}/{MILESTONES_V3.length}
                     </span>
                 </div>
@@ -176,42 +190,47 @@ const Rail = ({
             <MilestoneList form={form} deal={deal} issues={issues} attempted={attempted} />
 
             {blank && !attempted ? (
-                <p className="rounded-xl border border-dashed border-secondary p-4 text-sm text-tertiary">
-                    As you fill in the form, each choice shows up below. Start with the deal.
+                <p className="rounded-xl border border-dashed border-secondary p-4 text-md text-tertiary">
+                    <Copy>As you fill in the form, each choice shows up below. Start with the deal.</Copy>
                 </p>
             ) : issues.length > 0 ? (
                 <div className="flex flex-col gap-2">
-                    <span className="text-xs font-semibold text-tertiary uppercase">
-                        {attempted ? "Fix before publishing" : `${issues.length} left to finish`}
+                    <span className="text-md font-semibold text-tertiary uppercase">
+                        <Copy>{attempted ? "Fix before publishing" : `${issues.length} left to finish`}</Copy>
                     </span>
                     <ProblemList issues={issues} attempted={attempted} />
                 </div>
             ) : mode === "validation" ? (
-                <p className="flex items-center gap-2 text-sm font-medium" style={{ color: TEAL }}>
-                    <CheckCircle className="size-4" aria-hidden="true" /> Everything checks out.
+                <p className="flex items-center gap-2 text-md font-medium" style={{ color: TEAL }}>
+                    <CheckCircle className="size-4" aria-hidden="true" /> <Copy>Everything checks out.</Copy>
                     <Added />
                 </p>
             ) : null}
 
             <div className="divide-y divide-secondary border-y border-secondary">
-                <Row label="Deal Name">{dealDisplayName(form, deal) ?? <Missing />}</Row>
-                <Row label="Deal ID">{dealDisplayId(form, deal) ?? (deal.mode === "generate" ? "Assigned by Nimbus" : <Missing />)}</Row>
-                <Row label="Campaign Name">{form.name || <Missing />}</Row>
-                <Row label="Auction Rules">{form.rule ?? <Missing />}</Row>
-                <Row label="Priority">{form.priority ? `${form.priority}${form.priority === 1 ? " — highest" : ""}` : "Even distribution"}</Row>
+                {/* Row labels: staging's Review page uses the first seven, word for word. */}
+                <Row label={<Copy original={ORIGINAL.rowDealName}>Deal Name</Copy>}>{dealDisplayName(form, deal) ?? <Missing />}</Row>
+                <Row label={<Copy original={ORIGINAL.rowDealId}>Deal ID</Copy>}>
+                    {dealDisplayId(form, deal) ?? (deal.mode === "generate" ? <Copy original={ORIGINAL.valueDealIdAuto}>Assigned by Nimbus</Copy> : <Missing />)}
+                </Row>
+                <Row label={<Copy original={ORIGINAL.rowCampaignName}>Campaign Name</Copy>}>{form.name || <Missing />}</Row>
+                <Row label={<Copy original={ORIGINAL.rowAuctionRules}>Auction Rules</Copy>}>{form.rule ?? <Missing />}</Row>
+                <Row label={<Copy original={ORIGINAL.rowPriority}>Priority</Copy>}>
+                    {form.priority ? `${form.priority}${form.priority === 1 ? " — highest" : ""}` : <Copy original={ORIGINAL.valuePriorityOff}>Even distribution</Copy>}
+                </Row>
                 {form.rule !== "Fallback" && (
                     <>
-                        <Row label="Budget">{form.budget ? `$${form.budget.replace(/\.00$/, "")}` : <Missing />}</Row>
-                        <Row label="Bid Amount (eCPM)">{form.ecpm ? `$${form.ecpm}` : <Missing />}</Row>
+                        <Row label={<Copy original={ORIGINAL.rowBudget}>Budget</Copy>}>{form.budget ? `$${form.budget.replace(/\.00$/, "")}` : <Missing />}</Row>
+                        <Row label={<Copy original={ORIGINAL.rowBidAmount}>Bid Amount (eCPM)</Copy>}>{form.ecpm ? `$${form.ecpm}` : <Missing />}</Row>
                     </>
                 )}
-                <Row label="Frequency Cap">{form.freqCap ? `${form.freqCap} per user / 24h` : "No cap"}</Row>
-                <Row label="Flight Dates">{form.start || form.end ? `${fmtDate(form.start) ?? "?"} – ${fmtDate(form.end) ?? "?"} (UTC)` : <Missing />}</Row>
-                <Row label="Ad Unit">{form.adUnits.length ? form.adUnits.join(", ") : "All units"}</Row>
-                <Row label="Keywords">{form.keywords.length ? `${form.keywords.length}` : <Missing />}</Row>
-                <Row label="Campaign Creative">{form.creatives.length ? `${form.creatives.length} × ${[...new Set(form.creatives.map((c) => c.type))].join(" + ")}` : <Missing />}</Row>
+                <Row label={<Copy>Frequency Cap</Copy>}>{form.freqCap ? `${form.freqCap} per user / 24h` : <Copy>No cap</Copy>}</Row>
+                <Row label={<Copy>Flight Dates</Copy>}>{form.start || form.end ? `${fmtDate(form.start) ?? "?"} – ${fmtDate(form.end) ?? "?"} (UTC)` : <Missing />}</Row>
+                <Row label={<Copy>Ad Unit</Copy>}>{form.adUnits.length ? form.adUnits.join(", ") : <Copy>All units</Copy>}</Row>
+                <Row label={<Copy>Keywords</Copy>}>{form.keywords.length ? `${form.keywords.length}` : <Missing />}</Row>
+                <Row label={<Copy>Campaign Creative</Copy>}>{form.creatives.length ? `${form.creatives.length} × ${[...new Set(form.creatives.map((c) => c.type))].join(" + ")}` : <Missing />}</Row>
                 {mode === "validation" && form.rule && form.rule !== "Fallback" && form.budget && flightDays(form) && (
-                    <Row label="Est. delivery">
+                    <Row label={<Copy>Est. delivery</Copy>}>
                         ≈ 2.9M impressions · $806/day
                         <Added />
                     </Row>
@@ -223,23 +242,27 @@ const Rail = ({
                     {/* One button. Grey until everything required is in, but never blocked:
                         pressing it while incomplete runs the check and flags each problem. */}
                     <Button color={issues.length ? "secondary" : "primary-pink"} className="uppercase" onClick={onPrimary}>
-                        Review
+                        <Copy original={ORIGINAL.toReview}>Review</Copy>
                     </Button>
-                    <p className="text-xs text-tertiary">
-                        {issues.length
-                            ? "Review checks the campaign. Anything missing is flagged on the page."
-                            : "Review sends the campaign to be checked. Nothing goes live until you approve it."}
+                    <p className="text-md text-tertiary">
+                        <Copy>
+                            {issues.length
+                                ? "Review checks the campaign. Anything missing is flagged on the page."
+                                : "Review sends the campaign to be checked. Nothing goes live until you approve it."}
+                        </Copy>
                     </p>
                 </div>
             ) : (
                 <div className="flex flex-col gap-2">
                     <Button color="primary-pink" className="uppercase" onClick={onPrimary}>
-                        Publish
+                        <Copy>Publish</Copy>
                     </Button>
                     <Button color="secondary" className="uppercase" onClick={onPrimary}>
-                        Publish &amp; Duplicate
+                        <Copy>Publish & Duplicate</Copy>
                     </Button>
-                    <p className="text-xs text-tertiary">Publish checks everything first. Anything missing is flagged on the page.</p>
+                    <p className="text-md text-tertiary">
+                        <Copy>Publish checks everything first. Anything missing is flagged on the page.</Copy>
+                    </p>
                 </div>
             )}
         </aside>
@@ -304,8 +327,10 @@ const ReviewModal = ({
             >
                 <div className="flex items-start justify-between gap-4 border-b border-secondary px-6 py-4">
                     <div className="flex flex-col gap-0.5">
-                        <h2 className="text-lg font-semibold text-primary">Review campaign</h2>
-                        <p className="text-sm text-tertiary">{form.name || "Untitled campaign"}</p>
+                        <h2 className="text-lg font-extrabold text-primary">
+                            <Copy original={ORIGINAL.reviewTitle}>Review campaign</Copy>
+                        </h2>
+                        <p className="text-md text-tertiary">{form.name || <Copy>Untitled campaign</Copy>}</p>
                     </div>
                     <button type="button" aria-label="Close" onClick={onCancel} className="rounded-md p-1.5 text-fg-quaternary hover:bg-secondary">
                         <XClose className="size-5" aria-hidden="true" />
@@ -313,28 +338,32 @@ const ReviewModal = ({
                 </div>
 
                 <div className="flex flex-col gap-4 px-6 py-5">
-                    <p className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold" style={{ backgroundColor: `${TEAL}14`, color: "#1F7F80" }}>
+                    <p className="flex items-center gap-2 rounded-xl px-4 py-3 text-md font-semibold" style={{ backgroundColor: `${TEAL}14`, color: "#1F7F80" }}>
                         <CheckCircle className="size-5 shrink-0" aria-hidden="true" />
-                        Checked — nothing blocking.
+                        <Copy>Checked — nothing blocking.</Copy>
                     </p>
 
                     {advisories.length > 0 && (
                         <div className="flex flex-col gap-2">
-                            <span className="text-xs font-semibold text-tertiary uppercase">Worth knowing</span>
+                            <span className="text-md font-semibold text-tertiary uppercase">
+                                <Copy>Worth knowing</Copy>
+                            </span>
                             <ul className="flex flex-col gap-2">
                                 {advisories.map((a) => (
-                                    <li key={a} className="flex items-start gap-2 text-sm text-secondary">
+                                    <li key={a} className="flex items-start gap-2 text-md text-secondary">
                                         <InfoCircle className="mt-0.5 size-4 shrink-0 text-fg-quaternary" aria-hidden="true" />
-                                        {a}
+                                        <Copy>{a}</Copy>
                                     </li>
                                 ))}
                             </ul>
                         </div>
                     )}
 
-                    <p className="text-xs text-tertiary">
-                        Publishing sends the campaign live. You can pause or edit it afterwards. Publish &amp; Duplicate also opens a second campaign started from
-                        this one.
+                    <p className="text-md text-tertiary">
+                        {/* Reworded from staging's Review page intro, which is the same job: the last thing read before Publish. */}
+                        <Copy original={ORIGINAL.reviewDescription}>
+                            Publishing sends the campaign live. You can pause or edit it afterwards. Publish & Duplicate also opens a second campaign started from this one.
+                        </Copy>
                     </p>
                 </div>
 
@@ -348,14 +377,14 @@ const ReviewModal = ({
                         from the two publish actions means the thing that undoes this
                         is never sitting next to the thing that commits it. */}
                     <Button color="secondary" className="uppercase" onClick={onCancel}>
-                        Cancel
+                        <Copy>Cancel</Copy>
                     </Button>
                     <div className="flex flex-wrap items-center gap-3">
                         <Button color="secondary" className="uppercase" onClick={onPublishDuplicate}>
-                            Publish &amp; Duplicate
+                            <Copy>Publish & Duplicate</Copy>
                         </Button>
                         <Button color="primary-pink" className="uppercase" onClick={onPublish}>
-                            Publish
+                            <Copy>Publish</Copy>
                         </Button>
                     </div>
                 </div>
@@ -518,15 +547,15 @@ export const CampaignSetup = ({
                     <div>
                         {attempted && issues.length > 0 && (
                             <div role="alert" className="mb-6 flex flex-col gap-3 rounded-xl p-4 ring-1 ring-error_subtle" style={{ backgroundColor: `${PINK}0f` }}>
-                                <p className="flex items-center gap-2 text-sm font-semibold text-error-primary">
+                                <p className="flex items-center gap-2 text-md font-semibold text-error-primary">
                                     <AlertCircle className="size-5" aria-hidden="true" />
-                                    {rail === "summary" ? "Review found" : "Can't publish yet:"} {issues.length} {issues.length === 1 ? "thing" : "things"} to fix
+                                    <Copy>{`${rail === "summary" ? "Review found" : "Can't publish yet:"} ${issues.length} ${issues.length === 1 ? "thing" : "things"} to fix`}</Copy>
                                 </p>
                                 <ul className="flex flex-wrap gap-2">
                                     {issues.map((i) => (
                                         <li key={i.field + i.text}>
-                                            <JumpLink to={i.section} className="inline-flex items-center gap-1 rounded-md bg-primary px-2.5 py-1 text-sm font-medium text-error-primary ring-1 ring-error_subtle">
-                                                {i.text} →
+                                            <JumpLink to={i.section} className="inline-flex items-center gap-1 rounded-md bg-primary px-2.5 py-1 text-md font-medium text-error-primary ring-1 ring-error_subtle">
+                                                <Copy original={issueOriginal(i)}>{i.text}</Copy> →
                                             </JumpLink>
                                         </li>
                                     ))}
@@ -548,8 +577,15 @@ export const CampaignSetup = ({
                             the exact inconsistency that prompted it. */}
                         <Section
                             id="creative"
-                            title="Creative"
-                            description="Add creatives from your asset library. A campaign can hold many creatives, all of the same type. For another format or language, use Publish & Duplicate."
+                            /* Staging's Creative step is headed "Add Existing Asset", with its own instruction line. */
+                            title={<Copy original={ORIGINAL.creativeTitle}>Creative</Copy>}
+                            /* "For another format or language, use Publish & Duplicate." was cut
+                               in the 5 Oct review (C6). */
+                            description={
+                                <Copy original={ORIGINAL.creativeDescription}>
+                                    Add creatives from your asset library. A campaign can hold many creatives, all of the same type.
+                                </Copy>
+                            }
                         >
                             <CreativeTargetBlock
                                 value={form.creatives}

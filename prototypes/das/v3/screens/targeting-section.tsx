@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { NewFieldBadge, Section } from "../../v1/screens/das-shell";
+import { Copy } from "./copy-deck-ui";
+import { NewFieldBadge, Section } from "./das-shell";
 import { AdUnitHelp, AdUnitTypeFieldV3 } from "./ad-unit";
 import type { SetupForm } from "../../v1/screens/setup-data";
 import { ExistingTargetsV3 } from "./existing-targets";
@@ -26,7 +27,9 @@ type Setter = (p: Partial<SetupForm>) => void;
 const TargetModule = ({ title, added, help, children }: { title: string; added?: boolean; /** A question mark, beside the heading. */ help?: ReactNode; children: ReactNode }) => (
     <div className="flex flex-col gap-4 rounded-xl p-5 ring-1 ring-secondary">
         <div className="flex items-center gap-2">
-            <h3 className="text-lg font-semibold text-primary">{title}</h3>
+            <h3 className="text-lg font-bold text-primary">
+                <Copy>{title}</Copy>
+            </h3>
             {help}
             {added && <NewFieldBadge />}
         </div>
@@ -48,7 +51,7 @@ export const TargetingSectionV3 = ({
     keywordEntry?: KeywordEntry;
     screenId?: string;
 }) => (
-    <Section id="targeting" title="Targeting" description="Leave a target empty to include everyone.">
+    <Section id="targeting" title={<Copy>Targeting</Copy>} description={<Copy>Leave a target empty to include everyone.</Copy>}>
         <div className="flex flex-col gap-4">
             <ExistingTargetsV3 empty={empty} />
             <TargetModule title="Ad Unit" help={<AdUnitHelp />}>

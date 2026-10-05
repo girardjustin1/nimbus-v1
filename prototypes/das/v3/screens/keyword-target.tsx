@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Button } from "@/components/base/buttons/button";
-import { PinkAction } from "../../v1/screens/das-shell";
-import { useKeywords } from "./keyword-data";
 import { setReturnTo } from "./asset-data";
+import { useCopy } from "./copy-deck";
+import { Copy } from "./copy-deck-ui";
+import { PinkAction } from "./das-shell";
+import { useKeywords } from "./keyword-data";
 import { ChosenTable, InlineSearchSelect, ModalSearchSelect, type SelectableRow, TargetBlock, TrafficBadge } from "./search-select";
+import { Button } from "./type-rules";
 
 /**
  * Targeting a campaign at keywords.
@@ -21,13 +23,17 @@ import { ChosenTable, InlineSearchSelect, ModalSearchSelect, type SelectableRow,
 
 export type KeywordEntry = "inline" | "modal";
 
+/** Which campaigns already target a keyword, in words. Copy, so it goes through the deck where it renders. */
+const usedBy = (campaigns: number) => (campaigns ? `${campaigns} campaign${campaigns === 1 ? "" : "s"}` : "No campaign targets it");
+
 /** The library, shaped for the picker. */
 const useKeywordRows = (): SelectableRow[] => {
     const keywords = useKeywords();
+    const copy = useCopy();
     return keywords.map((k) => ({
         id: k.value,
         label: k.value,
-        meta: k.campaigns.length ? `${k.campaigns.length} campaign${k.campaigns.length === 1 ? "" : "s"}` : "No campaign targets it",
+        meta: copy.text(usedBy(k.campaigns.length)),
         trailing: <TrafficBadge seen={k.seenInTraffic} />,
     }));
 };
@@ -45,6 +51,8 @@ export const KeywordTargetBlock = ({
     screenId?: string;
 }) => {
     const rows = useKeywordRows();
+    const keywords = useKeywords();
+    const copy = useCopy();
     const byId = new Map(rows.map((r) => [r.id, r]));
     const [browsing, setBrowsing] = useState(false);
 
@@ -62,6 +70,7 @@ export const KeywordTargetBlock = ({
 
     const chosen = value.map((v) => {
         const row = byId.get(v);
+        const keyword = keywords.find((k) => k.value === v);
         return {
             id: v,
             cells: [
@@ -70,7 +79,7 @@ export const KeywordTargetBlock = ({
                 </span>,
                 row?.trailing ?? <TrafficBadge seen={false} />,
                 <span key="c" className="text-tertiary">
-                    {row?.meta ?? "Not in your library"}
+                    <Copy>{keyword ? usedBy(keyword.campaigns.length) : "Not in your library"}</Copy>
                 </span>,
             ],
             invalid: !row,
@@ -79,21 +88,23 @@ export const KeywordTargetBlock = ({
 
     return (
         <TargetBlock
-            title="Keywords"
+            title={copy.text("Keywords") ?? ""}
             trailing={
                 entry === "modal" ? (
                     <Button color="secondary" className="uppercase" onClick={() => setBrowsing(true)}>
-                        Find keywords
+                        <Copy>Find keywords</Copy>
                     </Button>
                 ) : (
-                    <PinkAction onPress={createKeyword}>Add keyword</PinkAction>
+                    <PinkAction onPress={createKeyword}>
+                        <Copy>Add keyword</Copy>
+                    </PinkAction>
                 )
             }
         >
             {entry === "inline" && (
                 <InlineSearchSelect
-                    label="Search keywords"
-                    placeholder="Search your keyword library"
+                    label={copy.text("Search keywords") ?? ""}
+                    placeholder={copy.text("Search your keyword library") ?? ""}
                     rows={rows}
                     chosenIds={value}
                     onPick={(row) => add([row.id])}
@@ -102,26 +113,28 @@ export const KeywordTargetBlock = ({
             )}
 
             <ChosenTable
-                columns={["Keyword", "In traffic", "Also used by"]}
+                columns={[copy.text("Keyword") ?? "", copy.text("In traffic") ?? "", copy.text("Also used by") ?? ""]}
                 rows={chosen}
                 onRemove={(id) => onChange(value.filter((v) => v !== id))}
                 empty={
-                    entry === "inline"
-                        ? "No keywords yet. Search above to target one, or add a new keyword to your library."
-                        : "No keywords yet. Find keywords to target one."
+                    <Copy>
+                        {entry === "inline"
+                            ? "No keywords yet. Search above to target one, or add a new keyword to your library."
+                            : "No keywords yet. Find keywords to target one."}
+                    </Copy>
                 }
             />
 
             {browsing && (
                 <ModalSearchSelect
-                    title="Find keywords"
-                    placeholder="Search your keyword library"
+                    title={copy.text("Find keywords") ?? ""}
+                    placeholder={copy.text("Search your keyword library") ?? ""}
                     rows={rows}
                     chosenIds={value}
                     noun="keywords"
                     onAdd={(picked) => add(picked.map((p) => p.id))}
                     onClose={() => setBrowsing(false)}
-                    createLabel="Add a keyword instead"
+                    createLabel={copy.text("Add a keyword instead")}
                     onCreate={createKeyword}
                 />
             )}

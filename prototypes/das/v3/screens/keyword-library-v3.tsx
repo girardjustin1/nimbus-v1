@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Activity, CheckSquare, ChevronDown, Download01, Edit03, InfoCircle, Plus, SearchLg, Trash01 } from "@untitledui/icons";
-import { Button } from "@/components/base/buttons/button";
+import { Button } from "./type-rules";
 import { Dropdown } from "@/components/base/dropdown/dropdown";
 import { Input } from "@/components/base/input/input";
 import { cx } from "@/utils/cx";
 import { currentFillMode, useRegisterPageFill } from "../../../shared/demo-fill";
 import { Fillable } from "../../../shared/demo-fill-ui";
-import { DasShell, KeywordChip, PinkAction, TEAL } from "../../v1/screens/das-shell";
+import { DasShell, KeywordChip, PinkAction, TEAL } from "./das-shell";
 import { V3_NAV_ITEMS } from "./nav";
 import { peekReturn } from "./asset-data";
 import { Card, IntegrationGuide, KeywordTabs } from "./keyword-common";
@@ -90,7 +90,7 @@ export const KeywordSetup = ({ filled = false }: { filled?: boolean }) => {
             <KeywordTabs active="setup" />
             <div className="flex flex-col gap-6 px-8 py-8">
                 {ret && (
-                    <p className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm" style={{ backgroundColor: `${TEAL}0f`, color: "#1F7F80" }}>
+                    <p className="flex items-center gap-2 rounded-xl px-4 py-3 text-md" style={{ backgroundColor: `${TEAL}0f`, color: "#1F7F80" }}>
                         <InfoCircle className="size-4 shrink-0" aria-hidden="true" />
                         Adding keywords for the campaign you were setting up. Saving brings you straight back to it.
                     </p>
@@ -99,7 +99,7 @@ export const KeywordSetup = ({ filled = false }: { filled?: boolean }) => {
                 <div className="grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_320px]">
                     <div className="flex min-w-0 flex-col gap-5">
                         <div className="flex flex-col gap-1.5">
-                            <span className="text-sm font-semibold text-primary">Keywords *</span>
+                            <span className="text-md font-semibold text-primary">Keywords *</span>
                             <Fillable filled={Boolean(text)} onFill={() => setText("commuter\nweekend-warrior")} hint="Click to fill">
                                 <textarea
                                     aria-label="Keywords"
@@ -108,11 +108,11 @@ export const KeywordSetup = ({ filled = false }: { filled?: boolean }) => {
                                     rows={8}
                                     spellCheck={false}
                                     placeholder={"One per line, or comma-separated\ne.g. commuter, night-owl"}
-                                    className="w-full rounded-lg bg-primary px-3.5 py-3 font-mono text-sm text-primary shadow-xs ring-1 ring-primary ring-inset outline-none focus:ring-2 focus:ring-brand"
+                                    className="w-full rounded-lg bg-primary px-3.5 py-3 font-mono text-md text-primary shadow-xs ring-1 ring-primary ring-inset outline-none focus:ring-2 focus:ring-brand"
                                 />
                             </Fillable>
-                            <span className="text-sm text-tertiary">
-                                Saved lower-case. Matching is exact and case-insensitive, against <code className="font-mono text-xs">user.keywords</code> in the request.
+                            <span className="text-md text-tertiary">
+                                Saved lower-case. Matching is exact and case-insensitive, against <code className="font-mono text-md">user.keywords</code> in the request.
                             </span>
                         </div>
 
@@ -124,7 +124,7 @@ export const KeywordSetup = ({ filled = false }: { filled?: boolean }) => {
                                 Add Keywords
                             </Button>
                             {saved > 0 && !ret && (
-                                <span className="self-center text-sm font-medium" style={{ color: "#1F7F80" }}>
+                                <span className="self-center text-md font-medium" style={{ color: "#1F7F80" }}>
                                     {saved} keyword{saved === 1 ? "" : "s"} added.
                                 </span>
                             )}
@@ -133,16 +133,16 @@ export const KeywordSetup = ({ filled = false }: { filled?: boolean }) => {
                         {/* Bulk add was a second page doing what this one already does.
                             Every line is checked here — casing, characters, duplicates,
                             and whether your apps are actually sending it. */}
-                        <p className="text-sm text-tertiary">
+                        <p className="text-md text-tertiary">
                             Paste as many as you like, one per line or comma-separated. Every line is checked — casing, characters, duplicates, and whether your apps are
                             actually sending it.
                         </p>
                     </div>
 
                     <aside className="flex flex-col gap-3 rounded-2xl bg-primary p-5 ring-1 ring-secondary xl:sticky xl:top-14">
-                        <h2 className="text-lg font-semibold text-primary">Preview ({parsed.length})</h2>
+                        <h2 className="text-lg font-extrabold text-primary">Preview ({parsed.length})</h2>
                         {parsed.length === 0 ? (
-                            <p className="rounded-xl border border-dashed border-secondary p-6 text-center text-sm text-tertiary">Type above to see what gets added.</p>
+                            <p className="rounded-xl border border-dashed border-secondary p-6 text-center text-md text-tertiary">Type above to see what gets added.</p>
                         ) : (
                             <>
                                 <div className="flex flex-wrap gap-1.5">
@@ -153,9 +153,9 @@ export const KeywordSetup = ({ filled = false }: { filled?: boolean }) => {
                                         <KeywordChip key={p.raw} value={p.value} muted />
                                     ))}
                                 </div>
-                                {existing.length > 0 && <p className="text-sm text-tertiary">{existing.length} already covered — they won't be duplicated.</p>}
+                                {existing.length > 0 && <p className="text-md text-tertiary">{existing.length} already covered — they won't be duplicated.</p>}
                                 {blocked.length > 0 && (
-                                    <div className="flex flex-col gap-1.5 text-sm text-error-primary">
+                                    <div className="flex flex-col gap-1.5 text-md text-error-primary">
                                         {blocked.map((p) => (
                                             <span key={p.raw}>
                                                 <span className="font-mono">{p.raw}</span> — {p.problems[0]?.text}
@@ -187,8 +187,8 @@ export const ViewAllKeywords = ({ search = "", empty = false }: { search?: strin
     const removable = batch.selected.filter((k) => liveCampaigns(k).length === 0);
     const blocked = batch.selected.filter((k) => liveCampaigns(k).length > 0);
     const [showBlocked, setShowBlocked] = useState(false);
-    const th = "px-3 py-2.5 text-left text-xs font-semibold text-tertiary";
-    const td = "px-3 py-3 text-sm text-secondary";
+    const th = "px-3 py-2.5 text-left text-md font-semibold text-tertiary";
+    const td = "px-3 py-3 text-md text-secondary";
 
     return (
         <DasShell
@@ -211,7 +211,7 @@ export const ViewAllKeywords = ({ search = "", empty = false }: { search?: strin
                 ) : (
                     <>
                         <div className="flex flex-wrap items-center justify-between gap-3">
-                            <h2 className="text-display-xs font-semibold text-primary">Keywords</h2>
+                            <h2 className="text-display-xs font-extrabold text-primary">Keywords</h2>
                             <div className="flex items-center gap-3">
                                 <Input aria-label="Search Keywords" size="md" icon={SearchLg} placeholder="Search Keywords" value={query} onChange={setQuery} wrapperClassName="w-72" />
                                 {/* Everything that acts on the table lives behind Actions, so
@@ -322,7 +322,7 @@ export const ViewAllKeywords = ({ search = "", empty = false }: { search?: strin
                                     })}
                                     {visible.length === 0 && (
                                         <tr>
-                                            <td colSpan={batch.on ? 7 : 6} className="px-3 py-10 text-center text-sm text-tertiary">
+                                            <td colSpan={batch.on ? 7 : 6} className="px-3 py-10 text-center text-md text-tertiary">
                                                 No keywords match “{query}”.
                                             </td>
                                         </tr>
@@ -366,10 +366,10 @@ const keywordCsv = (rows: Keyword[]) =>
 const EmptyLibrary = () => (
     <div className="flex flex-col gap-6">
         <div className="flex flex-col items-start gap-4 rounded-2xl border border-dashed border-secondary p-8">
-            <h2 className="text-display-xs font-semibold text-primary">No keywords yet</h2>
+            <h2 className="text-display-xs font-extrabold text-primary">No keywords yet</h2>
             <p className="max-w-2xl text-md text-tertiary">
-                A keyword is a word your app puts on the bid request — a segment you already know about, like <code className="font-mono text-sm">over21</code> or{" "}
-                <code className="font-mono text-sm">power-user</code>. Define it here and a DAS campaign can target it. Nimbus doesn't invent keywords and can't read them from
+                A keyword is a word your app puts on the bid request — a segment you already know about, like <code className="font-mono text-md">over21</code> or{" "}
+                <code className="font-mono text-md">power-user</code>. Define it here and a DAS campaign can target it. Nimbus doesn't invent keywords and can't read them from
                 anywhere else.
             </p>
             <div className="flex flex-wrap gap-3">
@@ -380,7 +380,7 @@ const EmptyLibrary = () => (
                     See What's Arriving
                 </Button>
             </div>
-            <p className="text-sm text-tertiary">
+            <p className="text-md text-tertiary">
                 Not sure what your apps already send? Keyword Health lists every keyword Nimbus has seen in the last 7 days — starting there is usually faster than typing.
             </p>
         </div>

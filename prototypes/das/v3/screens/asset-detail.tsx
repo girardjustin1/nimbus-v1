@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { AlertTriangle, ArrowLeft, InfoCircle, PlayCircle, Trash01 } from "@untitledui/icons";
-import { Button } from "@/components/base/buttons/button";
+import { Button } from "./type-rules";
 import { Dropdown } from "@/components/base/dropdown/dropdown";
 import { Input } from "@/components/base/input/input";
 import { Select } from "@/components/base/select/select";
-import { AdFormatDemo } from "@/pages/deal-activation-system/studio/components/ad-format-demo";
+import { AdFormatDemo } from "./type-rules";
 import { cx } from "@/utils/cx";
 import { currentFillMode, useRegisterPageFill } from "../../../shared/demo-fill";
 import { Fillable } from "../../../shared/demo-fill-ui";
-import { DasShell, PINK, PinkAction, TEAL } from "../../v1/screens/das-shell";
+import { DasShell, PINK, PinkAction, TEAL } from "./das-shell";
 import { AD_SIZES, AD_TYPES, type AdSize, type AdType, assetById, deleteAsset, findMacros, isWrappedVast, previewFor, updateAsset, useAssets } from "./asset-data";
 
 import { V3_NAV_ITEMS } from "./nav";
@@ -28,7 +28,7 @@ import { V3_NAV_ITEMS } from "./nav";
  */
 
 const Label = ({ children, required }: { children: React.ReactNode; required?: boolean }) => (
-    <span className="text-sm font-semibold text-primary">
+    <span className="text-md font-semibold text-primary">
         {children}
         {required && " *"}
     </span>
@@ -42,18 +42,18 @@ const DeleteGuard = ({ name, campaigns, onCancel }: { name: string; campaigns: s
                     <AlertTriangle className="size-5 shrink-0 text-warning-primary" aria-hidden="true" />
                     This asset is live
                 </p>
-                <p className="text-sm text-secondary">
-                    <span className="font-mono text-xs">{name}</span> is serving in {campaigns.length} campaign{campaigns.length === 1 ? "" : "s"}. Deleting it would
+                <p className="text-md text-secondary">
+                    <span className="font-mono text-md">{name}</span> is serving in {campaigns.length} campaign{campaigns.length === 1 ? "" : "s"}. Deleting it would
                     stop delivery immediately.
                 </p>
                 <ul className="flex flex-col gap-1 rounded-xl bg-secondary/60 px-4 py-3">
                     {campaigns.map((c) => (
-                        <li key={c} className="text-sm font-medium text-primary">
+                        <li key={c} className="text-md font-medium text-primary">
                             {c}
                         </li>
                     ))}
                 </ul>
-                <p className="text-sm text-tertiary">Remove it from those campaigns first, then delete it here.</p>
+                <p className="text-md text-tertiary">Remove it from those campaigns first, then delete it here.</p>
             </div>
             <div className="flex justify-end gap-3 border-t border-secondary px-6 py-4">
                 <Button color="secondary" className="uppercase" onClick={onCancel}>
@@ -86,7 +86,7 @@ export const AssetDetail = ({ id = "a1", confirmingDelete = false }: { id?: stri
     if (!asset) {
         return (
             <DasShell navItems={V3_NAV_ITEMS} navKey="manage assets">
-                <div className="px-8 py-10 text-sm text-tertiary">No asset with id “{id}”.</div>
+                <div className="px-8 py-10 text-md text-tertiary">No asset with id “{id}”.</div>
             </DasShell>
         );
     }
@@ -140,7 +140,7 @@ export const AssetDetail = ({ id = "a1", confirmingDelete = false }: { id?: stri
                     />
                 </Fillable>
             ))}
-            <span className="text-xs text-tertiary">{values.filter(Boolean).length} of {values.length} used.</span>
+            <span className="text-md text-tertiary">{values.filter(Boolean).length} of {values.length} used.</span>
         </div>
     );
 
@@ -159,14 +159,14 @@ export const AssetDetail = ({ id = "a1", confirmingDelete = false }: { id?: stri
             }}
         >
             <div className="flex flex-col gap-5 px-8 py-8">
-                <a href="#/asset-view" className="inline-flex items-center gap-1.5 self-start text-sm font-semibold" style={{ color: PINK }}>
+                <a href="#/asset-view" className="inline-flex items-center gap-1.5 self-start text-md font-semibold" style={{ color: PINK }}>
                     <ArrowLeft className="size-4" aria-hidden="true" /> All assets
                 </a>
 
                 <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="flex flex-col gap-1">
-                        <h2 className="text-display-xs font-semibold text-primary">{asset.name}</h2>
-                        <span className="inline-flex items-center gap-2 text-sm text-tertiary">
+                        <h2 className="text-display-xs font-extrabold text-primary">{asset.name}</h2>
+                        <span className="inline-flex items-center gap-2 text-md text-tertiary">
                             <span className="size-2 rounded-full" style={{ backgroundColor: live ? TEAL : "#98A2B3" }} aria-hidden="true" />
                             {asset.status} · {asset.type} · {asset.size}
                         </span>
@@ -196,7 +196,7 @@ export const AssetDetail = ({ id = "a1", confirmingDelete = false }: { id?: stri
                 </div>
 
                 {live && (
-                    <p className="flex items-start gap-2 rounded-xl px-4 py-3 text-sm" style={{ backgroundColor: "#FFF4E5", color: "#B54708" }}>
+                    <p className="flex items-start gap-2 rounded-xl px-4 py-3 text-md" style={{ backgroundColor: "#FFF4E5", color: "#B54708" }}>
                         <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
                         Serving now in {asset.campaigns.join(", ")}. Changes take effect on the next ad request — there is no publish step for an asset.
                     </p>
@@ -261,11 +261,11 @@ export const AssetDetail = ({ id = "a1", confirmingDelete = false }: { id?: stri
                                 rows={9}
                                 spellCheck={false}
                                 className={cx(
-                                    "w-full rounded-lg bg-primary px-3.5 py-3 font-mono text-sm text-primary shadow-xs ring-1 ring-inset outline-none focus:ring-2",
+                                    "w-full rounded-lg bg-primary px-3.5 py-3 font-mono text-md text-primary shadow-xs ring-1 ring-inset outline-none focus:ring-2",
                                     markupError ? "ring-error_subtle" : "ring-primary focus:ring-brand",
                                 )}
                             />
-                            {markupError && <span className="text-sm text-error-primary">{markupError}</span>}
+                            {markupError && <span className="text-md text-error-primary">{markupError}</span>}
                         </div>
 
                         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -281,7 +281,7 @@ export const AssetDetail = ({ id = "a1", confirmingDelete = false }: { id?: stri
                                 Save Changes
                             </Button>
                             {saved && (
-                                <span className="text-sm font-medium" style={{ color: "#1F7F80" }}>
+                                <span className="text-md font-medium" style={{ color: "#1F7F80" }}>
                                     Saved. {live ? "Live on the next ad request." : "This asset isn't serving yet."}
                                 </span>
                             )}
@@ -289,13 +289,13 @@ export const AssetDetail = ({ id = "a1", confirmingDelete = false }: { id?: stri
                     </div>
 
                     <aside className="flex flex-col gap-3 rounded-2xl bg-primary p-5 ring-1 ring-secondary xl:sticky xl:top-14">
-                        <h3 className="text-lg font-semibold text-primary">Preview</h3>
+                        <h3 className="text-lg font-bold text-primary">Preview</h3>
                         <div className="mx-auto w-[200px]">
                             <AdFormatDemo format={preview.format} moment={preview.moment} />
                         </div>
-                        <p className="text-center text-xs text-tertiary">Approximate placement. Size and position vary by device, screen and app.</p>
-                        <div className="flex flex-col gap-1 border-t border-secondary pt-3 text-sm">
-                            <span className="text-xs font-semibold text-tertiary uppercase">Associated Campaigns</span>
+                        <p className="text-center text-md text-tertiary">Approximate placement. Size and position vary by device, screen and app.</p>
+                        <div className="flex flex-col gap-1 border-t border-secondary pt-3 text-md">
+                            <span className="text-md font-semibold text-tertiary uppercase">Associated Campaigns</span>
                             {asset.campaigns.length ? (
                                 asset.campaigns.map((c) => (
                                     <span key={c} className="text-secondary">

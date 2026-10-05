@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import { CheckCircle, Copy01, InfoCircle } from "@untitledui/icons";
-import { Button } from "@/components/base/buttons/button";
-import { TEAL } from "../../v1/screens/das-shell";
+import { ORIGINAL } from "./copy-deck";
+import { Copy } from "./copy-deck-ui";
+import { TEAL } from "./das-shell";
+import { Button } from "./type-rules";
 
 /**
  * Publish, and Publish & Duplicate.
@@ -38,16 +40,18 @@ export const DuplicateHandoff = ({ onContinue }: { onContinue: () => void }) => 
                 <div className="flex flex-col gap-3 px-6 py-6">
                     <p className="flex items-start gap-2 text-md font-semibold text-primary">
                         <CheckCircle className="mt-0.5 size-5 shrink-0" style={{ color: TEAL }} aria-hidden="true" />
-                        Your campaign was created. Continue to set up a duplicate campaign.
+                        <Copy>Your campaign was created. Continue to set up a duplicate campaign.</Copy>
                     </p>
-                    <p className="flex items-start gap-2 rounded-xl px-4 py-3 text-sm" style={{ backgroundColor: `${TEAL}0f`, color: "#1F7F80" }}>
+                    <p className="flex items-start gap-2 rounded-xl px-4 py-3 text-md" style={{ backgroundColor: `${TEAL}0f`, color: "#1F7F80" }}>
                         <InfoCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                        The duplicate starts with everything the original had. Change what differs — usually the creative or the geo — and publish again.
+                        <Copy>
+                            The duplicate starts with everything the original had. Change what differs — usually the creative or the geo — and publish again.
+                        </Copy>
                     </p>
                 </div>
                 <div className="flex justify-end border-t border-secondary px-6 py-4">
                     <Button color="primary-pink" className="uppercase" onClick={onContinue} autoFocus>
-                        Continue to duplicate setup
+                        <Copy>Continue to duplicate setup</Copy>
                     </Button>
                 </div>
             </div>
@@ -75,25 +79,26 @@ export const PublishFooter = ({
 }) => (
     <div className="flex flex-col gap-3 border-t border-secondary pt-5">
         {issues > 0 && (
-            <p className="text-sm text-error-primary">
-                {issues} {issues === 1 ? "thing needs" : "things need"} fixing before this can publish.
+            <p className="text-md text-error-primary">
+                <Copy>{`${issues} ${issues === 1 ? "thing needs" : "things need"} fixing before this can publish.`}</Copy>
             </p>
         )}
         <div className="flex flex-wrap items-center justify-between gap-3">
             <Button color="link-gray" className="uppercase" onClick={onCancel}>
-                Cancel campaign setup
+                {/* Staging's step footer. Capitals to match it word for word; uppercase either way. */}
+                <Copy original={ORIGINAL.cancelSetup}>CANCEL CAMPAIGN SETUP</Copy>
             </Button>
             <div className="flex flex-wrap gap-3">
                 <Button color="secondary" className="uppercase" iconLeading={Copy01} isDisabled={issues > 0} onClick={onPublishDuplicate}>
-                    Publish &amp; Duplicate
+                    <Copy>Publish &amp; Duplicate</Copy>
                 </Button>
                 <Button color="primary-pink" className="uppercase" isDisabled={issues > 0} onClick={onPublish}>
-                    Publish
+                    <Copy>Publish</Copy>
                 </Button>
             </div>
         </div>
-        <p className="text-xs text-tertiary">
-            Publish &amp; Duplicate creates this campaign, then opens a copy of it so you can change what differs and publish that too.
+        <p className="text-md text-tertiary">
+            <Copy>Publish &amp; Duplicate creates this campaign, then opens a copy of it so you can change what differs and publish that too.</Copy>
         </p>
     </div>
 );

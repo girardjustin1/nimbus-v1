@@ -1,5 +1,5 @@
 import type { ProtoScreen } from "../../shared/prototype-frame";
-import { ViewDeliveryFirst, ViewOnePage, ViewPerformance, ViewSentence } from "../v1/screens/campaign-view";
+import { ViewDeliveryFirst, ViewOnePage, ViewPerformance, ViewSentence } from "./screens/campaign-view";
 import { CompareCampaigns, ManageCampaignsDelivery } from "../v1/screens/manage-campaigns";
 import { AssetDetail } from "./screens/asset-detail";
 import { AssetSetup, ViewAllAssets } from "./screens/asset-library";

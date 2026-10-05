@@ -1,7 +1,7 @@
 import { AlertTriangle, CheckCircle, Plus } from "@untitledui/icons";
-import { Button } from "@/components/base/buttons/button";
+import { Button } from "./type-rules";
 import { cx } from "@/utils/cx";
-import { DasShell, KeywordChip, TEAL } from "../../v1/screens/das-shell";
+import { DasShell, KeywordChip, TEAL } from "./das-shell";
 import { V3_NAV_ITEMS } from "./nav";
 import { Card, ExportCsv, IntegrationGuide, KeywordTabs, Metric, PatternBadge, ReportingGuardrail, SourceChips } from "./keyword-common";
 import { appTraffic, fmtInt, fmtPct, incoming, totals, useKeywords } from "./keyword-data";
@@ -53,8 +53,8 @@ export const KeywordHealth = () => {
     const undefinedIncoming = incoming.filter((i) => !defined.has(i.value)).sort((a, b) => b.requests7d - a.requests7d);
     const quietApps = appTraffic.filter((a) => a.withKeywords === 0);
 
-    const th = "px-3 py-2.5 text-left text-xs font-semibold text-tertiary";
-    const td = "px-3 py-3 text-sm text-secondary";
+    const th = "px-3 py-2.5 text-left text-md font-semibold text-tertiary";
+    const td = "px-3 py-3 text-md text-secondary";
 
     return (
         <DasShell
@@ -75,8 +75,8 @@ export const KeywordHealth = () => {
 
                 <div className="flex flex-wrap items-end justify-between gap-3">
                     <div className="flex flex-col gap-1">
-                        <h2 className="text-display-xs font-semibold text-primary">Keyword Health</h2>
-                        <p className="max-w-2xl text-sm text-tertiary">
+                        <h2 className="text-display-xs font-extrabold text-primary">Keyword Health</h2>
+                        <p className="max-w-2xl text-md text-tertiary">
                             What Test Publisher's apps sent in the last 7 days, against what is in your library. A keyword only matches if an app is actually sending it.
                         </p>
                     </div>
@@ -104,7 +104,7 @@ export const KeywordHealth = () => {
                     title="What your apps are sending"
                     trailing={
                         quietApps.length > 0 ? (
-                            <span className="inline-flex items-center gap-1.5 text-sm font-medium text-warning-primary">
+                            <span className="inline-flex items-center gap-1.5 text-md font-medium text-warning-primary">
                                 <AlertTriangle className="size-4" aria-hidden="true" />
                                 {quietApps.length} app sending no keywords at all
                             </span>
@@ -130,7 +130,7 @@ export const KeywordHealth = () => {
                                         <td className={td}>
                                             <PatternBadge pattern={a.pattern} />
                                         </td>
-                                        <td className={cx(td, "font-mono text-xs")}>{a.sdk}</td>
+                                        <td className={cx(td, "font-mono text-md")}>{a.sdk}</td>
                                         <td className={td}>{fmtInt(a.requests7d)}</td>
                                         <td className={cx(td, a.withKeywords === 0 && "font-semibold text-warning-primary", a.withKeywords > 0 && a.withKeywords < 0.8 && "text-warning-primary")}>
                                             {fmtPct(a.withKeywords)}
@@ -144,7 +144,7 @@ export const KeywordHealth = () => {
                             </tbody>
                         </table>
                     </div>
-                    <p className="text-xs text-tertiary">
+                    <p className="text-md text-tertiary">
                         The pattern is inferred from how the values behave, not configured here — Nimbus receives the same request whichever way you populate it. An app whose
                         keywords never change between releases reads as hardcoded; one that changes mid-version reads as remote config.
                     </p>
@@ -154,13 +154,13 @@ export const KeywordHealth = () => {
                     {/* ------------------------------ defined but silent --- */}
                     <Card title={`Defined, but not arriving (${notArriving.length})`}>
                         {notArriving.length === 0 ? (
-                            <p className="inline-flex items-center gap-2 text-sm font-medium" style={{ color: "#1F7F80" }}>
+                            <p className="inline-flex items-center gap-2 text-md font-medium" style={{ color: "#1F7F80" }}>
                                 <CheckCircle className="size-4" aria-hidden="true" />
                                 Every keyword in your library is arriving from at least one app.
                             </p>
                         ) : (
                             <>
-                                <p className="text-sm text-tertiary">
+                                <p className="text-md text-tertiary">
                                     These are in your library and can be targeted, but no app has sent them in the last 7 days. A campaign targeting one will never match.
                                 </p>
                                 <ul className="flex flex-col divide-y divide-secondary">
@@ -168,22 +168,22 @@ export const KeywordHealth = () => {
                                         <li key={k.id} className="flex flex-wrap items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
                                             <span className="flex min-w-0 items-center gap-3">
                                                 <KeywordChip value={k.value} muted />
-                                                <span className="truncate text-sm text-tertiary">
+                                                <span className="truncate text-md text-tertiary">
                                                     {k.campaigns.length ? `${k.campaigns.length} campaign${k.campaigns.length === 1 ? "" : "s"}` : "No campaign targets it"}
                                                 </span>
                                             </span>
                                             <span className="flex items-center gap-3">
-                                                <span className="text-sm whitespace-nowrap text-warning-primary">
+                                                <span className="text-md whitespace-nowrap text-warning-primary">
                                                     {k.campaigns.length ? `${k.campaigns.length} campaign${k.campaigns.length === 1 ? "" : "s"} waiting` : "No campaign"}
                                                 </span>
-                                                <a href={`#/keyword-detail?k=${k.id}`} className="text-sm font-semibold whitespace-nowrap" style={{ color: TEAL }}>
+                                                <a href={`#/keyword-detail?k=${k.id}`} className="text-md font-semibold whitespace-nowrap" style={{ color: TEAL }}>
                                                     Open →
                                                 </a>
                                             </span>
                                         </li>
                                     ))}
                                 </ul>
-                                <p className="text-xs text-tertiary">
+                                <p className="text-md text-tertiary">
                                     Usually the remote config hasn't propagated, the build carrying it hasn't shipped, or it's spelled differently in the app. Matching is
                                     exact, so a stray space or a different separator is enough.
                                 </p>
@@ -200,7 +200,7 @@ export const KeywordHealth = () => {
                             </Button>
                         }
                     >
-                        <p className="text-sm text-tertiary">
+                        <p className="text-md text-tertiary">
                             Your apps send these, but nothing in the library matches them, so no campaign can target them. Highest volume first;
                             the CSV has every field and the full history.
                         </p>
@@ -208,17 +208,17 @@ export const KeywordHealth = () => {
                             {undefinedIncoming.map((i) => (
                                 <li key={i.value} className="flex flex-wrap items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
                                     <span className="flex min-w-0 flex-col gap-1">
-                                        <code className="font-mono text-sm font-medium text-primary">{i.value}</code>
-                                        <span className="truncate text-xs text-tertiary">{i.apps.join(", ")}</span>
+                                        <code className="font-mono text-md font-medium text-primary">{i.value}</code>
+                                        <span className="truncate text-md text-tertiary">{i.apps.join(", ")}</span>
                                     </span>
                                     <span className="flex items-center gap-3">
                                         <SourceChips sources={i.sources} />
-                                        <span className="text-sm whitespace-nowrap text-secondary">{fmtInt(i.requests7d)}</span>
+                                        <span className="text-md whitespace-nowrap text-secondary">{fmtInt(i.requests7d)}</span>
                                     </span>
                                 </li>
                             ))}
                         </ul>
-                        <p className="flex items-start gap-2 text-xs text-warning-primary">
+                        <p className="flex items-start gap-2 text-md text-warning-primary">
                             <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
                             <span>
                                 <code className="font-mono">user_7f3a91c2</code> looks like a per-user identifier and <code className="font-mono">promo-2026-10-01</code> like a

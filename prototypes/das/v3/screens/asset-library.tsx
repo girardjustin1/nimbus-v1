@@ -1,14 +1,14 @@
 import { useRef, useState } from "react";
 import { AlertTriangle, CheckCircle, CheckDone01, CheckSquare, ChevronDown, Download01, Edit03, InfoCircle, PlayCircle, SearchLg, Trash01, XCircle } from "@untitledui/icons";
-import { Button } from "@/components/base/buttons/button";
+import { Button } from "./type-rules";
 import { Dropdown } from "@/components/base/dropdown/dropdown";
 import { Input } from "@/components/base/input/input";
 import { Select } from "@/components/base/select/select";
-import { AdFormatDemo } from "@/pages/deal-activation-system/studio/components/ad-format-demo";
+import { AdFormatDemo } from "./type-rules";
 import { cx } from "@/utils/cx";
 import { currentFillMode, useRegisterPageFill } from "../../../shared/demo-fill";
 import { Fillable } from "../../../shared/demo-fill-ui";
-import { DasShell, PINK, PinkAction, TEAL } from "../../v1/screens/das-shell";
+import { DasShell, PINK, PinkAction, TEAL } from "./das-shell";
 import { V3_NAV_ITEMS } from "./nav";
 import { BatchAction, BatchBar, BatchBlocked, BatchCell, BatchDanger, BatchHeadCell } from "./batch-actions";
 import { downloadCsv, useBatch } from "./batch-data";
@@ -113,7 +113,7 @@ const BAD_CLICK_URLS = ["https://track.example.com/clk?ts=[TIMESTAMP]", "clk.exa
 
 
 const Label = ({ children, required }: { children: React.ReactNode; required?: boolean }) => (
-    <span className="text-sm font-semibold text-primary">
+    <span className="text-md font-semibold text-primary">
         {children}
         {required && " *"}
     </span>
@@ -123,7 +123,7 @@ const Label = ({ children, required }: { children: React.ReactNode; required?: b
 const Added = () => (
     <span
         title="Our wording — no equivalent in DAS today"
-        className="ml-2 rounded-full border border-dashed px-1.5 py-px text-[10px] font-bold uppercase"
+        className="ml-2 rounded-full border border-dashed px-1.5 py-px text-md font-bold uppercase"
         style={{ color: "#A94579", borderColor: `${PINK}99` }}
     >
         Added
@@ -241,7 +241,7 @@ const MarkupField = ({
         <div className="flex flex-col gap-1.5">
             <div className="flex flex-wrap items-center justify-between gap-2">
                 <Label required>Add Markup</Label>
-                <span className="flex items-center gap-1.5 text-xs text-tertiary">
+                <span className="flex items-center gap-1.5 text-md text-tertiary">
                     Load a sample:
                     <button type="button" onClick={() => sample("good")} className="rounded-md px-1.5 py-0.5 font-semibold hover:bg-secondary" style={{ color: "#1F7F80" }}>
                         valid
@@ -263,7 +263,7 @@ const MarkupField = ({
                     <div
                         ref={gutterRef}
                         aria-hidden="true"
-                        className="w-11 shrink-0 overflow-hidden border-r border-secondary bg-secondary py-3 text-right font-mono text-sm select-none"
+                        className="w-11 shrink-0 overflow-hidden border-r border-secondary bg-secondary py-3 text-right font-mono text-md select-none"
                         style={{ lineHeight: `${LINE_HEIGHT}px` }}
                     >
                         {lines.map((_, i) => {
@@ -297,7 +297,7 @@ const MarkupField = ({
                         spellCheck={false}
                         wrap="off"
                         placeholder={type === "VAST (xml)" ? "Paste raw, unwrapped VAST XML" : "Paste the HTML markup"}
-                        className="relative w-full resize-none overflow-auto bg-transparent px-3 pt-3 pb-14 font-mono text-sm text-primary outline-none"
+                        className="relative w-full resize-none overflow-auto bg-transparent px-3 pt-3 pb-14 font-mono text-md text-primary outline-none"
                         style={{ lineHeight: `${LINE_HEIGHT}px` }}
                     />
 
@@ -315,26 +315,26 @@ const MarkupField = ({
 
             {/* Once a current report is on screen it supersedes the live line — the same
                 problem stated twice, once without a line number, just reads as noise. */}
-            {liveError && (!report || stale) && <span className="text-sm text-error-primary">{liveError}</span>}
+            {liveError && (!report || stale) && <span className="text-md text-error-primary">{liveError}</span>}
 
-            <span className="text-sm text-tertiary">Paste the tag itself. Nimbus doesn’t host images, so a file upload isn’t accepted.</span>
+            <span className="text-md text-tertiary">Paste the tag itself. Nimbus doesn’t host images, so a file upload isn’t accepted.</span>
 
             {report && (
                 <div className="mt-1 overflow-hidden rounded-xl ring-1 ring-secondary">
                     {stale ? (
-                        <p className="flex items-center gap-2 px-4 py-3 text-sm" style={{ backgroundColor: `${AMBER}0f`, color: AMBER }}>
+                        <p className="flex items-center gap-2 px-4 py-3 text-md" style={{ backgroundColor: `${AMBER}0f`, color: AMBER }}>
                             <AlertTriangle className="size-4 shrink-0" aria-hidden="true" />
                             The markup changed since the last check. Validate again.
                         </p>
                     ) : errors.length === 0 && warnings.length === 0 ? (
-                        <p className="flex items-center gap-2 px-4 py-3 text-sm font-medium" style={{ backgroundColor: `${TEAL}0f`, color: "#1F7F80" }}>
+                        <p className="flex items-center gap-2 px-4 py-3 text-md font-medium" style={{ backgroundColor: `${TEAL}0f`, color: "#1F7F80" }}>
                             <CheckCircle className="size-4 shrink-0" aria-hidden="true" />
                             Markup checks out — {lines.length} {lines.length === 1 ? "line" : "lines"} of {type ?? "HTML"}, nothing to fix.
                         </p>
                     ) : (
                         <>
                             <p
-                                className="flex items-center gap-2 px-4 py-3 text-sm font-semibold"
+                                className="flex items-center gap-2 px-4 py-3 text-md font-semibold"
                                 style={errors.length ? { backgroundColor: `${RED}0f`, color: RED } : { backgroundColor: `${AMBER}0f`, color: AMBER }}
                             >
                                 {errors.length ? <XCircle className="size-4 shrink-0" aria-hidden="true" /> : <AlertTriangle className="size-4 shrink-0" aria-hidden="true" />}
@@ -352,14 +352,14 @@ const MarkupField = ({
                                             className="flex w-full items-start gap-3 px-4 py-2.5 text-left hover:bg-secondary"
                                         >
                                             <span
-                                                className="mt-px shrink-0 rounded px-1.5 py-0.5 font-mono text-xs font-bold"
+                                                className="mt-px shrink-0 rounded px-1.5 py-0.5 font-mono text-md font-bold"
                                                 style={{ color: issue.severity === "error" ? RED : AMBER, backgroundColor: issue.severity === "error" ? `${RED}14` : `${AMBER}14` }}
                                             >
                                                 {issue.line}
                                             </span>
                                             <span className="flex min-w-0 flex-col gap-0.5">
-                                                <span className="text-sm text-primary">{issue.message}</span>
-                                                {issue.excerpt && <code className="truncate font-mono text-xs text-tertiary">{issue.excerpt}</code>}
+                                                <span className="text-md text-primary">{issue.message}</span>
+                                                {issue.excerpt && <code className="truncate font-mono text-md text-tertiary">{issue.excerpt}</code>}
                                             </span>
                                         </button>
                                     </li>
@@ -473,7 +473,7 @@ export const AssetSetup = ({ filled = false, invalid = false, macros: withMacros
                 />
                 </Fillable>
             ))}
-            <span className="text-xs text-tertiary">{values.filter(Boolean).length} of {values.length} used. Macros aren't supported here.</span>
+            <span className="text-md text-tertiary">{values.filter(Boolean).length} of {values.length} used. Macros aren't supported here.</span>
         </div>
     );
 
@@ -482,7 +482,7 @@ export const AssetSetup = ({ filled = false, invalid = false, macros: withMacros
             <Tabs active="setup" />
             <div className="flex flex-col gap-6 px-8 py-8">
                 {ret && (
-                    <p className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm" style={{ backgroundColor: `${TEAL}0f`, color: "#1F7F80" }}>
+                    <p className="flex items-center gap-2 rounded-xl px-4 py-3 text-md" style={{ backgroundColor: `${TEAL}0f`, color: "#1F7F80" }}>
                         <InfoCircle className="size-4 shrink-0" aria-hidden="true" />
                         Adding a creative for the campaign you were setting up. Saving brings you straight back to it.
                     </p>
@@ -550,7 +550,7 @@ export const AssetSetup = ({ filled = false, invalid = false, macros: withMacros
                                 Add Creative
                             </Button>
                             {saved && !ret && (
-                                <span className="self-center text-sm font-medium" style={{ color: "#1F7F80" }}>
+                                <span className="self-center text-md font-medium" style={{ color: "#1F7F80" }}>
                                     “{saved}” added to the library.
                                 </span>
                             )}
@@ -559,7 +559,7 @@ export const AssetSetup = ({ filled = false, invalid = false, macros: withMacros
 
                     {/* Our addition: see the placement as you build it. */}
                     <aside className="flex flex-col gap-3 rounded-2xl bg-primary p-5 ring-1 ring-secondary xl:sticky xl:top-14">
-                        <h2 className="flex items-center text-lg font-semibold text-primary">
+                        <h2 className="flex items-center text-lg font-extrabold text-primary">
                             Preview
                             <Added />
                         </h2>
@@ -568,12 +568,12 @@ export const AssetSetup = ({ filled = false, invalid = false, macros: withMacros
                                 <div className="mx-auto w-[220px]">
                                     <AdFormatDemo format={preview.format} moment={preview.moment} />
                                 </div>
-                                <p className="text-center text-xs text-tertiary">
+                                <p className="text-center text-md text-tertiary">
                                     Approximate placement for {size ?? "this size"}. Size and position vary by device, screen and app.
                                 </p>
                             </>
                         ) : (
-                            <p className="rounded-xl border border-dashed border-secondary p-6 text-center text-sm text-tertiary">
+                            <p className="rounded-xl border border-dashed border-secondary p-6 text-center text-md text-tertiary">
                                 Choose an Ad Type and Ad Size to see where this creative sits in an app.
                             </p>
                         )}
@@ -606,15 +606,15 @@ export const ViewAllAssets = ({ search = "" }: { search?: string }) => {
             list.map((a) => [a.name, a.status, a.campaigns.join("; "), a.type, a.size, a.impressionTrackers.length, a.clickTrackers.length]),
         );
 
-    const th = "px-3 py-2.5 text-left text-xs font-semibold text-tertiary";
-    const td = "px-3 py-3 text-sm text-secondary";
+    const th = "px-3 py-2.5 text-left text-md font-semibold text-tertiary";
+    const td = "px-3 py-3 text-md text-secondary";
 
     return (
         <DasShell navItems={V3_NAV_ITEMS} navKey="manage assets">
             <Tabs active="view" />
             <div className="flex flex-col gap-5 px-8 py-8">
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                    <h2 className="text-display-xs font-semibold text-primary">Assets</h2>
+                    <h2 className="text-display-xs font-extrabold text-primary">Assets</h2>
                     <div className="flex items-center gap-3">
                         <Input aria-label="Search Assets" size="md" icon={SearchLg} placeholder="Search Assets" value={query} onChange={setQuery} wrapperClassName="w-72" />
                         {/* Same Actions menu as manage keywords, so the two libraries behave
@@ -722,7 +722,7 @@ export const ViewAllAssets = ({ search = "" }: { search?: string }) => {
                             ))}
                             {visible.length === 0 && (
                                 <tr>
-                                    <td colSpan={batch.on ? 9 : 8} className="px-3 py-10 text-center text-sm text-tertiary">
+                                    <td colSpan={batch.on ? 9 : 8} className="px-3 py-10 text-center text-md text-tertiary">
                                         No assets match “{query}”.
                                     </td>
                                 </tr>

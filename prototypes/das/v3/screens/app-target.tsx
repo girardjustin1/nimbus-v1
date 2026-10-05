@@ -1,4 +1,5 @@
-import { PinkAction } from "../../v1/screens/das-shell";
+import { Copy } from "./copy-deck-ui";
+import { PinkAction } from "./das-shell";
 import { APP_LIST, appById } from "./target-data";
 import { ChosenTable, InlineSearchSelect, type SelectableRow, TargetBlock } from "./search-select";
 
@@ -39,15 +40,24 @@ export const AppTargetBlock = ({ value, onChange }: { value: string[]; onChange:
                     {app?.name ?? id}
                 </span>,
                 app?.platform ?? "—",
-                <span key="b" className="font-mono text-xs text-tertiary">
-                    {app?.bundle ?? "Not in your account"}
+                <span key="b" className="font-mono text-md text-tertiary">
+                    {app?.bundle ?? <Copy>Not in your account</Copy>}
                 </span>,
             ],
         };
     });
 
     return (
-        <TargetBlock title="Apps" trailing={value.length > 0 ? <PinkAction onPress={() => onChange([])}>Clear all</PinkAction> : undefined}>
+        <TargetBlock
+            title="Apps"
+            trailing={
+                value.length > 0 ? (
+                    <PinkAction onPress={() => onChange([])}>
+                        <Copy>Clear all</Copy>
+                    </PinkAction>
+                ) : undefined
+            }
+        >
             <InlineSearchSelect
                 label="Search apps"
                 placeholder="Search your apps"

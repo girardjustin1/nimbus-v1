@@ -3,7 +3,10 @@ import { Input } from "@/components/base/input/input";
 import { RadioButton, RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
 import { cx } from "@/utils/cx";
 import { Fillable } from "../../../shared/demo-fill-ui";
-import { PINK, Section, TEAL } from "../../v1/screens/das-shell";
+import { PINK, Section, TEAL } from "./das-shell";
+import { LABEL } from "./type-rules";
+import { ORIGINAL, useCopy } from "./copy-deck";
+import { Copy } from "./copy-deck-ui";
 import type { SetupForm } from "../../v1/screens/setup-data";
 import { activeRowStyle, resultCount, useListCursor } from "./arrow-keys";
 import { usePanelPlacement } from "./panel-placement";
@@ -69,6 +72,7 @@ const NumberPicker = ({
 }) => {
     const [open, setOpen] = useState(false);
     const [query, setQuery] = useState("");
+    const copy = useCopy();
     const wrapRef = useRef<HTMLDivElement>(null);
     const listRef = useRef<HTMLDivElement>(null);
     const panelRef = useRef<HTMLDivElement>(null);
@@ -111,12 +115,13 @@ const NumberPicker = ({
     });
 
     return (
-        <div ref={wrapRef} className="relative max-w-xs flex-1" onKeyDownCapture={cursor.onKeyDown}>
+        <div ref={wrapRef} className="relative w-72 max-w-full" onKeyDownCapture={cursor.onKeyDown}>
             <Input
                 aria-label={name}
                 size="md"
                 isDisabled={disabled}
-                placeholder="Select or type a number"
+                className={copy.mark({ placeholder: ["Select or type a number"] })}
+                placeholder={copy.text("Select or type a number")}
                 value={open ? query : value ? labelFor(value) : ""}
                 onChange={(next) => {
                     setQuery(next.replace(/[^0-9]/g, ""));
@@ -127,12 +132,17 @@ const NumberPicker = ({
             {open && !disabled && (
                 <div ref={panelRef} className="absolute top-full right-0 left-0 z-30 mt-1 overflow-hidden rounded-lg bg-primary shadow-lg ring-1 ring-secondary">
                     <div className="flex items-center justify-between gap-3 border-b border-secondary px-3 py-2">
-                        <span className="text-xs font-semibold text-tertiary uppercase">{name}</span>
-                        <span className="text-xs font-medium text-tertiary tabular-nums">{resultCount(shown.length, ONE_TO_100.length, "options", Boolean(q))}</span>
+                        <span className="text-md font-semibold text-tertiary uppercase">
+                            <Copy>{name}</Copy>
+                        </span>
+                        <span className="text-md font-medium text-tertiary tabular-nums"><Copy>{resultCount(shown.length, ONE_TO_100.length, "options", Boolean(q))}</Copy>
+                        </span>
                     </div>
                     <div ref={listRef} role="listbox" aria-label={name} className="max-h-64 overflow-y-auto overscroll-contain py-1">
                         {shown.length === 0 ? (
-                            <p className="px-3 py-2 text-sm text-tertiary">No number matches “{q}”.</p>
+                            <p className="px-3 py-2 text-md text-tertiary">
+                                <Copy>{`No number matches “${q}”.`}</Copy>
+                            </p>
                         ) : (
                             shown.map((n, i) => {
                                 const active = i === cursor.active;
@@ -145,7 +155,7 @@ const NumberPicker = ({
                                         data-active={active}
                                         onMouseMove={() => cursor.move(i)}
                                         onClick={() => pick(n)}
-                                        className={cx("flex w-full items-center px-3 py-2 text-left text-sm", !active && "hover:bg-secondary", value === n && "font-semibold")}
+                                        className={cx("flex w-full items-center px-3 py-2 text-left text-md", !active && "hover:bg-secondary", value === n && "font-semibold")}
                                         style={{ ...(value === n ? { color: TEAL } : {}), ...(active ? activeRowStyle(PINK) : {}) }}
                                     >
                                         {labelFor(n)}
@@ -182,16 +192,35 @@ const EnableChoice = ({
     children: React.ReactNode;
 }) => (
     <RadioGroup size="md" value={enabled ? "on" : "off"} onChange={(v) => onToggle(v === "on")} className="flex flex-col gap-5" aria-label={label}>
-        <RadioButton value="off" label="Do not enable" hint={label} />
+        <RadioButton
+            value="off"
+            label={
+                <span className={LABEL}>
+                    <Copy original={ORIGINAL.doNotEnable}>Do not enable</Copy>
+                </span>
+            }
+            hint={<Copy>{label}</Copy>}
+        />
         <div className="flex flex-wrap items-center gap-4">
-            <RadioButton value="on" label="Enable:" />
+            <RadioButton
+                value="on"
+                label={
+                    <span className={LABEL}>
+                        <Copy original={ORIGINAL.enable}>Enable:</Copy>
+                    </span>
+                }
+            />
             {children}
         </div>
     </RadioGroup>
 );
 
 export const PrioritySection = ({ form, set }: { form: SetupForm; set: Setter }) => (
-    <Section id="priority" title="Priority" description="Set the priority of this campaign versus other active campaigns. 1 is served first.">
+    <Section
+        id="priority"
+        title={<Copy>Priority</Copy>}
+        description={<Copy>Set the priority of this campaign versus other active campaigns. 1 is served first.</Copy>}
+    >
         <EnableChoice
             enabled={form.priority !== undefined}
             onToggle={(on) => set({ priority: on ? (form.priority ?? 1) : undefined })}
@@ -202,7 +231,9 @@ export const PrioritySection = ({ form, set }: { form: SetupForm; set: Setter })
             </Fillable>
             {/* Always present: a hint that appears only once the radio is on makes the
                 row reflow at the moment you are reading it. */}
-            <span className="text-sm text-tertiary">1 to 100. Type to jump to a number, or ↑ ↓ to step through them.</span>
+            <span className="text-md text-tertiary">
+                <Copy>1 to 100. Type to jump to a number, or ↑ ↓ to step through them.</Copy>
+            </span>
         </EnableChoice>
     </Section>
 );
@@ -215,7 +246,13 @@ export const FrequencyCapSection = ({ form, set }: { form: SetupForm; set: Sette
     // starting at 1 means it can no longer be typed.
     const chosen = form.freqCap ? Number(form.freqCap) : undefined;
     return (
-        <Section id="freqcap" title="Frequency Cap" description="Maximum number of times an ad from this campaign is shown to an individual user over a 24hr period.">
+        <Section
+            id="freqcap"
+            title={<Copy original={ORIGINAL.freqCapTitle}>Frequency Cap</Copy>}
+            description={
+                <Copy original={ORIGINAL.freqCapDescription}>Maximum number of times an ad from this campaign is shown to an individual user over a 24hr period.</Copy>
+            }
+        >
             <EnableChoice
                 enabled={on}
                 onToggle={(enable) => set({ freqCap: enable ? (form.freqCap ?? "") : undefined })}
@@ -230,7 +267,9 @@ export const FrequencyCapSection = ({ form, set }: { form: SetupForm; set: Sette
                         disabled={!on}
                     />
                 </Fillable>
-                <span className="text-sm text-tertiary">Impressions per user, per 24 hours. Type to jump to a number, or ↑ ↓ to step through them.</span>
+                <span className="text-md text-tertiary">
+                    <Copy>Impressions per user, per 24 hours. Type to jump to a number, or ↑ ↓ to step through them.</Copy>
+                </span>
             </EnableChoice>
         </Section>
     );

@@ -2,7 +2,9 @@ import { type ReactNode, useEffect, useLayoutEffect, useMemo, useRef, useState }
 import { ChevronRight, SearchLg } from "@untitledui/icons";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { cx } from "@/utils/cx";
-import { KeywordChip, PINK } from "../../v1/screens/das-shell";
+import { useCopy } from "./copy-deck";
+import { Copy } from "./copy-deck-ui";
+import { KeywordChip, PINK } from "./das-shell";
 import { activeRowStyle, resultCount, useListCursor } from "./arrow-keys";
 import { usePanelPlacement } from "./panel-placement";
 import { useScrollLock } from "./scroll-lock";
@@ -259,9 +261,9 @@ const Row = ({
             />
             {/* Text, not a label: clicking it must not select. Double-clicking the row
                 — name included — is how you open and close. */}
-            <span className={cx("min-w-0 flex-1 truncate text-sm text-secondary", branch && "font-semibold")}>{node.label}</span>
+            <span className={cx("min-w-0 flex-1 truncate text-md text-secondary", branch && "font-semibold")}>{node.label}</span>
             {branch && (
-                <span className="shrink-0 text-xs text-tertiary tabular-nums">
+                <span className="shrink-0 text-md text-tertiary tabular-nums">
                     {leavesOf(node, query).filter((l) => selected.has(l)).length || ""}
                     <span className="text-quaternary">/{leavesOf(node, query).length}</span>
                 </span>
@@ -293,6 +295,7 @@ export const TaxonomyPicker = ({
 }) => {
     const [open, setOpen] = useState(false);
     const [query, setQuery] = useState("");
+    const copy = useCopy();
     const [expanded, setExpanded] = useState<Set<string>>(new Set());
     const [unfolded, setUnfolded] = useState<Set<string>>(new Set());
     const box = useRef<HTMLDivElement>(null);
@@ -450,7 +453,11 @@ export const TaxonomyPicker = ({
                                     ))}
                                 </div>
                             )}
-                            {!anyApplied && <span className="px-0.5 text-sm text-placeholder">Nothing selected yet — pick a region or a country below.</span>}
+                            {!anyApplied && (
+                                <span className="px-0.5 text-md text-placeholder">
+                                    <Copy>Nothing selected yet — pick a region or a country below.</Copy>
+                                </span>
+                            )}
                             {applied.partial.map((g) => {
                                 const key = g.path.join("|") || "_";
                                 const folded = g.items.length > COLLAPSE_AT && !unfolded.has(key);
@@ -458,7 +465,7 @@ export const TaxonomyPicker = ({
                                 return (
                                     <div key={key} className="flex flex-col gap-1">
                                         {g.path.length > 0 && (
-                                            <span className="truncate px-0.5 text-xs font-semibold" style={{ color: "#1F7F80" }}>
+                                            <span className="truncate px-0.5 text-md font-semibold" style={{ color: "#1F7F80" }}>
                                                 {g.path.join(" › ")}
                                             </span>
                                         )}
@@ -476,10 +483,10 @@ export const TaxonomyPicker = ({
                                                             return next;
                                                         })
                                                     }
-                                                    className="px-1 text-xs font-semibold"
+                                                    className="px-1 text-md font-semibold"
                                                     style={{ color: PINK }}
                                                 >
-                                                    {folded ? `+${g.items.length - COLLAPSE_AT} more` : "Show fewer"}
+                                                    <Copy>{folded ? `+${g.items.length - COLLAPSE_AT} more` : "Show fewer"}</Copy>
                                                 </button>
                                             )}
                                         </div>
@@ -490,7 +497,13 @@ export const TaxonomyPicker = ({
                     )}
 
                     {/* The search and Browse sit under the applied chips, as in the storyboard. */}
-                    <div className={cx("flex items-center gap-2 px-3 py-2", (anyApplied || open) && "border-t border-secondary")}>
+                    <div
+                        className={cx(
+                            "flex items-center gap-2 px-3 py-2",
+                            (anyApplied || open) && "border-t border-secondary",
+                            copy.mark({ placeholder: [placeholder] }),
+                        )}
+                    >
                         <SearchLg className="size-4 shrink-0 text-fg-quaternary" aria-hidden="true" />
                         <input
                             aria-label={`Search ${noun}`}
@@ -500,17 +513,17 @@ export const TaxonomyPicker = ({
                                 setOpen(true);
                             }}
                             onFocus={() => setOpen(true)}
-                            placeholder={placeholder}
-                            className="min-w-0 flex-1 bg-transparent text-sm text-primary outline-none placeholder:text-placeholder"
+                            placeholder={copy.text(placeholder)}
+                            className="min-w-0 flex-1 bg-transparent text-md text-primary outline-none placeholder:text-placeholder"
                         />
                         <button
                             type="button"
                             onClick={() => setOpen((o) => !o)}
                             aria-expanded={open}
-                            className="shrink-0 rounded-md px-1 text-sm font-semibold uppercase transition-opacity hover:opacity-80"
+                            className="shrink-0 rounded-md px-1 text-md font-semibold uppercase transition-opacity hover:opacity-80"
                             style={{ color: PINK }}
                         >
-                            Browse
+                            <Copy>Browse</Copy>
                         </button>
                     </div>
                 </div>
@@ -519,26 +532,32 @@ export const TaxonomyPicker = ({
                     <div ref={panelRef} className="absolute top-full right-0 left-0 z-30 mt-1 overflow-hidden rounded-xl bg-primary shadow-lg ring-1 ring-secondary">
                         <div className="flex items-center justify-between gap-3 border-b border-secondary px-3 py-2">
                             <span className="flex items-baseline gap-2">
-                                <span className="text-xs font-semibold text-tertiary uppercase">{label}</span>
-                                <span className="text-xs font-medium text-tertiary tabular-nums">{resultCount(matchedLeaves, allLeaves.length, noun, Boolean(q))}</span>
+                                <span className="text-md font-semibold text-tertiary uppercase">
+                                    <Copy>{label}</Copy>
+                                </span>
+                                <span className="text-md font-medium text-tertiary tabular-nums">
+                                    <Copy>{resultCount(matchedLeaves, allLeaves.length, noun, Boolean(q))}</Copy>
+                                </span>
                             </span>
                             <span className="flex gap-3">
                                 <button
                                     type="button"
                                     onClick={() => onChange(allLeaves.filter((l) => !q || visibleLeaves.has(l) || selected.has(l)))}
-                                    className="text-sm font-semibold"
+                                    className="text-md font-semibold"
                                     style={{ color: PINK }}
                                 >
-                                    {q ? "Select these" : "Select all"}
+                                    <Copy>{q ? "Select these" : "Select all"}</Copy>
                                 </button>
-                                <button type="button" onClick={() => onChange([])} className="text-sm font-semibold text-secondary hover:text-primary">
-                                    Clear
+                                <button type="button" onClick={() => onChange([])} className="text-md font-semibold text-secondary hover:text-primary">
+                                    <Copy>Clear</Copy>
                                 </button>
                             </span>
                         </div>
                         <div ref={listRef} className={cx("overflow-y-auto overscroll-contain py-1", anyOpen ? "max-h-[28rem]" : "max-h-72")}>
                             {flat.length === 0 ? (
-                                <p className="px-3 py-6 text-center text-sm text-tertiary">Nothing matches “{query}”.</p>
+                                <p className="px-3 py-6 text-center text-md text-tertiary">
+                                    <Copy>{`Nothing matches “${query}”.`}</Copy>
+                                </p>
                             ) : (
                                 flat.map((row, i) => (
                                     <Row
@@ -560,8 +579,12 @@ export const TaxonomyPicker = ({
                     </div>
                 )}
             </div>
-            <span className="text-sm text-tertiary">
-                {value.length === 0 ? (emptyHint ?? `Not Specified — includes every ${one}.`) : `${value.length} of ${allLeaves.length} ${noun} selected`}
+            <span className="text-md text-tertiary">
+                {value.length === 0 ? (
+                    (emptyHint ?? <Copy>{`Not Specified — includes every ${one}.`}</Copy>)
+                ) : (
+                    <Copy>{`${value.length} of ${allLeaves.length} ${noun} selected`}</Copy>
+                )}
             </span>
         </div>
     );
