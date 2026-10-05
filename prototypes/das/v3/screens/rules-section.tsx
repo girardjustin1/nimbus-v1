@@ -2,9 +2,17 @@ import { AlertCircle } from "@untitledui/icons";
 import { RadioButton, RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
 import { cx } from "@/utils/cx";
 import type { AuctionRule } from "../../v1/screens/das-data";
-import { Section, TEAL } from "../../v1/screens/das-shell";
+import { Section, TEAL } from "./das-shell";
+import { LABEL } from "./type-rules";
+import { ORIGINAL } from "./copy-deck";
+import { Copy } from "./copy-deck-ui";
 import type { FieldError, Setter } from "../../v1/screens/campaign-setup-one-page";
 import { type SetupForm, rules } from "../../v1/screens/setup-data";
+
+/** Staging shows only Guaranteed; the other three rules are new to the form. */
+const STAGING_RULE: Partial<Record<AuctionRule, { label: string; hint: string }>> = {
+    Guaranteed: { label: ORIGINAL.rulesGuaranteed, hint: ORIGINAL.rulesGuaranteedHint },
+};
 
 /**
  * Auction Rules — the whole card is the target, not the dot.
@@ -31,9 +39,13 @@ import { type SetupForm, rules } from "../../v1/screens/setup-data";
 export const RulesSectionV3 = ({ form, set, error }: { form: SetupForm; set: Setter; error: FieldError }) => {
     const invalid = Boolean(error("rule"));
     return (
-        <Section id="rules" title="Auction Rules" description="How this campaign competes with open-marketplace auctions.">
+        <Section
+            id="rules"
+            title={<Copy original={ORIGINAL.rulesTitle}>Auction Rules</Copy>}
+            description={<Copy original={ORIGINAL.rulesDescription}>How this campaign competes with open-marketplace auctions.</Copy>}
+        >
             <RadioGroup
-                size="sm"
+                size="md"
                 value={form.rule ?? null}
                 onChange={(v) => set({ rule: v as AuctionRule })}
                 className="grid grid-cols-1 gap-3 md:grid-cols-2"
@@ -45,24 +57,29 @@ export const RulesSectionV3 = ({ form, set, error }: { form: SetupForm; set: Set
                         value={r.id}
                         className={({ isSelected, isFocusVisible }) =>
                             cx(
-                                "cursor-pointer rounded-xl p-4 ring-1 transition-colors",
-                                isSelected ? "ring-transparent" : invalid ? "ring-error_subtle hover:bg-primary_hover" : "ring-secondary hover:bg-primary_hover",
+                                // Same edge as the text fields: shadow-xs with an inset ring-primary.
+                                "cursor-pointer rounded-xl p-4 shadow-xs ring-1 transition-colors ring-inset",
+                                isSelected ? "ring-transparent" : invalid ? "ring-error_subtle hover:bg-primary_hover" : "ring-primary hover:bg-primary_hover",
                                 isFocusVisible && "outline-2 outline-offset-2 outline-focus-ring",
                             )
                         }
-                        style={form.rule === r.id ? { boxShadow: `inset 0 0 0 2px ${TEAL}`, backgroundColor: `${TEAL}0a` } : undefined}
+                        style={form.rule === r.id ? { boxShadow: `inset 0 0 0 2px ${TEAL}, var(--shadow-xs)`, backgroundColor: `${TEAL}0a` } : undefined}
                         label={
                             <span className="flex flex-col gap-0.5">
-                                <span className="text-sm font-medium text-secondary">{r.id}</span>
-                                <span className="text-sm font-normal text-tertiary">{r.hint}</span>
+                                <span className={LABEL}>
+                                    <Copy original={STAGING_RULE[r.id]?.label}>{r.id}</Copy>
+                                </span>
+                                <span className="text-md font-normal text-tertiary">
+                                    <Copy original={STAGING_RULE[r.id]?.hint}>{r.hint}</Copy>
+                                </span>
                             </span>
                         }
                     />
                 ))}
             </RadioGroup>
             {invalid && (
-                <p className="flex items-center gap-2 text-sm font-medium text-error-primary">
-                    <AlertCircle className="size-4 shrink-0" aria-hidden="true" /> {error("rule")}
+                <p className="flex items-center gap-2 text-md font-medium text-error-primary">
+                    <AlertCircle className="size-4 shrink-0" aria-hidden="true" /> <Copy>{error("rule")}</Copy>
                 </p>
             )}
         </Section>

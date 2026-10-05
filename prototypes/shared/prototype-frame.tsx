@@ -60,7 +60,7 @@ const storybookUrl = () => (window.location.hostname === "localhost" ? "http://l
 
 const selectClass = "rounded-md border border-white/15 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-white/40";
 
-const Toolbar = ({ meta, screens, activeId }: { meta: ProtoMeta; screens: ProtoScreen[]; activeId?: string }) => {
+const Toolbar = ({ meta, screens, activeId, extras }: { meta: ProtoMeta; screens: ProtoScreen[]; activeId?: string; extras?: ReactNode }) => {
     const index = screens.findIndex((s) => s.id === activeId);
     const prev = index > 0 ? screens[index - 1] : undefined;
     const next = index >= 0 && index < screens.length - 1 ? screens[index + 1] : undefined;
@@ -128,6 +128,7 @@ const Toolbar = ({ meta, screens, activeId }: { meta: ProtoMeta; screens: ProtoS
             <div className="ml-auto flex items-center gap-3">
                 {activeId && <ScreenInfoButton />}
                 {activeId && <DemoFillControls onFillPage={runPageFill} clickToFill={meta.current === "v3"} />}
+                {extras}
                 <a href="#/" className="inline-flex items-center gap-1.5 opacity-80 hover:opacity-100">
                     <Grid01 className="size-4" aria-hidden="true" /> All screens
                 </a>
@@ -212,7 +213,19 @@ const IndexPage = ({ meta, screens }: { meta: ProtoMeta; screens: ProtoScreen[] 
     );
 };
 
-export const PrototypeApp = ({ meta, screens }: { meta: ProtoMeta; screens: ProtoScreen[] }) => {
+/**
+ * `toolbarExtras` lets a version add its own controls to the toolbar for the screens
+ * they apply to (Round 3's copy deck). Versions that don't pass it are unchanged.
+ */
+export const PrototypeApp = ({
+    meta,
+    screens,
+    toolbarExtras,
+}: {
+    meta: ProtoMeta;
+    screens: ProtoScreen[];
+    toolbarExtras?: (screen: ProtoScreen) => ReactNode;
+}) => {
     const route = useHashRoute();
     const screen = screens.find((s) => s.id === route);
 
@@ -222,7 +235,7 @@ export const PrototypeApp = ({ meta, screens }: { meta: ProtoMeta; screens: Prot
 
     return (
         <>
-            <Toolbar meta={meta} screens={screens} activeId={screen?.id} />
+            <Toolbar meta={meta} screens={screens} activeId={screen?.id} extras={screen && toolbarExtras?.(screen)} />
             {screen ? <div key={screen.id}>{screen.render()}</div> : <IndexPage meta={meta} screens={screens} />}
         </>
     );

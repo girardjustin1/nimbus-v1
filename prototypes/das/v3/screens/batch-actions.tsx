@@ -2,7 +2,7 @@ import type { FC, ReactNode } from "react";
 import { useEffect } from "react";
 import { AlertTriangle, ChevronDown, Trash01, XClose } from "@untitledui/icons";
 import { Button as AriaButton } from "react-aria-components";
-import { Button } from "@/components/base/buttons/button";
+import { Button } from "./type-rules";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Dropdown } from "@/components/base/dropdown/dropdown";
 import { Toggle } from "@/components/base/toggle/toggle";
@@ -46,7 +46,7 @@ export const BatchAction = ({ icon: Icon, children, onClick }: { icon?: FC<{ cla
     <button
         type="button"
         onClick={onClick}
-        className="inline-flex cursor-pointer items-center gap-1.5 rounded-md bg-tertiary px-2.5 py-1 text-xs font-semibold text-secondary transition-colors hover:bg-quaternary hover:text-primary"
+        className="inline-flex cursor-pointer items-center gap-1.5 rounded-md bg-tertiary px-2.5 py-1 text-md font-semibold text-secondary transition-colors hover:bg-quaternary hover:text-primary"
     >
         {Icon && <Icon className="size-3.5" aria-hidden="true" />}
         {children}
@@ -85,7 +85,7 @@ export const BatchBar = ({
                 {/* An Aria Button, not a plain one: Dropdown.Root is a MenuTrigger and
                     wires the press handler onto an Aria child. A bare <button> renders
                     fine and never opens the menu. */}
-                <AriaButton className="inline-flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-xs font-semibold text-primary outline-focus-ring hover:bg-tertiary focus-visible:outline-2">
+                <AriaButton className="inline-flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-md font-semibold text-primary outline-focus-ring hover:bg-tertiary focus-visible:outline-2">
                     {n === 0 ? "None selected" : `${n} selected`}
                     <ChevronDown className="size-3.5 text-fg-quaternary" aria-hidden="true" />
                 </AriaButton>
@@ -112,12 +112,12 @@ export const BatchBar = ({
             )}
 
             <div className="ml-auto flex items-center gap-3">
-                {/* The shared Toggle fixes its label at text-sm; everything else in this
-                    bar is text-xs, so bring the label down rather than fork the component. */}
+                {/* The shared Toggle's sm label is 13px; Prototype 3 holds everything to the
+                    15px minimum, so bring it up to match the bar rather than fork the component. */}
                 <Toggle
                     size="sm"
                     label="Show all selected"
-                    className="[&_p]:text-xs [&_p]:font-semibold"
+                    className="[&_p]:text-md [&_p]:font-semibold"
                     isSelected={batch.onlySelected}
                     isDisabled={n === 0}
                     onChange={batch.setOnlySelected}
@@ -125,7 +125,7 @@ export const BatchBar = ({
                 <button
                     type="button"
                     onClick={batch.stop}
-                    className="inline-flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-xs font-semibold text-secondary hover:bg-tertiary hover:text-primary"
+                    className="inline-flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-md font-semibold text-secondary hover:bg-tertiary hover:text-primary"
                 >
                     <XClose className="size-3.5" aria-hidden="true" />
                     Done
@@ -174,14 +174,14 @@ export const BatchBlocked = ({ title, lead, names, onClose }: { title: string; l
                 className="w-full max-w-md overflow-hidden rounded-2xl bg-primary shadow-2xl"
             >
                 <div className="flex flex-col gap-3 px-6 py-5">
-                    <h2 className="flex items-center gap-2 text-lg font-semibold text-primary">
+                    <h2 className="flex items-center gap-2 text-lg font-extrabold text-primary">
                         <AlertTriangle className="size-5 shrink-0" style={{ color: "#B54708" }} aria-hidden="true" />
                         {title}
                     </h2>
-                    <p className="text-sm text-secondary">{lead}</p>
+                    <p className="text-md text-secondary">{lead}</p>
                     <ul className="flex max-h-48 flex-col gap-1 overflow-y-auto rounded-xl bg-secondary px-4 py-3">
                         {names.map((n) => (
-                            <li key={n} className="truncate font-mono text-xs text-secondary">
+                            <li key={n} className="truncate font-mono text-md text-secondary">
                                 {n}
                             </li>
                         ))}

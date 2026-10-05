@@ -1,10 +1,11 @@
 import { CurrencyDollar, InfoCircle } from "@untitledui/icons";
 import { Input } from "@/components/base/input/input";
-import { END_OF_DAY, START_OF_DAY } from "@/pages/deal-activation-system/dates";
-import { DateTimePicker } from "@/pages/deal-activation-system/round-1-components/datetime-picker";
 import { Fillable } from "../../../shared/demo-fill-ui";
 import type { FieldError, Setter } from "../../v1/screens/campaign-setup-one-page";
-import { Section } from "../../v1/screens/das-shell";
+import { Field, Section } from "./das-shell";
+import { DatePicker } from "./date-picker";
+import { ORIGINAL, useCopy } from "./copy-deck";
+import { Copy } from "./copy-deck-ui";
 import { type SetupForm, TODAY, fill, flightDays } from "../../v1/screens/setup-data";
 
 /**
@@ -30,84 +31,97 @@ import { type SetupForm, TODAY, fill, flightDays } from "../../v1/screens/setup-
 
 const FlightDates = ({ form, set, error, calendarOpen }: { form: SetupForm; set: Setter; error: FieldError; calendarOpen?: boolean }) => {
     const days = flightDays(form);
+    const copy = useCopy();
     const field = (which: "start" | "end") => {
         const err = error(which);
         const isStart = which === "start";
         return (
-            <div className="flex flex-col gap-1.5">
-                <span className="text-sm font-medium text-secondary">
-                    {isStart ? "Start" : "End"} <span className="text-brand-tertiary">*</span>
-                </span>
+            <Field label={<Copy>{isStart ? "Start" : "End"}</Copy>} required>
                 <Fillable filled={Boolean(form[which])} onFill={() => set(isStart ? { start: fill.start() } : { end: fill.end() })}>
-                    <DateTimePicker
+                    {/* Dates only (C2). No time is stored, so a flight runs from the start
+                        of its first day to the end of its last — validation's default. */}
+                    <DatePicker
                         label={isStart ? "Start" : "End"}
-                        value={{ date: form[which], time: (isStart ? form.startTime : form.endTime) ?? (isStart ? START_OF_DAY : END_OF_DAY) }}
-                        onChange={(v) => set(isStart ? { start: v.date, startTime: v.time } : { end: v.date, endTime: v.time })}
+                        value={form[which]}
+                        onChange={(date) => set(isStart ? { start: date } : { end: date })}
                         minValue={isStart ? TODAY : (form.start ?? TODAY)}
                         today={TODAY}
-                        notBefore={!isStart && form.start ? { date: form.start, time: form.startTime ?? START_OF_DAY } : undefined}
                         invalid={Boolean(err)}
                         defaultOpen={calendarOpen && isStart}
-                        placeholder={isStart ? "Select start" : "Select end"}
+                        placeholder={copy.text(isStart ? "Select start" : "Select end") ?? ""}
                     />
                 </Fillable>
-                {err && <span className="text-sm text-error-primary">{err}</span>}
-            </div>
+                {err && (
+                    <span className="text-md text-error-primary">
+                        <Copy>{err}</Copy>
+                    </span>
+                )}
+            </Field>
         );
     };
     return (
-        <div className="flex flex-col gap-3">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-4">
-                {field("start")}
-                <span className="hidden pt-9 text-quaternary sm:block">→</span>
-                {field("end")}
-                {days && <span className="text-sm text-tertiary sm:pt-9">{days}-day flight</span>}
-            </div>
-            <p className="text-sm text-tertiary italic">All scheduling times are in UTC. Past dates can't be picked.</p>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-4">
+            {field("start")}
+            <span className="hidden pt-9 text-quaternary sm:block">→</span>
+            {field("end")}
+            {days && (
+                <span className="text-md text-tertiary sm:pt-9">
+                    <Copy>{`${days}-day flight`}</Copy>
+                </span>
+            )}
         </div>
     );
 };
 
 export const BudgetSectionV3 = ({ form, set, error }: { form: SetupForm; set: Setter; error: FieldError }) => {
+    const title = <Copy original={ORIGINAL.budget}>Budget</Copy>;
     if (form.rule === "Fallback") {
         return (
-            <Section id="budget" title="Budget">
-                <p className="flex items-center gap-2 text-sm text-tertiary">
-                    <InfoCircle className="size-4" aria-hidden="true" /> Fallback campaigns have no budget or eCPM. Set the flight dates below.
+            <Section id="budget" title={title}>
+                <p className="flex items-center gap-2 text-md text-tertiary">
+                    <InfoCircle className="size-4" aria-hidden="true" /> <Copy>Fallback campaigns have no budget or eCPM. Set the flight dates below.</Copy>
                 </p>
             </Section>
         );
     }
 
     return (
-        <Section id="budget" title="Budget" description="Pacing is front-loaded hourly: up to 1/24th of the daily budget spends at the start of each hour.">
+        <Section
+            id="budget"
+            title={title}
+            description={<Copy>Pacing is front-loaded hourly: up to 1/24th of the daily budget spends at the start of each hour.</Copy>}
+        >
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Fillable filled={Boolean(form.budget)} onFill={() => set({ budget: fill.budget() })}>
-                    <Input
-                        label="Budget"
-                        size="md"
-                        icon={CurrencyDollar}
-                        placeholder="0.00"
-                        value={form.budget}
-                        onChange={(budget) => set({ budget })}
-                        isRequired
-                        isInvalid={Boolean(error("budget"))}
-                        hint={error("budget") ?? "Spent across the whole flight."}
-                    />
-                </Fillable>
-                <Fillable filled={Boolean(form.ecpm)} onFill={() => set({ ecpm: fill.ecpm() })}>
-                    <Input
-                        label="Bid Amount (eCPM)"
-                        size="md"
-                        icon={CurrencyDollar}
-                        placeholder="0.00"
-                        value={form.ecpm}
-                        onChange={(ecpm) => set({ ecpm })}
-                        isRequired
-                        isInvalid={Boolean(error("ecpm"))}
-                        hint={error("ecpm") ?? "Selling value, not a floor."}
-                    />
-                </Fillable>
+                <Field label={<Copy original={ORIGINAL.budget}>Budget</Copy>} required hint={<Copy original={ORIGINAL.budgetDescription}>Spent across the whole flight.</Copy>}>
+                    <Fillable filled={Boolean(form.budget)} onFill={() => set({ budget: fill.budget() })}>
+                        <Input
+                            aria-label="Budget"
+                            size="md"
+                            icon={CurrencyDollar}
+                            placeholder="0.00"
+                            value={form.budget}
+                            onChange={(budget) => set({ budget })}
+                            isRequired
+                            isInvalid={Boolean(error("budget"))}
+                            hint={error("budget") ? <Copy>{error("budget")}</Copy> : undefined}
+                        />
+                    </Fillable>
+                </Field>
+                <Field label={<Copy original={ORIGINAL.bidAmount}>Bid Amount (eCPM)</Copy>} required hint={<Copy original={ORIGINAL.bidDescription}>Selling value, not a floor.</Copy>}>
+                    <Fillable filled={Boolean(form.ecpm)} onFill={() => set({ ecpm: fill.ecpm() })}>
+                        <Input
+                            aria-label="Bid Amount (eCPM)"
+                            size="md"
+                            icon={CurrencyDollar}
+                            placeholder="0.00"
+                            value={form.ecpm}
+                            onChange={(ecpm) => set({ ecpm })}
+                            isRequired
+                            isInvalid={Boolean(error("ecpm"))}
+                            hint={error("ecpm") ? <Copy>{error("ecpm")}</Copy> : undefined}
+                        />
+                    </Fillable>
+                </Field>
             </div>
         </Section>
     );
@@ -124,8 +138,13 @@ export const BudgetSectionV3 = ({ form, set, error }: { form: SetupForm; set: Se
 export const FlightDatesSection = ({ form, set, error, calendarOpen }: { form: SetupForm; set: Setter; error: FieldError; calendarOpen?: boolean }) => (
     <Section
         id="flight"
-        title="Flight Dates"
-        description="When this campaign starts and stops serving. It won't deliver outside these dates, and it goes live automatically at the start time."
+        title={<Copy>Flight Dates</Copy>}
+        description={
+            <>
+                <Copy>When this campaign starts and stops serving. It won't deliver outside these dates, and it goes live automatically on the start date.</Copy>{" "}
+                <Copy>Dates are in UTC. Past dates can't be picked.</Copy>
+            </>
+        }
     >
         <FlightDates form={form} set={set} error={error} calendarOpen={calendarOpen} />
     </Section>

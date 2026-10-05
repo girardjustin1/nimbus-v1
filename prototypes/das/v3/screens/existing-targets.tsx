@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
-import { PinkAction } from "../../v1/screens/das-shell";
+import { Copy } from "./copy-deck-ui";
+import { PinkAction } from "./das-shell";
+import { LABEL } from "./type-rules";
 import { GEO_REGIONS } from "../../v1/screens/geo-data";
 import { type TaxonomyNode, TaxonomyPicker } from "./taxonomy-picker";
 import { APP_LIST } from "./target-data";
@@ -27,8 +29,14 @@ const GEO_TREE: TaxonomyNode[] = GEO_REGIONS.map((g) => ({ id: g.region, label: 
 const TargetCard = ({ title, onClear, children }: { title: string; onClear?: () => void; children: React.ReactNode }) => (
     <div className="flex flex-col gap-4 rounded-xl p-5 ring-1 ring-secondary">
         <div className="flex items-center justify-between gap-3">
-            <h3 className="text-lg font-semibold text-primary">{title}</h3>
-            {onClear && <PinkAction onPress={onClear}>Clear all</PinkAction>}
+            <h3 className="text-lg font-bold text-primary">
+                <Copy>{title}</Copy>
+            </h3>
+            {onClear && (
+                <PinkAction onPress={onClear}>
+                    <Copy>Clear all</Copy>
+                </PinkAction>
+            )}
         </div>
         {children}
     </div>
@@ -47,10 +55,10 @@ export const ExistingTargetsV3 = ({ empty = false }: { empty?: boolean }) => {
             <TargetCard title="Platform" onClear={platforms.length ? () => setPlatforms([]) : undefined}>
                 <div className="flex gap-6">
                     {["iOS", "Android"].map((p) => (
-                        <Checkbox key={p} size="sm" label={p} isSelected={platforms.includes(p)} onChange={() => togglePlatform(p)} />
+                        <Checkbox key={p} size="md" label={<span className={LABEL}>{p}</span>} isSelected={platforms.includes(p)} onChange={() => togglePlatform(p)} />
                     ))}
                 </div>
-                <p className="text-sm text-tertiary">{platforms.length === 0 ? "Not Specified — includes every platform." : platforms.join(", ")}</p>
+                <p className="text-md text-tertiary">{platforms.length === 0 ? <Copy>Not Specified — includes every platform.</Copy> : platforms.join(", ")}</p>
             </TargetCard>
             <AppTargetBlock value={appList} onChange={setAppList} />
         </>
