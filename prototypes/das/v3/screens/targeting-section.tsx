@@ -25,7 +25,8 @@ import { type KeywordEntry, KeywordTargetBlock } from "./keyword-target";
 type Setter = (p: Partial<SetupForm>) => void;
 
 const TargetModule = ({ title, added, help, children }: { title: string; added?: boolean; /** A question mark, beside the heading. */ help?: ReactNode; children: ReactNode }) => (
-    <div className="flex flex-col gap-4 rounded-xl p-5 ring-1 ring-secondary">
+    <div className="flex flex-col gap-4 rounded-xl p-5 ring-1 ring-secondary has-[[data-intro]]:gap-1">
+        {/* Tightens under the title when the content opens with an instruction — see TargetBlock. */}
         <div className="flex items-center gap-2">
             <h3 className="text-lg font-bold text-primary">
                 <Copy>{title}</Copy>

@@ -155,7 +155,7 @@ export const AdUnitTypeFieldV3 = ({
         <div className="flex flex-col gap-2">
             {/* Instruction above the cards, under the module title (C1); the requirement
                 stays below them, where the choice is. */}
-            <p className="text-md text-tertiary">
+            <p data-intro className="mb-1 text-md text-tertiary">
                 <Copy>Targets the publisher's ad units, not creative sizes.</Copy>
             </p>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
