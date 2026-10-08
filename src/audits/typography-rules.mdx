@@ -1,0 +1,155 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Callout, Chip, MdTable, Stat } from "./audit-ui";
+import { EdgeCaseTable, RulesInContext, SpecimenList, StyleMatrix } from "./typography-rules-ui";
+
+<Meta title="Audits/Typography Rules" />
+
+<div className="type-audit" style={{ maxWidth: 1040 }}>
+
+# Typography Rules
+
+<div style={{ display: "flex", flexWrap: "wrap", gap: 10, margin: "14px 0 6px" }}>
+  <Chip bg="#FCE7F1" fg="#A94579">Prototype 3 · Deal Activation System</Chip>
+  <Chip>Set in Product's 5 Oct review</Chip>
+  <Chip>Measured 8 Oct 2026</Chip>
+  <Chip>Audience: Design, Engineering</Chip>
+</div>
+
+<Callout tone="#FFFBEB" edge="#FDE68A" title="Open questions for Product">
+  <p style={{ margin: "0 0 10px" }}>Each one is built one way today, described after the question. A yes keeps it; a different answer is a small change.</p>
+  <ol style={{ listStyle: "decimal", paddingLeft: 22, margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+    <li><strong>Page titles are smaller than section headlines.</strong> "Test Publisher" is 24px, and "Auction Rules" below it is 26px. Should page titles move up, or section headlines down to 24px? <em>Built: as the design system had them.</em></li>
+    <li><strong>Are targeting card titles labels or headlines?</strong> Geos, Apps, Ad Unit and the rest are 18px bold (700), following the review's "Geos should be the bolds." Headlines are 800. <em>Built: 700.</em></li>
+    <li><strong>KPI numbers.</strong> Large figures such as "1,284,902" are 24px at 600, treated as data rather than headlines. Should they be 800 too? <em>Built: 600.</em></li>
+    <li><strong>Uppercase at 15px.</strong> Uppercase reads bigger than mixed case. Text actions (CLEAR ALL, BROWSE), statuses (ON TRACK) and group labels are all 15px. Keep them at 15px, or allow uppercase a step smaller? <em>Built: 15px, no exceptions.</em></li>
+    <li><strong>Two exceptions.</strong> Text inside the mock ads (AD, Learn more →) stays at the scale of the ad it shows, and the prototype's own toolbar is outside the rules. Agreed? <em>Built: both exempt.</em></li>
+    <li><strong>Monospace for data.</strong> Keywords, bundle IDs and markup use the system monospace font at 15px, not Proxima Nova. Keep mono? <em>Built: mono.</em></li>
+    <li><strong>Long values in the 300px summary rail</strong> wrap onto a second line (for example "Sports fans · Interstitial") rather than shrink or truncate. Wrap or truncate with a tooltip? <em>Built: wrap.</em></li>
+    <li><strong>17 styles here, 10 in the audit.</strong> The Typography Audit proposed 10 named styles for the product. Prototype 3 ended up with 17, mostly colour and case variants of the same size. Should these be folded into the audit's 10 before anything is built for real? <em>Built: 17, listed in section 3.</em></li>
+    <li><strong>Beyond Prototype 3.</strong> The rules apply only to Prototype 3. The design system's defaults (13px small text, 500-weight labels), the App Screens and the other prototypes are unchanged. Adopt them across the design system next? <em>Built: Prototype 3 only.</em></li>
+  </ol>
+</Callout>
+
+<Callout tone="#F0FDF9" edge="#99F6E0" title="The rules, as built">
+  The <a href="./?path=/docs/audits-typography-audit--docs" target="_top">Typography Audit</a> records what the
+  production dashboard does. This page records what Prototype 3 does instead, after Product's 5 Oct review: three
+  rules, applied to every screen in <code>prototypes/das/v3</code>. The design system's defaults are unchanged, and
+  so are Rounds 1 and 2. Every specimen below renders the real classes and reads its size back from the browser.
+</Callout>
+
+<div style={{ display: "flex", flexWrap: "wrap", gap: 12, margin: "18px 0" }}>
+  <Stat value="3" label="Rules" tone="#1F7F80" />
+  <Stat value="17" label="Named text styles" tone="#1F7F80" />
+  <Stat value="43" label="Screens, all compliant" />
+  <Stat value="5,698" label="Text elements measured" />
+</div>
+
+---
+
+## 1. The three rules
+
+1. **Headlines are extra bold (800).** Page titles, section headlines, and rail and modal titles.
+2. **Labels are bold (700) and black.** Field labels, radio and checkbox options, and the titles of targeting cards (those use 700, not 800).
+3. **Nothing is smaller than 15px.** Not hints, badges, table cells, buttons, uppercase text, or chart axes. The exceptions are in section 5.
+
+In context:
+
+<RulesInContext />
+
+---
+
+## 2. The scale
+
+<MdTable md={`
+| Size | Line height | Tailwind | Used for |
+|---|---|---|---|
+| **26px** | 30px | \`text-xl\` | Section headlines |
+| **24px** | 32px | \`text-display-xs\` | Page titles (800), KPI numbers (600) |
+| **18px** | 28px | \`text-lg\` | Panel titles (800), card titles (700) |
+| **15px** | 24px | \`text-md\` | Everything else: labels, body, buttons, tables, badges, errors |
+`} />
+
+<MdTable md={`
+| Weight | Tailwind | Used for |
+|---|---|---|
+| **800** | \`font-extrabold\` | Headlines only |
+| **700** | \`font-bold\` | Labels, card titles, required marks, badges |
+| **600** | \`font-semibold\` | Buttons, text actions, column headers, eyebrows, statuses, nav, KPI numbers |
+| **500** | \`font-medium\` | Values, errors, placeholders |
+| **400** | (default) | Body text and table cells |
+`} />
+
+**Font:** Proxima Nova (Adobe Fonts kit, 300–900), with the system monospace stack for data. `text-xs` (12px) and
+`text-sm` (13px) are not used anywhere in Prototype 3.
+
+---
+
+## 3. The styles
+
+Each specimen renders its real classes. The spec line underneath is read from the browser.
+
+<SpecimenList />
+
+---
+
+## 4. Developer matrix
+
+One row per style. **Size, weight and colour are measured live** from the rendered specimen. Classes are what to type.
+
+<StyleMatrix />
+
+**Colour tokens:** `text-primary` #181D27 (headlines, labels, values) · `text-secondary` #414651 (table cells) ·
+`text-tertiary` #535862 (body, hints, headers) · `text-placeholder` #717680 · `text-error-primary` #E7000B (errors) ·
+pink #DA6EA3 (text actions) · teal #37B6B7 / #1F7F80 (statuses, links, data chips).
+
+---
+
+## 5. Edge cases
+
+<EdgeCaseTable />
+
+---
+
+## 6. In the code
+
+Everything lives in `prototypes/das/v3/screens/type-rules.tsx`:
+
+<MdTable md={`
+| Export | What it does |
+|---|---|
+| \`HEADLINE\` | \`font-extrabold\` — put it on every headline |
+| \`LABEL\` | \`text-md font-bold text-primary\` — option labels, Start / End, anything that is a label but not a design-system Label |
+| \`FIELD_TYPE\` | Applied once on the page shell. Restyles every design-system Label (\`[data-label]\`) to LABEL and every hint / error (\`[slot=description]\`, \`[slot=errorMessage]\`) to 15px |
+| \`Button\` | The design-system Button with \`text-md\` (its own sizes are 13px) |
+| \`AdFormatDemo\` | The Studio ad preview with its caption and Pause / Replay at 15px |
+`} />
+
+**Checklist for a new v3 screen**
+
+- Render inside `DasShell`. It applies `FIELD_TYPE` and the nav-footer fix.
+- Import `Button` from `./type-rules`, not from the design system.
+- Use `text-md` for all body text. Never `text-xs`, `text-sm` or `text-[Npx]` under 15.
+- Use `size="md"` on Input, RadioGroup and Checkbox (when it has a label).
+- Use `HEADLINE` on headlines and `LABEL` on custom labels.
+- Popovers portal outside the shell, so set `**:text-md` on their panel.
+
+**Enforced in CI:** `prototypes/das/v3/screens/type-rules.test.ts` fails if any v3 screen uses `text-xs`, `text-sm`, a
+pixel size under 15, or an Input at `size="sm"`.
+
+---
+
+## 7. Measured
+
+All 43 Prototype 3 screens were rendered at 1440×1000 on 8 Oct 2026. Every visible text element was checked (5,698
+in all), and so were every input, select and textarea.
+
+<MdTable md={`
+| Check | Result |
+|---|---|
+| Product text under 15px | **0** |
+| Headlines not at 800 | **0** |
+| Form fields under 15px | **0** |
+| Text under 15px, all exceptions | Mock-ad artwork (AD, Learn more →, ADVERTISEMENT) and the prototype's Click to fill hints |
+`} />
+
+</div>

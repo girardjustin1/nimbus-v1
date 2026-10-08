@@ -38,7 +38,7 @@ const DeleteGuard = ({ name, campaigns, onCancel }: { name: string; campaigns: s
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4" onClick={onCancel}>
         <div role="dialog" aria-modal="true" aria-label={`Can't delete ${name}`} onClick={(e) => e.stopPropagation()} className="w-full max-w-md overflow-hidden rounded-2xl bg-primary shadow-2xl">
             <div className="flex flex-col gap-3 px-6 py-5">
-                <p className="flex items-center gap-2 text-lg font-semibold text-primary">
+                <p className="flex items-center gap-2 text-lg font-extrabold text-primary">
                     <AlertTriangle className="size-5 shrink-0 text-warning-primary" aria-hidden="true" />
                     This asset is live
                 </p>

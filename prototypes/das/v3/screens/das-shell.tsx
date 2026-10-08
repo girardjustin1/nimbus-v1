@@ -51,13 +51,15 @@ export interface DasShellProps {
 export const DasShell = ({ navKey, tabs, footer, concept, navItems, children }: DasShellProps) => {
     useScreenNotes(concept ? { label: concept.label, title: concept.title, notes: concept.notes.map(String) } : null);
     return (
-    <div className="flex min-h-screen bg-secondary">
+    // The shared Global Nav sets its footer links at 13px; the 15px minimum is applied
+    // from here rather than by editing the shared component.
+    <div className="flex min-h-screen bg-secondary [&_footer]:text-md">
         <GlobalNav sections={dasNavSections(navItems)} defaultActiveKey={navKey} />
 
         <main className={cx("flex min-w-0 flex-1 flex-col bg-primary", FIELD_TYPE)}>
             <header className="flex items-center justify-between gap-4 border-b border-secondary px-8 py-5">
                 <div className="flex min-w-0 items-center gap-3">
-                    <h1 className="truncate text-display-xs font-semibold text-primary">Test Publisher</h1>
+                    <h1 className={cx("truncate text-display-xs text-primary", HEADLINE)}>Test Publisher</h1>
                     <span className="rounded-md px-2 py-0.5 text-md font-semibold" style={{ color: TEAL, backgroundColor: `${TEAL}1f` }}>
                         TP
                     </span>
