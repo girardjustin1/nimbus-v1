@@ -5,6 +5,22 @@ import { Meta } from "@storybook/addon-docs/blocks";
 export const protoUrl = (name) =>
   typeof window !== "undefined" && window.location.hostname === "localhost" ? `http://localhost:5190/${name}/` : `./${name}/`;
 
+export const ProtoCard = ({ tone, soft, badge, date, title, body, meta, href, links = [] }) => (
+  <div style={{ flex: "1 1 280px", display: "flex", flexDirection: "column", background: "#FFFFFF", border: "1px solid #EAECF0", borderTop: `4px solid ${tone}`, borderRadius: 14, padding: "16px 18px" }}>
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+      <span style={{ background: soft, color: tone, fontSize: 12, fontWeight: 700, padding: "3px 10px", borderRadius: 999 }}>{badge}</span>
+      <span style={{ fontSize: 12, color: "#667085" }}>{date}</span>
+    </div>
+    <div style={{ fontSize: 16, fontWeight: 700, color: "#101828", margin: "10px 0 6px" }}>{title}</div>
+    <div style={{ fontSize: 13, lineHeight: 1.6, color: "#475467" }}>{body}</div>
+    <div style={{ fontSize: 12, color: "#667085", margin: "8px 0 14px" }}>{meta}</div>
+    <div style={{ marginTop: "auto", display: "flex", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
+      <a href={href} target="_top" style={{ background: tone, color: "#FFFFFF", padding: "7px 14px", borderRadius: 999, fontSize: 13, fontWeight: 700, textDecoration: "none" }}>Open prototype →</a>
+      {links.map(([h, label]) => <a key={label} href={h} target="_top" style={{ color: tone, fontSize: 12, fontWeight: 600 }}>{label}</a>)}
+    </div>
+  </div>
+);
+
 <div style={{ maxWidth: 900 }}>
 
 # Nimbus Design System
@@ -34,103 +50,74 @@ single button to a full application screen — in both light and dark modes.
 
 <div style={{ background: "#FFF7FB", border: "1px solid #F7D6E6", borderRadius: 18, padding: "20px 22px", margin: "8px 0 20px" }}>
   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 8 }}>
-    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#A94579" }}>Round 3 · current</div>
-    <div style={{ fontSize: 13, fontWeight: 600, color: "#101828" }}>October 2 and 5, 2026 reviews, built</div>
+    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#A94579" }}>Round 4 · current</div>
+    <div style={{ fontSize: 13, fontWeight: 600, color: "#101828" }}>Started October 17, 2026</div>
   </div>
   <div style={{ display: "flex", flexDirection: "column", background: "#FFFFFF", border: "1px solid #EAECF0", borderTop: "4px solid #A94579", borderRadius: 14, padding: "18px 20px", marginTop: 14 }}>
-    <span style={{ alignSelf: "flex-start", background: "#FCE7F1", color: "#A94579", fontSize: 12, fontWeight: 700, padding: "3px 10px", borderRadius: 999 }}>Deal Activation System · v3</span>
-    <div style={{ fontSize: 20, fontWeight: 700, color: "#101828", margin: "10px 0 6px" }}>One way to pick something, used seven times</div>
+    <span style={{ alignSelf: "flex-start", background: "#FCE7F1", color: "#A94579", fontSize: 12, fontWeight: 700, padding: "3px 10px", borderRadius: 999 }}>Deal Activation System · v4</span>
+    <div style={{ fontSize: 20, fontWeight: 700, color: "#101828", margin: "10px 0 6px" }}>After a campaign exists: the list, one campaign, and where it delivered</div>
     <div style={{ fontSize: 14, lineHeight: 1.6, color: "#475467" }}>
-      The review was blunt about the premise: <em>“I'm not going to look through any list at all. I'm going to do a type ahead and then it's going to filter down my giant list for me.”</em> Round 2 assumed you would browse. Everything you choose from a library you already built now behaves identically — click the field or press <strong>↓</strong> for the whole list alphabetically, type to narrow it, <strong>↑ ↓</strong> and <strong>Enter</strong> to take one — and the page holds still until you have chosen.
+      The 16 Oct review, built. Setup goes to build as it is; this round is the three screens after it. <strong>Manage campaigns</strong> is staging's table again, under four chips — Live, Queued, Total spend and a traffic-light <strong>Campaign Health</strong>. A campaign's <strong>overview</strong> gets the dashboard's breadcrumb strip, leads with status, rule, flight dates, platform and apps, keeps one summary, and shows dollars in its chart tooltip. <strong>Full performance</strong> is new: break a campaign down by creative, platform, geo, app and keywords, pivot two at a time, and export the view as CSV. Creative previews are gone everywhere. Where the review left a choice open, the options are side by side in <em>Oct 17</em> in Storybook.
     </div>
-    <ul style={{ fontSize: 14, lineHeight: 1.65, color: "#475467", margin: "12px 0 6px", paddingLeft: 18 }}>
-      <li><strong>Apps and Keywords end in a table, not chips.</strong> A column can say which of two identically-named apps you are looking at, and whether a keyword is actually arriving in traffic. A chip cannot.</li>
-      <li><strong>Deal asks only for what each option needs</strong> — a name to generate an ID, a name and an ID to create one, or a search that fills both in. Campaign Name and Flight Dates are sections of their own now, level with Auction Rules; Daily Impression Cap is gone.</li>
-      <li><strong>The rail counts the product's five steps</strong> — General, Budget, Targeting, Creative, Review — instead of nine headings. Review turns pink when nothing is missing, and <strong>Publish &amp; Duplicate</strong> is back, in the Review modal, with the confirm the review asked for.</li>
-      <li><strong>Geos keeps its tree</strong>, because taking a whole region is the common case: the checkbox selects, a click opens a region, a double-click rolls it up, and nothing moves while you work.</li>
-      <li><strong>Creative previews are bounded by the search</strong> — they render once you are down to twelve or fewer — and any chosen creative opens full size.</li>
-      <li><strong>Ad Unit has a ?</strong> that shows what each of the four units looks like in an app, and auction rule cards are clickable end to end rather than on the dot.</li>
-    </ul>
-    <div style={{ fontSize: 14, lineHeight: 1.6, color: "#475467", margin: "4px 0 6px" }}>
-      <strong>From the 5 Oct review:</strong> Proxima Nova, with extra-bold headlines, bold black labels and nothing under 15px. Instructions sit above the control, so an open list can't cover them. Flight Dates are dates only. Every picker has a <strong>Done</strong> button. A published campaign offers <strong>Duplicate</strong>, and the Create Campaign / View Campaigns tabs are gone.
-    </div>
-    <div style={{ fontSize: 13, color: "#667085", margin: "8px 0 6px" }}>43 screens · libraries grown to 50 deals, 50 keywords, 50 assets and 52 apps, each spanning A–Z so no first keystroke dead-ends</div>
-    <div style={{ fontSize: 13, color: "#667085", margin: "0 0 16px" }}>
-      Click any empty field to fill it, or press <strong>Fill page</strong>. The toolbar also has a <strong>Fill / Type</strong> switch, which turns click-to-fill off so you can type, and a <strong>Copy</strong> switch that shows staging's original wording, or ours with new copy highlighted or hidden.
-    </div>
+    <div style={{ fontSize: 13, color: "#667085", margin: "10px 0 16px" }}>51 screens · click any empty field to fill it, or press <strong>Fill page</strong></div>
     <div style={{ marginTop: "auto", display: "flex", alignItems: "center", flexWrap: "wrap", gap: 14 }}>
-      <a href={protoUrl("das/v3")} target="_top" style={{ background: "#A94579", color: "#FFFFFF", padding: "9px 16px", borderRadius: 999, fontSize: 14, fontWeight: 700, textDecoration: "none" }}>Open prototype →</a>
+      <a href={protoUrl("das/v4")} target="_top" style={{ background: "#A94579", color: "#FFFFFF", padding: "9px 16px", borderRadius: 999, fontSize: 14, fontWeight: 700, textDecoration: "none" }}>Open prototype →</a>
+      <a href={`${protoUrl("das/v4")}#/campaigns`} target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Manage campaigns</a>
+      <a href={`${protoUrl("das/v4")}#/view-d`} target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Full performance</a>
+      <a href="./?path=/docs/oct-17-overview--docs" target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Oct 17 in Storybook</a>
       <a href="./?path=/docs/deal-activation-system-campaign-setup-spec--docs" target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Campaign Setup spec</a>
-      <a href={`${protoUrl("das/v3")}#/setup-empty`} target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Empty form</a>
-      <a href={`${protoUrl("das/v3")}#/setup-ready`} target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Review &amp; Publish &amp; Duplicate</a>
-      <a href={`${protoUrl("das/v3")}#/keyword-health`} target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Keyword Health</a>
-    </div>
-  </div>
-</div>
-
-<div style={{ background: "#F9FAFB", border: "1px solid #EAECF0", borderRadius: 18, padding: "20px 22px", margin: "8px 0 20px" }}>
-  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 8 }}>
-    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#475467" }}>Round 2 · reviewed, frozen</div>
-    <div style={{ fontSize: 13, fontWeight: 600, color: "#101828" }}>October 1, 2026 review</div>
-  </div>
-  <div style={{ fontSize: 13, color: "#667085", marginTop: 6 }}>The version Round 3 was reviewed against on 2 Oct. Kept exactly as it was.</div>
-  <div style={{ display: "flex", flexDirection: "column", background: "#FFFFFF", border: "1px solid #EAECF0", borderTop: "4px solid #A94579", borderRadius: 14, padding: "18px 20px", marginTop: 14 }}>
-    <span style={{ alignSelf: "flex-start", background: "#FCE7F1", color: "#A94579", fontSize: 12, fontWeight: 700, padding: "3px 10px", borderRadius: 999 }}>Deal Activation System · v2</span>
-    <div style={{ fontSize: 20, fontWeight: 700, color: "#101828", margin: "10px 0 6px" }}>One page, one rail, and the libraries behind it</div>
-    <div style={{ fontSize: 14, lineHeight: 1.6, color: "#475467" }}>
-      The duplicated “On this page” rail is gone — the right-hand rail now both summarises the campaign and jumps you to anything that needs fixing. It carries one button: Review, grey until nothing is missing, opening a modal where the campaign is approved and published. Everything you can target on is its own module at the same level, and the geo and app pickers really work. Two sections that the product has but the prototype never did: an <strong>asset library</strong> where a creative is made by pasting its markup and previewed live as you type, and a <strong>keyword library</strong> that mirrors it — both reachable from inside a campaign and returning you to it with the thing you just made attached. <strong>Keyword Health</strong> answers the question the charter implies but never addresses: are your keywords actually arriving?
-    </div>
-    <div style={{ fontSize: 13, color: "#667085", margin: "10px 0 6px" }}>Deal activation setup · Right rail concepts · Manage assets · Manage keywords · Manage campaigns · After publishing — 38 screens</div>
-    <div style={{ fontSize: 13, color: "#667085", margin: "0 0 16px" }}>
-      Wording follows the product exactly; anything we invented carries an <span style={{ border: "1px dashed #DA6EA399", color: "#A94579", borderRadius: 999, padding: "1px 7px", fontSize: 11, fontWeight: 700, textTransform: "uppercase" }}>Added</span> chip. Click any empty field to fill it, or press <strong>Fill page</strong> in the toolbar — switch to <strong>Bad</strong> to see the error states.
-    </div>
-    <div style={{ marginTop: "auto", display: "flex", alignItems: "center", flexWrap: "wrap", gap: 14 }}>
-      <a href={protoUrl("das/v2")} target="_top" style={{ background: "#A94579", color: "#FFFFFF", padding: "9px 16px", borderRadius: 999, fontSize: 14, fontWeight: 700, textDecoration: "none" }}>Open prototype →</a>
-      <a href={`${protoUrl("das/v2")}#/keyword-health`} target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Keyword Health</a>
-      <a href={`${protoUrl("das/v2")}#/asset-setup`} target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Asset Setup</a>
-      <a href={`${protoUrl("das/v2")}#/setup-reviewed`} target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Review modal</a>
-      <a href={`${protoUrl("das/v2")}#/rail-validation`} target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Rail: the open question</a>
+      <a href="./?path=/docs/audits-typography-rules--docs" target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Typography Rules</a>
     </div>
   </div>
 </div>
 
 <div style={{ background: "#F9FAFB", border: "1px solid #EAECF0", borderRadius: 18, padding: "20px 22px", margin: "0 0 28px" }}>
   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 8 }}>
-    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#475467" }}>Round 1 · earlier</div>
-    <div style={{ fontSize: 13, fontWeight: 600, color: "#101828" }}>September 22, 2026 review</div>
+    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#475467" }}>Earlier rounds &amp; other prototypes</div>
+    <div style={{ fontSize: 13, fontWeight: 600, color: "#101828" }}>Kept as reviewed</div>
   </div>
-  <div style={{ fontSize: 13, color: "#667085", marginTop: 6 }}>Kept as reviewed. Terminology has been brought in line with Round 2, but the layouts are unchanged.</div>
+  <div style={{ fontSize: 13, color: "#667085", marginTop: 6 }}>Each round is frozen at the version that was reviewed, so they can be compared side by side.</div>
   <div style={{ display: "flex", flexWrap: "wrap", gap: 16, marginTop: 14 }}>
-  <div style={{ flex: "1 1 360px", display: "flex", flexDirection: "column", background: "#FFFFFF", border: "1px solid #EAECF0", borderTop: "4px solid #1F7F80", borderRadius: 14, padding: "18px 20px" }}>
-    <span style={{ alignSelf: "flex-start", background: "#E6F6F6", color: "#1F7F80", fontSize: 12, fontWeight: 700, padding: "3px 10px", borderRadius: 999 }}>Deal Activation System · v1</span>
-    <div style={{ fontSize: 18, fontWeight: 700, color: "#101828", margin: "10px 0 6px" }}>Extended Targeting</div>
-    <div style={{ fontSize: 14, lineHeight: 1.6, color: "#475467" }}>Set up a direct-sold campaign on one page, target it with the publisher's own keywords plus geo, platform, app and ad unit, manage keywords in a new library, and see at a glance whether every campaign is on pace to deliver.</div>
-    <div style={{ fontSize: 13, color: "#667085", margin: "10px 0 16px" }}>Campaign setup · Targeting · Keyword library · Manage campaigns · Reporting · View campaign — 49 screens</div>
-    <div style={{ marginTop: "auto", display: "flex", alignItems: "center", flexWrap: "wrap", gap: 14 }}>
-      <a href={protoUrl("das/v1")} target="_top" style={{ background: "#1F7F80", color: "#FFFFFF", padding: "9px 16px", borderRadius: 999, fontSize: 14, fontWeight: 700, textDecoration: "none" }}>Open prototype →</a>
-      <a href="./?path=/docs/deal-activation-system-overview--docs" target="_top" style={{ color: "#1F7F80", fontSize: 13, fontWeight: 600 }}>Storybook concepts</a>
-    </div>
-  </div>
-  <div style={{ flex: "1 1 360px", display: "flex", flexDirection: "column", background: "#FFFFFF", border: "1px solid #EAECF0", borderTop: "4px solid #A94579", borderRadius: 14, padding: "18px 20px" }}>
-    <span style={{ alignSelf: "flex-start", background: "#FCE7F1", color: "#A94579", fontSize: 12, fontWeight: 700, padding: "3px 10px", borderRadius: 999 }}>Performance Insights</span>
-    <div style={{ fontSize: 18, fontWeight: 700, color: "#101828", margin: "10px 0 6px" }}>Reporting redesign</div>
-    <div style={{ fontSize: 14, lineHeight: 1.6, color: "#475467" }}>Start from a template or saved query instead of a checkbox wall, ask for data as one readable sentence that only runs on demand, compare every number to the previous period, and build any breakdown by dragging fields into a pivot. Saved queries show their dates, trend and latest number at a glance.</div>
-    <div style={{ fontSize: 13, color: "#667085", margin: "10px 0 16px" }}>Start page · Question bar · Drag-to-build explorer · Saved queries — 44 screens</div>
-    <div style={{ marginTop: "auto", display: "flex", alignItems: "center", flexWrap: "wrap", gap: 14 }}>
-      <a href={protoUrl("performance-insights")} target="_top" style={{ background: "#A94579", color: "#FFFFFF", padding: "9px 16px", borderRadius: 999, fontSize: 14, fontWeight: 700, textDecoration: "none" }}>Open prototype →</a>
-      <a href="./?path=/docs/performance-insights-overview--docs" target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Storybook concepts</a>
-    </div>
-  </div>
-  <div style={{ flex: "1 1 360px", display: "flex", flexDirection: "column", background: "#FFFFFF", border: "1px solid #EAECF0", borderTop: "4px solid #3538CD", borderRadius: 14, padding: "18px 20px" }}>
-    <span style={{ alignSelf: "flex-start", background: "#EEF4FF", color: "#3538CD", fontSize: 12, fontWeight: 700, padding: "3px 10px", borderRadius: 999 }}>DAS Studio</span>
-    <div style={{ fontSize: 18, fontWeight: 700, color: "#101828", margin: "10px 0 6px" }}>Build with the result in view</div>
-    <div style={{ fontSize: 14, lineHeight: 1.6, color: "#475467" }}>A guided, full-screen builder for deal campaigns: goal tiles, live delivery estimates while you set audience, budget and bid, and the ad rendered in a real app screen as you build it, from banner to rewarded video.</div>
-    <div style={{ fontSize: 13, color: "#667085", margin: "10px 0 16px" }}>Goal · Deal · Audience · Budget · Creative & preview · Review · Full-screen preview — 24 screens, 11 components</div>
-    <div style={{ marginTop: "auto", display: "flex", alignItems: "center", flexWrap: "wrap", gap: 14 }}>
-      <a href={protoUrl("das-studio")} target="_top" style={{ background: "#3538CD", color: "#FFFFFF", padding: "9px 16px", borderRadius: 999, fontSize: 14, fontWeight: 700, textDecoration: "none" }}>Open prototype →</a>
-      <a href="./?path=/docs/deal-activation-system-studio-concept-overview--docs" target="_top" style={{ color: "#3538CD", fontSize: 13, fontWeight: 600 }}>Storybook concept</a>
-    </div>
-  </div>
+    <ProtoCard
+      tone="#A94579" soft="#FCE7F1" badge="DAS · v3 · Round 3" date="Oct 2 & 5, 2026 reviews"
+      title="One way to pick something, used seven times"
+      body="Every library field works the same way: type to narrow, arrows and Enter to pick. Apps and keywords end in tables, the rail counts five steps, and the 5 Oct type rules, dates only and Done buttons are in."
+      meta="43 screens"
+      href={protoUrl("das/v3")}
+      links={[[`${protoUrl("das/v3")}#/setup-empty`, "Empty form"], [`${protoUrl("das/v3")}#/keyword-health`, "Keyword Health"]]}
+    />
+    <ProtoCard
+      tone="#A94579" soft="#FCE7F1" badge="DAS · v2 · Round 2" date="Oct 1, 2026 review"
+      title="One page, one rail, and the libraries behind it"
+      body="One rail that summarises and jumps to problems, targeting as peer modules, working geo and app pickers, an asset library with live preview, and a keyword library with Keyword Health."
+      meta="38 screens"
+      href={protoUrl("das/v2")}
+      links={[[`${protoUrl("das/v2")}#/setup-reviewed`, "Review modal"], [`${protoUrl("das/v2")}#/asset-setup`, "Asset Setup"]]}
+    />
+    <ProtoCard
+      tone="#1F7F80" soft="#E6F6F6" badge="DAS · v1 · Round 1" date="Sep 22, 2026 review"
+      title="Extended Targeting"
+      body="One-page setup, the publisher's own keywords plus geo, platform, app and ad unit targets, a keyword library, and at-a-glance pacing for every campaign."
+      meta="49 screens"
+      href={protoUrl("das/v1")}
+      links={[["./?path=/docs/deal-activation-system-overview--docs", "Storybook concepts"]]}
+    />
+    <ProtoCard
+      tone="#A94579" soft="#FCE7F1" badge="Performance Insights" date="Sep 22, 2026 review"
+      title="Reporting redesign"
+      body="Start from a template or saved query, ask for data as one readable sentence, compare every number to the previous period, and build any breakdown by dragging fields into a pivot."
+      meta="44 screens"
+      href={protoUrl("performance-insights")}
+      links={[["./?path=/docs/performance-insights-overview--docs", "Storybook concepts"]]}
+    />
+    <ProtoCard
+      tone="#3538CD" soft="#EEF4FF" badge="DAS Studio" date="Sep 22, 2026"
+      title="Build with the result in view"
+      body="A guided, full-screen builder: goal tiles, live delivery estimates while you set audience, budget and bid, and the ad rendered in a real app screen as you build it."
+      meta="24 screens, 11 components"
+      href={protoUrl("das-studio")}
+      links={[["./?path=/docs/deal-activation-system-studio-concept-overview--docs", "Storybook concept"]]}
+    />
   </div>
 </div>
 
@@ -163,7 +150,7 @@ single button to a full application screen — in both light and dark modes.
   </div>
 
   <div style={{ fontSize: 13, color: "#667085", marginTop: 14 }}>
-    <strong style={{ color: "#344054" }}>Changelog</strong> · Oct 5, 2026: DAS v3 updated from the 5 Oct review — Proxima Nova loaded, extra-bold headlines and a 15px minimum, instructions above controls, dates only, Done on every picker, Duplicate once published, no setup tabs, and a Copy switch comparing staging's wording with ours; <em>Deal Activation System</em> in Storybook now holds the Campaign Setup spec and every component on the setup page (earlier rounds, the Studio concept and Prototype 3's pages are hidden but still open by link) · Oct 3, 2026: DAS v3 (Round 3) built from the 2 Oct review — one search-and-select behaviour across all seven pickers, Apps and Keywords as tables, the Deal section rebuilt around its three options, Campaign Name and Flight Dates promoted to sections, a five-step rail, Publish &amp; Duplicate in the Review modal, and a Fill / Type toggle in the toolbar; typography audit of the production dashboard added under Audits · Oct 1, 2026: DAS v2 (Round 2) — one rail instead of two ending in a single Review button and a publish modal, targeting promoted to peer modules, working geo and app pickers, a new asset library (with macro and wrapped-VAST validation) and keyword library (with Keyword Health), click-to-fill on every field, and terminology aligned to the product with ADDED chips on anything invented · Sep 22, 2026: DAS Studio concept and prototype added; DAS gets View campaign pages and Publish error states; Performance Insights gets Saved Queries concepts and a drag-to-build explorer; both earlier prototypes now run as standalone, versioned apps (v1) · Sep 18, 2026: DAS kickoff, <em>Deal Activation System</em> category added.
+    <strong style={{ color: "#344054" }}>Changelog</strong> · Oct 17, 2026: DAS v4 (Round 4) built from the 16 Oct review — Manage campaigns back to the staging table under Live, Queued, Total spend and Campaign Health chips; the campaign overview tightened (breadcrumb strip, flight dates, platform and apps up top, one summary, dollars in the tooltip); a new Full performance screen with breakdowns, pivots and CSV export; creative previews removed; a new <em>Oct 17</em> category holds the applied changes and the open choices as concepts. Round 3 is frozen as reviewed · Oct 5, 2026: DAS v3 updated from the 5 Oct review — Proxima Nova loaded, extra-bold headlines and a 15px minimum, instructions above controls, dates only, Done on every picker, Duplicate once published, no setup tabs, and a Copy switch comparing staging's wording with ours; <em>Deal Activation System</em> in Storybook now holds the Campaign Setup spec and every component on the setup page (earlier rounds, the Studio concept and Prototype 3's pages are hidden but still open by link) · Oct 3, 2026: DAS v3 (Round 3) built from the 2 Oct review — one search-and-select behaviour across all seven pickers, Apps and Keywords as tables, the Deal section rebuilt around its three options, Campaign Name and Flight Dates promoted to sections, a five-step rail, Publish &amp; Duplicate in the Review modal, and a Fill / Type toggle in the toolbar; typography audit of the production dashboard added under Audits · Oct 1, 2026: DAS v2 (Round 2) — one rail instead of two ending in a single Review button and a publish modal, targeting promoted to peer modules, working geo and app pickers, a new asset library (with macro and wrapped-VAST validation) and keyword library (with Keyword Health), click-to-fill on every field, and terminology aligned to the product with ADDED chips on anything invented · Sep 22, 2026: DAS Studio concept and prototype added; DAS gets View campaign pages and Publish error states; Performance Insights gets Saved Queries concepts and a drag-to-build explorer; both earlier prototypes now run as standalone, versioned apps (v1) · Sep 18, 2026: DAS kickoff, <em>Deal Activation System</em> category added.
   </div>
 </div>
 

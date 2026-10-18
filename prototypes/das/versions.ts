@@ -23,6 +23,13 @@ export const versions: ProtoVersion[] = [
         summary:
             "The 2 Oct review, built. Everything you choose from a library you already made — deal, priority, frequency cap, geos, apps, keywords, creative — now behaves the same way: click or press Down for the whole list alphabetically, type to narrow it, arrows and Enter to pick, with the page held still until you choose. Apps and keywords end in a table rather than chips. Deal asks only for what each option needs, and Campaign Name and Flight Dates are sections of their own. The rail counts the product's five steps and Publish & Duplicate is back, in the Review modal. Rounds 1 and 2 stay frozen as the versions that were reviewed.",
     },
+    {
+        id: "v4",
+        label: "Round 4",
+        date: "October 17, 2026",
+        summary:
+            "The 16 Oct review, built. Setup goes to build as it is; this round is what comes after it. Manage campaigns is staging's table again, under four chips — Live, Queued, Total spend and a traffic-light Campaign Health that filters the table. A campaign's overview gets the dashboard's breadcrumb strip, leads with status, rule, flight dates, platform and apps, keeps one summary, and shows dollars in its chart tooltip. Full performance is new: break a campaign down by creative, platform, geo, app and keywords, pivot two at a time, and export what you see as CSV. Creative previews are gone everywhere. Open choices are screens of their own, marked Concept.",
+    },
 ];
 
 export const latest = versions[versions.length - 1].id;

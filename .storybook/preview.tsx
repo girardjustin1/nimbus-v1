@@ -83,7 +83,16 @@ const preview: Preview = {
                         ],
                     ],
                     "*",
-                    // 8) Sept 22 review — staged revisions, last so it reads as a batch
+                    // 8) Oct 17 review batch — Round 4, from the 16 Oct review. Sits with the
+                    //    other review batches, newest first.
+                    "Oct 17",
+                    [
+                        "Overview",
+                        "Applied Changes",
+                        "Concepts",
+                        ["Campaign Health", "Campaigns Table", "Overview Summary", "Full Performance Layout", "Keyword Reporting"],
+                    ],
+                    // 9) Sept 22 review — staged revisions, last so it reads as a batch
                     //    of pending changes rather than part of the concepts themselves.
                     "Sept 22",
                     [

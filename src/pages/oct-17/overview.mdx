@@ -1,0 +1,107 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { framing, items } from "./feedback";
+
+<Meta title="Oct 17/Overview" />
+
+export const Chip = ({ children, tone }) => (
+  <span style={{
+    background: tone === "Applied" ? "#E6F6F6" : tone === "Concepts" ? "#FFF4E5" : "#FBE9F1",
+    color: tone === "Applied" ? "#1F7F80" : tone === "Concepts" ? "#B54708" : "#A94579",
+    borderRadius: 999, padding: "1px 8px", fontSize: 15, fontWeight: 700, whiteSpace: "nowrap",
+  }}>{children}</span>
+);
+
+export const th = { textAlign: "left", fontSize: 15, fontWeight: 700, color: "#101828", padding: "9px 12px", borderBottom: "1px solid #EAECF0", background: "#F9FAFB" };
+export const td = { fontSize: 15, color: "#344054", padding: "10px 12px", borderBottom: "1px solid #EAECF0", verticalAlign: "top" };
+
+<div style={{ maxWidth: 920 }}>
+
+# Oct 17 · Round 4
+
+Round 3 was reviewed on 16 October. This category holds what came out of it: the
+changes that were decided outright, already built into prototype **v4**, and the ones
+where the call left a choice open, built as concepts side by side so the choice is made
+by looking.
+
+> “{framing.quote}”
+>
+> — Product, 16 Oct review
+
+{framing.decision}
+
+**Manage campaigns → campaign overview → Full performance.** The list is for scanning
+and comparing, the overview says how one campaign is pacing, and Full performance says
+where.
+
+## What's in here
+
+<div style={{ overflowX: "auto", border: "1px solid #EAECF0", borderRadius: 12, margin: "12px 0 24px" }}>
+  <table style={{ width: "100%", borderCollapse: "collapse", margin: 0 }}>
+    <thead><tr><th style={th}>Change</th><th style={th}>Status</th><th style={th}>What it decides</th></tr></thead>
+    <tbody>
+      {items.map((i) => (
+        <tr key={i.slug}>
+          <td style={{ ...td, fontWeight: 700, color: "#101828" }}>{i.title}</td>
+          <td style={td}><Chip tone={i.status}>{i.status}</Chip></td>
+          <td style={{ ...td, color: "#475467" }}>{i.decision[0]}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+- **Applied** — decided on the call and in prototype v4. *Oct 17 › Applied Changes*
+  shows each one next to Round 3 as it was reviewed, so anything removed is easy to put
+  back.
+- **Concepts** — the call left a choice. *Oct 17 › Concepts* has one folder per
+  question, with the options as stories you can click through. The prototype opens on
+  the first option, or the one marked as the default.
+- **To confirm** — built on a reading that still needs an answer.
+
+## Concepts, one question per folder
+
+| Folder | The question | Options |
+| --- | --- | --- |
+| Campaign Health | How should the traffic light read in its chip? | A counts by colour · B a segmented bar · C what needs attention, by name |
+| Campaigns Table | Should the table say which campaign is which colour? | A staging's columns exactly · B plus a Campaign Health column |
+| Overview Summary | Sidebar or cards — Product asked for one, not both | A sidebar · B cards (the prototype's default) |
+| Full Performance Layout | Where the breakdown controls sit | A across the top, like Performance Insights · B down the left |
+| Keyword Reporting | Do a campaign's keywords report as one set, or one by one? | A one set · B one by one |
+
+## Charter check: keyword matching
+
+Asked for on the call, because it decides how keywords are reported.
+
+- **The charter does not say all-or-nothing.** Its setup wireframe has a *Match Logic*
+  toggle — “ANY keyword matches” / “ALL must match” — and says to **default to ANY**.
+- Match logic was dropped from setup on 1 Oct, so which one the backend does is
+  currently unstated.
+- The charter's **reporting guardrail** keeps per-keyword breakdowns to CSV and the API
+  at launch, with no per-keyword charting in the dashboard.
+
+Full performance is built on Product's reading — keywords as one set, which is one row
+per campaign and stays inside the guardrail. Needs an answer before build.
+
+## Campaign Health maths is a placeholder
+
+Product is settling the rule with engineering, and said it can run in the front end.
+Until then the prototype uses: **green** when spend is within 10% of the share of the
+flight that has gone (ahead counts as green); **orange** when it's behind but the daily
+spend needed to finish is at most 1.5× today's; **red** beyond that. Only live campaigns
+with a budget have a health. It is written down once, in
+`prototypes/das/v4/screens/campaign-data.ts`, so it can be replaced in one place.
+
+## Kept on purpose
+
+- **The Ad Unit guide** in Targeting still animates each unit type. It explains what an
+  interstitial is, not what the publisher's creative looks like. It goes if that still
+  reads as a hint at previews.
+
+## Still open from before
+
+- **Device Language** is in the charter but was dropped on 1 Oct; waiting on Product.
+  Manage campaigns no longer shows a language anywhere.
+- **Platform values.** The call listed “iOS, Android, Unity”. The charter treats Unity
+  as an SDK, so the prototype's platforms are iOS and Android.
+
+</div>
