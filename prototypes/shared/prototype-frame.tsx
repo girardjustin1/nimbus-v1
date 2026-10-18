@@ -58,6 +58,9 @@ const useHashRoute = () => {
 /** Storybook (design system) lives at the Pages root; locally it runs on its own port. */
 const storybookUrl = () => (window.location.hostname === "localhost" ? "http://localhost:6006/" : "../../");
 
+/** Versions that show the Fill / Type switch. Round 3 introduced it; earlier rounds keep the toolbar they were reviewed with. */
+const CLICK_TO_FILL = new Set(["v3", "v4"]);
+
 const selectClass = "rounded-md border border-white/15 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-white/40";
 
 const Toolbar = ({ meta, screens, activeId, extras }: { meta: ProtoMeta; screens: ProtoScreen[]; activeId?: string; extras?: ReactNode }) => {
@@ -127,7 +130,7 @@ const Toolbar = ({ meta, screens, activeId, extras }: { meta: ProtoMeta; screens
 
             <div className="ml-auto flex items-center gap-3">
                 {activeId && <ScreenInfoButton />}
-                {activeId && <DemoFillControls onFillPage={runPageFill} clickToFill={meta.current === "v3"} />}
+                {activeId && <DemoFillControls onFillPage={runPageFill} clickToFill={CLICK_TO_FILL.has(meta.current)} />}
                 {extras}
                 <a href="#/" className="inline-flex items-center gap-1.5 opacity-80 hover:opacity-100">
                     <Grid01 className="size-4" aria-hidden="true" /> All screens
