@@ -4,8 +4,8 @@ import { bySlug } from "../feedback";
 import { Compare } from "../note";
 
 /**
- * Oct 17 · the campaigns table. Product asked for staging's table exactly. The one open
- * question is whether a table with a health chip above it should say which row is which.
+ * Oct 17 · the campaigns table. Product asked for staging's table exactly. Still open
+ * after 19 Oct: whether the table should also say which row is which colour.
  */
 const meta = {
     title: "Oct 17/Concepts/Campaigns Table",

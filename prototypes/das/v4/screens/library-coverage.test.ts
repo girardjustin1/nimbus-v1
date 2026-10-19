@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { allSeedAssets } from "./asset-data";
 import { deals } from "./deal-data";
 import { allKeywords } from "./keyword-data";
-import { APP_LIST } from "./target-data";
+import { APP_LIST, LANGUAGES } from "./target-data";
 
 /**
  * Round 3 replaced four browse-and-scroll controls with type-aheads, and a type-ahead
@@ -60,9 +60,10 @@ describe("keywords", () => {
 });
 
 describe("apps", () => {
-    it("has every app on both platforms, with unique ids", () => {
-        expect(APP_LIST).toHaveLength(52);
-        expect(new Set(APP_LIST.map((a) => a.id)).size).toBe(52);
+    it("has every app on iOS and Android, the games on Unity too, with unique ids", () => {
+        expect(APP_LIST.filter((a) => a.platform !== "Unity")).toHaveLength(52);
+        expect(APP_LIST.filter((a) => a.platform === "Unity")).toHaveLength(4);
+        expect(new Set(APP_LIST.map((a) => a.id)).size).toBe(56);
         expect(new Set(APP_LIST.map((a) => a.name)).size).toBe(26);
     });
 
@@ -100,5 +101,20 @@ describe("assets", () => {
             if (a.type === "VAST (xml)") expect(a.size, a.name).toBe("N/A");
             else expect(["Full screen", "Medium Rectangle", "Banner", "Invalid"], a.name).toContain(a.size);
         }
+    });
+});
+
+describe("device languages", () => {
+    it("starts one with every letter", () => {
+        expect(missingInitials(LANGUAGES.map((l) => l.name))).toEqual([]);
+    });
+
+    it("matches something for every letter typed, name or code", () => {
+        expect(missingMatches(LANGUAGES.map((l) => `${l.name} ${l.id}`))).toEqual([]);
+    });
+
+    it("has unique ISO 639-1 codes", () => {
+        expect(new Set(LANGUAGES.map((l) => l.id)).size).toBe(LANGUAGES.length);
+        expect(LANGUAGES.every((l) => /^[a-z]{2}$/.test(l.id))).toBe(true);
     });
 });

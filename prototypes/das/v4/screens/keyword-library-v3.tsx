@@ -36,7 +36,8 @@ import { downloadCsv, useBatch } from "./batch-data";
  * it was one note against however many keywords you pasted, which is not a thing a note
  * can mean.
  *
- * KILLED ON 1 OCT, do not reintroduce: ANY/ALL match logic, and device language.
+ * No ANY/ALL toggle: keywords match on ANY, with no setting (confirmed 19 Oct).
+ * Device language was dropped on 1 Oct and restored on 19 Oct as its own target.
  *
  * Every term on this screen carries an ADDED chip at the page level: keywords do not
  * exist in DAS today, so none of this wording can be checked against the product.

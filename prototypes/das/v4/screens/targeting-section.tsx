@@ -5,6 +5,7 @@ import { AdUnitHelp, AdUnitTypeFieldV3 } from "./ad-unit";
 import type { SetupForm } from "../../v1/screens/setup-data";
 import { ExistingTargetsV3 } from "./existing-targets";
 import { type KeywordEntry, KeywordTargetBlock } from "./keyword-target";
+import { LanguageTargetBlock } from "./language-target";
 
 /**
  * Round 3 targeting — one module per thing you can target on, all at the same level.
@@ -15,11 +16,13 @@ import { type KeywordEntry, KeywordTargetBlock } from "./keyword-target";
  *   Targeting charter — Match Logic has a wireframe in it — and v1 is the record of what
  *   was built to that charter and reviewed on 22 Sep.
  *
- *   Round 2 dropped both, on the 1 Oct instruction: matching is exact, and device
- *   language was never in the charter. Geos, Platform and Apps are promoted out of the
+ *   Round 2 dropped both on 1 Oct. The note behind it said device language was never
+ *   in the charter; it is, and Round 4 restores it. Geos, Platform and Apps are promoted out of the
  *   loose row they used to sit in, so everything targetable reads at one level.
  *
- * If the charter is amended, this is the file that stops needing to exist.
+ * Round 4 (19 Oct): Device Language is back — Product confirmed it is in the charter
+ * — with the same search-and-table pattern as Apps and Keywords. Match logic stays out:
+ * keywords match on ANY, the way geos do, with no toggle. Platform gains Unity.
  */
 
 type Setter = (p: Partial<SetupForm>) => void;
@@ -58,6 +61,7 @@ export const TargetingSectionV3 = ({
             <TargetModule title="Ad Unit" help={<AdUnitHelp />}>
                 <AdUnitTypeFieldV3 value={form.adUnits} onChange={(adUnits) => set({ adUnits })} />
             </TargetModule>
+            <LanguageTargetBlock value={form.languages} onChange={(languages) => set({ languages })} />
             <KeywordTargetBlock value={form.keywords} onChange={(keywords) => set({ keywords })} entry={keywordEntry} screenId={screenId} />
         </div>
     </Section>

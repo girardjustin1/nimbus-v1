@@ -206,7 +206,7 @@ const Highlight = ({ text, query }: { text: string; query: string }) => {
     );
 };
 
-const searchText = (c: Campaign) => [c.name, c.dealName, c.dealId, c.status, c.rule, c.geos, c.platforms, ...c.apps, ...c.adUnits, ...c.keywords].join(" ").toLowerCase();
+const searchText = (c: Campaign) => [c.name, c.dealName, c.dealId, c.status, c.rule, c.geos, c.platforms, ...c.apps, ...c.adUnits, ...c.languages, ...c.keywords].join(" ").toLowerCase();
 
 /* -------------------------------------------------------------- Page --- */
 

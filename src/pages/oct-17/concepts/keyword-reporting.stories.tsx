@@ -4,8 +4,11 @@ import { bySlug } from "../feedback";
 import { Compare } from "../note";
 
 /**
- * Oct 17 · how keywords report on Full performance. It depends on how they match, which
- * the charter does not settle (see the note). Shown on Over 21 Midwest, which targets two.
+ * Oct 17 · how keywords report on Full performance.
+ *
+ * 19 Oct: keywords match on ANY, so each keyword reports on its own. Still open: may
+ * per-keyword figures be on screen, or only in a CSV as the charter says? Shown on Over 21
+ * Midwest, which targets two keywords.
  */
 const meta = {
     title: "Oct 17/Concepts/Keyword Reporting",
@@ -17,20 +20,20 @@ type Story = StoryObj<typeof meta>;
 
 const item = bySlug("keyword-reporting");
 
-export const AsOneSet: Story = {
-    name: "A · The campaign's keywords as one set",
+export const OnScreen: Story = {
+    name: "A · On screen (the prototype's default)",
     render: () => (
-        <Compare item={item} kind="A" title="All-or-nothing: “over21 + midwest” is one row. Pivot it against platform, geo or creative. Inside the charter's guardrail">
-            <FullPerformance id="c3" breakdown={["Keywords", "Platform"]} keywordMode="set" />
+        <Compare item={item} kind="A" title="Keyword is a breakdown like any other: one row per keyword, pivot it against platform">
+            <FullPerformance id="c3" breakdown={["Keyword", "Platform"]} />
         </Compare>
     ),
 };
 
-export const OneByOne: Story = {
-    name: "B · Each keyword on its own",
+export const CsvOnly: Story = {
+    name: "B · CSV only (the charter)",
     render: () => (
-        <Compare item={item} quote={1} kind="B" title="ANY matching: each keyword is a row and a line. The charter keeps this to CSV and the API at launch">
-            <FullPerformance id="c3" breakdown={["Keywords"]} keywordMode="each" />
+        <Compare item={item} quote={1} kind="B" title="Keyword can't be picked on screen; per-keyword figures come from Download by keyword .CSV">
+            <FullPerformance id="c3" breakdown={["Platform"]} keywordMode="csv" />
         </Compare>
     ),
 };

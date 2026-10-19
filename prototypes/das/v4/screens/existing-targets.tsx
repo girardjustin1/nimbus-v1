@@ -5,7 +5,7 @@ import { PinkAction } from "./das-shell";
 import { LABEL } from "./type-rules";
 import { GEO_REGIONS } from "../../v1/screens/geo-data";
 import { type TaxonomyNode, TaxonomyPicker } from "./taxonomy-picker";
-import { APP_LIST } from "./target-data";
+import { ALL_PLATFORMS, APP_LIST } from "./target-data";
 import { AppTargetBlock } from "./app-target";
 
 /**
@@ -53,7 +53,8 @@ export const PlatformTarget = ({ value, onChange }: { value: string[]; onChange:
     return (
         <TargetCard title="Platform" onClear={value.length ? () => onChange([]) : undefined}>
             <div className="flex gap-6">
-                {["iOS", "Android"].map((p) => (
+                {/* Unity joined iOS and Android on 19 Oct. */}
+                {ALL_PLATFORMS.map((p) => (
                     <Checkbox key={p} size="md" label={<span className={LABEL}>{p}</span>} isSelected={value.includes(p)} onChange={() => toggle(p)} />
                 ))}
             </div>

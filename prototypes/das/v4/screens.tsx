@@ -255,22 +255,19 @@ export const screens: ProtoScreen[] = [
         render: () => <KeywordHealth />,
     }),
 
-    /* 5 · Campaigns — the staging table, with four highlight chips (16 Oct). */
+    /* 5 · Campaigns — the staging table, with four highlight chips (16 Oct). Campaign Health as counts (19 Oct). */
     campaigns({ id: "campaigns", title: "Campaigns table", description: "Staging's table, with Live, Queued, Total spend and Campaign Health above it.", render: () => <ManageCampaigns /> }),
     campaigns({ id: "campaigns-search", title: "Searching", description: "The search bar narrows the table.", render: () => <ManageCampaigns search="sports" /> }),
     campaigns({ id: "campaigns-attention", title: "Campaign Health, filtered", description: "Clicking Campaign Health leaves only the campaigns behind or at risk.", render: () => <ManageCampaigns filter="attention" /> }),
-    campaigns({ id: "campaigns-health-bar", title: "Concept · Health as a bar", description: "Campaign Health as one segmented bar.", render: () => <ManageCampaigns health="bar" /> }),
-    campaigns({ id: "campaigns-health-attention", title: "Concept · Health as a to-do", description: "Campaign Health leads with what needs attention, by name.", render: () => <ManageCampaigns health="attention" /> }),
-    campaigns({ id: "campaigns-health-column", title: "Concept · Table with a health column", description: "Staging's table plus one column: each campaign's health.", render: () => <ManageCampaigns healthColumn /> }),
+    campaigns({ id: "campaigns-health-column", title: "Concept · Table with a health column", description: "Still open: staging's table plus one column, each campaign's health.", render: () => <ManageCampaigns healthColumn /> }),
 
-    /* 6 · A campaign, then its full performance (16 Oct). */
-    view({ id: "view-a", title: "Overview · summary as cards", render: () => <ViewOnePage /> }),
-    view({ id: "view-a-sidebar", title: "Overview · summary in a sidebar", render: () => <ViewOnePage summary="sidebar" /> }),
+    /* 6 · A campaign, then its full performance. Cards and the builder on top, in Performance Insights' style (19 Oct). */
+    view({ id: "view-a", title: "Overview", render: () => <ViewOnePage /> }),
     view({ id: "view-a-at-risk", title: "Overview · at risk", description: "A campaign that can't catch up.", render: () => <ViewOnePage id="c2" /> }),
     view({ id: "view-a-behind", title: "Overview · behind, can catch up", render: () => <ViewOnePage id="c8" /> }),
     view({ id: "view-a-queued", title: "Overview · queued", render: () => <ViewOnePage id="c6" /> }),
-    view({ id: "view-d", title: "Full performance", description: "Break down by creative, platform, geo, app and keywords. Export CSV.", render: () => <FullPerformance /> }),
+    view({ id: "view-d", title: "Full performance", description: "Styled like Performance Insights. Break down by creative, platform, geo, app, keyword and device language; download the view as CSV.", render: () => <FullPerformance /> }),
     view({ id: "view-d-pivot", title: "Full performance · pivot", description: "Creative against Platform.", render: () => <FullPerformance breakdown={["Creative", "Platform"]} /> }),
-    view({ id: "view-d-side", title: "Concept · builder on the left", render: () => <FullPerformance layout="side" /> }),
-    view({ id: "view-d-keywords", title: "Concept · keywords one by one", description: "What per-keyword reporting would look like. The charter keeps it to CSV at launch.", render: () => <FullPerformance id="c3" keywordMode="each" breakdown={["Keywords"]} /> }),
+    view({ id: "view-d-keywords", title: "Full performance · by keyword", description: "Keywords match on ANY, so each keyword is a row.", render: () => <FullPerformance id="c3" breakdown={["Keyword"]} /> }),
+    view({ id: "view-d-keywords-csv", title: "Concept · keywords in CSV only", description: "Still open: the charter's version, with per-keyword figures only in a download.", render: () => <FullPerformance id="c3" keywordMode="csv" breakdown={["Platform"]} /> }),
 ];

@@ -33,7 +33,8 @@ import { type Keyword, deleteKeyword, fmtInt, getKeyword, liveCampaigns, useKeyw
  *   - History is a local activity log. The charter does not ask for one; it is here
  *     because "who added this and when" is the first question asked about free text.
  *
- * KILLED ON 1 OCT, do not reintroduce: ANY/ALL match logic, and device language.
+ * No ANY/ALL toggle: keywords match on ANY, with no setting (confirmed 19 Oct).
+ * Device language was dropped on 1 Oct and restored on 19 Oct as its own target.
  */
 
 /** Read `#/keyword-detail?k=k3` so the library table can link to a specific row. */

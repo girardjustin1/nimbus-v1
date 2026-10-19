@@ -5,6 +5,7 @@ import { Compare } from "../note";
 
 /**
  * Oct 17 · the summary on a campaign's overview. Product: pick one, not both.
+ * Decided 19 Oct: cards. The sidebar stays here as the record of what was compared.
  */
 const meta = {
     title: "Oct 17/Concepts/Overview Summary",
@@ -26,9 +27,9 @@ export const Sidebar: Story = {
 };
 
 export const Cards: Story = {
-    name: "B · Cards (the prototype's default)",
+    name: "B · Cards — chosen",
     render: () => (
-        <Compare item={item} kind="B" title="Four cards above the chart. The chart gets the full width, and the cards match Manage campaigns">
+        <Compare item={item} kind="Chosen" title="B · Four cards above the chart — chosen on 19 Oct">
             <ViewOnePage summary="cards" />
         </Compare>
     ),
@@ -37,7 +38,7 @@ export const Cards: Story = {
 export const CardsAtRisk: Story = {
     name: "C · Cards, on a campaign at risk",
     render: () => (
-        <Compare item={item} kind="B" title="The same cards when the campaign can't catch up: red health, and a banner with the daily spend it would need">
+        <Compare item={item} kind="Chosen" title="The same cards when the campaign can't catch up: red health, and a banner with the daily spend it would need">
             <ViewOnePage id="c2" summary="cards" />
         </Compare>
     ),
