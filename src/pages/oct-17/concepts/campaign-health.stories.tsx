@@ -4,7 +4,10 @@ import { bySlug } from "../feedback";
 import { Compare } from "../note";
 
 /**
- * Oct 17 · Campaign Health. Three ways to show the traffic light in the fourth chip.
+ * Oct 17 · Campaign Health. Decided 19 Oct: A, counts by colour. B and C stay here as
+ * the record of what was compared.
+ *
+ * Three ways to show the traffic light in the fourth chip.
  * Same data and the same click in all three: it filters the table to the campaigns
  * behind or at risk. Click a chip to try it.
  */
@@ -19,9 +22,9 @@ type Story = StoryObj<typeof meta>;
 const item = bySlug("campaign-health");
 
 export const Counts: Story = {
-    name: "A · Counts by colour",
+    name: "A · Counts by colour — chosen",
     render: () => (
-        <Compare item={item} kind="A" title="Three dots and three numbers. Quickest to read; says nothing about which campaigns">
+        <Compare item={item} kind="Chosen" title="A · Three dots and three numbers — chosen on 19 Oct">
             <ManageCampaigns health="counts" />
         </Compare>
     ),
@@ -46,9 +49,9 @@ export const ToDo: Story = {
 };
 
 export const Filtered: Story = {
-    name: "D · Any of them, clicked",
+    name: "D · Clicked",
     render: () => (
-        <Compare item={item} kind="A" title="Clicking Campaign Health filters the table to the campaigns behind or at risk">
+        <Compare item={item} kind="Chosen" title="Clicking Campaign Health filters the table to the campaigns behind or at risk">
             <ManageCampaigns filter="attention" />
         </Compare>
     ),

@@ -9,6 +9,7 @@ import {
     HEALTH_LABEL,
     HEALTH_MEANING,
     appName,
+    appPlatform,
     appsSummary,
     compact,
     daysLeft,
@@ -22,6 +23,7 @@ import { BreadcrumbStrip, ChartTooltip, HealthDot, StatChip } from "./campaign-u
 import { DasShell, DeliveryBar, KeywordChip, PINK, Section, StatusDot, TEAL } from "./das-shell";
 import { axis, dailyDelivery, effectiveEcpm, flightDay, useCampaign } from "./campaign-series";
 import { V3_NAV_ITEMS } from "./nav";
+import { languageLabel } from "./target-data";
 import { LABEL } from "./type-rules";
 
 /**
@@ -38,8 +40,8 @@ import { LABEL } from "./type-rules";
  *   - The delivery chart stays, with dollars back in its tooltip, and links to Full
  *     performance — the third screen, where the breakdowns live.
  *   - No creative previews. The Creative section lists the creatives by name.
- *   - Targeting: Platform (singular) and an Apps row; no "ANY of" (match logic was
- *     dropped on 1 Oct).
+ *   - Targeting: Platform (singular) and an Apps row; no "ANY of" — keywords match on
+ *     ANY with no toggle (confirmed 19 Oct). Device Language is back (19 Oct).
  *
  * Any link may carry ?c=<campaign id>, e.g. #/view-a?c=c2.
  */
@@ -67,7 +69,7 @@ const series = (c: Campaign) => {
 const groupedApps = (apps: string[]) => {
     const by = new Map<string, string[]>();
     for (const a of apps) {
-        const platform = a.match(/\((iOS|Android)\)$/)?.[1];
+        const platform = appPlatform(a);
         const list = by.get(appName(a)) ?? [];
         if (platform) list.push(platform);
         by.set(appName(a), list);
@@ -440,6 +442,7 @@ export const ViewOnePage = ({ id = "c1", published = false, summary = "cards" }:
                                 <Row label="Platform">{c.platforms}</Row>
                                 <Row label="Apps">{c.apps.length ? groupedApps(c.apps).join(", ") : "All apps"}</Row>
                                 <Row label="Ad Unit">{c.adUnits.join(", ") || "All units"}</Row>
+                                <Row label="Device Language">{c.languages.length ? c.languages.map(languageLabel).join(", ") : "All languages"}</Row>
                                 <Row label="Keywords">
                                     <Keywords c={c} />
                                 </Row>

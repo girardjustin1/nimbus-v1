@@ -13,6 +13,7 @@ import type { FeedbackItem } from "./feedback";
 
 const TONE: Record<FeedbackItem["status"], string> = {
     Applied: "#1F7F80",
+    Decided: "#1F7F80",
     Concepts: "#B54708",
     "To confirm": "#A94579",
 };
@@ -22,14 +23,14 @@ export const ReviewNote = ({ item, quote = 0 }: { item: FeedbackItem; quote?: nu
         <MessageTextSquare02 className="mt-0.5 size-5 shrink-0" style={{ color: PINK }} aria-hidden="true" />
         <div className="flex min-w-0 flex-col gap-2">
             <p className="text-md font-bold text-primary">
-                <span style={{ color: PINK }}>Oct 16 review</span> · {item.title}
+                <span style={{ color: PINK }}>{item.decidedOn ? `Decided ${item.decidedOn}` : "Oct 16 review"}</span> · {item.title}
                 <span className="ml-2 rounded-full px-2 py-0.5 text-md font-semibold" style={{ color: TONE[item.status], backgroundColor: `${PINK}24` }}>
                     {item.status}
                 </span>
             </p>
             <blockquote className="border-l-2 pl-3 text-md text-secondary italic" style={{ borderColor: `${PINK}66` }}>
                 “{item.quotes[quote]}”
-                <footer className="mt-0.5 text-md text-tertiary not-italic">Product, 16 Oct review</footer>
+                <footer className="mt-0.5 text-md text-tertiary not-italic">Product, {item.quoteDates?.[quote] ?? "16 Oct review"}</footer>
             </blockquote>
             <ul className="list-disc space-y-0.5 pl-4 text-md text-tertiary">
                 {item.decision.map((d, i) => (
@@ -40,17 +41,18 @@ export const ReviewNote = ({ item, quote = 0 }: { item: FeedbackItem; quote?: nu
     </aside>
 );
 
-export type VariantKind = "Round 3" | "Round 4" | "A" | "B" | "C";
+export type VariantKind = "Round 3" | "Round 4" | "A" | "B" | "C" | "Chosen";
 
 /** A label above a story so you know which one you are looking at. */
 export const Variant = ({ kind, title, children }: { kind: VariantKind; title: string; children: ReactNode }) => {
     const before = kind === "Round 3";
+    const chosen = kind === "Chosen";
     return (
         <div className="flex flex-col gap-3">
             <p className="flex items-center gap-2 text-md font-semibold">
                 <span
                     className="rounded-md px-2 py-0.5 text-md font-bold uppercase"
-                    style={before ? { color: "#667085", backgroundColor: "#F2F4F7" } : { color: "white", backgroundColor: PINK }}
+                    style={before ? { color: "#667085", backgroundColor: "#F2F4F7" } : { color: "white", backgroundColor: chosen ? "#1F7F80" : PINK }}
                 >
                     {kind}
                 </span>

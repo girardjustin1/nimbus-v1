@@ -14,6 +14,9 @@ import { type Campaign as RoundOneCampaign } from "../../v1/screens/das-data";
  *   - The staging table's columns: daily impression cap.
  *   - The creatives themselves, by name, since there is no preview to stand in for them.
  *
+ * 19 Oct: keywords match on ANY (Product), Unity is a platform, and Device Language is
+ * back, so campaigns carry their languages again.
+ *
  * Everything is fictional sample data.
  */
 
@@ -52,13 +55,13 @@ export const campaigns: Campaign[] = [
         flightDays: 30,
         flightElapsed: 57,
         geos: "United States, Canada",
-        platforms: "iOS, Android",
+        platforms: "iOS, Android, Unity",
         adUnits: ["Interstitial"],
-        languages: [],
+        languages: ["en"],
         keywords: ["sports", "power-user"],
-        match: "ALL",
+        match: "ANY",
         creatives: 3,
-        apps: ["Daily Scores (iOS)", "Daily Scores (Android)", "Match Report (iOS)", "Match Report (Android)", "Xtra Innings (iOS)"],
+        apps: ["Daily Scores (iOS)", "Daily Scores (Android)", "Match Report (iOS)", "Match Report (Android)", "Xtra Innings (iOS)", "Xtra Innings (Unity)"],
         dailyCap: 80000,
         creativeList: [html("FallLaunch_Interstitial_Stadium"), html("FallLaunch_Interstitial_Jersey"), html("FallLaunch_Interstitial_Countdown")],
     },
@@ -80,9 +83,9 @@ export const campaigns: Campaign[] = [
         geos: "United States, Mexico",
         platforms: "iOS, Android",
         adUnits: ["Inline"],
-        languages: [],
+        languages: ["es"],
         keywords: ["sports"],
-        match: "ALL",
+        match: "ANY",
         creatives: 2,
         apps: ["Daily Scores (iOS)", "Daily Scores (Android)", "Match Report (Android)"],
         dailyCap: 25000,
@@ -104,13 +107,13 @@ export const campaigns: Campaign[] = [
         flightDays: 31,
         flightElapsed: 83,
         geos: "United States",
-        platforms: "iOS",
+        platforms: "iOS, Unity",
         adUnits: ["Interstitial", "Rewarded"],
-        languages: [],
+        languages: ["en"],
         keywords: ["over21", "midwest"],
-        match: "ALL",
+        match: "ANY",
         creatives: 2,
-        apps: ["Night Sky (iOS)", "Quiz Night (iOS)", "Vinyl Crate (iOS)"],
+        apps: ["Night Sky (iOS)", "Quiz Night (iOS)", "Quiz Night (Unity)", "Vinyl Crate (iOS)"],
         dailyCap: null,
         creativeList: [html("TwentyOne_Interstitial_Lager"), { name: "TwentyOne_Rewarded_Tasting", type: "VAST (xml)", size: "Full screen" }],
     },
@@ -132,9 +135,9 @@ export const campaigns: Campaign[] = [
         geos: "United States",
         platforms: "iOS, Android",
         adUnits: ["Inline"],
-        languages: [],
+        languages: ["en", "es"],
         keywords: ["commuter"],
-        match: "ALL",
+        match: "ANY",
         creatives: 2,
         apps: ["Commute Cast (iOS)", "Commute Cast (Android)", "Urban Transit (iOS)", "Urban Transit (Android)", "Pocket Radio (Android)"],
         dailyCap: 40000,
@@ -160,7 +163,7 @@ export const campaigns: Campaign[] = [
         adUnits: ["Inline", "Dynamic Unit"],
         languages: [],
         keywords: ["plant"],
-        match: "ALL",
+        match: "ANY",
         creatives: 2,
         apps: ["Zen Garden (Android)", "Recipe Box (Android)"],
         dailyCap: null,
@@ -186,7 +189,7 @@ export const campaigns: Campaign[] = [
         adUnits: ["Interstitial", "Inline", "Rewarded", "Dynamic Unit"],
         languages: [],
         keywords: [],
-        match: "ALL",
+        match: "ANY",
         creatives: 2,
         apps: [],
         dailyCap: 100000,
@@ -210,9 +213,9 @@ export const campaigns: Campaign[] = [
         geos: "United States",
         platforms: "iOS, Android",
         adUnits: ["Rewarded"],
-        languages: [],
+        languages: ["en", "es"],
         keywords: ["runner", "power-user"],
-        match: "ALL",
+        match: "ANY",
         creatives: 1,
         apps: ["Trail Tracker (iOS)", "Trail Tracker (Android)", "Fit Log (iOS)", "Fit Log (Android)"],
         dailyCap: 60000,
@@ -236,9 +239,9 @@ export const campaigns: Campaign[] = [
         geos: "United States, Canada",
         platforms: "iOS, Android",
         adUnits: ["Interstitial"],
-        languages: [],
+        languages: ["en", "fr"],
         keywords: ["gift-giver"],
-        match: "ALL",
+        match: "ANY",
         creatives: 2,
         apps: ["Budget Jar (iOS)", "Budget Jar (Android)", "Garage Sale (iOS)", "Garage Sale (Android)"],
         dailyCap: null,
@@ -262,9 +265,9 @@ export const campaigns: Campaign[] = [
         geos: "United States",
         platforms: "iOS, Android",
         adUnits: ["Inline"],
-        languages: [],
+        languages: ["en"],
         keywords: ["student"],
-        match: "ALL",
+        match: "ANY",
         creatives: 1,
         apps: ["Word Streak (iOS)", "Word Streak (Android)"],
         dailyCap: 90000,
@@ -376,7 +379,10 @@ export const usd = (n: number, digits = 0) =>
 export const compact = (n: number) => n.toLocaleString("en-US", { notation: "compact", maximumFractionDigits: 1 });
 
 /** "Daily Scores (iOS)" → "Daily Scores". */
-export const appName = (app: string) => app.replace(/\s*\((iOS|Android)\)$/, "");
+export const appName = (app: string) => app.replace(/\s*\((iOS|Android|Unity)\)$/, "");
+
+/** An app's platform, from "Daily Scores (iOS)". */
+export const appPlatform = (app: string) => app.match(/\((iOS|Android|Unity)\)$/)?.[1];
 
 /** Apps for a sentence: unique names, the first few, then "+N more". */
 export const appsSummary = (apps: string[], show = 2) => {

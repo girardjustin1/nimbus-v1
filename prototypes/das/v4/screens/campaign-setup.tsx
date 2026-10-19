@@ -18,6 +18,7 @@ import { type CreativeEntry, CreativeTargetBlock } from "./creative-target";
 import { DuplicateHandoff, PublishFooter, type PublishMode } from "./publish-duplicate";
 import { libraryByName } from "./asset-data";
 import { AssetPicker } from "./asset-picker";
+import { languageById } from "./target-data";
 import { V3_NAV_ITEMS } from "./nav";
 import { ORIGINAL } from "./copy-deck";
 import { Copy } from "./copy-deck-ui";
@@ -57,7 +58,7 @@ const plainName = <T extends Partial<SetupForm>>(f: T): T => (f.name && PLAIN_NA
  *   - Two rail variants, because whether the client can validate on its own is an open
  *     question for engineering. "Summary" ends in Review, matching the backend
  *     round-trip DAS does today. "Validation" checks as you type and ends in Publish.
- *   - Targeting is five peer modules (Geos, Platform, Apps, Ad Unit, Keywords) rather
+ *   - Targeting is peer modules (Geos, Platform, Apps, Ad Unit, Device Language, Keywords) rather
  *     than loose rows plus two cards.
  */
 
@@ -263,6 +264,7 @@ export const Rail = ({
                 <Row label={<Copy>Frequency Cap</Copy>}>{form.freqCap ? `${form.freqCap} per user / 24h` : <Copy>No cap</Copy>}</Row>
                 <Row label={<Copy>Flight Dates</Copy>}>{form.start || form.end ? `${fmtDate(form.start) ?? "?"} – ${fmtDate(form.end) ?? "?"} (UTC)` : <Missing />}</Row>
                 <Row label={<Copy>Ad Unit</Copy>}>{form.adUnits.length ? form.adUnits.join(", ") : <Copy>All units</Copy>}</Row>
+                <Row label={<Copy>Device Language</Copy>}>{form.languages.length ? form.languages.map((id) => languageById(id)?.name ?? id).join(", ") : <Copy>All languages</Copy>}</Row>
                 <Row label={<Copy>Keywords</Copy>}>{form.keywords.length ? `${form.keywords.length}` : <Missing />}</Row>
                 <Row label={<Copy>Campaign Creative</Copy>}>{form.creatives.length ? `${form.creatives.length} × ${[...new Set(form.creatives.map((c) => c.type))].join(" + ")}` : <Missing />}</Row>
                 {mode === "validation" && form.rule && form.rule !== "Fallback" && form.budget && flightDays(form) && (

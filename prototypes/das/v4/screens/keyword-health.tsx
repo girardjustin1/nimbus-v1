@@ -38,7 +38,8 @@ import { appTraffic, fmtInt, fmtPct, incoming, totals, useKeywords } from "./key
  *   - Everything is a seven-day window, because a keyword that stopped arriving three
  *     days ago is the case worth catching.
  *
- * KILLED ON 1 OCT, do not reintroduce: ANY/ALL match logic, and device language.
+ * No ANY/ALL toggle: keywords match on ANY, with no setting (confirmed 19 Oct).
+ * Device language was dropped on 1 Oct and restored on 19 Oct as its own target.
  *
  * KILLED ON 2 OCT: Bulk add. "Add Some" therefore goes to Keyword Setup, which takes a
  * pasted list on its own — the link still pointed at the deleted page until 3 Oct.

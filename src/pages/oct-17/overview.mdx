@@ -35,8 +35,8 @@ export const Where = ({ slug }) => {
 
 export const Chip = ({ children, tone }) => (
   <span style={{
-    background: tone === "Applied" ? "#E6F6F6" : tone === "Concepts" ? "#FFF4E5" : "#FBE9F1",
-    color: tone === "Applied" ? "#1F7F80" : tone === "Concepts" ? "#B54708" : "#A94579",
+    background: tone === "Applied" || tone === "Decided" ? "#E6F6F6" : tone === "Concepts" ? "#FFF4E5" : "#FBE9F1",
+    color: tone === "Applied" || tone === "Decided" ? "#1F7F80" : tone === "Concepts" ? "#B54708" : "#A94579",
     borderRadius: 999, padding: "1px 8px", fontSize: 15, fontWeight: 700, whiteSpace: "nowrap",
   }}>{children}</span>
 );
@@ -63,6 +63,21 @@ by looking.
 and comparing, the overview says how one campaign is pacing, and Full performance says
 where.
 
+## Decided on 19 Oct
+
+Product answered the open questions, and the answers are built into v4:
+
+- **Keywords match on ANY**, the way geos do. No toggle; each keyword reports on its own.
+- **Campaign Health: A**, the counts by colour.
+- **Overview summary: cards.**
+- **Full performance: the builder across the top**, in Performance Insights' look and styling.
+- **Unity is a platform**, next to iOS and Android.
+- **Device Language is in** — it is in the charter.
+
+**Still open:** whether per-keyword figures may be shown on screen (the charter says CSV
+only), and whether the campaigns table gets a Campaign Health column. Both are under
+Concepts.
+
 ## What's in here
 
 <div style={{ overflowX: "auto", border: "1px solid #EAECF0", borderRadius: 12, margin: "12px 0 24px" }}>
@@ -88,9 +103,10 @@ to its **Storybook** stories (teal, stays here).
 - **Applied** — decided on the call and in prototype v4. *Oct 17 › Applied Changes*
   shows each one next to Round 3 as it was reviewed, so anything removed is easy to put
   back.
-- **Concepts** — the call left a choice. *Oct 17 › Concepts* has one folder per
-  question, with the options as stories you can click through. The prototype opens on
-  the first option, or the one marked as the default.
+- **Decided** — was a concept until Product picked on 19 Oct. The pick is in v4; the
+  options not taken stay in *Oct 17 › Concepts* as the record.
+- **Concepts** — still a choice to make. *Oct 17 › Concepts* has one folder per
+  question, with the options as stories you can click through.
 - **To confirm** — built on a reading that still needs an answer.
 
 ## Concepts, one question per folder
@@ -100,14 +116,14 @@ to its **Storybook** stories (teal, stays here).
     <thead><tr><th style={{ ...th, width: 170 }}>Folder</th><th style={{ ...th, width: 220 }}>The question</th><th style={th}>Options</th></tr></thead>
     <tbody>
       {[
-        ["Campaign Health", "How should the traffic light read in its chip?", [["A · Counts", "oct-17-concepts-campaign-health--counts", "campaigns"], ["B · Bar", "oct-17-concepts-campaign-health--bar", "campaigns-health-bar"], ["C · Needs attention", "oct-17-concepts-campaign-health--to-do", "campaigns-health-attention"]]],
-        ["Campaigns Table", "Should the table say which campaign is which colour?", [["A · Staging's columns", "oct-17-concepts-campaigns-table--as-staging", "campaigns"], ["B · Health column", "oct-17-concepts-campaigns-table--health-column", "campaigns-health-column"]]],
-        ["Overview Summary", "Sidebar or cards — Product asked for one, not both", [["A · Sidebar", "oct-17-concepts-overview-summary--sidebar", "view-a-sidebar"], ["B · Cards (default)", "oct-17-concepts-overview-summary--cards", "view-a"]]],
-        ["Full Performance Layout", "Where the breakdown controls sit", [["A · Across the top", "oct-17-concepts-full-performance-layout--on-top", "view-d"], ["B · Down the left", "oct-17-concepts-full-performance-layout--on-the-left", "view-d-side"]]],
-        ["Keyword Reporting", "Do a campaign's keywords report as one set, or one by one?", [["A · One set", "oct-17-concepts-keyword-reporting--as-one-set", "view-d"], ["B · One by one", "oct-17-concepts-keyword-reporting--one-by-one", "view-d-keywords"]]],
-      ].map(([folder, question, options]) => (
+        ["Campaign Health", "How should the traffic light read in its chip?", "Chose A", [["A · Counts — chosen", "oct-17-concepts-campaign-health--counts", "campaigns"], ["B · Bar", "oct-17-concepts-campaign-health--bar"], ["C · Needs attention", "oct-17-concepts-campaign-health--to-do"]]],
+        ["Campaigns Table", "Should the table say which campaign is which colour?", "Open", [["A · Staging's columns", "oct-17-concepts-campaigns-table--as-staging", "campaigns"], ["B · Health column", "oct-17-concepts-campaigns-table--health-column", "campaigns-health-column"]]],
+        ["Overview Summary", "Sidebar or cards — Product asked for one, not both", "Chose cards", [["A · Sidebar", "oct-17-concepts-overview-summary--sidebar"], ["B · Cards — chosen", "oct-17-concepts-overview-summary--cards", "view-a"]]],
+        ["Full Performance Layout", "Where the breakdown controls sit", "Chose the top", [["Across the top, like Performance Insights — chosen", "oct-17-concepts-full-performance-layout--decided", "view-d"]]],
+        ["Keyword Reporting", "Per-keyword figures on screen, or CSV only?", "Open", [["A · On screen", "oct-17-concepts-keyword-reporting--on-screen", "view-d-keywords"], ["B · CSV only (charter)", "oct-17-concepts-keyword-reporting--csv-only", "view-d-keywords-csv"]]],
+      ].map(([folder, question, state, options]) => (
         <tr key={folder}>
-          <td style={{ ...td, fontWeight: 700, color: "#101828" }}>{folder}</td>
+          <td style={{ ...td, fontWeight: 700, color: "#101828" }}>{folder}<div style={{ marginTop: 6 }}><Chip tone={state === "Open" ? "Concepts" : "Decided"}>{state}</Chip></div></td>
           <td style={{ ...td, color: "#475467" }}>{question}</td>
           <td style={td}>
             {options.map(([label, id, route]) => (
@@ -115,7 +131,7 @@ to its **Storybook** stories (teal, stays here).
                 <span style={{ fontWeight: 600, color: "#101828" }}>{label}</span>
                 <span style={{ display: "flex", gap: 6, flexShrink: 0 }}>
                   <Pill kind="story" href={storyUrl(id)}>Storybook →</Pill>
-                  <Pill kind="proto" href={protoUrl(route)}>Prototype ↗</Pill>
+                  {route && <Pill kind="proto" href={protoUrl(route)}>Prototype ↗</Pill>}
                 </span>
               </div>
             ))}
@@ -126,19 +142,16 @@ to its **Storybook** stories (teal, stays here).
   </table>
 </div>
 
-## Charter check: keyword matching
+## Charter check: keywords
 
-Asked for on the call, because it decides how keywords are reported.
-
-- **The charter does not say all-or-nothing.** Its setup wireframe has a *Match Logic*
-  toggle — “ANY keyword matches” / “ALL must match” — and says to **default to ANY**.
-- Match logic was dropped from setup on 1 Oct, so which one the backend does is
-  currently unstated.
-- The charter's **reporting guardrail** keeps per-keyword breakdowns to CSV and the API
-  at launch, with no per-keyword charting in the dashboard.
-
-Full performance is built on Product's reading — keywords as one set, which is one row
-per campaign and stays inside the guardrail. Needs an answer before build.
+- **Matching.** The charter's setup wireframe had an ANY / ALL toggle defaulting to ANY;
+  it was dropped on 1 Oct. Product confirmed on 19 Oct that keywords match on **ANY**,
+  like geos, with no toggle.
+- **Reporting.** The charter's guardrail keeps per-keyword breakdowns to CSV and the API
+  at launch, with no per-keyword charting in the dashboard. Full performance currently
+  shows keywords on screen; the CSV-only version is concept B. Waiting on Product.
+- **Counting.** With ANY, one impression can match several keywords. It counts under
+  the first it matched, so per-keyword rows add up to the campaign's total.
 
 ## Campaign Health maths is a placeholder
 
@@ -155,11 +168,10 @@ with a budget have a health. It is written down once, in
   interstitial is, not what the publisher's creative looks like. It goes if that still
   reads as a hint at previews.
 
-## Still open from before
+## Settled from before
 
-- **Device Language** is in the charter but was dropped on 1 Oct; waiting on Product.
-  Manage campaigns no longer shows a language anywhere.
-- **Platform values.** The call listed “iOS, Android, Unity”. The charter treats Unity
-  as an SDK, so the prototype's platforms are iOS and Android.
+- **Device Language** is in the charter, so it is back (19 Oct): in setup, the rail, the
+  overview's Targeting and Full performance.
+- **Unity** is a platform (19 Oct), next to iOS and Android.
 
 </div>

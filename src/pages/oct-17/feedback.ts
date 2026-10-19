@@ -5,12 +5,13 @@
  * trimmed to the design point, and the reviewer is named by role, because this
  * Storybook publishes to a public URL.
  *
- * Applied means it was decided on the call and is in prototype v4. Concepts means the
- * call left a choice open, and the options sit side by side under Oct 17 › Concepts.
- * To confirm means it is built on a reading that still needs an answer.
+ * Applied means it was decided on the call and is in prototype v4. Decided means it was
+ * a concept until Product picked one on 19 Oct; the pick is in v4 and the others stay in
+ * Oct 17 › Concepts as the record. Concepts means the choice is still open. To confirm
+ * means it is built on a reading that still needs an answer.
  */
 
-export type Status = "Applied" | "Concepts" | "To confirm";
+export type Status = "Applied" | "Decided" | "Concepts" | "To confirm";
 
 export interface FeedbackItem {
     slug: string;
@@ -22,6 +23,10 @@ export interface FeedbackItem {
     decision: string[];
     /** Files in prototype v4 that changed. */
     touches: string[];
+    /** When Product settled it, if after the call — e.g. "19 Oct". */
+    decidedOn?: string;
+    /** Where each quote is from, when not the 16 Oct call. */
+    quoteDates?: string[];
 }
 
 export const framing = {
@@ -81,15 +86,18 @@ export const items: FeedbackItem[] = [
     {
         slug: "campaign-health",
         title: "Campaign Health, as a traffic light",
-        status: "Concepts",
+        status: "Decided",
+        decidedOn: "19 Oct",
         quotes: [
             "Let's change pacing to something like campaign health. Green, which is like everything's on pace. Orange: pacing is down, but there's still a big duration left of the campaign. And red, where pacing is down but it doesn't look like there's even enough time to make it up.",
             "You don't have to know that math. Even the front end can calculate it. Just represent it and we'll deal with how it actually works.",
+            "A.",
         ],
+        quoteDates: ["16 Oct review", "16 Oct review", "19 Oct"],
         decision: [
-            "Three ways to show the same three counts in one chip: the counts by colour, a segmented bar, or the campaigns that need attention by name. Same click in all three — it filters the table to the campaigns behind or at risk.",
+            "Chosen on 19 Oct: A, the counts by colour. The bar (B) and the named list (C) stay in Concepts as the record. Clicking the chip filters the table to the campaigns behind or at risk.",
             "The maths behind green, orange and red is a placeholder, written down in campaign-data.ts so engineering can replace it in one place. Today: on pace within 10% of the flight elapsed; orange if the daily spend needed to finish is at most 1.5× today's; red beyond that.",
-            "A fourth option, a Campaign Health column in the table, is under Campaigns Table.",
+            "Still open: whether the table also gets a Campaign Health column — see Campaigns Table.",
         ],
         touches: ["prototypes/das/v4/screens/campaign-data.ts", "prototypes/das/v4/screens/manage-campaigns.tsx"],
     },
@@ -122,11 +130,13 @@ export const items: FeedbackItem[] = [
     {
         slug: "overview-summary",
         title: "One summary on the overview, not two",
-        status: "Concepts",
-        quotes: ["I would either do this sidebar, or I would make it these top thingies — it's the same content repeated. So I would pick one, and put it on this main page."],
+        status: "Decided",
+        decidedOn: "19 Oct",
+        quotes: ["I would either do this sidebar, or I would make it these top thingies — it's the same content repeated. So I would pick one, and put it on this main page.", "Cards."],
+        quoteDates: ["16 Oct review", "19 Oct"],
         decision: [
-            "A keeps Round 3's Live delivery rail beside the chart. B moves the same figures into four cards above it: Spend, Campaign Health, Impressions, Days left. Both now carry Campaign Health.",
-            "The prototype opens on B. Cards give the chart the page's full width, and the cards match the chips on Manage campaigns.",
+            "Chosen on 19 Oct: cards. Four cards above the chart — Spend, Campaign Health, Impressions, Days left — so the chart gets the page's full width and the cards match the chips on Manage campaigns.",
+            "The sidebar version stays in Concepts as the record.",
         ],
         touches: ["prototypes/das/v4/screens/campaign-view.tsx"],
     },
@@ -148,27 +158,30 @@ export const items: FeedbackItem[] = [
             "We need to show it by creative, by platform. We're gonna need UI against this chart.",
             "How is this creative performing on this platform in this geo? Especially if I'm underspending, I want to see where am I underspending.",
             "I don't need any summaries on this. I need a very robust breakdown, and an export CSV of whatever view I'm on.",
+            "Across the top — use the look, feel and styling of Performance Insights.",
         ],
+        quoteDates: ["16 Oct review", "16 Oct review", "16 Oct review", "19 Oct"],
         decision: [
             "Manage campaigns → overview → Full performance, linked from the delivery chart. No summary panel.",
-            "Break down by Creative, Platform, Geo, App and Keywords, two at a time to pivot one against the other; filter any of them; Spend, Impressions or eCPM; flight to date, 14 or 7 days; line, bar or table. Modelled on Performance Insights' query builder.",
-            "Export CSV downloads the table on screen, as filtered. Every breakdown adds up to the campaign's real total.",
-            "Where the controls sit — across the top or down the left — is under Concepts.",
+            "19 Oct: the builder sits across the top in Performance Insights' look — START DATE / END DATE, a range and an interval, then Metrics, Breakdown, Filters (+ ADD) and Chart Type (Table, Line, Area, Bar, Stacked bar, Pie), with pink uppercase actions. Held to the 15px floor.",
+            "Break down by Creative, Platform (now with Unity), Geo, App, Keyword and Device Language, two at a time to pivot one against the other; filter any of them; tick any of Spend, Impressions and eCPM.",
+            "Download .CSV takes the table on screen, as filtered. Every breakdown adds up to the campaign's real total.",
         ],
         touches: ["prototypes/das/v4/screens/full-performance.tsx", "prototypes/das/v4/screens/campaign-series.ts"],
     },
     {
         slug: "keyword-reporting",
-        title: "Keywords: all-or-nothing, or any?",
+        title: "Keywords: on screen, or CSV only?",
         status: "To confirm",
         quotes: [
-            "It's by the combination of keywords. It's all or nothing on the keywords mapped to a particular campaign.",
-            "In the charter, can you actually check this? I think it's all or nothing. If it's not in the charter, tell me and I will get an answer — that's going to be important on how we report on this.",
+            "Keywords is ANY — the same way geo would be, for instance.",
+            "In the charter, can you actually check this? That's going to be important on how we report on this.",
         ],
+        quoteDates: ["19 Oct", "16 Oct review"],
         decision: [
-            "Checked. The charter does not say all-or-nothing. Its setup wireframe has a Match Logic toggle — ANY keyword matches / ALL must match — and says to default to ANY. Match logic was then dropped from setup on 1 Oct, so which one the backend does is now unstated.",
-            "The charter's reporting guardrail also matters here: per-keyword breakdowns are CSV and API only at launch, with no per-keyword charting in the dashboard.",
-            "Built on Product's reading: a campaign's keywords report as one set (“sports + power-user”), which is one row and stays inside the guardrail. Concept B shows keywords one by one for comparison; it would need the guardrail changed.",
+            "Settled 19 Oct: keywords match on ANY, like geos. So each keyword reports on its own row; an impression that matches more than one counts under the first it matched, so the rows still add up. The “one set” option is gone.",
+            "Still open, with an example sent back: may per-keyword figures be on screen? The charter keeps per-keyword breakdowns to CSV and the API at launch, with no per-keyword charting in the dashboard.",
+            "A puts Keyword on screen like any breakdown (the prototype's default). B is the charter: Keyword can't be picked on screen, and a Download by keyword .CSV gives the figures.",
         ],
         touches: ["prototypes/das/v4/screens/full-performance.tsx"],
     },
@@ -178,10 +191,37 @@ export const items: FeedbackItem[] = [
         status: "Applied",
         quotes: ["If you're a publisher who has many apps, you can decide which ones."],
         decision: [
-            "On the campaign view's Targeting: “Platforms” is now Platform, as in setup; Apps has its own row, grouped by app (“Daily Scores (iOS, Android)”); “ANY of” is gone from Keywords, since match logic was dropped from setup on 1 Oct.",
-            "Device Language is still out pending Product, and Manage campaigns no longer shows a language anywhere.",
+            "On the campaign view's Targeting: “Platforms” is now Platform, as in setup; Apps has its own row, grouped by app (“Daily Scores (iOS, Android)”); “ANY of” is gone from Keywords, since keywords match on ANY with no toggle (confirmed 19 Oct).",
+            "19 Oct: Device Language has a row again, and Platform can include Unity.",
         ],
         touches: ["prototypes/das/v4/screens/campaign-view.tsx"],
+    },
+    {
+        slug: "unity-platform",
+        title: "Unity is a platform",
+        status: "Decided",
+        decidedOn: "19 Oct",
+        quotes: ["Yes — Unity counts as a platform."],
+        quoteDates: ["19 Oct"],
+        decision: [
+            "Platform in setup offers iOS, Android and Unity. The four games in the sample account ship a Unity build, so the Apps picker lists 56 apps, and Unity builds only meet the Unity platform in reporting.",
+            "Sample campaigns include Unity, so it shows in the campaigns table, the overview's header and Targeting, and as a Platform breakdown on Full performance.",
+        ],
+        touches: ["prototypes/das/v4/screens/target-data.ts", "prototypes/das/v4/screens/existing-targets.tsx", "prototypes/das/v4/screens/campaign-data.ts"],
+    },
+    {
+        slug: "device-language",
+        title: "Device Language is back",
+        status: "Decided",
+        decidedOn: "19 Oct",
+        quotes: ["This was added in the charter, right? If so, in."],
+        quoteDates: ["19 Oct"],
+        decision: [
+            "It is in the charter — a new standard target, the device's OS locale as ISO 639-1 codes — so it is in. It was dropped on 1 Oct on a note that said otherwise.",
+            "Setup has a Device Language module between Ad Unit and Keywords, with the same search-and-table pattern as Apps and Keywords, and the rail lists it. The overview's Targeting has a row, and Full performance can break down by it.",
+            "Match logic stays out: keywords match on ANY with no toggle.",
+        ],
+        touches: ["prototypes/das/v4/screens/language-target.tsx", "prototypes/das/v4/screens/targeting-section.tsx", "prototypes/das/v4/screens/campaign-setup.tsx"],
     },
 ];
 
@@ -209,7 +249,7 @@ export const links: Record<string, { prototype: ScreenLink[]; stories: StoryLink
     "campaigns-table": {
         prototype: [
             ["Campaigns table", "campaigns"],
-            ["Searching", "campaigns-search"],
+            ["With a health column", "campaigns-health-column"],
         ],
         stories: [
             ["Manage campaigns · R3 → R4", "oct-17-applied-changes--campaigns-after"],
@@ -225,16 +265,13 @@ export const links: Record<string, { prototype: ScreenLink[]; stories: StoryLink
     },
     "campaign-health": {
         prototype: [
-            ["A · Counts", "campaigns"],
-            ["B · Bar", "campaigns-health-bar"],
-            ["C · Needs attention", "campaigns-health-attention"],
-            ["Health column", "campaigns-health-column"],
+            ["Counts (chosen)", "campaigns"],
+            ["Clicked", "campaigns-attention"],
         ],
         stories: [
-            ["A · Counts", "oct-17-concepts-campaign-health--counts"],
+            ["A · Counts (chosen)", "oct-17-concepts-campaign-health--counts"],
             ["B · Bar", "oct-17-concepts-campaign-health--bar"],
             ["C · Needs attention", "oct-17-concepts-campaign-health--to-do"],
-            ["Clicked", "oct-17-concepts-campaign-health--filtered"],
         ],
     },
     breadcrumb: {
@@ -256,13 +293,10 @@ export const links: Record<string, { prototype: ScreenLink[]; stories: StoryLink
         ],
     },
     "overview-summary": {
-        prototype: [
-            ["A · Sidebar", "view-a-sidebar"],
-            ["B · Cards", "view-a"],
-        ],
+        prototype: [["Cards (chosen)", "view-a"]],
         stories: [
             ["A · Sidebar", "oct-17-concepts-overview-summary--sidebar"],
-            ["B · Cards", "oct-17-concepts-overview-summary--cards"],
+            ["B · Cards (chosen)", "oct-17-concepts-overview-summary--cards"],
             ["Cards, at risk", "oct-17-concepts-overview-summary--cards-at-risk"],
         ],
     },
@@ -274,23 +308,37 @@ export const links: Record<string, { prototype: ScreenLink[]; stories: StoryLink
         prototype: [
             ["Full performance", "view-d"],
             ["Pivot", "view-d-pivot"],
-            ["Builder on the left", "view-d-side"],
         ],
         stories: [
             ["Performance · R3 → R4", "oct-17-applied-changes--performance-after"],
-            ["A · Builder on top", "oct-17-concepts-full-performance-layout--on-top"],
-            ["B · Builder on the left", "oct-17-concepts-full-performance-layout--on-the-left"],
+            ["Across the top (chosen)", "oct-17-concepts-full-performance-layout--decided"],
+            ["Stacked bar", "oct-17-concepts-full-performance-layout--stacked-bar"],
         ],
     },
     "keyword-reporting": {
         prototype: [
-            ["Keywords as one set", "view-d"],
-            ["One by one", "view-d-keywords"],
+            ["A · On screen", "view-d-keywords"],
+            ["B · CSV only", "view-d-keywords-csv"],
         ],
         stories: [
-            ["A · One set", "oct-17-concepts-keyword-reporting--as-one-set"],
-            ["B · One by one", "oct-17-concepts-keyword-reporting--one-by-one"],
+            ["A · On screen", "oct-17-concepts-keyword-reporting--on-screen"],
+            ["B · CSV only", "oct-17-concepts-keyword-reporting--csv-only"],
         ],
+    },
+    "unity-platform": {
+        prototype: [
+            ["Setup · Platform", "step-targeting"],
+            ["Overview", "view-a"],
+            ["Pivot by platform", "view-d-pivot"],
+        ],
+        stories: [["Overview · R4", "oct-17-applied-changes--overview-after"]],
+    },
+    "device-language": {
+        prototype: [
+            ["Setup · Device Language", "step-targeting"],
+            ["Overview · Targeting", "view-a"],
+        ],
+        stories: [["Setup · Targeting", "deal-activation-system-campaign-setup-sections-targeting--filled"]],
     },
     "targeting-block": {
         prototype: [["Overview · Targeting", "view-a"]],
