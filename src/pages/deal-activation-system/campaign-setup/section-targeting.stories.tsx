@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { TargetingSectionV3 } from "../../../../prototypes/das/v3/screens/targeting-section";
+import { TargetingSectionV3 } from "../../../../prototypes/das/v4/screens/targeting-section";
 import { Setup, Surface } from "./harness";
 
 /**

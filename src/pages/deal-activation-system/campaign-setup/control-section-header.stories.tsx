@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Section } from "../../../../prototypes/das/v3/screens/das-shell";
+import { Section } from "../../../../prototypes/das/v4/screens/das-shell";
 import { Surface } from "./harness";
 
 /**

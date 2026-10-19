@@ -11,13 +11,13 @@ export const Table = ({ head, rows }) => (
   </div>
 );
 export const S = ({ id, children }) => <a href={`./?path=/story/deal-activation-system-campaign-setup-${id}`} target="_top" style={{ color: "#1F7F80", fontWeight: 600 }}>{children}</a>;
-export const prototypeUrl = () => (typeof window !== "undefined" && window.location.hostname === "localhost" ? "http://localhost:5190/das/v3/#/setup-empty" : "./das/v3/#/setup-empty");
+export const prototypeUrl = () => (typeof window !== "undefined" && window.location.hostname === "localhost" ? "http://localhost:5190/das/v4/#/setup-empty" : "./das/v4/#/setup-empty");
 
 <Meta title="Deal Activation System/Campaign Setup Spec" />
 
 <div style={{ maxWidth: 920 }}>
 
-<div style={{ fontSize: 13, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#1F7F80" }}>Prototype 3 · final spec after the 5 Oct review</div>
+<div style={{ fontSize: 13, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#1F7F80" }}>Round 4 · approved for build on 16 Oct</div>
 
 # Campaign Setup
 
@@ -106,16 +106,16 @@ you see there is what is on the page.
 />
 
 Base components underneath (Input, Radio, Checkbox, Button) come from the design system,
-unchanged. Prototype 3 restyles their labels and hints from the page, not by editing them.
+unchanged. The prototype restyles their labels and hints from the page, not by editing them.
 
 ## Copy
 
-Staging's wording is transcribed in `prototypes/das/v3/screens/copy-deck.ts`. In the
+Staging's wording is transcribed in `prototypes/das/v4/screens/copy-deck.ts`. In the
 prototype, the toolbar's **Copy** switch shows:
 
 - **Original:** staging's wording only. Anything staging has no copy for is left out, so
   gaps show.
-- **New:** Prototype 3's wording, as built. You can highlight what is new or hide it.
+- **New:** the prototype's wording, as built. You can highlight what is new or hide it.
 
 Final wording is Product's to write.
 

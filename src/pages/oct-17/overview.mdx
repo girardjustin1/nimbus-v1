@@ -1,7 +1,37 @@
 import { Meta } from "@storybook/addon-docs/blocks";
-import { framing, items } from "./feedback";
+import { framing, items, links } from "./feedback";
 
 <Meta title="Oct 17/Overview" />
+
+export const protoUrl = (route) =>
+  (typeof window !== "undefined" && window.location.hostname === "localhost" ? "http://localhost:5190/das/v4/" : "./das/v4/") + `#/${route}`;
+export const storyUrl = (id) => `./?path=/story/${id}`;
+
+export const Pill = ({ href, kind, children }) => (
+  <a href={href} target="_top" style={{
+    display: "inline-block", whiteSpace: "nowrap", textDecoration: "none", fontSize: 14, fontWeight: 600, padding: "2px 9px", borderRadius: 999,
+    color: kind === "proto" ? "#A94579" : "#1F7F80",
+    background: kind === "proto" ? "#FCE7F1" : "#E6F6F6",
+  }}>{children}</a>
+);
+
+export const LinkRow = ({ label, children }) => (
+  <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 6, margin: "2px 0" }}>
+    <span style={{ fontSize: 13, fontWeight: 700, color: "#667085", textTransform: "uppercase", letterSpacing: 0.4, minWidth: 82 }}>{label}</span>
+    {children}
+  </div>
+);
+
+export const Where = ({ slug }) => {
+  const l = links[slug];
+  if (!l) return null;
+  return (
+    <div>
+      <LinkRow label="Prototype">{l.prototype.map(([t, r]) => <Pill key={t} kind="proto" href={protoUrl(r)}>{t} ↗</Pill>)}</LinkRow>
+      <LinkRow label="Storybook">{l.stories.map(([t, id]) => <Pill key={t} kind="story" href={storyUrl(id)}>{t} →</Pill>)}</LinkRow>
+    </div>
+  );
+};
 
 export const Chip = ({ children, tone }) => (
   <span style={{
@@ -37,18 +67,23 @@ where.
 
 <div style={{ overflowX: "auto", border: "1px solid #EAECF0", borderRadius: 12, margin: "12px 0 24px" }}>
   <table style={{ width: "100%", borderCollapse: "collapse", margin: 0 }}>
-    <thead><tr><th style={th}>Change</th><th style={th}>Status</th><th style={th}>What it decides</th></tr></thead>
+    <thead><tr><th style={{ ...th, width: 210 }}>Change</th><th style={th}>What it decides, and where to see it</th></tr></thead>
     <tbody>
       {items.map((i) => (
         <tr key={i.slug}>
-          <td style={{ ...td, fontWeight: 700, color: "#101828" }}>{i.title}</td>
-          <td style={td}><Chip tone={i.status}>{i.status}</Chip></td>
-          <td style={{ ...td, color: "#475467" }}>{i.decision[0]}</td>
+          <td style={{ ...td, fontWeight: 700, color: "#101828" }}>{i.title}<div style={{ marginTop: 6 }}><Chip tone={i.status}>{i.status}</Chip></div></td>
+          <td style={{ ...td, color: "#475467" }}>
+            {i.decision[0]}
+            <div style={{ marginTop: 10 }}><Where slug={i.slug} /></div>
+          </td>
         </tr>
       ))}
     </tbody>
   </table>
 </div>
+
+Each change links to the **prototype** screens it shows on (pink, opens prototype v4) and
+to its **Storybook** stories (teal, stays here).
 
 - **Applied** — decided on the call and in prototype v4. *Oct 17 › Applied Changes*
   shows each one next to Round 3 as it was reviewed, so anything removed is easy to put
@@ -60,13 +95,36 @@ where.
 
 ## Concepts, one question per folder
 
-| Folder | The question | Options |
-| --- | --- | --- |
-| Campaign Health | How should the traffic light read in its chip? | A counts by colour · B a segmented bar · C what needs attention, by name |
-| Campaigns Table | Should the table say which campaign is which colour? | A staging's columns exactly · B plus a Campaign Health column |
-| Overview Summary | Sidebar or cards — Product asked for one, not both | A sidebar · B cards (the prototype's default) |
-| Full Performance Layout | Where the breakdown controls sit | A across the top, like Performance Insights · B down the left |
-| Keyword Reporting | Do a campaign's keywords report as one set, or one by one? | A one set · B one by one |
+<div style={{ overflowX: "auto", border: "1px solid #EAECF0", borderRadius: 12, margin: "12px 0 24px" }}>
+  <table style={{ width: "100%", borderCollapse: "collapse", margin: 0 }}>
+    <thead><tr><th style={{ ...th, width: 170 }}>Folder</th><th style={{ ...th, width: 220 }}>The question</th><th style={th}>Options</th></tr></thead>
+    <tbody>
+      {[
+        ["Campaign Health", "How should the traffic light read in its chip?", [["A · Counts", "oct-17-concepts-campaign-health--counts", "campaigns"], ["B · Bar", "oct-17-concepts-campaign-health--bar", "campaigns-health-bar"], ["C · Needs attention", "oct-17-concepts-campaign-health--to-do", "campaigns-health-attention"]]],
+        ["Campaigns Table", "Should the table say which campaign is which colour?", [["A · Staging's columns", "oct-17-concepts-campaigns-table--as-staging", "campaigns"], ["B · Health column", "oct-17-concepts-campaigns-table--health-column", "campaigns-health-column"]]],
+        ["Overview Summary", "Sidebar or cards — Product asked for one, not both", [["A · Sidebar", "oct-17-concepts-overview-summary--sidebar", "view-a-sidebar"], ["B · Cards (default)", "oct-17-concepts-overview-summary--cards", "view-a"]]],
+        ["Full Performance Layout", "Where the breakdown controls sit", [["A · Across the top", "oct-17-concepts-full-performance-layout--on-top", "view-d"], ["B · Down the left", "oct-17-concepts-full-performance-layout--on-the-left", "view-d-side"]]],
+        ["Keyword Reporting", "Do a campaign's keywords report as one set, or one by one?", [["A · One set", "oct-17-concepts-keyword-reporting--as-one-set", "view-d"], ["B · One by one", "oct-17-concepts-keyword-reporting--one-by-one", "view-d-keywords"]]],
+      ].map(([folder, question, options]) => (
+        <tr key={folder}>
+          <td style={{ ...td, fontWeight: 700, color: "#101828" }}>{folder}</td>
+          <td style={{ ...td, color: "#475467" }}>{question}</td>
+          <td style={td}>
+            {options.map(([label, id, route]) => (
+              <div key={label} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, padding: "4px 0" }}>
+                <span style={{ fontWeight: 600, color: "#101828" }}>{label}</span>
+                <span style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                  <Pill kind="story" href={storyUrl(id)}>Storybook →</Pill>
+                  <Pill kind="proto" href={protoUrl(route)}>Prototype ↗</Pill>
+                </span>
+              </div>
+            ))}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
 
 ## Charter check: keyword matching
 

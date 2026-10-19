@@ -3,19 +3,19 @@ import { cx } from "@/utils/cx";
 import { setClickToFill } from "../../../../prototypes/shared/demo-fill";
 import type { FieldError, Setter } from "../../../../prototypes/das/v1/screens/campaign-setup-one-page";
 import { type SetupForm, type SetupPreset, allPresets } from "../../../../prototypes/das/v1/screens/setup-data";
-import { type DealDraft, dealDraftFor } from "../../../../prototypes/das/v3/screens/deal-draft";
-import { type IssueV3, validateV3 } from "../../../../prototypes/das/v3/screens/setup-sections";
-import { FIELD_TYPE } from "../../../../prototypes/das/v3/screens/type-rules";
+import { type DealDraft, dealDraftFor } from "../../../../prototypes/das/v4/screens/deal-draft";
+import { type IssueV3, validateV3 } from "../../../../prototypes/das/v4/screens/setup-sections";
+import { FIELD_TYPE } from "../../../../prototypes/das/v4/screens/type-rules";
 
 /**
  * Story harness for Deal Activation System › Campaign Setup.
  *
- * Every story here renders Prototype 3's own components — the ones on
- * prototypes/das/v3 #/setup-empty — so the inventory cannot drift from the page.
+ * Every story here renders Round 4's own components — the ones on
+ * prototypes/das/v4 #/setup-empty — so the inventory cannot drift from the page.
  *
  * Click-to-fill is prototype chrome for walkthroughs; it is switched off while a story
  * is on screen so every field behaves like a field. It comes back on when the story
- * unmounts, so the Prototype 3 stories that rely on it are unaffected.
+ * unmounts, so the Prototype 3 and Oct 17 stories that rely on it are unaffected.
  */
 export const NoFill = ({ children }: { children: ReactNode }) => {
     useLayoutEffect(() => {
@@ -25,7 +25,7 @@ export const NoFill = ({ children }: { children: ReactNode }) => {
     return <>{children}</>;
 };
 
-/** The page surface: Prototype 3's type rules (labels, hints) and a white page. */
+/** The page surface: Round 4's type rules (labels, hints) and a white page. */
 export const Surface = ({ children, className }: { children: ReactNode; className?: string }) => (
     <NoFill>
         <div className={cx(FIELD_TYPE, "min-h-full bg-primary p-8", className)}>{children}</div>

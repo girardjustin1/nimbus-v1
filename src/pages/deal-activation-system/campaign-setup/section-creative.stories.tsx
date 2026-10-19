@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { CreativeSection } from "../../../../prototypes/das/v3/screens/campaign-setup";
+import { CreativeSection } from "../../../../prototypes/das/v4/screens/campaign-setup";
 import { Setup, Surface } from "./harness";
 
 /**

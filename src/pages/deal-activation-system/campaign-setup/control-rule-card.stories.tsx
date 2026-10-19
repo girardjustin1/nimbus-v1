@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
 import { rules } from "../../../../prototypes/das/v1/screens/setup-data";
-import { RuleCard } from "../../../../prototypes/das/v3/screens/rules-section";
+import { RuleCard } from "../../../../prototypes/das/v4/screens/rules-section";
 import { Surface } from "./harness";
 
 /**

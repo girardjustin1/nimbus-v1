@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { EnableChoice, NumberPicker } from "../../../../prototypes/das/v3/screens/priority-frequency";
+import { EnableChoice, NumberPicker } from "../../../../prototypes/das/v4/screens/priority-frequency";
 import { Surface, Value } from "./harness";
 
 /**

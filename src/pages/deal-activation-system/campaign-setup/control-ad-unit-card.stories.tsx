@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { adUnitTypes } from "../../../../prototypes/das/v1/screens/das-data";
-import { AdUnitCard } from "../../../../prototypes/das/v3/screens/ad-unit";
+import { AdUnitCard } from "../../../../prototypes/das/v4/screens/ad-unit";
 import { Surface, Value } from "./harness";
 
 /**

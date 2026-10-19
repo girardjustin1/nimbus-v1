@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { allPresets } from "../../../../prototypes/das/v1/screens/setup-data";
-import { ReviewModal } from "../../../../prototypes/das/v3/screens/campaign-setup";
+import { ReviewModal } from "../../../../prototypes/das/v4/screens/campaign-setup";
 import { Surface } from "./harness";
 
 /**

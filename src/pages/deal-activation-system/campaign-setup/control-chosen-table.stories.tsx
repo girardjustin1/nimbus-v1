@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ChosenTable } from "../../../../prototypes/das/v3/screens/search-select";
+import { ChosenTable } from "../../../../prototypes/das/v4/screens/search-select";
 import { Surface, Value } from "./harness";
 
 const ROWS = [
