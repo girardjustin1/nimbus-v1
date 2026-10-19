@@ -73,10 +73,15 @@ Product answered the open questions, and the answers are built into v4:
 - **Full performance: the builder across the top**, in Performance Insights' look and styling.
 - **Unity is a platform**, next to iOS and Android.
 - **Device Language is in** — it is in the charter.
+- **Keywords report on screen**, one row each (A, “the harder design”) — over the
+  charter's CSV-only guardrail, so the charter needs updating to match.
+- **No Campaign Health column**: the table stays exactly staging's. Product left the
+  rest to us.
+- **“Queued”** is the word for a campaign scheduled to start later, in the chip and the
+  table alike.
 
-**Still open:** whether per-keyword figures may be shown on screen (the charter says CSV
-only), and whether the campaigns table gets a Campaign Health column. Both are under
-Concepts.
+**Still open:** only the Campaign Health maths, which Product is settling with
+engineering.
 
 ## What's in here
 
@@ -117,10 +122,10 @@ to its **Storybook** stories (teal, stays here).
     <tbody>
       {[
         ["Campaign Health", "How should the traffic light read in its chip?", "Chose A", [["A · Counts — chosen", "oct-17-concepts-campaign-health--counts", "campaigns"], ["B · Bar", "oct-17-concepts-campaign-health--bar"], ["C · Needs attention", "oct-17-concepts-campaign-health--to-do"]]],
-        ["Campaigns Table", "Should the table say which campaign is which colour?", "Open", [["A · Staging's columns", "oct-17-concepts-campaigns-table--as-staging", "campaigns"], ["B · Health column", "oct-17-concepts-campaigns-table--health-column", "campaigns-health-column"]]],
+        ["Campaigns Table", "Should the table say which campaign is which colour?", "Chose A", [["A · Staging's columns — chosen", "oct-17-concepts-campaigns-table--as-staging", "campaigns"], ["B · Health column", "oct-17-concepts-campaigns-table--health-column"]]],
         ["Overview Summary", "Sidebar or cards — Product asked for one, not both", "Chose cards", [["A · Sidebar", "oct-17-concepts-overview-summary--sidebar"], ["B · Cards — chosen", "oct-17-concepts-overview-summary--cards", "view-a"]]],
         ["Full Performance Layout", "Where the breakdown controls sit", "Chose the top", [["Across the top, like Performance Insights — chosen", "oct-17-concepts-full-performance-layout--decided", "view-d"]]],
-        ["Keyword Reporting", "Per-keyword figures on screen, or CSV only?", "Open", [["A · On screen", "oct-17-concepts-keyword-reporting--on-screen", "view-d-keywords"], ["B · CSV only (charter)", "oct-17-concepts-keyword-reporting--csv-only", "view-d-keywords-csv"]]],
+        ["Keyword Reporting", "Per-keyword figures on screen, or CSV only?", "Chose A", [["A · On screen — chosen", "oct-17-concepts-keyword-reporting--on-screen", "view-d-keywords"], ["B · CSV only (charter)", "oct-17-concepts-keyword-reporting--csv-only"]]],
       ].map(([folder, question, state, options]) => (
         <tr key={folder}>
           <td style={{ ...td, fontWeight: 700, color: "#101828" }}>{folder}<div style={{ marginTop: 6 }}><Chip tone={state === "Open" ? "Concepts" : "Decided"}>{state}</Chip></div></td>
@@ -148,8 +153,8 @@ to its **Storybook** stories (teal, stays here).
   it was dropped on 1 Oct. Product confirmed on 19 Oct that keywords match on **ANY**,
   like geos, with no toggle.
 - **Reporting.** The charter's guardrail keeps per-keyword breakdowns to CSV and the API
-  at launch, with no per-keyword charting in the dashboard. Full performance currently
-  shows keywords on screen; the CSV-only version is concept B. Waiting on Product.
+  at launch, with no per-keyword charting in the dashboard. Product chose to show them on
+  screen anyway (19 Oct), so **the charter needs an update** to match.
 - **Counting.** With ANY, one impression can match several keywords. It counts under
   the first it matched, so per-keyword rows add up to the campaign's total.
 

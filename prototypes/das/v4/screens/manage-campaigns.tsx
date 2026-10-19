@@ -22,10 +22,11 @@ import { Button } from "./type-rules";
  *   3. Total spend — leads into detailed reporting
  *   4. Campaign Health — was "Behind pace", now a traffic light
  *
- * Live, Queued and Campaign Health also filter the table when clicked. How Campaign
- * Health should look is open, so it comes in three variants (`health`), and whether the
- * table gains a health column is open too (`healthColumn`). Storybook › Oct 17 shows
- * them side by side.
+ * Live, Queued and Campaign Health also filter the table when clicked.
+ *
+ * 19 Oct: Campaign Health reads as counts by colour (`health="counts"`), and the table
+ * stays exactly staging's, with no health column. The other variants (`health`,
+ * `healthColumn`) stay so Storybook › Oct 17 can show what was compared.
  */
 
 export type HealthVariant = "counts" | "bar" | "attention";
@@ -206,7 +207,7 @@ const Highlight = ({ text, query }: { text: string; query: string }) => {
     );
 };
 
-const searchText = (c: Campaign) => [c.name, c.dealName, c.dealId, c.status, c.rule, c.geos, c.platforms, ...c.apps, ...c.adUnits, ...c.languages, ...c.keywords].join(" ").toLowerCase();
+const searchText = (c: Campaign) => [c.name, c.dealName, c.dealId, c.status, queued(c) ? "Queued" : "", c.rule, c.geos, c.platforms, ...c.apps, ...c.adUnits, ...c.languages, ...c.keywords].join(" ").toLowerCase();
 
 /* -------------------------------------------------------------- Page --- */
 

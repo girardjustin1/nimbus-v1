@@ -69,6 +69,7 @@ export const items: FeedbackItem[] = [
             "Round 3's deal-grouped delivery cards are replaced by staging's table, column for column: Status, Deal ID, Deal Name, Campaign Name, Geos, Platform, Apps, Ad Units, Budget, Spend, Bid Amount, Start Date, End Date, Campaign Daily Impression Cap. Every column sorts. The search bar stays.",
             "Spend shows real figures rather than staging's N/A.",
             "No Export CSV on this page — raised and withdrawn on the call.",
+            "19 Oct: no Campaign Health column either. The table stays exactly staging's; the column version stays in Concepts as the record.",
         ],
         touches: ["prototypes/das/v4/screens/manage-campaigns.tsx", "prototypes/das/v4/screens/campaign-data.ts"],
     },
@@ -80,6 +81,7 @@ export const items: FeedbackItem[] = [
         decision: [
             "Live campaigns, Queued campaigns (replaces Ending in 7 days — campaigns scheduled to start later), Total spend (links into detailed reporting), Campaign Health (was Behind pace).",
             "Live, Queued and Campaign Health also filter the table when clicked, and say so. That is our addition.",
+            "19 Oct: a campaign scheduled to start later reads “Queued” in the table's Status too, so the chip and the table use one word.",
         ],
         touches: ["prototypes/das/v4/screens/manage-campaigns.tsx", "prototypes/das/v4/screens/campaign-ui.tsx"],
     },
@@ -97,7 +99,7 @@ export const items: FeedbackItem[] = [
         decision: [
             "Chosen on 19 Oct: A, the counts by colour. The bar (B) and the named list (C) stay in Concepts as the record. Clicking the chip filters the table to the campaigns behind or at risk.",
             "The maths behind green, orange and red is a placeholder, written down in campaign-data.ts so engineering can replace it in one place. Today: on pace within 10% of the flight elapsed; orange if the daily spend needed to finish is at most 1.5× today's; red beyond that.",
-            "Still open: whether the table also gets a Campaign Health column — see Campaigns Table.",
+            "No Campaign Health column in the table: it stays exactly staging's, and health lives in the chip (19 Oct).",
         ],
         touches: ["prototypes/das/v4/screens/campaign-data.ts", "prototypes/das/v4/screens/manage-campaigns.tsx"],
     },
@@ -171,17 +173,19 @@ export const items: FeedbackItem[] = [
     },
     {
         slug: "keyword-reporting",
-        title: "Keywords: on screen, or CSV only?",
-        status: "To confirm",
+        title: "Keywords: one by one, on screen",
+        status: "Decided",
+        decidedOn: "19 Oct",
         quotes: [
             "Keywords is ANY — the same way geo would be, for instance.",
             "In the charter, can you actually check this? That's going to be important on how we report on this.",
+            "Go ahead and do the rest — assume A, since that's the harder design.",
         ],
-        quoteDates: ["19 Oct", "16 Oct review"],
+        quoteDates: ["19 Oct", "16 Oct review", "19 Oct"],
         decision: [
-            "Settled 19 Oct: keywords match on ANY, like geos. So each keyword reports on its own row; an impression that matches more than one counts under the first it matched, so the rows still add up. The “one set” option is gone.",
-            "Still open, with an example sent back: may per-keyword figures be on screen? The charter keeps per-keyword breakdowns to CSV and the API at launch, with no per-keyword charting in the dashboard.",
-            "A puts Keyword on screen like any breakdown (the prototype's default). B is the charter: Keyword can't be picked on screen, and a Download by keyword .CSV gives the figures.",
+            "Keywords match on ANY, like geos. Each keyword reports on its own row; an impression that matches more than one counts under the first it matched, so the rows add up.",
+            "Per-keyword figures are on screen (A): Keyword is a breakdown like any other. Product chose this over the charter's guardrail, which keeps per-keyword breakdowns to CSV and the API at launch — the charter will need updating to match.",
+            "The CSV-only version (B) stays in Concepts as the record.",
         ],
         touches: ["prototypes/das/v4/screens/full-performance.tsx"],
     },
@@ -249,7 +253,7 @@ export const links: Record<string, { prototype: ScreenLink[]; stories: StoryLink
     "campaigns-table": {
         prototype: [
             ["Campaigns table", "campaigns"],
-            ["With a health column", "campaigns-health-column"],
+            ["Searching", "campaigns-search"],
         ],
         stories: [
             ["Manage campaigns · R3 → R4", "oct-17-applied-changes--campaigns-after"],
@@ -316,12 +320,9 @@ export const links: Record<string, { prototype: ScreenLink[]; stories: StoryLink
         ],
     },
     "keyword-reporting": {
-        prototype: [
-            ["A · On screen", "view-d-keywords"],
-            ["B · CSV only", "view-d-keywords-csv"],
-        ],
+        prototype: [["By keyword (chosen)", "view-d-keywords"]],
         stories: [
-            ["A · On screen", "oct-17-concepts-keyword-reporting--on-screen"],
+            ["A · On screen (chosen)", "oct-17-concepts-keyword-reporting--on-screen"],
             ["B · CSV only", "oct-17-concepts-keyword-reporting--csv-only"],
         ],
     },

@@ -6,9 +6,9 @@ import { Compare } from "../note";
 /**
  * Oct 17 · how keywords report on Full performance.
  *
- * 19 Oct: keywords match on ANY, so each keyword reports on its own. Still open: may
- * per-keyword figures be on screen, or only in a CSV as the charter says? Shown on Over 21
- * Midwest, which targets two keywords.
+ * 19 Oct: keywords match on ANY, so each keyword reports on its own — and on screen.
+ * Product chose A ("the harder design") over the charter's CSV-only guardrail; B stays
+ * here as the record. Shown on Over 21 Midwest, which targets two keywords.
  */
 const meta = {
     title: "Oct 17/Concepts/Keyword Reporting",
@@ -21,16 +21,16 @@ type Story = StoryObj<typeof meta>;
 const item = bySlug("keyword-reporting");
 
 export const OnScreen: Story = {
-    name: "A · On screen (the prototype's default)",
+    name: "A · On screen — chosen",
     render: () => (
-        <Compare item={item} kind="A" title="Keyword is a breakdown like any other: one row per keyword, pivot it against platform">
+        <Compare item={item} quote={2} kind="Chosen" title="A · Keyword is a breakdown like any other: one row per keyword, pivot it against platform">
             <FullPerformance id="c3" breakdown={["Keyword", "Platform"]} />
         </Compare>
     ),
 };
 
 export const CsvOnly: Story = {
-    name: "B · CSV only (the charter)",
+    name: "B · CSV only (the charter) — not chosen",
     render: () => (
         <Compare item={item} quote={1} kind="B" title="Keyword can't be picked on screen; per-keyword figures come from Download by keyword .CSV">
             <FullPerformance id="c3" breakdown={["Platform"]} keywordMode="csv" />
