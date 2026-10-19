@@ -259,7 +259,6 @@ export const screens: ProtoScreen[] = [
     campaigns({ id: "campaigns", title: "Campaigns table", description: "Staging's table, with Live, Queued, Total spend and Campaign Health above it.", render: () => <ManageCampaigns /> }),
     campaigns({ id: "campaigns-search", title: "Searching", description: "The search bar narrows the table.", render: () => <ManageCampaigns search="sports" /> }),
     campaigns({ id: "campaigns-attention", title: "Campaign Health, filtered", description: "Clicking Campaign Health leaves only the campaigns behind or at risk.", render: () => <ManageCampaigns filter="attention" /> }),
-    campaigns({ id: "campaigns-health-column", title: "Concept · Table with a health column", description: "Still open: staging's table plus one column, each campaign's health.", render: () => <ManageCampaigns healthColumn /> }),
 
     /* 6 · A campaign, then its full performance. Cards and the builder on top, in Performance Insights' style (19 Oct). */
     view({ id: "view-a", title: "Overview", render: () => <ViewOnePage /> }),
@@ -268,6 +267,5 @@ export const screens: ProtoScreen[] = [
     view({ id: "view-a-queued", title: "Overview · queued", render: () => <ViewOnePage id="c6" /> }),
     view({ id: "view-d", title: "Full performance", description: "Styled like Performance Insights. Break down by creative, platform, geo, app, keyword and device language; download the view as CSV.", render: () => <FullPerformance /> }),
     view({ id: "view-d-pivot", title: "Full performance · pivot", description: "Creative against Platform.", render: () => <FullPerformance breakdown={["Creative", "Platform"]} /> }),
-    view({ id: "view-d-keywords", title: "Full performance · by keyword", description: "Keywords match on ANY, so each keyword is a row.", render: () => <FullPerformance id="c3" breakdown={["Keyword"]} /> }),
-    view({ id: "view-d-keywords-csv", title: "Concept · keywords in CSV only", description: "Still open: the charter's version, with per-keyword figures only in a download.", render: () => <FullPerformance id="c3" keywordMode="csv" breakdown={["Platform"]} /> }),
+    view({ id: "view-d-keywords", title: "Full performance · by keyword", description: "Keywords match on ANY and report on screen, one row each (19 Oct).", render: () => <FullPerformance id="c3" breakdown={["Keyword"]} /> }),
 ];

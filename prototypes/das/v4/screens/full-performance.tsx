@@ -28,8 +28,9 @@ import { LABEL } from "./type-rules";
  *     matches more than one counts under the first it matched, so the rows add up.
  *   - Unity is a platform, and Device Language is a breakdown again.
  *
- * Still open: whether per-keyword figures may be on screen at all. The charter keeps
- * them to CSV and the API at launch. `keywordMode="csv"` draws that version.
+ * Per-keyword figures are on screen: Product chose that over the charter's CSV-only
+ * guardrail on 19 Oct ("the harder design"). `keywordMode="csv"` still draws the
+ * charter's version for the record in Storybook.
  *
  * All figures are synthesised from the campaign's totals so every breakdown adds up.
  */
@@ -382,7 +383,7 @@ export const FullPerformance = ({
                     "Laid out and styled like Performance Insights (Product, 19 Oct): date row, then Metrics, Breakdown, Filters (+ ADD) and Chart Type. Download .CSV takes the table on screen.",
                     "Break down by Creative, Platform (now with Unity), Geo, App, Keyword and Device Language — two at a time to pivot.",
                     keywordMode === "screen"
-                        ? "Keywords match on ANY, so each keyword is a row. Still open: the charter keeps per-keyword figures to CSV and the API at launch."
+                        ? "Keywords match on ANY, so each keyword is a row, on screen — Product's choice on 19 Oct over the charter's CSV-only guardrail."
                         : "The charter's version: Keyword is not a breakdown on screen; per-keyword figures come from Download by keyword .CSV.",
                 ],
             }}

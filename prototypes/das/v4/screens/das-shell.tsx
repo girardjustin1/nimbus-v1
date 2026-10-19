@@ -244,10 +244,17 @@ const statusDot: Record<CampaignStatus, string> = {
     Draft: "#98A2B3",
 };
 
+/**
+ * What a status reads as. Round 4 (19 Oct): a campaign scheduled to start later reads
+ * "Queued", the word Product uses and the Manage campaigns chip uses, so the chip and
+ * the table say the same thing. The data value stays "Scheduled".
+ */
+const statusLabel: Partial<Record<CampaignStatus, string>> = { Scheduled: "Queued" };
+
 export const StatusDot = ({ status }: { status: CampaignStatus }) => (
     <span className={cx("inline-flex items-center gap-2 text-md whitespace-nowrap", status === "Paused" ? "font-medium text-error-primary" : "text-primary")}>
         <span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: statusDot[status] }} aria-hidden="true" />
-        {status}
+        {statusLabel[status] ?? status}
     </span>
 );
 
