@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { SingleSearchSelect } from "../../../../prototypes/das/v3/screens/search-select";
-import { deals } from "../../../../prototypes/das/v3/screens/deal-data";
+import { SingleSearchSelect } from "../../../../prototypes/das/v4/screens/search-select";
+import { deals } from "../../../../prototypes/das/v4/screens/deal-data";
 import { Surface, Value } from "./harness";
 
 const rows = deals.map((d) => ({ id: d.id, label: d.label, meta: d.supportingText }));

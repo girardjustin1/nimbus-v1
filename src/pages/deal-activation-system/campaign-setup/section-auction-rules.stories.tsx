@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { RulesSectionV3 } from "../../../../prototypes/das/v3/screens/rules-section";
+import { RulesSectionV3 } from "../../../../prototypes/das/v4/screens/rules-section";
 import { Setup, Surface } from "./harness";
 
 /**

@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { CampaignSetup } from "../../../../prototypes/das/v3/screens/campaign-setup";
+import { CampaignSetup } from "../../../../prototypes/das/v4/screens/campaign-setup";
 import { NoFill } from "./harness";
 
 /**
- * The whole setup page — prototype 3, #/setup-empty and its states. Everything below this entry is a piece of it.
+ * The whole setup page — prototype v4, #/setup-empty and its states. Everything below this entry is a piece of it.
  */
 const meta = {
     title: "Deal Activation System/Campaign Setup/Page",

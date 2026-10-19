@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { BudgetSectionV3 } from "../../../../prototypes/das/v3/screens/budget-section";
+import { BudgetSectionV3 } from "../../../../prototypes/das/v4/screens/budget-section";
 import { Setup, Surface } from "./harness";
 
 /**

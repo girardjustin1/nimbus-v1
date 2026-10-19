@@ -185,6 +185,119 @@ export const items: FeedbackItem[] = [
     },
 ];
 
+/** A screen in prototype v4: label and its hash route. */
+export type ScreenLink = [label: string, route: string];
+/** A story in this category: label and its Storybook id. */
+export type StoryLink = [label: string, id: string];
+
+/**
+ * Where to see each change: the prototype v4 screens it shows on, and the stories in
+ * this category that compare or present it. Rendered as links on Oct 17 › Overview.
+ */
+export const links: Record<string, { prototype: ScreenLink[]; stories: StoryLink[] }> = {
+    "creative-previews": {
+        prototype: [
+            ["Creative step", "step-creative"],
+            ["Asset Setup", "asset-setup-filled"],
+            ["Asset detail", "asset-detail"],
+        ],
+        stories: [
+            ["Creative · R3 → R4", "oct-17-applied-changes--creative-after"],
+            ["Asset Setup · R3 → R4", "oct-17-applied-changes--asset-setup-after"],
+        ],
+    },
+    "campaigns-table": {
+        prototype: [
+            ["Campaigns table", "campaigns"],
+            ["Searching", "campaigns-search"],
+        ],
+        stories: [
+            ["Manage campaigns · R3 → R4", "oct-17-applied-changes--campaigns-after"],
+            ["Table concepts", "oct-17-concepts-campaigns-table--as-staging"],
+        ],
+    },
+    "highlight-chips": {
+        prototype: [
+            ["Campaigns table", "campaigns"],
+            ["Filtered by health", "campaigns-attention"],
+        ],
+        stories: [["Manage campaigns · R4", "oct-17-applied-changes--campaigns-after"]],
+    },
+    "campaign-health": {
+        prototype: [
+            ["A · Counts", "campaigns"],
+            ["B · Bar", "campaigns-health-bar"],
+            ["C · Needs attention", "campaigns-health-attention"],
+            ["Health column", "campaigns-health-column"],
+        ],
+        stories: [
+            ["A · Counts", "oct-17-concepts-campaign-health--counts"],
+            ["B · Bar", "oct-17-concepts-campaign-health--bar"],
+            ["C · Needs attention", "oct-17-concepts-campaign-health--to-do"],
+            ["Clicked", "oct-17-concepts-campaign-health--filtered"],
+        ],
+    },
+    breadcrumb: {
+        prototype: [
+            ["Overview", "view-a"],
+            ["Full performance", "view-d"],
+        ],
+        stories: [["Overview · R3 → R4", "oct-17-applied-changes--overview-after"]],
+    },
+    "overview-header": {
+        prototype: [
+            ["Overview", "view-a"],
+            ["At risk", "view-a-at-risk"],
+            ["Queued", "view-a-queued"],
+        ],
+        stories: [
+            ["Overview · R3", "oct-17-applied-changes--overview-before"],
+            ["Overview · R4", "oct-17-applied-changes--overview-after"],
+        ],
+    },
+    "overview-summary": {
+        prototype: [
+            ["A · Sidebar", "view-a-sidebar"],
+            ["B · Cards", "view-a"],
+        ],
+        stories: [
+            ["A · Sidebar", "oct-17-concepts-overview-summary--sidebar"],
+            ["B · Cards", "oct-17-concepts-overview-summary--cards"],
+            ["Cards, at risk", "oct-17-concepts-overview-summary--cards-at-risk"],
+        ],
+    },
+    "chart-tooltip": {
+        prototype: [["Overview (hover the chart)", "view-a"]],
+        stories: [["Overview · R4", "oct-17-applied-changes--overview-after"]],
+    },
+    "full-performance": {
+        prototype: [
+            ["Full performance", "view-d"],
+            ["Pivot", "view-d-pivot"],
+            ["Builder on the left", "view-d-side"],
+        ],
+        stories: [
+            ["Performance · R3 → R4", "oct-17-applied-changes--performance-after"],
+            ["A · Builder on top", "oct-17-concepts-full-performance-layout--on-top"],
+            ["B · Builder on the left", "oct-17-concepts-full-performance-layout--on-the-left"],
+        ],
+    },
+    "keyword-reporting": {
+        prototype: [
+            ["Keywords as one set", "view-d"],
+            ["One by one", "view-d-keywords"],
+        ],
+        stories: [
+            ["A · One set", "oct-17-concepts-keyword-reporting--as-one-set"],
+            ["B · One by one", "oct-17-concepts-keyword-reporting--one-by-one"],
+        ],
+    },
+    "targeting-block": {
+        prototype: [["Overview · Targeting", "view-a"]],
+        stories: [["Overview · R4", "oct-17-applied-changes--overview-after"]],
+    },
+};
+
 export const bySlug = (slug: string): FeedbackItem => {
     const found = items.find((i) => i.slug === slug);
     if (!found) throw new Error(`No Oct 17 feedback item named “${slug}”`);

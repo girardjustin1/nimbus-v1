@@ -5,6 +5,21 @@ import { Meta } from "@storybook/addon-docs/blocks";
 export const protoUrl = (name) =>
   typeof window !== "undefined" && window.location.hostname === "localhost" ? `http://localhost:5190/${name}/` : `./${name}/`;
 
+export const DestGroup = ({ label, children }) => (
+  <div>
+    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#667085", margin: "0 0 6px" }}>{label}</div>
+    <div style={{ border: "1px solid #EAECF0", borderRadius: 12, overflow: "hidden" }}>{children}</div>
+  </div>
+);
+
+export const Dest = ({ href, title, note }) => (
+  <a href={href} target="_top" style={{ display: "flex", alignItems: "center", gap: 14, padding: "10px 14px", borderTop: "1px solid #EAECF0", marginTop: -1, textDecoration: "none", background: "#FFFFFF" }}>
+    <span style={{ flex: "0 0 150px", fontSize: 14, fontWeight: 700, color: "#A94579" }}>{title}</span>
+    <span style={{ flex: 1, fontSize: 13, lineHeight: 1.5, color: "#475467" }}>{note}</span>
+    <span style={{ fontSize: 16, color: "#A94579" }} aria-hidden="true">→</span>
+  </a>
+);
+
 export const ProtoCard = ({ tone, soft, badge, date, title, body, meta, href, links = [] }) => (
   <div style={{ flex: "1 1 280px", display: "flex", flexDirection: "column", background: "#FFFFFF", border: "1px solid #EAECF0", borderTop: `4px solid ${tone}`, borderRadius: 14, padding: "16px 18px" }}>
     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
@@ -48,26 +63,34 @@ single button to a full application screen — in both light and dark modes.
   Both deploy from <code>main</code> and serve the same build, prototypes included at <code>/das/</code>, <code>/performance-insights/</code> and <code>/das-studio/</code>. If one is behind, use the other.
 </div>
 
-<div style={{ background: "#FFF7FB", border: "1px solid #F7D6E6", borderRadius: 18, padding: "20px 22px", margin: "8px 0 20px" }}>
-  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 8 }}>
-    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#A94579" }}>Round 4 · current</div>
-    <div style={{ fontSize: 13, fontWeight: 600, color: "#101828" }}>Started October 17, 2026</div>
+<div style={{ display: "flex", flexWrap: "wrap", gap: 28, background: "#FFFFFF", border: "1px solid #EAECF0", borderLeft: "4px solid #A94579", borderRadius: 16, padding: "24px 26px", margin: "8px 0 28px" }}>
+  <div style={{ flex: "1 1 300px", display: "flex", flexDirection: "column", gap: 12 }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+      <span style={{ background: "#A94579", color: "#FFFFFF", fontSize: 12, fontWeight: 700, letterSpacing: 0.4, textTransform: "uppercase", padding: "3px 10px", borderRadius: 999 }}>Round 4 · current</span>
+      <span style={{ fontSize: 13, color: "#667085" }}>Deal Activation System · v4 · Oct 17, 2026</span>
+    </div>
+    <div style={{ fontSize: 22, fontWeight: 800, lineHeight: 1.3, color: "#101828" }}>After a campaign exists</div>
+    <div style={{ fontSize: 15, lineHeight: 1.6, color: "#475467" }}>The 16 Oct review, built. Setup is approved for build; this round is the three screens that follow it — the list, one campaign, and where it delivered.</div>
+    <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 12, marginTop: 4 }}>
+      <a href={protoUrl("das/v4")} target="_top" style={{ background: "#A94579", color: "#FFFFFF", padding: "9px 18px", borderRadius: 999, fontSize: 14, fontWeight: 700, textDecoration: "none" }}>Open prototype →</a>
+      <span style={{ fontSize: 13, color: "#667085" }}>51 screens · <strong>Fill page</strong> fills any form</span>
+    </div>
+    <div style={{ marginTop: "auto", background: "#FFF7FB", border: "1px dashed #F7D6E6", borderRadius: 12, padding: "10px 12px", fontSize: 13, lineHeight: 1.55, color: "#475467" }}>
+      <strong style={{ color: "#A94579" }}>Waiting on Product:</strong> how keywords match (all-or-nothing or any), the Campaign Health maths, and a pick for each open concept.
+    </div>
   </div>
-  <div style={{ display: "flex", flexDirection: "column", background: "#FFFFFF", border: "1px solid #EAECF0", borderTop: "4px solid #A94579", borderRadius: 14, padding: "18px 20px", marginTop: 14 }}>
-    <span style={{ alignSelf: "flex-start", background: "#FCE7F1", color: "#A94579", fontSize: 12, fontWeight: 700, padding: "3px 10px", borderRadius: 999 }}>Deal Activation System · v4</span>
-    <div style={{ fontSize: 20, fontWeight: 700, color: "#101828", margin: "10px 0 6px" }}>After a campaign exists: the list, one campaign, and where it delivered</div>
-    <div style={{ fontSize: 14, lineHeight: 1.6, color: "#475467" }}>
-      The 16 Oct review, built. Setup goes to build as it is; this round is the three screens after it. <strong>Manage campaigns</strong> is staging's table again, under four chips — Live, Queued, Total spend and a traffic-light <strong>Campaign Health</strong>. A campaign's <strong>overview</strong> gets the dashboard's breadcrumb strip, leads with status, rule, flight dates, platform and apps, keeps one summary, and shows dollars in its chart tooltip. <strong>Full performance</strong> is new: break a campaign down by creative, platform, geo, app and keywords, pivot two at a time, and export the view as CSV. Creative previews are gone everywhere. Where the review left a choice open, the options are side by side in <em>Oct 17</em> in Storybook.
-    </div>
-    <div style={{ fontSize: 13, color: "#667085", margin: "10px 0 16px" }}>51 screens · click any empty field to fill it, or press <strong>Fill page</strong></div>
-    <div style={{ marginTop: "auto", display: "flex", alignItems: "center", flexWrap: "wrap", gap: 14 }}>
-      <a href={protoUrl("das/v4")} target="_top" style={{ background: "#A94579", color: "#FFFFFF", padding: "9px 16px", borderRadius: 999, fontSize: 14, fontWeight: 700, textDecoration: "none" }}>Open prototype →</a>
-      <a href={`${protoUrl("das/v4")}#/campaigns`} target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Manage campaigns</a>
-      <a href={`${protoUrl("das/v4")}#/view-d`} target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Full performance</a>
-      <a href="./?path=/docs/oct-17-overview--docs" target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Oct 17 in Storybook</a>
-      <a href="./?path=/docs/deal-activation-system-campaign-setup-spec--docs" target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Campaign Setup spec</a>
-      <a href="./?path=/docs/audits-typography-rules--docs" target="_top" style={{ color: "#A94579", fontSize: 13, fontWeight: 600 }}>Typography Rules</a>
-    </div>
+  <div style={{ flex: "1.4 1 380px", display: "flex", flexDirection: "column", gap: 14 }}>
+    <DestGroup label="In the prototype">
+      <Dest href={`${protoUrl("das/v4")}#/campaigns`} title="Manage campaigns" note="Staging's table under four chips: Live, Queued, Total spend, Campaign Health." />
+      <Dest href={`${protoUrl("das/v4")}#/view-a`} title="Campaign overview" note="Breadcrumb strip; flight dates, platform and apps up top; one summary." />
+      <Dest href={`${protoUrl("das/v4")}#/view-d`} title="Full performance" note="New. Break down and pivot by creative, platform, geo, app, keywords; export CSV." />
+      <Dest href={`${protoUrl("das/v4")}#/setup-empty`} title="Campaign setup" note="Approved for build. Creative previews removed." />
+    </DestGroup>
+    <DestGroup label="In Storybook">
+      <Dest href="./?path=/docs/oct-17-overview--docs" title="Oct 17 review" note="What changed, Round 3 beside Round 4, and the open choices as concepts." />
+      <Dest href="./?path=/docs/deal-activation-system-campaign-setup-spec--docs" title="Campaign Setup spec" note="Every section and control on the setup page." />
+      <Dest href="./?path=/docs/audits-typography-rules--docs" title="Typography Rules" note="800 headlines, 700 labels, nothing under 15px." />
+    </DestGroup>
   </div>
 </div>
 

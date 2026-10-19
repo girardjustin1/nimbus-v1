@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Rail } from "../../../../prototypes/das/v3/screens/campaign-setup";
+import { Rail } from "../../../../prototypes/das/v4/screens/campaign-setup";
 import { Setup, Surface } from "./harness";
 
 /**

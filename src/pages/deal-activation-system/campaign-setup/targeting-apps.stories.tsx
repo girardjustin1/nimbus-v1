@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { AppTargetBlock } from "../../../../prototypes/das/v3/screens/app-target";
-import { APP_LIST } from "../../../../prototypes/das/v3/screens/target-data";
+import { AppTargetBlock } from "../../../../prototypes/das/v4/screens/app-target";
+import { APP_LIST } from "../../../../prototypes/das/v4/screens/target-data";
 import { Surface, Value } from "./harness";
 
 /**

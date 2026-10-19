@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { PlatformTarget } from "../../../../prototypes/das/v3/screens/existing-targets";
+import { PlatformTarget } from "../../../../prototypes/das/v4/screens/existing-targets";
 import { Surface, Value } from "./harness";
 
 /**

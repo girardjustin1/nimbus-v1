@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { FrequencyCapSection } from "../../../../prototypes/das/v3/screens/priority-frequency";
+import { FrequencyCapSection } from "../../../../prototypes/das/v4/screens/priority-frequency";
 import { Setup, Surface } from "./harness";
 
 /**
