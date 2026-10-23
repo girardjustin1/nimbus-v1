@@ -387,7 +387,7 @@ const PinkPill = ({ children }: { children: ReactNode }) => (
     </button>
 );
 
-const CapCell = ({ cap }: { cap: CapKind }) => {
+export const CapCell = ({ cap }: { cap: CapKind }) => {
     if (cap.type === "add") {
         return (
             <button
@@ -438,56 +438,59 @@ export const ManageActiveDemandIntegratedPartners = () => {
                     </div>
                 </div>
 
-                <TableCard.Root>
-                    <Table aria-label="Integrated demand partners" selectionMode="none">
-                        <Table.Header>
-                            <Table.Head id="source" isRowHeader label="Demand Source" />
-                            <Table.Head id="status" label="Status" />
-                            <Table.Head id="enabled" label="Enabled" />
-                            <Table.Head id="cap" label="Impression Cap" />
-                            <Table.Head id="type" label="Demand Type" />
-                            <Table.Head id="edit" label="Edit Demand Setup" />
-                        </Table.Header>
-                        <Table.Body>
-                            {partnerRows.map((row) => (
-                                <Table.Row key={row.id} id={row.id}>
-                                    <Table.Cell>
-                                        <span className="text-sm font-medium text-primary">{row.source}</span>
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        <span
-                                            className="inline-flex items-center gap-2 text-sm font-medium"
-                                            style={{ color: row.status === "Paused" ? "#F04438" : undefined }}
-                                        >
-                                            <span
-                                                className="size-2 shrink-0 rounded-full"
-                                                style={{ backgroundColor: statusDot[row.status] }}
-                                                aria-hidden="true"
-                                            />
-                                            <span className={row.status === "Paused" ? "" : "text-primary"}>{row.status}</span>
-                                        </span>
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        <Toggle defaultSelected={row.enabled} aria-label={`${row.source} enabled`} />
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        <CapCell cap={row.cap} />
-                                    </Table.Cell>
-                                    <Table.Cell>{row.demandType}</Table.Cell>
-                                    <Table.Cell>
-                                        <a href="#" className="inline-flex items-center gap-1 text-sm font-semibold" style={{ color: TEAL }}>
-                                            Placements
-                                            <ChevronRight className="size-4" aria-hidden="true" />
-                                        </a>
-                                    </Table.Cell>
-                                </Table.Row>
-                            ))}
-                        </Table.Body>
-                    </Table>
-                </TableCard.Root>
+                <IntegratedDemandPartnersTable />
             </div>
         </AppShell>
     );
 };
 
 export default ManageActiveDemandActionNeeded;
+
+/** The table used by ManageActiveDemandIntegratedPartners, exposed without page navigation for the 102326 audit. */
+export const IntegratedDemandPartnersTable = () => {
+    return (
+        <TableCard.Root>
+            <Table aria-label="Integrated demand partners" selectionMode="none">
+                <Table.Header>
+                    <Table.Head id="source" isRowHeader label="Demand Source" />
+                    <Table.Head id="status" label="Status" />
+                    <Table.Head id="enabled" label="Enabled" />
+                    <Table.Head id="cap" label="Impression Cap" />
+                    <Table.Head id="type" label="Demand Type" />
+                    <Table.Head id="edit" label="Edit Demand Setup" />
+                </Table.Header>
+                <Table.Body>
+                    {partnerRows.map((row) => (
+                        <Table.Row key={row.id} id={row.id}>
+                            <Table.Cell>
+                                <span className="text-sm font-medium text-primary">{row.source}</span>
+                            </Table.Cell>
+                            <Table.Cell>
+                                <span
+                                    className="inline-flex items-center gap-2 text-sm font-medium"
+                                    style={{ color: row.status === "Paused" ? "#F04438" : undefined }}
+                                >
+                                    <span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: statusDot[row.status] }} aria-hidden="true" />
+                                    <span className={row.status === "Paused" ? "" : "text-primary"}>{row.status}</span>
+                                </span>
+                            </Table.Cell>
+                            <Table.Cell>
+                                <Toggle defaultSelected={row.enabled} aria-label={`${row.source} enabled`} />
+                            </Table.Cell>
+                            <Table.Cell>
+                                <CapCell cap={row.cap} />
+                            </Table.Cell>
+                            <Table.Cell>{row.demandType}</Table.Cell>
+                            <Table.Cell>
+                                <a href="#" className="inline-flex items-center gap-1 text-sm font-semibold" style={{ color: TEAL }}>
+                                    Placements
+                                    <ChevronRight className="size-4" aria-hidden="true" />
+                                </a>
+                            </Table.Cell>
+                        </Table.Row>
+                    ))}
+                </Table.Body>
+            </Table>
+        </TableCard.Root>
+    );
+};

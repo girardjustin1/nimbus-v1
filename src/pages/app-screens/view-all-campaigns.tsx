@@ -232,64 +232,7 @@ export const ViewCampaignsScreen = () => {
 
                 {/* Very wide table — scrolls horizontally inside its own container. */}
                 <div className="overflow-x-auto">
-                    <TableCard.Root className="min-w-max">
-                        <Table aria-label="View campaigns" selectionMode="none">
-                            <Table.Header>
-                                {columns.map((col) => (
-                                    <Table.Head key={col.id} id={col.id} isRowHeader={col.id === "status"} label={col.label}>
-                                        {col.sortable ? <SortChevron /> : null}
-                                    </Table.Head>
-                                ))}
-                            </Table.Header>
-                            <Table.Body>
-                                {campaignRows.map((row) => (
-                                    <Table.Row key={row.id} id={row.id}>
-                                        <Table.Cell>
-                                            <StatusCell status={row.status} />
-                                        </Table.Cell>
-                                        <Table.Cell className="whitespace-nowrap">{row.dealId}</Table.Cell>
-                                        <Table.Cell>
-                                            <a href="#" className="text-sm font-semibold whitespace-nowrap" style={{ color: TEAL }}>
-                                                {row.name}
-                                            </a>
-                                        </Table.Cell>
-                                        <Table.Cell className="whitespace-nowrap">{row.geos}</Table.Cell>
-                                        <Table.Cell className="whitespace-nowrap">{row.platform}</Table.Cell>
-                                        <Table.Cell>{row.apps}</Table.Cell>
-                                        <Table.Cell>{row.budget}</Table.Cell>
-                                        <Table.Cell>{row.bidAmount}</Table.Cell>
-                                        <Table.Cell>{row.startDate}</Table.Cell>
-                                        <Table.Cell>{row.endDate}</Table.Cell>
-                                        <Table.Cell>{row.campaignCap}</Table.Cell>
-                                        <Table.Cell>{row.rules}</Table.Cell>
-                                        <Table.Cell>{row.adTypes}</Table.Cell>
-                                        <Table.Cell>{row.creativeCaps}</Table.Cell>
-                                        <Table.Cell>
-                                            <div className="flex items-center gap-2">
-                                                {row.priorityEditable ? (
-                                                    <Input
-                                                        size="sm"
-                                                        defaultValue={row.priority}
-                                                        aria-label="Priority"
-                                                        wrapperClassName="w-24"
-                                                    />
-                                                ) : (
-                                                    <span className="whitespace-nowrap text-primary">{row.priority}</span>
-                                                )}
-                                                <MiniPill>{row.priorityAction === "change" ? "Change" : "Save"}</MiniPill>
-                                            </div>
-                                        </Table.Cell>
-                                        <Table.Cell>
-                                            <Toggle size="sm" defaultSelected={row.enabled} aria-label="Enable campaign" />
-                                        </Table.Cell>
-                                        <Table.Cell>
-                                            <MiniPill>Duplicate</MiniPill>
-                                        </Table.Cell>
-                                    </Table.Row>
-                                ))}
-                            </Table.Body>
-                        </Table>
-                    </TableCard.Root>
+                    <ViewCampaignsTable />
                 </div>
             </div>
         </AppShell>
@@ -379,3 +322,62 @@ export const AddAssetScreen = () => {
 };
 
 export default ViewCampaignsScreen;
+
+/** The table used by ViewCampaignsScreen, exposed without page navigation for the 102326 audit. */
+export const ViewCampaignsTable = () => {
+    return (
+        <TableCard.Root className="min-w-max">
+            <Table aria-label="View campaigns" selectionMode="none">
+                <Table.Header>
+                    {columns.map((col) => (
+                        <Table.Head key={col.id} id={col.id} isRowHeader={col.id === "status"} label={col.label}>
+                            {col.sortable ? <SortChevron /> : null}
+                        </Table.Head>
+                    ))}
+                </Table.Header>
+                <Table.Body>
+                    {campaignRows.map((row) => (
+                        <Table.Row key={row.id} id={row.id}>
+                            <Table.Cell>
+                                <StatusCell status={row.status} />
+                            </Table.Cell>
+                            <Table.Cell className="whitespace-nowrap">{row.dealId}</Table.Cell>
+                            <Table.Cell>
+                                <a href="#" className="text-sm font-semibold whitespace-nowrap" style={{ color: TEAL }}>
+                                    {row.name}
+                                </a>
+                            </Table.Cell>
+                            <Table.Cell className="whitespace-nowrap">{row.geos}</Table.Cell>
+                            <Table.Cell className="whitespace-nowrap">{row.platform}</Table.Cell>
+                            <Table.Cell>{row.apps}</Table.Cell>
+                            <Table.Cell>{row.budget}</Table.Cell>
+                            <Table.Cell>{row.bidAmount}</Table.Cell>
+                            <Table.Cell>{row.startDate}</Table.Cell>
+                            <Table.Cell>{row.endDate}</Table.Cell>
+                            <Table.Cell>{row.campaignCap}</Table.Cell>
+                            <Table.Cell>{row.rules}</Table.Cell>
+                            <Table.Cell>{row.adTypes}</Table.Cell>
+                            <Table.Cell>{row.creativeCaps}</Table.Cell>
+                            <Table.Cell>
+                                <div className="flex items-center gap-2">
+                                    {row.priorityEditable ? (
+                                        <Input size="sm" defaultValue={row.priority} aria-label="Priority" wrapperClassName="w-24" />
+                                    ) : (
+                                        <span className="whitespace-nowrap text-primary">{row.priority}</span>
+                                    )}
+                                    <MiniPill>{row.priorityAction === "change" ? "Change" : "Save"}</MiniPill>
+                                </div>
+                            </Table.Cell>
+                            <Table.Cell>
+                                <Toggle size="sm" defaultSelected={row.enabled} aria-label="Enable campaign" />
+                            </Table.Cell>
+                            <Table.Cell>
+                                <MiniPill>Duplicate</MiniPill>
+                            </Table.Cell>
+                        </Table.Row>
+                    ))}
+                </Table.Body>
+            </Table>
+        </TableCard.Root>
+    );
+};

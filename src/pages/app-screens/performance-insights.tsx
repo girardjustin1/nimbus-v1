@@ -363,7 +363,7 @@ const tableRows = [
     ["2019-06-12", "AOL", "1,000,000", "80.00%", "$10.00", "$Amount"],
 ];
 
-const DataTable = () => (
+export const DataTable = () => (
     <div className="px-6 py-6">
         <table className="w-full border-separate border-spacing-0 overflow-hidden rounded-lg ring-1 ring-secondary">
             <thead style={{ backgroundColor: "#101828" }}>
@@ -548,7 +548,7 @@ const ConfigPanel = ({ chartType }: { chartType: ChartType | null }) => {
 const savedHeaders = ["Impressions", "Report Date Range", "Created by", "Date Created", "Report Type"];
 const savedRows: { saved: boolean }[] = [{ saved: true }, { saved: true }, { saved: true }, { saved: false }, { saved: false }, { saved: false }];
 
-const SavedQueriesView = () => (
+export const SavedQueriesView = () => (
     <div className="px-6 py-6">
         <div className="mb-5 flex items-center gap-6">
             <span className="text-md font-semibold text-primary">Breakdown:</span>

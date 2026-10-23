@@ -443,7 +443,7 @@ const benchmarkRows: BenchmarkRow[] = [
 
 const tableColumns = ["Date", "App", "Win%", "CTR", "eCPM"];
 
-const BenchmarksTable = () => (
+export const BenchmarksTable = () => (
     <div className="overflow-x-auto">
         <table className="w-full border-collapse text-left">
             <thead>
@@ -630,3 +630,11 @@ export const NimbusBenchmarksScreen = ({ state = "results" }: { state?: Benchmar
 };
 
 export default NimbusBenchmarksScreen;
+
+/** Ranked definition-list rows from the leaderboard screen. */
+export const BenchmarkRankExamples = () => (
+    <div className="flex flex-col gap-8 md:flex-row">
+        <RankList title="Share of Voice:" rows={shareOfVoice} valueColor={BLUE} />
+        <RankList title="eCPM:" rows={ecpmRank} valueColor={OLIVE} />
+    </div>
+);

@@ -237,3 +237,73 @@ export const AdBlockingScreen = () => {
 };
 
 export default AdBlockingScreen;
+
+/** Existing App Screens section presets for the 102326 table inventory. */
+export const AdBlockingTableExamples = () => (
+    <div className="flex flex-col gap-10">
+        <BlockListSection
+            title="Blocked Categories"
+            badge="bcat"
+            description="Blocked creatives from specific advertising campaigns. Creative IDs rotate frequently and are recycled across the programmatic landscape. Nimbus only blocks Creative IDs for the current quarter; when the quarter ends, blocks are automatically removed."
+            searchPlaceholder="Search the IAB Category List"
+            searchActions={
+                <>
+                    <Button size="sm" color="primary-pink">
+                        Block core
+                    </Button>
+                    <Button size="sm" color="primary-pink">
+                        Block N+
+                    </Button>
+                    <Button size="sm" color="primary-pink">
+                        Block both
+                    </Button>
+                </>
+            }
+            columns={[
+                { id: "creative", label: "25 blocked creatives", isRowHeader: true, allowsSorting: true },
+                { id: "blockedBy", label: "Blocked By", allowsSorting: true },
+                { id: "blockedOn", label: "Blocked On", allowsSorting: true },
+                { id: "blockedDate", label: "Blocked Date", allowsSorting: true },
+                { id: "unblockDate", label: "Unblock Date", allowsSorting: true },
+                { id: "action", header: unblockAllHeader, align: "right" },
+            ]}
+            rows={categoryRows}
+        />
+        <BlockListSection
+            title="Blocked Advertisers"
+            badge="badv"
+            description="Blocked advertiser categories using the IAB content categories."
+            searchPlaceholder="Enter one or more domains (CSV supported)"
+            searchActions={
+                <Button size="sm" color="primary-pink">
+                    Block
+                </Button>
+            }
+            columns={[
+                { id: "domain", label: "33 blocked apps", isRowHeader: true, allowsSorting: true },
+                { id: "blockedBy", label: "Blocked By", allowsSorting: true },
+                { id: "blockedDate", label: "Blocked Date", allowsSorting: true },
+                { id: "action", header: unblockAllHeader, align: "right" },
+            ]}
+            rows={advertiserRows}
+        />
+        <BlockListSection
+            title="Blocked Applications"
+            badge="bapp"
+            description="Block list of applications by their platform-specific, exchange-independent application identifiers. On Android these are bundle or package names (e.g. com.foo.mygame); on iOS these are numeric IDs."
+            searchPlaceholder="com.foo.mygame"
+            searchActions={
+                <Button size="sm" color="primary-pink">
+                    Block
+                </Button>
+            }
+            columns={[
+                { id: "bundle", label: "33 blocked apps", isRowHeader: true, allowsSorting: true },
+                { id: "blockedBy", label: "Blocked By", allowsSorting: true },
+                { id: "blockedDate", label: "Blocked Date", allowsSorting: true },
+                { id: "action", header: unblockAllHeader, align: "right" },
+            ]}
+            rows={applicationRows}
+        />
+    </div>
+);

@@ -354,7 +354,6 @@ const PublisherFooter = ({ state }: { state: PublisherState }) => {
 };
 
 const PublisherPayments = ({ state }: { state: PublisherState }) => {
-    const rows = publisherRowsByState[state];
     const showIssuePill = state === "issue";
 
     return (
@@ -365,40 +364,7 @@ const PublisherPayments = ({ state }: { state: PublisherState }) => {
                     {showIssuePill && <IssuePill />}
                 </div>
 
-                <TableCard.Root>
-                    <Table aria-label="Publisher payments" selectionMode="none">
-                        <Table.Header>
-                            <Table.Head id="demand" isRowHeader label="Demand" />
-                            <Table.Head id="status" label="Status" />
-                            <Table.Head id="total" label="Total Amount" />
-                        </Table.Header>
-                        <Table.Body>
-                            {rows.map((row) => (
-                                <Table.Row key={row.id} id={row.id} className={row.danger ? "bg-[#fdf2f7] hover:bg-[#fbe8f0]" : undefined}>
-                                    <Table.Cell>
-                                        <span
-                                            className={cx("text-sm", row.isTotal ? "font-medium text-tertiary" : "font-semibold", row.danger ? undefined : !row.isTotal && "text-primary")}
-                                            style={row.danger ? { color: RED } : undefined}
-                                        >
-                                            {row.demand}
-                                        </span>
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        <div className="flex items-center justify-between gap-4">
-                                            {row.status ? <StatusDot {...row.status} /> : <span aria-hidden="true" />}
-                                            {row.resubmit && <PillAction variant="pink">Resubmit Payment</PillAction>}
-                                        </div>
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        <span className={cx("text-sm font-semibold", row.danger ? undefined : "text-primary")} style={row.danger ? { color: RED } : undefined}>
-                                            {row.total}
-                                        </span>
-                                    </Table.Cell>
-                                </Table.Row>
-                            ))}
-                        </Table.Body>
-                    </Table>
-                </TableCard.Root>
+                <PublisherPaymentsTable state={state} />
 
                 <PublisherFooter state={state} />
             </div>
@@ -412,3 +378,59 @@ export const NimbusPlusPayoutsPublisherBilling = () => <PublisherPayments state=
 export const NimbusPlusPayoutsPublisherIssue = () => <PublisherPayments state="issue" />;
 
 export default NimbusPlusPayoutsOverview;
+
+/** The table used by PublisherPayments, exposed without page navigation for the 102326 audit. */
+export const PublisherPaymentsTable = ({ state = "unsubmitted" }: { state?: PublisherState } = {}) => {
+    const rows = publisherRowsByState[state];
+    return (
+        <TableCard.Root>
+            <Table aria-label="Publisher payments" selectionMode="none">
+                <Table.Header>
+                    <Table.Head id="demand" isRowHeader label="Demand" />
+                    <Table.Head id="status" label="Status" />
+                    <Table.Head id="total" label="Total Amount" />
+                </Table.Header>
+                <Table.Body>
+                    {rows.map((row) => (
+                        <Table.Row key={row.id} id={row.id} className={row.danger ? "bg-[#fdf2f7] hover:bg-[#fbe8f0]" : undefined}>
+                            <Table.Cell>
+                                <span
+                                    className={cx(
+                                        "text-sm",
+                                        row.isTotal ? "font-medium text-tertiary" : "font-semibold",
+                                        row.danger ? undefined : !row.isTotal && "text-primary",
+                                    )}
+                                    style={row.danger ? { color: RED } : undefined}
+                                >
+                                    {row.demand}
+                                </span>
+                            </Table.Cell>
+                            <Table.Cell>
+                                <div className="flex items-center justify-between gap-4">
+                                    {row.status ? <StatusDot {...row.status} /> : <span aria-hidden="true" />}
+                                    {row.resubmit && <PillAction variant="pink">Resubmit Payment</PillAction>}
+                                </div>
+                            </Table.Cell>
+                            <Table.Cell>
+                                <span
+                                    className={cx("text-sm font-semibold", row.danger ? undefined : "text-primary")}
+                                    style={row.danger ? { color: RED } : undefined}
+                                >
+                                    {row.total}
+                                </span>
+                            </Table.Cell>
+                        </Table.Row>
+                    ))}
+                </Table.Body>
+            </Table>
+        </TableCard.Root>
+    );
+};
+
+/** Existing sample data and table implementations, without page navigation. */
+export const PayoutOverviewTableExamples = () => (
+    <div className="flex flex-col gap-10">
+        <OverviewTable rows={januaryRows} />
+        <OverviewTable rows={decemberRows} sortable />
+    </div>
+);

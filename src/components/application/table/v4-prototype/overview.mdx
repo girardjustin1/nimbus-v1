@@ -1,0 +1,40 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { PrototypeTableMap } from "./context";
+import { prototypeHref, storyHref } from "./catalog";
+
+<Meta title="Application UI/Table/V4 Prototype/00 Overview" />
+
+# V4 Prototype · tables and matching components
+
+Reference direction: **“make the components look exactly like what's live today — like the table headers being charcoal.”**
+
+This inventory maps **seven table implementations** in the current v4 prototype to the closest existing design-system examples. Open the component links for a visual reference, or the v4 location links to see where each table is used in the flow. The current-v4 stories render the actual prototype components, with the full screen around the table for context.
+
+<a href={prototypeHref("campaigns")} target="_blank" rel="noreferrer">Open local prototype v4 → Manage campaigns</a>
+
+## Closest charcoal-header references
+
+All three reference components already use **#101828 charcoal headers with white text**. They come from the saved App Screens library; they are reference matches, rather than confirmation of exact parity with today's live deployment.
+
+<ul>
+<li><a href={storyHref("application-ui-table-v4-prototype-charcoal-references--reporting-metrics")} target="_top">Performance Insights · reporting metrics</a> — closest for Full performance and numeric reporting: dark header, alternating rows, teal revenue and totals.</li>
+<li><a href={storyHref("application-ui-table-v4-prototype-charcoal-references--saved-queries")} target="_top">Performance Insights · saved queries</a> — closest for asset/keyword library styling: dark header, named rows and add/delete controls.</li>
+<li><a href={storyHref("application-ui-table-v4-prototype-charcoal-references--benchmarks")} target="_top">Nimbus Benchmarks · metrics</a> — closest for app diagnostics: dark header, white labels, teal sort chevrons and alternating rows.</li>
+</ul>
+
+## Where each table is used in v4
+
+<PrototypeTableMap />
+
+## Current use and gaps
+
+- **V4 currently has light headers.** Manage campaigns has a transparent header over a white surface. The other six implementations use the light secondary surface. The charcoal reference treatment has not been applied to these tables.
+- **These are seven native HTML implementations.** They do not use the shared React Aria `Table` compound component. The selected-items pattern is an exact shared component across Apps, Device Language, Keywords and Creative, and already has a Campaign Setup story importing it from v4.
+- **The reference components are close in different ways.** Charcoal-header examples match the requested color direction; the 102326 campaign and asset tables match column content, status cells and controls. Their exact columns, typography, sorting behavior and actions differ from v4.
+- **A full visual match needs more than the header fill.** Compare label size/weight, white text, sort icons, borders, row density, numeric alignment, totals, empty states, selections and action cells. V4 holds text to its own 15px minimum, while several reference tables use smaller labels.
+- **Full performance is configurable.** `view-d` starts with Creative; `view-d-pivot` uses Creative × Platform; `view-d-keywords` shows per-keyword rows. The stories here select Table view to keep the results visible.
+- **Bulk-selection columns are conditional.** Asset and keyword libraries expose them in selection mode. The selected-items table instead has remove buttons and a dashed empty state.
+
+## Source map
+
+The actual prototype tables live in `prototypes/das/v4/screens/`: `manage-campaigns.tsx`, `campaign-view.tsx`, `full-performance.tsx`, `asset-library.tsx`, `keyword-library-v3.tsx`, `keyword-health.tsx` and `search-select.tsx`. Each inventory row identifies its owning component. Storybook wrappers and links are in `src/components/application/table/v4-prototype/`.

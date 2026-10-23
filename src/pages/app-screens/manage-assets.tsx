@@ -77,7 +77,7 @@ const CampaignTabs = ({ active }: { active: "create" | "view" }) => {
 };
 
 /** Small pink text action used at the end of table rows. */
-const RemoveButton = () => (
+export const RemoveButton = () => (
     <button
         type="button"
         className="inline-flex items-center gap-1.5 text-sm font-semibold uppercase transition-colors duration-100 hover:opacity-80"
@@ -89,7 +89,7 @@ const RemoveButton = () => (
 );
 
 /** Compact pill action button used inside dense table rows. */
-const MiniPill = ({ children, color = "pink" }: { children: ReactNode; color?: "pink" | "blue" }) => (
+export const MiniPill = ({ children, color = "pink" }: { children: ReactNode; color?: "pink" | "blue" }) => (
     <button
         type="button"
         className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap text-white uppercase transition-opacity duration-100 hover:opacity-90"
@@ -150,32 +150,7 @@ export const ManageAssetsAddExisting = () => {
                     </Button>
                 </div>
 
-                <TableCard.Root>
-                    <Table aria-label="Selected assets" selectionMode="none">
-                        <Table.Header>
-                            <Table.Head id="creative" isRowHeader label="Campaign Creative" />
-                            <Table.Head id="adType" label="Ad Type" />
-                            <Table.Head id="adSize" label="Ad Size" />
-                            <Table.Head id="dailyCap" label="Daily Impression Cap" />
-                            <Table.Head id="action" label="" />
-                        </Table.Header>
-                        <Table.Body>
-                            {assetRows.map((row) => (
-                                <Table.Row key={row.id} id={row.id}>
-                                    <Table.Cell>
-                                        <span className="text-sm font-medium text-primary">{row.creative}</span>
-                                    </Table.Cell>
-                                    <Table.Cell>{row.adType}</Table.Cell>
-                                    <Table.Cell>{row.adSize}</Table.Cell>
-                                    <Table.Cell>{row.dailyCap}</Table.Cell>
-                                    <Table.Cell className="text-right">
-                                        <RemoveButton />
-                                    </Table.Cell>
-                                </Table.Row>
-                            ))}
-                        </Table.Body>
-                    </Table>
-                </TableCard.Root>
+                <SelectedAssetsTable />
             </div>
         </AppShell>
     );
@@ -327,7 +302,7 @@ const statusColors: Record<CampaignStatus, { dot: string; text: string }> = {
     Waiting: { dot: "#F79009", text: "text-primary" },
 };
 
-const StatusCell = ({ status }: { status: CampaignStatus }) => {
+export const StatusCell = ({ status }: { status: CampaignStatus }) => {
     const { dot, text } = statusColors[status];
     return (
         <span className={`inline-flex items-center gap-2 text-sm font-medium ${text}`}>
@@ -351,6 +326,55 @@ const getSortValue = (row: CampaignRow, column: string): string | number => {
 };
 
 export const ManageAssetsViewCampaigns = () => {
+    return (
+        <AppShell>
+            <CampaignTabs active="view" />
+
+            <div className="flex flex-col gap-6 px-8 py-8">
+                <Input size="md" icon={SearchLg} placeholder="Search Assets" aria-label="Search Assets" />
+
+                <AssetCampaignsTable />
+            </div>
+        </AppShell>
+    );
+};
+
+export default ManageAssetsAddExisting;
+
+/** The table used by ManageAssetsAddExisting, exposed without page navigation for the 102326 audit. */
+export const SelectedAssetsTable = () => {
+    return (
+        <TableCard.Root>
+            <Table aria-label="Selected assets" selectionMode="none">
+                <Table.Header>
+                    <Table.Head id="creative" isRowHeader label="Campaign Creative" />
+                    <Table.Head id="adType" label="Ad Type" />
+                    <Table.Head id="adSize" label="Ad Size" />
+                    <Table.Head id="dailyCap" label="Daily Impression Cap" />
+                    <Table.Head id="action" label="" />
+                </Table.Header>
+                <Table.Body>
+                    {assetRows.map((row) => (
+                        <Table.Row key={row.id} id={row.id}>
+                            <Table.Cell>
+                                <span className="text-sm font-medium text-primary">{row.creative}</span>
+                            </Table.Cell>
+                            <Table.Cell>{row.adType}</Table.Cell>
+                            <Table.Cell>{row.adSize}</Table.Cell>
+                            <Table.Cell>{row.dailyCap}</Table.Cell>
+                            <Table.Cell className="text-right">
+                                <RemoveButton />
+                            </Table.Cell>
+                        </Table.Row>
+                    ))}
+                </Table.Body>
+            </Table>
+        </TableCard.Root>
+    );
+};
+
+/** The table used by ManageAssetsViewCampaigns, exposed without page navigation for the 102326 audit. */
+export const AssetCampaignsTable = () => {
     const [sort, setSort] = useState<SortDescriptor>({ column: "status", direction: "ascending" });
 
     const sortedRows = useMemo(() => {
@@ -365,77 +389,67 @@ export const ManageAssetsViewCampaigns = () => {
     }, [sort]);
 
     return (
-        <AppShell>
-            <CampaignTabs active="view" />
-
-            <div className="flex flex-col gap-6 px-8 py-8">
-                <Input size="md" icon={SearchLg} placeholder="Search Assets" aria-label="Search Assets" />
-
-                <TableCard.Root>
-                    <Table aria-label="Live campaigns" selectionMode="none" sortDescriptor={sort} onSortChange={setSort}>
-                        <Table.Header>
-                            <Table.Head id="status" isRowHeader allowsSorting label="Status" />
-                            <Table.Head id="creative" allowsSorting label="Creative" />
-                            <Table.Head id="adType" allowsSorting label="Ad Type" />
-                            <Table.Head id="adSize" allowsSorting label="Ad Size" />
-                            <Table.Head id="impressionTrackers" allowsSorting label="Impression Trackers" />
-                            <Table.Head id="clickTrackers" allowsSorting label="Click Trackers" />
-                            <Table.Head id="dailyCap" allowsSorting label="Daily Impression Cap" />
-                            <Table.Head id="action" label="" />
-                        </Table.Header>
-                        <Table.Body>
-                            {sortedRows.map((row) => (
-                                <Table.Row key={row.id} id={row.id}>
-                                    <Table.Cell>
-                                        <StatusCell status={row.status} />
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        <a href="#" className="text-sm font-semibold" style={{ color: TEAL }}>
-                                            {row.creative}
-                                        </a>
-                                    </Table.Cell>
-                                    <Table.Cell>{row.adType}</Table.Cell>
-                                    <Table.Cell>{row.adSize}</Table.Cell>
-                                    <Table.Cell>{row.impressionTrackers}</Table.Cell>
-                                    <Table.Cell>{row.clickTrackers}</Table.Cell>
-                                    <Table.Cell>
-                                        {row.capEditable ? (
-                                            <Input size="sm" defaultValue={row.dailyCap} aria-label="Daily impression cap" wrapperClassName="w-28" />
-                                        ) : (
-                                            row.dailyCap
-                                        )}
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        <div className="flex items-center justify-end gap-3">
-                                            {row.action === "change" && (
-                                                <>
-                                                    <MiniPill>Change</MiniPill>
-                                                    <MiniPill>Test Asset</MiniPill>
-                                                </>
-                                            )}
-                                            {row.action === "save-copy" && (
-                                                <>
-                                                    <MiniPill>Save</MiniPill>
-                                                    <MiniPill color="blue">Copy Test Link</MiniPill>
-                                                </>
-                                            )}
-                                            {row.action === "save-test" && (
-                                                <>
-                                                    <MiniPill>Save</MiniPill>
-                                                    <MiniPill>Test Asset</MiniPill>
-                                                </>
-                                            )}
-                                            <RemoveButton />
-                                        </div>
-                                    </Table.Cell>
-                                </Table.Row>
-                            ))}
-                        </Table.Body>
-                    </Table>
-                </TableCard.Root>
-            </div>
-        </AppShell>
+        <TableCard.Root>
+            <Table aria-label="Live campaigns" selectionMode="none" sortDescriptor={sort} onSortChange={setSort}>
+                <Table.Header>
+                    <Table.Head id="status" isRowHeader allowsSorting label="Status" />
+                    <Table.Head id="creative" allowsSorting label="Creative" />
+                    <Table.Head id="adType" allowsSorting label="Ad Type" />
+                    <Table.Head id="adSize" allowsSorting label="Ad Size" />
+                    <Table.Head id="impressionTrackers" allowsSorting label="Impression Trackers" />
+                    <Table.Head id="clickTrackers" allowsSorting label="Click Trackers" />
+                    <Table.Head id="dailyCap" allowsSorting label="Daily Impression Cap" />
+                    <Table.Head id="action" label="" />
+                </Table.Header>
+                <Table.Body>
+                    {sortedRows.map((row) => (
+                        <Table.Row key={row.id} id={row.id}>
+                            <Table.Cell>
+                                <StatusCell status={row.status} />
+                            </Table.Cell>
+                            <Table.Cell>
+                                <a href="#" className="text-sm font-semibold" style={{ color: TEAL }}>
+                                    {row.creative}
+                                </a>
+                            </Table.Cell>
+                            <Table.Cell>{row.adType}</Table.Cell>
+                            <Table.Cell>{row.adSize}</Table.Cell>
+                            <Table.Cell>{row.impressionTrackers}</Table.Cell>
+                            <Table.Cell>{row.clickTrackers}</Table.Cell>
+                            <Table.Cell>
+                                {row.capEditable ? (
+                                    <Input size="sm" defaultValue={row.dailyCap} aria-label="Daily impression cap" wrapperClassName="w-28" />
+                                ) : (
+                                    row.dailyCap
+                                )}
+                            </Table.Cell>
+                            <Table.Cell>
+                                <div className="flex items-center justify-end gap-3">
+                                    {row.action === "change" && (
+                                        <>
+                                            <MiniPill>Change</MiniPill>
+                                            <MiniPill>Test Asset</MiniPill>
+                                        </>
+                                    )}
+                                    {row.action === "save-copy" && (
+                                        <>
+                                            <MiniPill>Save</MiniPill>
+                                            <MiniPill color="blue">Copy Test Link</MiniPill>
+                                        </>
+                                    )}
+                                    {row.action === "save-test" && (
+                                        <>
+                                            <MiniPill>Save</MiniPill>
+                                            <MiniPill>Test Asset</MiniPill>
+                                        </>
+                                    )}
+                                    <RemoveButton />
+                                </div>
+                            </Table.Cell>
+                        </Table.Row>
+                    ))}
+                </Table.Body>
+            </Table>
+        </TableCard.Root>
     );
 };
-
-export default ManageAssetsAddExisting;

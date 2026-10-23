@@ -425,3 +425,27 @@ export const BillingRatesScreenWithModal = ({ modal }: { modal: ModalKind }) => 
 };
 
 export default BillingRatesScreen;
+
+/** Existing App Screens section presets for the 102326 table inventory. */
+export const DasRateTableExamples = () => (
+    <div className="flex flex-col gap-10">
+        <RateSection
+            title="Creative"
+            badge={
+                <Badge color="purple" type="pill-color" size="md">
+                    Tiered Rate
+                </Badge>
+            }
+            rows={creativeRows}
+        />
+        <RateSection
+            title="DAS Billing Rates"
+            badge={
+                <Badge color="pink" type="pill-color" size="md">
+                    Fixed Rate
+                </Badge>
+            }
+            rows={dasRows}
+        />
+    </div>
+);
