@@ -294,3 +294,99 @@ export const AdBlockingBlocklistsScreen = () => {
 };
 
 export default AdBlockingBlocklistsScreen;
+
+/** Existing App Screens section presets for the 102326 table inventory. */
+export const DetailedBlocklistTableExamples = () => (
+    <div className="flex flex-col gap-10">
+        <BlockListSection
+            title="Blocked Categories"
+            code="bcat"
+            description="Blocked creatives from specific advertising campaigns. Creative IDs rotate frequently and are recycled across the programmatic landscape. Therefore, Nimbus only blocks Creative IDs for the current quarter. When the quarter ends, blocks are automatically removed by our system."
+            inputPlaceholder="Search the IAB Category List"
+            actions={
+                <>
+                    <Button size="md" color="primary-pink" className="uppercase">
+                        Block core
+                    </Button>
+                    <Button size="md" color="primary-pink" className="uppercase">
+                        Block N+
+                    </Button>
+                    <Button size="md" color="primary-pink" className="uppercase">
+                        Block both
+                    </Button>
+                </>
+            }
+            columns={[
+                { id: "creative", label: "25 blocked creatives", isRowHeader: true, sortable: true },
+                { id: "blockedBy", label: "Blocked By", sortable: true },
+                { id: "blockedOn", label: "Blocked On", sortable: true },
+                { id: "blockedDate", label: "Blocked Date", sortable: true },
+                { id: "unblockDate", label: "Unblock Date", sortable: true },
+                { id: "action", header: unblockAllHeader, align: "right" },
+            ]}
+            rows={categoryRows}
+        />
+        <BlockListSection
+            title="Blocked Advertisers"
+            code="badv"
+            description={
+                <>
+                    Blocked advertiser categories using the IAB content categories.{" "}
+                    <a href="#" className="font-semibold text-[#37B6B7] transition duration-100 ease-linear hover:text-[#2c9192]">
+                        See the list here
+                    </a>
+                </>
+            }
+            inputPlaceholder="Enter one or more domains (CSV supported)"
+            inputIcon={SearchLg}
+            actions={
+                <Button size="md" color="primary-pink" className="uppercase">
+                    Block
+                </Button>
+            }
+            columns={[
+                { id: "app", label: "33 blocked apps", isRowHeader: true, sortable: true },
+                { id: "blockedBy", label: "Blocked By", sortable: true },
+                { id: "blockedDate", label: "Blocked Date", sortable: true },
+                { id: "action", header: unblockAllHeader, align: "right" },
+            ]}
+            rows={advertiserAppRows}
+        />
+        <BlockListSection
+            title="Blocked Advertisers"
+            code="badv"
+            description={'Block list of advertisers by their domains (e.g., "ford.com").'}
+            inputPlaceholder="Enter one more domains (CSV supported)"
+            actions={
+                <Button size="md" color="primary-pink" className="uppercase">
+                    Block
+                </Button>
+            }
+            columns={[
+                { id: "domain", label: "17 blocked domains", isRowHeader: true, sortable: true },
+                { id: "blockedBy", label: "Blocked By", sortable: true },
+                { id: "blockDate", label: "Block Date", sortable: true },
+                { id: "action", header: unblockAllHeader, align: "right" },
+            ]}
+            rows={advertiserDomainRows}
+        />
+        <BlockListSection
+            title="Blocked Applications"
+            code="bapp"
+            description="Block list of applications by their platform-specific exchange independent application identifiers. On Android, these should be bundle or package names (e.g., com.foo.mygame). On IOS, these are numeric IDs."
+            inputPlaceholder="com.foo.mygame"
+            actions={
+                <Button size="md" color="primary-pink" className="uppercase">
+                    Block
+                </Button>
+            }
+            columns={[
+                { id: "bundle", label: "33 blocked apps", isRowHeader: true, sortable: true },
+                { id: "blockedBy", label: "Blocked By", sortable: true },
+                { id: "blockedDate", label: "Blocked Date", sortable: true },
+                { id: "action", header: unblockAllHeader, align: "right" },
+            ]}
+            rows={applicationRows}
+        />
+    </div>
+);

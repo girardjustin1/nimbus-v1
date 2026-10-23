@@ -419,7 +419,7 @@ const savedRows: SavedQueryRow[] = [
     { id: "r6", name: "Report Name", dateRange: "Data", createdBy: "Data", dateCreated: "Data", reportType: "Data", isDelete: false },
 ];
 
-const RowAction = ({ row }: { row: SavedQueryRow }) => (
+export const RowAction = ({ row }: { row: SavedQueryRow }) => (
     <div className="relative flex justify-end">
         {row.showTooltip && (
             <span className="absolute top-1/2 right-12 -translate-y-1/2 rounded-md bg-primary-solid px-2.5 py-1 text-xs font-medium text-white">
@@ -453,34 +453,7 @@ const SavedListView = () => (
 
         {/* Saved queries table */}
         <div className="px-8 py-8">
-            <TableCard.Root>
-                <Table aria-label="Saved queries" selectionMode="none">
-                    <Table.Header>
-                        <Table.Head id="name" isRowHeader label="Impressions" allowsSorting />
-                        <Table.Head id="range" label="Report Date Range" allowsSorting />
-                        <Table.Head id="createdBy" label="Created by" allowsSorting />
-                        <Table.Head id="created" label="Date Created" allowsSorting />
-                        <Table.Head id="type" label="Report Type" allowsSorting />
-                        <Table.Head id="action" label="" />
-                    </Table.Header>
-                    <Table.Body>
-                        {savedRows.map((row) => (
-                            <Table.Row key={row.id} id={row.id}>
-                                <Table.Cell>
-                                    <span className="text-sm font-semibold text-[#37b6b7]">{row.name}</span>
-                                </Table.Cell>
-                                <Table.Cell>{row.dateRange}</Table.Cell>
-                                <Table.Cell>{row.createdBy}</Table.Cell>
-                                <Table.Cell>{row.dateCreated}</Table.Cell>
-                                <Table.Cell>{row.reportType}</Table.Cell>
-                                <Table.Cell className="text-right">
-                                    <RowAction row={row} />
-                                </Table.Cell>
-                            </Table.Row>
-                        ))}
-                    </Table.Body>
-                </Table>
-            </TableCard.Root>
+            <SavedQueriesTable />
         </div>
     </main>
 );
@@ -594,3 +567,37 @@ export const SavedQueriesScreen = ({ variant = "saved-list" }: SavedQueriesScree
 };
 
 export default SavedQueriesScreen;
+
+/** The table used by SavedListView, exposed without page navigation for the 102326 audit. */
+export const SavedQueriesTable = () => {
+    return (
+        <TableCard.Root>
+            <Table aria-label="Saved queries" selectionMode="none">
+                <Table.Header>
+                    <Table.Head id="name" isRowHeader label="Impressions" allowsSorting />
+                    <Table.Head id="range" label="Report Date Range" allowsSorting />
+                    <Table.Head id="createdBy" label="Created by" allowsSorting />
+                    <Table.Head id="created" label="Date Created" allowsSorting />
+                    <Table.Head id="type" label="Report Type" allowsSorting />
+                    <Table.Head id="action" label="" />
+                </Table.Header>
+                <Table.Body>
+                    {savedRows.map((row) => (
+                        <Table.Row key={row.id} id={row.id}>
+                            <Table.Cell>
+                                <span className="text-sm font-semibold text-[#37b6b7]">{row.name}</span>
+                            </Table.Cell>
+                            <Table.Cell>{row.dateRange}</Table.Cell>
+                            <Table.Cell>{row.createdBy}</Table.Cell>
+                            <Table.Cell>{row.dateCreated}</Table.Cell>
+                            <Table.Cell>{row.reportType}</Table.Cell>
+                            <Table.Cell className="text-right">
+                                <RowAction row={row} />
+                            </Table.Cell>
+                        </Table.Row>
+                    ))}
+                </Table.Body>
+            </Table>
+        </TableCard.Root>
+    );
+};

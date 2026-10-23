@@ -465,40 +465,7 @@ export const CompletedPaymentsDetailed = () => (
         <div className="flex flex-col gap-6 px-8 py-8">
             <h2 className="text-xl font-semibold text-primary">Completed Payments via Tipalti</h2>
 
-            <TableCard.Root>
-                <Table aria-label="Completed payments via Tipalti — detailed" selectionMode="none">
-                    <Table.Header>
-                        <Table.Head id="date" isRowHeader label="Payment Date" />
-                        <Table.Head id="method" label="Payment Method" />
-                        <Table.Head id="gross" label="Gross Payment ($USD)" />
-                        <Table.Head id="fees" label="Tipalti Fees ($USD)" />
-                        <Table.Head id="net" label="Net Payment ($MXN)" />
-                        <Table.Head id="actions" label="" />
-                    </Table.Header>
-                    <Table.Body>
-                        {detailedPayments.map((row) => (
-                            <Table.Row key={row.id} id={row.id}>
-                                <Table.Cell>
-                                    <span className="text-sm font-medium text-primary">{row.date}</span>
-                                </Table.Cell>
-                                <Table.Cell>{row.method}</Table.Cell>
-                                <Table.Cell>
-                                    <span className="text-sm text-primary">{row.gross}</span>
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <span className="text-sm text-primary">{row.fees}</span>
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <span className="text-sm text-primary">{row.net}</span>
-                                </Table.Cell>
-                                <Table.Cell className="text-right">
-                                    <PinkPill>Details</PinkPill>
-                                </Table.Cell>
-                            </Table.Row>
-                        ))}
-                    </Table.Body>
-                </Table>
-            </TableCard.Root>
+            <DetailedPaymentsTable />
         </div>
     </AccountLayout>
 );
@@ -656,4 +623,62 @@ export const OverviewMonthlyPayouts = () => (
             ))}
         </div>
     </AccountLayout>
+);
+
+/** The table used by CompletedPaymentsDetailed, exposed without page navigation for the 102326 audit. */
+export const DetailedPaymentsTable = () => {
+    return (
+        <TableCard.Root>
+            <Table aria-label="Completed payments via Tipalti — detailed" selectionMode="none">
+                <Table.Header>
+                    <Table.Head id="date" isRowHeader label="Payment Date" />
+                    <Table.Head id="method" label="Payment Method" />
+                    <Table.Head id="gross" label="Gross Payment ($USD)" />
+                    <Table.Head id="fees" label="Tipalti Fees ($USD)" />
+                    <Table.Head id="net" label="Net Payment ($MXN)" />
+                    <Table.Head id="actions" label="" />
+                </Table.Header>
+                <Table.Body>
+                    {detailedPayments.map((row) => (
+                        <Table.Row key={row.id} id={row.id}>
+                            <Table.Cell>
+                                <span className="text-sm font-medium text-primary">{row.date}</span>
+                            </Table.Cell>
+                            <Table.Cell>{row.method}</Table.Cell>
+                            <Table.Cell>
+                                <span className="text-sm text-primary">{row.gross}</span>
+                            </Table.Cell>
+                            <Table.Cell>
+                                <span className="text-sm text-primary">{row.fees}</span>
+                            </Table.Cell>
+                            <Table.Cell>
+                                <span className="text-sm text-primary">{row.net}</span>
+                            </Table.Cell>
+                            <Table.Cell className="text-right">
+                                <PinkPill>Details</PinkPill>
+                            </Table.Cell>
+                        </Table.Row>
+                    ))}
+                </Table.Body>
+            </Table>
+        </TableCard.Root>
+    );
+};
+
+/** Existing sample data and table implementations, without page navigation. */
+export const PaymentMonthTableExamples = () => (
+    <div className="flex flex-col gap-10">
+        {months.map((month) => (
+            <PaymentMonthSection key={month.id} month={month} />
+        ))}
+    </div>
+);
+export const SimplePaymentTableExample = () => <SimplePaymentsTable label="Completed payments via Tipalti" rows={simplePayments} />;
+export const AdjustmentTableExample = () => <SimplePaymentsTable label="Adjustments" rows={adjustments} />;
+export const MonthlyOverviewTableExamples = () => (
+    <div className="flex flex-col gap-10">
+        {overviewMonths.map((month) => (
+            <OverviewMonthSection key={month.id} month={month} />
+        ))}
+    </div>
 );

@@ -523,32 +523,7 @@ export const Step4Creative = () => (
                 </Button>
             </div>
 
-            <TableCard.Root>
-                <Table aria-label="Campaign creatives" selectionMode="none">
-                    <Table.Header>
-                        {creativeColumns.map((col) => (
-                            <Table.Head
-                                key={col.id}
-                                id={col.id}
-                                isRowHeader={col.isRowHeader}
-                                label={col.label}
-                                className={col.align === "right" ? "text-right" : undefined}
-                            />
-                        ))}
-                    </Table.Header>
-                    <Table.Body items={creativeRows}>
-                        {(row) => (
-                            <Table.Row id={row.id} columns={creativeColumns}>
-                                {(col: CreativeCol) => (
-                                    <Table.Cell className={col.align === "right" ? "text-right" : undefined}>
-                                        <span className={cx("text-sm", col.isRowHeader ? "font-medium text-secondary" : "text-tertiary")}>{row[col.id]}</span>
-                                    </Table.Cell>
-                                )}
-                            </Table.Row>
-                        )}
-                    </Table.Body>
-                </Table>
-            </TableCard.Root>
+            <CampaignCreativeTable />
         </div>
     </CampaignSetupLayout>
 );
@@ -616,7 +591,7 @@ const reviewCreativeColumns: ReviewCreativeCol[] = [
     { id: "action", label: "" },
 ];
 
-const ReviewCreativeTable = ({ firstRowError }: { firstRowError?: boolean }) => {
+export const ReviewCreativeTable = ({ firstRowError }: { firstRowError?: boolean } = {}) => {
     const rows = [
         { id: "r1", name: "GTM-Mexico-Banner-300x250", cap: "1000", adType: "HTML", impTrackers: "2", clickTrackers: "1" },
         { id: "r2", name: "GTM-Mexico-Banner-300x50", cap: "1000", adType: "HTML", impTrackers: "2", clickTrackers: "1" },
@@ -727,3 +702,35 @@ export const Step5ReviewErrors = () => (
         </div>
     </CampaignSetupLayout>
 );
+
+/** The table used by Step4Creative, exposed without page navigation for the 102326 audit. */
+export const CampaignCreativeTable = () => {
+    return (
+        <TableCard.Root>
+            <Table aria-label="Campaign creatives" selectionMode="none">
+                <Table.Header>
+                    {creativeColumns.map((col) => (
+                        <Table.Head
+                            key={col.id}
+                            id={col.id}
+                            isRowHeader={col.isRowHeader}
+                            label={col.label}
+                            className={col.align === "right" ? "text-right" : undefined}
+                        />
+                    ))}
+                </Table.Header>
+                <Table.Body items={creativeRows}>
+                    {(row) => (
+                        <Table.Row id={row.id} columns={creativeColumns}>
+                            {(col: CreativeCol) => (
+                                <Table.Cell className={col.align === "right" ? "text-right" : undefined}>
+                                    <span className={cx("text-sm", col.isRowHeader ? "font-medium text-secondary" : "text-tertiary")}>{row[col.id]}</span>
+                                </Table.Cell>
+                            )}
+                        </Table.Row>
+                    )}
+                </Table.Body>
+            </Table>
+        </TableCard.Root>
+    );
+};

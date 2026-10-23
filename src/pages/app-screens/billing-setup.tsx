@@ -370,3 +370,12 @@ export const BillingSetupScreen = () => {
 };
 
 export default BillingSetupScreen;
+
+/** Existing sample data and table implementations, without page navigation. */
+export const BillingSetupTableExamples = () => (
+    <div className="flex flex-col gap-10">
+        {sections.map((section) => (
+            <BillingRateSection key={section.title} {...section} />
+        ))}
+    </div>
+);
