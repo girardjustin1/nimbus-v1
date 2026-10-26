@@ -1,0 +1,60 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Application UI/Nimbus Tokens/00 Overview" />
+
+export const storyUrl = (id) => `./?path=/story/${id}`;
+export const docUrl = (id) => `./?path=/docs/${id}`;
+export const TOKENS = [
+  ['Page Tabs', './?path=/docs/application-ui-nimbus-tokens-page-tabs--docs', 'Tabs across the top of a page: bold, thin rules between, active tab teal-filled with a teal rule', 'Manage assets, Manage keywords', null],
+  ['Bands', './?path=/docs/application-ui-nimbus-tokens-bands--docs', 'Full-span sections with a band label (“Metrics:”)', 'Full performance', null],
+  ['Dates and Dropdowns', './?path=/docs/application-ui-nimbus-tokens-dates-and-dropdowns--docs', '`DateCell` (selectable or not), quick picker and group-by (`BareSelect`), the date row', 'Full performance', null],
+  ['Buttons', './?path=/docs/application-ui-nimbus-tokens-buttons--docs', 'UI controller (Collapse) and state action (Save Query, Download .CSV — inactive with no state)', 'Full performance, filter menu', null],
+  ['Teal Controls', './?path=/docs/application-ui-nimbus-tokens-teal-controls--docs', 'Checkboxes and radios as on staging, one typography', 'Every checkbox and radio', null],
+  ['Chart Type Bar', './?path=/docs/application-ui-nimbus-tokens-chart-type-bar--docs', 'Chart type buttons that fill the band; icons swappable', 'Full performance', null],
+  ['Filter Control', './?path=/docs/application-ui-nimbus-tokens-filter-control--docs', "Performance Insights' filter menu: + ADD → category / values → SAVE; values become toggles; ✕ clears all", 'Full performance', null],
+  ['Tables', './?path=/docs/application-ui-nimbus-tokens-tables--docs', '`TABLE` / `tableHead`: list vs report, full bleed', 'Every table', './?path=/docs/application-ui-table-list-vs-report--docs'],
+];
+
+<div style={{ maxWidth: 900 }}>
+
+# Nimbus tokens
+
+From the 26 Oct review of Round 4: the DAS functionality and information design are
+approved, and what's left is making sure “the rules of how this gets outputted visually
+are in place.” Once DAS matches Performance Insights, **one rule change fixes everything**
+— and the Performance Insights redesign that comes next doesn't start from scratch.
+
+Every token lives once, in `prototypes/das/v5/screens/nimbus-ui.tsx`. Prototype v5 draws
+its screens from it, and these stories show the same exports.
+
+<div style={{ overflowX: "auto", border: "1px solid #EAECF0", borderRadius: 12, margin: "12px 0 24px" }}>
+  <table style={{ width: "100%", borderCollapse: "collapse", margin: 0 }}>
+    <thead><tr>{["Token", "What it is", "Used in v5"].map((h) => <th key={h} style={{ textAlign: "left", fontSize: 15, fontWeight: 700, color: "#101828", padding: "9px 12px", borderBottom: "1px solid #EAECF0", background: "#F9FAFB" }}>{h}</th>)}</tr></thead>
+    <tbody>
+      {TOKENS.map(([name, href, what, used, also]) => (
+        <tr key={name}>
+          <td style={{ fontSize: 15, padding: "10px 12px", borderBottom: "1px solid #EAECF0", verticalAlign: "top", whiteSpace: "nowrap" }}><a href={href} target="_top" style={{ color: "#1F7F80", fontWeight: 700 }}>{name}</a></td>
+          <td style={{ fontSize: 15, color: "#475467", padding: "10px 12px", borderBottom: "1px solid #EAECF0", verticalAlign: "top" }}>{what.replace(/`/g, "")}</td>
+          <td style={{ fontSize: 15, color: "#344054", padding: "10px 12px", borderBottom: "1px solid #EAECF0", verticalAlign: "top" }}>{used}{also && <> — see <a href={also} target="_top" style={{ color: "#1F7F80", fontWeight: 600 }}>List vs Report</a></>}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+## Still open
+
+- **Chart type icons** — the originals are in Product's Sketch files; until they arrive the
+  bar uses placeholder icons. Swapping them is a change to the options, not the component.
+- **Names** — “UI controller” and “state action” are working names; Product suggested
+  asking engineering what they're called in the build.
+- **Date picker** — `DateCell` is the layout token; engineering's React date picker replaces the
+  picker behind it.
+
+## The 15px floor
+
+V5 holds text to the 15px minimum (Audits › Typography Rules), so labels — date labels,
+table headers — read larger than staging's 10–13px. Colour, weight, rules, fills and
+stripes follow staging.
+
+</div>

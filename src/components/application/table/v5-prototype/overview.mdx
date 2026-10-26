@@ -1,0 +1,51 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { PrototypeTableMap } from "./context";
+import { prototypeHref, storyHref } from "./catalog";
+
+<Meta title="Application UI/Table/V5 Prototype/00 Overview" />
+
+# V5 Prototype · tables and matching components
+
+Round 5 applies the **26 Oct rule** (see <a href="./?path=/docs/application-ui-table-list-vs-report--docs" target="_top">List vs Report</a>):
+**reports get the charcoal header; lists keep a light one.** Both have bold labels and
+vertical column rules, and on a page they run full bleed, edge to edge of the content
+area, the way staging's tables do.
+
+This inventory maps the **seven table implementations** in prototype v5 to the closest
+existing design-system examples. The v5 stories render the actual prototype components,
+with the full screen around the table for context. Round 4 stays frozen at `das/v4` as it
+was reviewed.
+
+<a href={prototypeHref("campaigns")} target="_blank" rel="noreferrer">Open local prototype v5 → Manage campaigns</a>
+
+## Charcoal-header references
+
+All three reference components use **#101828 charcoal headers with white text**. They
+come from the saved App Screens library and are what the v5 report tables now follow.
+
+<ul>
+<li><a href={storyHref("application-ui-table-v5-prototype-charcoal-references--reporting-metrics")} target="_top">Performance Insights · reporting metrics</a> — the model for Full performance and the per-keyword report: dark header, alternating rows, totals.</li>
+<li><a href={storyHref("application-ui-table-v5-prototype-charcoal-references--saved-queries")} target="_top">Performance Insights · saved queries</a> — a charcoal list on staging; by the 26 Oct rule a list of saved things would take the light header, so this is one of the inconsistencies to settle in the PI redesign.</li>
+<li><a href={storyHref("application-ui-table-v5-prototype-charcoal-references--benchmarks")} target="_top">Nimbus Benchmarks · metrics</a> — a report with a charcoal header and white labels, consistent with the rule.</li>
+</ul>
+
+## Where each table is used in v5
+
+<PrototypeTableMap />
+
+## Notes
+
+- **Kind decides the header, nothing else.** A list is an organised set of things you
+  act on (campaigns, assets, keywords, selected items). A report is numbers about
+  delivery (Full performance, per keyword). Product, 26 Oct: “Reports get the charcoal
+  headlines … when it's like a list of stuff, I think I drop it.”
+- **These are native HTML tables styled from one place:** `TABLE` and `tableHead` in
+  `prototypes/das/v5/screens/nimbus-ui.tsx`. Change the rule there and every v5 table
+  follows. The selected-items pattern is one shared component across Apps, Device
+  Language, Keywords and Creative, and stays inside its form section rather than bleeding.
+- **Type floor.** V5 holds text to its 15px minimum, so header labels are larger than
+  staging's 12–13px; colour, weight, rules and stripes follow staging.
+
+## Source map
+
+The prototype tables live in `prototypes/das/v5/screens/`: `manage-campaigns.tsx`, `campaign-view.tsx`, `full-performance.tsx`, `asset-library.tsx`, `keyword-library-v3.tsx`, `keyword-health.tsx` and `search-select.tsx`. Storybook wrappers and links are in `src/components/application/table/v5-prototype/`.

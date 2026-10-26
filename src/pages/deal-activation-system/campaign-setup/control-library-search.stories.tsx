@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { InlineSearchSelect } from "../../../../prototypes/das/v4/screens/search-select";
-import { APP_LIST } from "../../../../prototypes/das/v4/screens/target-data";
+import { InlineSearchSelect } from "../../../../prototypes/das/v5/screens/search-select";
+import { APP_LIST } from "../../../../prototypes/das/v5/screens/target-data";
 import { Surface, Value } from "./harness";
 
 const rows = APP_LIST.map((a) => ({ id: a.id, label: a.name, meta: a.platform }));

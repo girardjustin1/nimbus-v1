@@ -30,6 +30,13 @@ export const versions: ProtoVersion[] = [
         summary:
             "The 16 Oct review, built. Setup goes to build as it is; this round is what comes after it. Manage campaigns is staging's table again, under four chips — Live, Queued, Total spend and a traffic-light Campaign Health that filters the table. A campaign's overview gets the dashboard's breadcrumb strip, leads with status, rule, flight dates, platform and apps, keeps one summary, and shows dollars in its chart tooltip. Full performance is new: break a campaign down by creative, platform, geo, app and keywords, pivot two at a time, and export what you see as CSV. Creative previews are gone everywhere. On 19 Oct Product settled the open choices: keywords match on ANY, Campaign Health reads as counts, the overview uses cards, Full performance takes Performance Insights' look, Unity is a platform, Device Language is back, keywords report on screen one by one, the campaigns table stays exactly staging's, and scheduled campaigns read “Queued”.",
     },
+    {
+        id: "v5",
+        label: "Round 5",
+        date: "October 26, 2026",
+        summary:
+            "The 26 Oct review, built. Setup and reporting were approved as they stand; this round makes DAS read as Nimbus. Tables run full bleed like staging, with the rule Product set: reports (Full performance, per-keyword) get the charcoal header and warm alternating rows, lists (campaigns, assets, keywords) a bold black header, and every table rules its columns. Search sits left above every table, and the Assets and Keywords labels are gone. Tabs are bold with the active one filled teal. Checkboxes and radios take staging's look: a pale teal box with a teal check, a teal ring around a solid dot. Full performance takes Performance Insights' full-width bands, a Collapse control, chart type buttons that fill their band, and Performance Insights' own filter menu: + ADD a category's values, then toggle each on and off to compare, or clear them all. Overview and campaign cards take the realtime dashboard's stat styling, and Detailed reporting now reads Performance Insights. Total spend, progress bars and the paused banner stay for now. The pieces are tokens in one place (nimbus-ui.tsx), shown in Storybook › Oct 26, ready for the Performance Insights redesign.",
+    },
 ];
 
 export const latest = versions[versions.length - 1].id;

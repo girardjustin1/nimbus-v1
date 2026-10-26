@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { KeywordTargetBlock } from "../../../../prototypes/das/v4/screens/keyword-target";
+import { KeywordTargetBlock } from "../../../../prototypes/das/v5/screens/keyword-target";
 import { Surface, Value } from "./harness";
 
 /**

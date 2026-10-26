@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { GEO_REGIONS } from "../../../../prototypes/das/v1/screens/geo-data";
-import { TaxonomyPicker, type TaxonomyNode } from "../../../../prototypes/das/v4/screens/taxonomy-picker";
+import { TaxonomyPicker, type TaxonomyNode } from "../../../../prototypes/das/v5/screens/taxonomy-picker";
 import { Surface, Value } from "./harness";
 
 const tree: TaxonomyNode[] = GEO_REGIONS.map((g) => ({ id: g.region, label: g.region, children: g.countries.map((c) => ({ id: c, label: c })) }));
