@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { PrioritySection } from "../../../../prototypes/das/v4/screens/priority-frequency";
+import { PrioritySection } from "../../../../prototypes/das/v5/screens/priority-frequency";
 import { Setup, Surface } from "./harness";
 
 /**

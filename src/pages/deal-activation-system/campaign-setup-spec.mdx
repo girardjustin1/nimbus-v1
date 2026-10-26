@@ -11,7 +11,7 @@ export const Table = ({ head, rows }) => (
   </div>
 );
 export const S = ({ id, children }) => <a href={`./?path=/story/deal-activation-system-campaign-setup-${id}`} target="_top" style={{ color: "#1F7F80", fontWeight: 600 }}>{children}</a>;
-export const prototypeUrl = () => (typeof window !== "undefined" && window.location.hostname === "localhost" ? "http://localhost:5190/das/v4/#/setup-empty" : "./das/v4/#/setup-empty");
+export const prototypeUrl = () => (typeof window !== "undefined" && window.location.hostname === "localhost" ? "http://localhost:5190/das/v5/#/setup-empty" : "./das/v5/#/setup-empty");
 
 <Meta title="Deal Activation System/Campaign Setup Spec" />
 
@@ -110,7 +110,7 @@ unchanged. The prototype restyles their labels and hints from the page, not by e
 
 ## Copy
 
-Staging's wording is transcribed in `prototypes/das/v4/screens/copy-deck.ts`. In the
+Staging's wording is transcribed in `prototypes/das/v5/screens/copy-deck.ts`. In the
 prototype, the toolbar's **Copy** switch shows:
 
 - **Original:** staging's wording only. Anything staging has no copy for is left out, so

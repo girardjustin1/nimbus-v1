@@ -1,0 +1,103 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { ListTableExample, ReportTableExample } from "../nimbus-tokens/table-examples";
+
+<Meta title="Application UI/Table/List vs Report" />
+
+export const protoUrl = (route) =>
+  (typeof window !== "undefined" && /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname) ? "http://localhost:5190/das/v5/" : "./das/v5/") + `#/${route}`;
+
+export const th = { textAlign: "left", fontSize: 15, fontWeight: 700, color: "#101828", padding: "9px 12px", borderBottom: "1px solid #EAECF0", background: "#F9FAFB" };
+export const td = { fontSize: 15, color: "#344054", padding: "10px 12px", borderBottom: "1px solid #EAECF0", verticalAlign: "top" };
+export const Kind = ({ k }) => (
+  <span style={{ borderRadius: 999, padding: "1px 9px", fontSize: 15, fontWeight: 700, whiteSpace: "nowrap", background: k === "Report" ? "#101828" : "#F2F4F7", color: k === "Report" ? "#FFFFFF" : "#101828" }}>{k}</span>
+);
+
+<div style={{ maxWidth: 920 }}>
+
+# Tables · List vs Report
+
+Settled on the 26 Oct review, so it can be written down once and reused by the
+Performance Insights redesign:
+
+> “Reports have this charcoal table, and then the alternating tan … when it's data like
+> this. And then when it's like a list of stuff, I think I drop it. It's not a report, it's
+> just an organised list. I think that's loosely the rule.”
+>
+> — Product, 26 Oct review
+
+- **Report** — numbers about delivery: **charcoal #101828 header, white labels, warm
+  alternating rows**, a totals row where the numbers add up.
+- **List** — an organised set of things you act on: **light header, bold black labels**.
+- **Both** have **vertical rules between columns** and, on a page, run **full bleed** —
+  edge to edge of the content area, like staging's tables — with the first and last cells
+  lining up with the page padding. A table inside a form section (the selected-items
+  tables in setup) stays inside its section.
+
+One place to change it: `TABLE` and `tableHead` in
+`prototypes/das/v5/screens/nimbus-ui.tsx`. The examples below are drawn with them.
+
+## Report
+
+</div>
+
+<div className="sb-unstyled" style={{ padding: "8px 32px 24px", background: "#FFFFFF", border: "1px solid #EAECF0", borderRadius: 12, maxWidth: 920 }}>
+  <ReportTableExample />
+</div>
+
+<div style={{ maxWidth: 920 }}>
+
+## List
+
+</div>
+
+<div className="sb-unstyled" style={{ padding: "8px 32px 24px", background: "#FFFFFF", border: "1px solid #EAECF0", borderRadius: 12, maxWidth: 920 }}>
+  <ListTableExample />
+</div>
+
+<div style={{ maxWidth: 920 }}>
+
+## Where each v5 table sits
+
+<div style={{ overflowX: "auto", border: "1px solid #EAECF0", borderRadius: 12, margin: "12px 0 24px" }}>
+  <table style={{ width: "100%", borderCollapse: "collapse", margin: 0 }}>
+    <thead><tr><th style={{ ...th, width: 210 }}>Table</th><th style={{ ...th, width: 90 }}>Kind</th><th style={th}>Why</th><th style={{ ...th, width: 110 }}>Prototype</th></tr></thead>
+    <tbody>
+      {[
+        ["Manage campaigns", "List", "The campaigns you run. Product confirmed on the call: not charcoal.", "campaigns"],
+        ["View All Assets", "List", "Your creatives, to search and act on.", "asset-view"],
+        ["View All Keywords", "List", "Your keyword library.", "keyword-view"],
+        ["Keyword Health · apps", "List", "One row per app with its integration state; a diagnostic list, not delivery reporting (the charter keeps per-keyword numbers out of charts).", "keyword-health"],
+        ["Campaign creatives (overview)", "List", "What the campaign serves: name, type, size.", "view-a"],
+        ["Selected items (setup)", "List", "Apps, languages, keywords, creatives chosen in a form. Stays inside its section — not full bleed.", "setup-ready"],
+        ["Full performance", "Report", "Spend and impressions by breakdown, with totals.", "view-d"],
+        ["Full performance · by keyword", "Report", "The same report, one row per keyword.", "view-d-keywords"],
+      ].map(([name, kind, why, route]) => (
+        <tr key={name}>
+          <td style={{ ...td, fontWeight: 700, color: "#101828" }}>{name}</td>
+          <td style={td}><Kind k={kind} /></td>
+          <td style={{ ...td, color: "#475467" }}>{why}</td>
+          <td style={td}><a href={protoUrl(route)} target="_blank" rel="noreferrer" style={{ color: "#A94579", fontWeight: 600 }}>Open ↗</a></td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+## Staging today is inconsistent
+
+Built by many hands over many years, staging doesn't follow one rule yet. These are the
+known exceptions, to settle in the Performance Insights redesign rather than copy:
+
+- **Manage Active Demand** has a **charcoal** header, though it's a list — the same shape
+  as Manage Campaigns, which is light.
+- **Nimbus+ Payments** and **Nimbus+ Payouts** have **light** headers, though they're
+  reporting.
+- **Saved Queries** (Performance Insights) is a list of saved reports with a charcoal header.
+
+Product's guidance: follow the designs, not the implemented exceptions, and change the
+rule in one place when it's settled.
+
+See also: <a href="./?path=/docs/application-ui-table-v5-prototype-00-overview--docs" target="_top">V5 Prototype tables</a> ·
+<a href="./?path=/docs/application-ui-nimbus-tokens-00-overview--docs" target="_top">Nimbus tokens</a>.
+
+</div>

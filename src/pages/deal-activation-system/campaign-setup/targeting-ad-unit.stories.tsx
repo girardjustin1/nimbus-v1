@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { AdUnitType } from "../../../../prototypes/das/v1/screens/das-data";
-import { AdUnitGuideModal, AdUnitHelp, AdUnitTypeFieldV3 } from "../../../../prototypes/das/v4/screens/ad-unit";
-import { TargetModule } from "../../../../prototypes/das/v4/screens/targeting-section";
+import { AdUnitGuideModal, AdUnitHelp, AdUnitTypeFieldV3 } from "../../../../prototypes/das/v5/screens/ad-unit";
+import { TargetModule } from "../../../../prototypes/das/v5/screens/targeting-section";
 import { Surface, Value } from "./harness";
 
 /**

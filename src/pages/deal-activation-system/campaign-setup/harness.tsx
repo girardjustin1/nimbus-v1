@@ -3,15 +3,15 @@ import { cx } from "@/utils/cx";
 import { setClickToFill } from "../../../../prototypes/shared/demo-fill";
 import type { FieldError, Setter } from "../../../../prototypes/das/v1/screens/campaign-setup-one-page";
 import { type SetupForm, type SetupPreset, allPresets } from "../../../../prototypes/das/v1/screens/setup-data";
-import { type DealDraft, dealDraftFor } from "../../../../prototypes/das/v4/screens/deal-draft";
-import { type IssueV3, validateV3 } from "../../../../prototypes/das/v4/screens/setup-sections";
-import { FIELD_TYPE } from "../../../../prototypes/das/v4/screens/type-rules";
+import { type DealDraft, dealDraftFor } from "../../../../prototypes/das/v5/screens/deal-draft";
+import { type IssueV3, validateV3 } from "../../../../prototypes/das/v5/screens/setup-sections";
+import { FIELD_TYPE } from "../../../../prototypes/das/v5/screens/type-rules";
 
 /**
  * Story harness for Deal Activation System › Campaign Setup.
  *
  * Every story here renders Round 4's own components — the ones on
- * prototypes/das/v4 #/setup-empty — so the inventory cannot drift from the page.
+ * prototypes/das/v5 #/setup-empty — so the inventory cannot drift from the page.
  *
  * Click-to-fill is prototype chrome for walkthroughs; it is switched off while a story
  * is on screen so every field behaves like a field. It comes back on when the story

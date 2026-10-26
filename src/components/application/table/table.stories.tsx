@@ -135,7 +135,7 @@ const meta = {
         layout: "fullscreen",
         docs: {
             description: {
-                component: 'The generic table patterns below are complemented by the current App Screens inventory in <a href="./?path=/docs/application-ui-table-102326-00-audit--docs" target="_top">102326 — table audit and extracted examples</a>. That folder includes complete screen tables, payment and error states, and the actual cell controls used in those screens. <a href="./?path=/docs/application-ui-table-v4-prototype-00-overview--docs" target="_top">V4 Prototype — table locations and matching components</a> maps the current prototype tables to their closest design-system examples, including the charcoal-header references.',
+                component: 'The generic table patterns below are complemented by the current App Screens inventory in <a href="./?path=/docs/application-ui-table-102326-00-audit--docs" target="_top">102326 — table audit and extracted examples</a>. That folder includes complete screen tables, payment and error states, and the actual cell controls used in those screens. <a href="./?path=/docs/application-ui-table-v5-prototype-00-overview--docs" target="_top">V5 Prototype — table locations and matching components</a> maps the current prototype tables to their closest design-system examples, including the charcoal-header references.',
             },
         },
     },

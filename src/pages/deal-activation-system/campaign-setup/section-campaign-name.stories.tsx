@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { CampaignNameSection } from "../../../../prototypes/das/v4/screens/deal-section";
+import { CampaignNameSection } from "../../../../prototypes/das/v5/screens/deal-section";
 import { Setup, Surface } from "./harness";
 
 /**

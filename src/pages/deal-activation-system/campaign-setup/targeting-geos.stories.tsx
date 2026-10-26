@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { GeoTarget } from "../../../../prototypes/das/v4/screens/existing-targets";
+import { GeoTarget } from "../../../../prototypes/das/v5/screens/existing-targets";
 import { Surface, Value } from "./harness";
 
 /**

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { PinkAction } from "../../../../prototypes/das/v4/screens/das-shell";
-import { DoneButton, KeyHint, TrafficBadge } from "../../../../prototypes/das/v4/screens/search-select";
+import { PinkAction } from "../../../../prototypes/das/v5/screens/das-shell";
+import { DoneButton, KeyHint, TrafficBadge } from "../../../../prototypes/das/v5/screens/search-select";
 import { Surface } from "./harness";
 
 /**

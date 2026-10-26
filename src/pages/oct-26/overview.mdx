@@ -1,0 +1,130 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { framing, items, links } from "./feedback";
+
+<Meta title="Oct 26/Overview" />
+
+export const protoUrl = (route) =>
+  (typeof window !== "undefined" && /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname) ? "http://localhost:5190/das/v5/" : "./das/v5/") + `#/${route}`;
+export const storyUrl = (id) => (id.endsWith("--docs") ? `./?path=/docs/${id}` : `./?path=/story/${id}`);
+
+export const Pill = ({ href, kind, children }) => (
+  <a href={href} target="_top" style={{
+    display: "inline-block", whiteSpace: "nowrap", textDecoration: "none", fontSize: 15, fontWeight: 600, padding: "2px 9px", borderRadius: 999,
+    color: kind === "proto" ? "#A94579" : "#1F7F80",
+    background: kind === "proto" ? "#FCE7F1" : "#E6F6F6",
+  }}>{children}</a>
+);
+
+export const LinkRow = ({ label, children }) => (
+  <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 6, margin: "2px 0" }}>
+    <span style={{ fontSize: 15, fontWeight: 700, color: "#667085", textTransform: "uppercase", letterSpacing: 0.4, minWidth: 92 }}>{label}</span>
+    {children}
+  </div>
+);
+
+export const Where = ({ slug }) => {
+  const l = links[slug];
+  if (!l) return null;
+  return (
+    <div>
+      {l.prototype.length > 0 && <LinkRow label="Prototype">{l.prototype.map(([t, r]) => <Pill key={t} kind="proto" href={protoUrl(r)}>{t} ↗</Pill>)}</LinkRow>}
+      {l.stories.length > 0 && <LinkRow label="Storybook">{l.stories.map(([t, id]) => <Pill key={t} kind="story" href={storyUrl(id)}>{t} →</Pill>)}</LinkRow>}
+    </div>
+  );
+};
+
+export const Chip = ({ tone }) => (
+  <span style={{
+    background: tone === "Applied" ? "#E6F6F6" : tone === "Pending" ? "#FFF4E5" : tone === "Kept" ? "#F2F4F7" : "#FBE9F1",
+    color: tone === "Applied" ? "#1F7F80" : tone === "Pending" ? "#B54708" : tone === "Kept" ? "#475467" : "#A94579",
+    borderRadius: 999, padding: "1px 8px", fontSize: 15, fontWeight: 700, whiteSpace: "nowrap",
+  }}>{tone}</span>
+);
+
+export const th = { textAlign: "left", fontSize: 15, fontWeight: 700, color: "#101828", padding: "9px 12px", borderBottom: "1px solid #EAECF0", background: "#F9FAFB" };
+export const td = { fontSize: 15, color: "#344054", padding: "10px 12px", borderBottom: "1px solid #EAECF0", verticalAlign: "top" };
+
+<div style={{ maxWidth: 920 }}>
+
+# Oct 26 · Round 5
+
+Round 4 was reviewed on 26 October. **DAS is approved** — setup and reporting both.
+Nothing structural changes; this round makes DAS read as part of the Nimbus dashboard,
+and writes the visual rules down so the Performance Insights redesign that comes next
+can reuse them. Everything below is built into prototype **v5**; Round 4 stays frozen at
+v4 as it was reviewed.
+
+> “{framing.quote}”
+>
+> — Product, 26 Oct review
+
+{framing.decision}
+
+## What changed
+
+<div style={{ overflowX: "auto", border: "1px solid #EAECF0", borderRadius: 12, margin: "12px 0 24px" }}>
+  <table style={{ width: "100%", borderCollapse: "collapse", margin: 0 }}>
+    <thead><tr><th style={{ ...th, width: 220 }}>Change</th><th style={th}>What it does, and where to see it</th></tr></thead>
+    <tbody>
+      {items.map((i) => (
+        <tr key={i.slug}>
+          <td style={{ ...td, fontWeight: 700, color: "#101828" }}>{i.title}<div style={{ marginTop: 6 }}><Chip tone={i.status} /></div></td>
+          <td style={{ ...td, color: "#475467" }}>
+            {i.decision.map((d, k) => <p key={k} style={{ margin: k ? "6px 0 0" : 0 }}>{d}</p>)}
+            <div style={{ marginTop: 10 }}><Where slug={i.slug} /></div>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+Each change links to the **prototype** screens it shows on (pink, opens prototype v5) and
+to its **Storybook** stories (teal, stays here). *Oct 26 › Applied Changes* shows each
+screen as Round 4 beside Round 5.
+
+- **Applied** — decided on the call and in prototype v5.
+- **Kept** — Product asked for it to stay as it is for now.
+- **To confirm** — built on a reading that still needs an answer.
+- **Pending** — waiting on something from outside the prototype.
+
+## Kept as it is
+
+- **Total spend** stays on Manage campaigns. It's ambiguous — a lifetime total, or the
+  active flights? — and Product is deciding whether to keep, replace or reframe it. It may
+  move into the Performance Insights landing page as DAS's headline number.
+- **Progress bars** and the **paused warning banner** stay until user feedback.
+
+## Pending
+
+- **Chart type icons** — from the original Sketch files, coming from Product. The bar uses
+  placeholder icons until then; swapping them is a change to its options.
+- **Total spend framing** — Product.
+- **Token names** — “UI controller” (Collapse) and “state action” (Save Query, Download
+  .CSV) are working names, to confirm with engineering.
+
+## Tokens, for the Performance Insights redesign
+
+Tabs, bands, the date cell, quick picker and group-by, UI controller and state action
+buttons, teal checkboxes and radios, the chart type bar, the filter menu and the two table
+kinds now live once, in `prototypes/das/v5/screens/nimbus-ui.tsx`.
+
+<LinkRow label="Storybook">
+  <Pill kind="story" href={storyUrl("application-ui-nimbus-tokens-00-overview--docs")}>Nimbus Tokens →</Pill>
+  <Pill kind="story" href={storyUrl("application-ui-table-list-vs-report--docs")}>List vs Report →</Pill>
+  <Pill kind="story" href={storyUrl("application-ui-table-v5-prototype-00-overview--docs")}>V5 tables →</Pill>
+</LinkRow>
+
+## The 15px type floor
+
+V5 holds text to the 15px minimum (Audits › Typography Rules). Staging's date labels and
+table headers are 10–13px, so ours read a little larger; colour, weight, rules, fills and
+stripes follow staging.
+
+## Next
+
+Engineering starts building DAS (it doesn't need the new endpoints to begin); sprint planning is
+Wednesday. Then Performance Insights: expanded metrics, possibly a generative component,
+saveable dashboards and a default view — built from these tokens.
+
+</div>

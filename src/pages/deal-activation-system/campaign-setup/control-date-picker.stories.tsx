@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { CalendarDate } from "@internationalized/date";
 import { TODAY } from "../../../../prototypes/das/v1/screens/setup-data";
-import { DatePicker } from "../../../../prototypes/das/v4/screens/date-picker";
+import { DatePicker } from "../../../../prototypes/das/v5/screens/date-picker";
 import { Surface, Value } from "./harness";
 
 /**

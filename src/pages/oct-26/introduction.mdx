@@ -1,0 +1,402 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import { Changed, Check, Links, Said, Shot, ShotPair, Status, Step, protoUrl, docUrl, th, td } from "./guide";
+import * as Tabs from "../../components/application/nimbus-tokens/page-tabs.stories";
+import * as BandStories from "../../components/application/nimbus-tokens/bands.stories";
+import * as Dates from "../../components/application/nimbus-tokens/dates-and-dropdowns.stories";
+import * as Buttons from "../../components/application/nimbus-tokens/buttons.stories";
+import * as Teal from "../../components/application/nimbus-tokens/teal-controls.stories";
+import * as Chart from "../../components/application/nimbus-tokens/chart-type-bar.stories";
+import * as Filter from "../../components/application/nimbus-tokens/filter-control.stories";
+import * as TableStories from "../../components/application/nimbus-tokens/tables.stories";
+import s01 from "./screens/01-campaigns.jpg";
+import s02 from "./screens/02-overview.jpg";
+import s03 from "./screens/03-overview-paused.jpg";
+import s04 from "./screens/04-full-performance.jpg";
+import s05 from "./screens/05-filter-menu.jpg";
+import s06 from "./screens/06-filters-saved.jpg";
+import s07 from "./screens/07-collapsed.jpg";
+import s08 from "./screens/08-report-table.jpg";
+import s09 from "./screens/09-by-keyword.jpg";
+import s10 from "./screens/10-assets.jpg";
+import s11 from "./screens/11-assets-batch.jpg";
+import s12 from "./screens/12-keywords.jpg";
+import s13 from "./screens/13-keyword-health.jpg";
+import s15 from "./screens/15-setup-rules.jpg";
+import s16 from "./screens/16-setup-targeting.jpg";
+
+<Meta title="Oct 26/Introduction" />
+
+<div style={{ maxWidth: 1040 }}>
+
+# Round 5 · review guide
+
+On 26 October Product approved DAS — setup and reporting both. What was left was visual:
+make DAS read as part of the Nimbus dashboard, and write the rules down so the
+Performance Insights redesign can reuse them. This guide walks every Round 5 change **in
+the order to review it**, the way a publisher moves through DAS: the campaigns list, a
+campaign, its full performance, then the libraries, then setup. It finishes with the
+components every screen now shares, and what's kept or still open.
+
+Each step has a screenshot of v5, what changed and why (in Product's words from the
+call), how to check it, and links: the screen in the **prototype**, **Round 4 → 5** side
+by side, and the **components** it uses.
+
+<div style={{ display: "flex", flexWrap: "wrap", gap: 10, margin: "18px 0 6px" }}>
+  <a href={protoUrl("campaigns")} target="_blank" rel="noreferrer" style={{ background: "#DA6EA3", color: "#fff", padding: "10px 20px", borderRadius: 999, fontSize: 15, fontWeight: 700, textDecoration: "none" }}>Open prototype v5 ↗</a>
+  <a href={docUrl("oct-26-overview--docs")} target="_top" style={{ background: "#E6F6F6", color: "#1F7F80", padding: "10px 20px", borderRadius: 999, fontSize: 15, fontWeight: 700, textDecoration: "none" }}>Change list (Overview) →</a>
+  <a href={docUrl("application-ui-nimbus-tokens-00-overview--docs")} target="_top" style={{ background: "#F2F4F7", color: "#344054", padding: "10px 20px", borderRadius: 999, fontSize: 15, fontWeight: 700, textDecoration: "none" }}>All components →</a>
+</div>
+
+<p style={{ fontSize: 15, color: "#667085" }}>Round 4 stays frozen at v4 as it was reviewed. Pick any round from the version menu at the top of the prototype.</p>
+
+## The review, in order
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0 0" }}>
+  <thead><tr><th style={th}>#</th><th style={th}>Screen</th><th style={th}>What to look at</th></tr></thead>
+  <tbody>
+    <tr><td style={td}>1</td><td style={td}><a href="#step-1">Campaigns</a></td><td style={td}>Stat cards, Performance Insights link, search, full-bleed list table</td></tr>
+    <tr><td style={td}>2</td><td style={td}><a href="#step-2">Campaign overview</a></td><td style={td}>Stat cards; banner and progress bars kept</td></tr>
+    <tr><td style={td}>3</td><td style={td}><a href="#step-3">Full performance · layout</a></td><td style={td}>Bands, dates, dropdowns, Collapse, Download, checkboxes, chart type</td></tr>
+    <tr><td style={td}>4</td><td style={td}><a href="#step-4">Full performance · filters</a></td><td style={td}>Performance Insights' filter menu, toggle to compare, clear all</td></tr>
+    <tr><td style={td}>5</td><td style={td}><a href="#step-5">Full performance · report table</a></td><td style={td}>Charcoal header, warm rows, by keyword</td></tr>
+    <tr><td style={td}>6</td><td style={td}><a href="#step-6">View All Assets</a></td><td style={td}>Tabs, no Assets label, search left, list table, batch selection</td></tr>
+    <tr><td style={td}>7</td><td style={td}><a href="#step-7">Keywords</a></td><td style={td}>Same treatment as assets; Keyword Health</td></tr>
+    <tr><td style={td}>8</td><td style={td}><a href="#step-8">Campaign setup</a></td><td style={td}>Teal radios and checkboxes; selected-items tables</td></tr>
+    <tr><td style={td}>9</td><td style={td}><a href="#step-9">The shared components</a></td><td style={td}>Every piece above, in one place, live</td></tr>
+    <tr><td style={td}>10</td><td style={td}><a href="#step-10">Kept, and still open</a></td><td style={td}>What didn't change on purpose, and the decisions left</td></tr>
+  </tbody>
+</table>
+
+<Step n={1} title="Campaigns">
+
+<Shot src={s01} caption="v5 · Deal Activation System › manage campaigns" />
+
+<Changed>
+  <ul>
+    <li><b>Stat cards</b> take the realtime dashboard's styling: uppercase label, large teal value, grey detail line.</li>
+    <li><b>Detailed reporting → Performance Insights.</b> A placeholder link to Performance Insights as a whole; the wording will change when there's somewhere specific to land.</li>
+    <li><b>Search</b> sits left above the table, at the same width as on the asset and keyword libraries.</li>
+    <li><b>The table runs full bleed</b>, edge to edge of the content area like staging, with a light header, bold black labels and a rule between every column. It's a list, so no charcoal.</li>
+  </ul>
+</Changed>
+
+<Said at="5:12">See how like just little things, right? Like the tables are just full bleed on the page.</Said>
+<Said at="28:05">Change detailed reporting to just have it say Performance Insights.</Said>
+<Said at="28:58">Nope, we don't have it as charcoal here.</Said>
+
+<Check>
+  <ol>
+    <li>Compare the table edge, header and column rules with staging's <i>manage campaigns</i>.</li>
+    <li>Click <b>Live campaigns</b> or <b>Campaign Health</b> — the table filters, as in Round 4.</li>
+    <li>Type <b>sp</b> in the search bar — two campaigns remain, the match highlighted.</li>
+  </ol>
+</Check>
+
+<Links
+  proto={[["Manage campaigns", "campaigns"]]}
+  compare={[["Round 4", "oct-26-applied-changes--campaigns-before"], ["Round 5", "oct-26-applied-changes--campaigns-after"]]}
+  tokens={[["Tables · List", "application-ui-nimbus-tokens-tables--list"], ["List vs Report rule", "application-ui-table-list-vs-report--docs"]]}
+/>
+
+</Step>
+
+<Step n={2} title="Campaign overview">
+
+<ShotPair>
+  <Shot src={s02} caption="Running · Sports fans" />
+  <Shot src={s03} caption="Paused · Plant lovers — banner kept" />
+</ShotPair>
+
+<Changed>
+  <ul>
+    <li><b>Stat cards</b> (Spend, Campaign Health, Impressions, Days left) take the same realtime styling as Campaigns.</li>
+    <li>The <b>creatives table</b> takes the list header and column rules; it stays inside its section.</li>
+    <li><b>Kept as they are:</b> the spend progress bar and the paused banner, so you can show them and see what people think.</li>
+  </ul>
+</Changed>
+
+<Said at="22:07">Yeah, keep them for now.</Said>
+<Said at="22:38">Leave them for now.</Said>
+
+<Check>
+  <ol>
+    <li>Open <b>Sports fans</b> from Campaigns; check the cards read like the realtime dashboard's blocks.</li>
+    <li>Open <b>Plant lovers</b> (paused) — the banner and progress bar are unchanged from Round 4.</li>
+  </ol>
+</Check>
+
+<Links
+  proto={[["Sports fans", "view-a?c=c1"], ["Plant lovers (paused)", "view-a?c=c4"]]}
+  compare={[["Round 4", "oct-26-applied-changes--overview-before"], ["Round 5", "oct-26-applied-changes--overview-after"], ["Paused", "oct-26-applied-changes--paused-after"]]}
+/>
+
+</Step>
+
+<Step n={3} title="Full performance · layout">
+
+<Shot src={s04} caption="v5 · Campaigns › Sports fans › Full performance" />
+
+<Changed>
+  <ul>
+    <li><b>Bands, not a card.</b> Dates, Metrics, Breakdown, Filters and Chart Type are full-span bands with their label on the left, as in Performance Insights.</li>
+    <li><b>Dates</b> use Performance Insights' START DATE / END DATE layout — the same component whether or not it opens a picker.</li>
+    <li><b>Quick picker</b> (Flight to date / Last 14 / Last 7 days) and <b>group-by</b> (By Day / By Week) are Performance Insights' bare dropdowns.</li>
+    <li><b>Collapse</b> (a UI controller button) folds the bands away; <b>Download .CSV</b> (a state action) goes inactive when no metric is ticked.</li>
+    <li><b>Checkboxes match staging</b>: a pale teal box with a teal border and teal check when ticked, white with a grey border when not — teal, not pink.</li>
+    <li><b>Chart type</b> — the chosen type fills the band's height, teal on a teal tint. The icons will be swapped for the ones in the original Sketch files.</li>
+  </ul>
+</Changed>
+
+<Said at="6:32">On our reporting, so if you go to Performance Insights, say, again, like you've got these, they just are these bands across.</Said>
+<Said at="6:47">And then the checkboxes are green, not pink.</Said>
+<Said at="19:15">Chart type, good. You can tokenize these buttons though. See how they fill the bar.</Said>
+
+<Shot src={s07} caption="Collapsed — only the dates, actions and results remain" />
+
+<Check>
+  <ol>
+    <li>Put it next to Performance Insights on staging: band heights, label column, dates, dropdowns.</li>
+    <li>Click <b>Collapse</b>, then <b>Expand</b>.</li>
+    <li>Untick Spend and Impressions — <b>Download .CSV</b> goes inactive and the page asks for a metric.</li>
+    <li>Click through the chart types; the chosen one fills its band.</li>
+  </ol>
+</Check>
+
+<Links
+  proto={[["Full performance", "view-d?c=c1"]]}
+  compare={[["Round 4", "oct-26-applied-changes--performance-before"], ["Round 5", "oct-26-applied-changes--performance-after"]]}
+  tokens={[["Bands", "application-ui-nimbus-tokens-bands--docs"], ["Dates and dropdowns", "application-ui-nimbus-tokens-dates-and-dropdowns--docs"], ["Buttons", "application-ui-nimbus-tokens-buttons--docs"], ["Teal controls", "application-ui-nimbus-tokens-teal-controls--docs"], ["Chart type bar", "application-ui-nimbus-tokens-chart-type-bar--docs"]]}
+/>
+
+</Step>
+
+<Step n={4} title="Full performance · filters">
+
+<ShotPair>
+  <Shot src={s05} caption="+ ADD → Platform → iOS and Android picked" />
+  <Shot src={s06} caption="Saved — Android toggled off to compare; ✕ clears all" />
+</ShotPair>
+
+<Changed>
+  <ul>
+    <li>Round 4's filter chips are gone. Filters use <b>Performance Insights' filter menu</b>: <b>+ ADD</b> opens categories on the left and that category's values on the right, with <b>Clear Selections</b>, <b>CANCEL</b> and <b>SAVE</b>.</li>
+    <li>Saved values sit in the Filters band <b>as checkboxes</b>, so you can add iOS and Android and toggle one off to compare them side by side. A dimension can't be toggled down to nothing.</li>
+    <li>The <b>✕</b> at the far right clears every filter.</li>
+  </ul>
+</Changed>
+
+<Said at="18:40">People are constantly comparing like one platform to another… add both and then just quickly like toggle one on and off.</Said>
+<Said at="19:09">OK, so yeah, kill this filter UI in favor of the other one.</Said>
+
+<Check>
+  <ol>
+    <li>Click <b>+ ADD</b>, choose <b>Platform</b>, pick <b>iOS</b> and <b>Android</b>, then <b>SAVE</b>.</li>
+    <li>Untick <b>Android</b> — the chart and table drop to iOS only, and the total reads <i>Total (filtered)</i>.</li>
+    <li>Add a <b>Geo</b> filter alongside; then click <b>✕</b> to clear both.</li>
+  </ol>
+</Check>
+
+<Links
+  proto={[["Full performance", "view-d?c=c1"]]}
+  tokens={[["Filter control", "application-ui-nimbus-tokens-filter-control--docs"]]}
+/>
+
+</Step>
+
+<Step n={5} title="Full performance · report table">
+
+<ShotPair>
+  <Shot src={s08} caption="Table chart type — the report table" />
+  <Shot src={s09} caption="By keyword — one row per keyword" />
+</ShotPair>
+
+<Changed>
+  <ul>
+    <li>Full performance is a <b>report</b>, so its table takes the <b>charcoal header</b> with white labels, warm alternating rows, column rules and a bold total row. It runs full bleed.</li>
+    <li>The per-keyword view is the same report table.</li>
+  </ul>
+</Changed>
+
+<Said at="9:43">Oh, so reports have this charcoal.</Said>
+<Said at="20:06">Is a report technically. So this would have the gray top.</Said>
+
+<Check>
+  <ol>
+    <li>Choose <b>Table</b> as the chart type and compare the header with Performance Insights' results table.</li>
+    <li>Open <b>Over 21 Midwest · by keyword</b> — the same report styling.</li>
+  </ol>
+</Check>
+
+<Links
+  proto={[["Report table", "view-d?c=c1"], ["By keyword", "view-d-keywords"]]}
+  tokens={[["Tables · Report", "application-ui-nimbus-tokens-tables--report"], ["List vs Report rule", "application-ui-table-list-vs-report--docs"]]}
+/>
+
+</Step>
+
+<Step n={6} title="View All Assets">
+
+<ShotPair>
+  <Shot src={s10} caption="Tabs, search left, list table" />
+  <Shot src={s11} caption="Actions › Batch actions — staging's checkboxes" />
+</ShotPair>
+
+<Changed>
+  <ul>
+    <li><b>Tabs</b> (Asset Setup / View All Assets) are bold, with the active tab filled teal and ruled underneath, inactive tabs pink, and thin rules between them — as on staging.</li>
+    <li>The <b>Assets</b> label is gone. <b>Search</b> sits left; <b>Actions</b> and <b>Add Creative</b> stay right.</li>
+    <li>The table is a <b>list</b>: full bleed, bold black headers and column rules — what was missing in Round 4.</li>
+    <li>Batch-selection checkboxes take staging's look.</li>
+  </ul>
+</Changed>
+
+<Said at="8:21">This assets label, I think you can just kill it, left align the search bar, and then leave the actions to the left and right.</Said>
+<Said at="8:44">See the bold, like the black bold headers on this table, like you don't have that and you don't have the vertical line separating the columns.</Said>
+<Said at="12:58">And yours isn't as bold.</Said>
+
+<Check>
+  <ol>
+    <li>Compare tabs, search and table with staging's <i>manage assets › View All Assets</i>.</li>
+    <li>Open <b>Actions › Batch actions</b> and tick a few rows.</li>
+  </ol>
+</Check>
+
+<Links
+  proto={[["View All Assets", "asset-view"]]}
+  compare={[["Round 4", "oct-26-applied-changes--assets-before"], ["Round 5", "oct-26-applied-changes--assets-after"]]}
+  tokens={[["Page tabs", "application-ui-nimbus-tokens-page-tabs--docs"], ["Tables · List", "application-ui-nimbus-tokens-tables--list"], ["Teal controls", "application-ui-nimbus-tokens-teal-controls--docs"]]}
+/>
+
+</Step>
+
+<Step n={7} title="Keywords">
+
+<ShotPair>
+  <Shot src={s12} caption="View All Keywords" />
+  <Shot src={s13} caption="Keyword Health" />
+</ShotPair>
+
+<Changed>
+  <ul>
+    <li>Keywords mirror assets: the same tabs, no <b>Keywords</b> label, search left, Actions and the add button right, and a full-bleed list table.</li>
+    <li><b>Keyword Health</b> is treated as a <b>list</b>, not a report: it checks which keywords your apps send and holds no spend or impressions.</li>
+  </ul>
+</Changed>
+
+<Said at="8:17">And not in keywords, but you have it in the campaign setup.</Said>
+
+<Check>
+  <ol>
+    <li>Switch between Keyword Setup, View All Keywords and Keyword Health — the tabs match assets.</li>
+    <li>Confirm Keyword Health should be a list (light header) rather than a report.</li>
+  </ol>
+</Check>
+
+<Links
+  proto={[["View All Keywords", "keyword-view"], ["Keyword Health", "keyword-health"]]}
+  tokens={[["Page tabs", "application-ui-nimbus-tokens-page-tabs--keywords"]]}
+/>
+
+</Step>
+
+<Step n={8} title="Campaign setup">
+
+<ShotPair>
+  <Shot src={s15} caption="Auction Rules and Priority — teal radios" />
+  <Shot src={s16} caption="Targeting — staging's checkboxes, selected-apps table" />
+</ShotPair>
+
+<Changed>
+  <ul>
+    <li>Setup itself was approved as it stands. The only change: <b>radios and checkboxes match staging</b> — a teal ring around a solid teal dot, and the pale teal checkbox — on deal, auction rules, priority, frequency, ad units, platforms and the geo picker.</li>
+    <li>The <b>selected items</b> tables (apps, languages, keywords, creatives) take the list header and column rules, and stay inside their sections.</li>
+  </ul>
+</Changed>
+
+<Said at="16:22">We use the exact same checkbox with typography for every checkbox we're doing. And then the radios have the same type spec.</Said>
+
+<Check>
+  <ol>
+    <li>Pick an auction rule and a priority; tick and untick platforms.</li>
+    <li>Add two apps — the selected-apps table shows the list header.</li>
+  </ol>
+</Check>
+
+<Links proto={[["Setup", "setup-empty"], ["Auction rules", "step-rules"], ["Targeting", "step-targeting"]]} tokens={[["Teal controls", "application-ui-nimbus-tokens-teal-controls--docs"]]} />
+
+</Step>
+
+<Step n={9} title="The shared components">
+
+Every piece above is built once and shared, so DAS and the Performance Insights redesign
+draw from the same source. Change one, and every screen that uses it follows.
+
+<Said at="11:42">Once we have those and once they match, if they're consistent with Performance Insights, then we're going to change the rule one time. And it's going to fix everything.</Said>
+
+<p style={{ fontSize: 16, color: "#344054" }}>Where they live: <code>prototypes/das/v5/screens/nimbus-ui.tsx</code> in the code, and <a href={docUrl("application-ui-nimbus-tokens-00-overview--docs")} target="_top">Application UI › Nimbus Tokens</a> in Storybook. They're live below — click them.</p>
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "12px 0 8px" }}>
+  <thead><tr><th style={th}>Component</th><th style={th}>What it is</th><th style={th}>Used in v5</th></tr></thead>
+  <tbody>
+    <tr><td style={td}><b>Page tabs</b></td><td style={td}>Tabs across the top of a page</td><td style={td}>Manage assets, Manage keywords</td></tr>
+    <tr><td style={td}><b>Bands</b></td><td style={td}>Full-span sections with a band label</td><td style={td}>Full performance</td></tr>
+    <tr><td style={td}><b>Date cell, quick picker, group-by</b></td><td style={td}>Performance Insights' date row</td><td style={td}>Full performance</td></tr>
+    <tr><td style={td}><b>UI controller button</b> <Status tone="To confirm" /></td><td style={td}>Changes the UI only (Collapse / Expand)</td><td style={td}>Full performance</td></tr>
+    <tr><td style={td}><b>State action</b> <Status tone="To confirm" /></td><td style={td}>Acts on the current state; inactive without one (Download .CSV)</td><td style={td}>Full performance, filter menu</td></tr>
+    <tr><td style={td}><b>Teal controls</b></td><td style={td}>Checkboxes and radios as on staging</td><td style={td}>Everywhere there's a checkbox or radio</td></tr>
+    <tr><td style={td}><b>Chart type bar</b></td><td style={td}>Chart type buttons that fill the band</td><td style={td}>Full performance</td></tr>
+    <tr><td style={td}><b>Filter control</b></td><td style={td}>Performance Insights' filter menu</td><td style={td}>Full performance</td></tr>
+    <tr><td style={td}><b>Tables · list / report</b></td><td style={td}>Table styles by context</td><td style={td}>Every table</td></tr>
+  </tbody>
+</table>
+
+### Page tabs
+<Canvas of={Tabs.Assets} />
+
+### Bands
+<Canvas of={BandStories.Builder} />
+
+### Date row — dates, quick picker, group-by, actions
+<Canvas of={Dates.DateRowComplete} />
+
+### Buttons — UI controller and state actions
+<Canvas of={Buttons.UiController} />
+<Canvas of={Buttons.StateActions} />
+
+### Teal controls
+<Canvas of={Teal.Teal} />
+
+### Chart type bar
+<Canvas of={Chart.InABand} />
+
+### Filter control
+<Canvas of={Filter.ComparingPlatforms} />
+
+### Tables — list and report
+<Canvas of={TableStories.List} />
+<Canvas of={TableStories.Report} />
+
+<Links tokens={[["All components", "application-ui-nimbus-tokens-00-overview--docs"], ["List vs Report rule", "application-ui-table-list-vs-report--docs"], ["Where every v5 table sits", "application-ui-table-v5-prototype-00-overview--docs"]]} />
+
+</Step>
+
+<Step n={10} title="Kept, and still open">
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
+  <thead><tr><th style={th}>Item</th><th style={th}>Status</th><th style={th}>Notes</th></tr></thead>
+  <tbody>
+    <tr><td style={td}>Total spend chip</td><td style={td}><Status tone="Kept" /></td><td style={td}>Product to decide whether lifetime spend is the right highlight, or whether to scope or replace it.</td></tr>
+    <tr><td style={td}>Progress bars, paused and alert banners</td><td style={td}><Status tone="Kept" /></td><td style={td}>Kept to show people and gather reactions.</td></tr>
+    <tr><td style={td}>Chart type icons</td><td style={td}><Status tone="Pending" /></td><td style={td}>To come from the original Sketch files; they swap in one place.</td></tr>
+    <tr><td style={td}>Checkboxes and radios</td><td style={td}><Status tone="Applied" /></td><td style={td}>Matched to staging, sampled from your call screenshots: pale teal fill, teal-grey border and teal check; a thin teal ring, white gap and solid teal dot.</td></tr>
+    <tr><td style={td}>"UI controller" and "state action" names</td><td style={td}><Status tone="To confirm" /></td><td style={td}>Working names; check with engineering whether they're already named.</td></tr>
+    <tr><td style={td}>Type sizes</td><td style={td}><Status tone="Kept" /></td><td style={td}>Labels stay at the 15px floor, so they're a little larger than staging's 10–12px.</td></tr>
+    <tr><td style={td}>Staging's own table inconsistencies</td><td style={td}><Status tone="To confirm" /></td><td style={td}>Manage Active Demand is charcoal; Nimbus+ Payments and Payouts are light though they're reporting. To settle in the Performance Insights redesign.</td></tr>
+  </tbody>
+</table>
+
+<p style={{ fontSize: 15, color: "#667085" }}>Next: once Round 5 is signed off, engineering starts the DAS build, and the Performance Insights redesign begins from these components.</p>
+
+</Step>
+
+</div>

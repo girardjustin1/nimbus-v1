@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { TargetBlock } from "../../../../prototypes/das/v4/screens/search-select";
+import { TargetBlock } from "../../../../prototypes/das/v5/screens/search-select";
 import { Surface } from "./harness";
 
 /**
