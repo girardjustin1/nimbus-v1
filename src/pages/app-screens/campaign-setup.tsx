@@ -131,7 +131,7 @@ const AppsSection = ({ targetedApps = [] as string[] }) => (
                 <p className="text-sm font-semibold text-secondary">Targeted Apps</p>
                 <div className="overflow-hidden rounded-xl ring-1 ring-secondary">
                     {targetedApps.map((app, i) => (
-                        <div key={app} className={cx("flex items-center justify-between px-4 py-3.5", i % 2 === 1 && "bg-secondary/40")}>
+                        <div key={app} className={cx("flex items-center justify-between px-4 py-3.5", i % 2 === 1 && "bg-[#FCFAF9]")}>
                             <span className="text-sm text-secondary">{app}</span>
                             <PinkAction icon={XClose}>Remove</PinkAction>
                         </div>
@@ -550,7 +550,7 @@ const ReviewCard = ({ title, badge, children }: { title: string; badge?: ReactNo
 );
 
 const ReviewRow = ({ label, value, isError, index }: { label: string; value: ReactNode; isError?: boolean; index: number }) => (
-    <div className={cx("grid grid-cols-[160px_1fr_auto] items-center gap-4 border-b border-secondary px-5 py-4 last:border-b-0", index % 2 === 1 && "bg-secondary/40")}>
+    <div className={cx("grid grid-cols-[160px_1fr_auto] items-center gap-4 border-b border-secondary px-5 py-4 last:border-b-0", index % 2 === 1 && "bg-[#FCFAF9]")}>
         <span className="text-sm text-tertiary">{label}</span>
         <span className={cx("flex items-center gap-2 text-sm", isError ? "font-semibold text-error-primary" : "text-secondary")}>
             {value}
@@ -610,7 +610,7 @@ export const ReviewCreativeTable = ({ firstRowError }: { firstRowError?: boolean
                 </thead>
                 <tbody>
                     {rows.map((row, ri) => (
-                        <tr key={row.id} className={cx("border-t border-secondary", ri % 2 === 1 && "bg-secondary/40")}>
+                        <tr key={row.id} className={cx("border-t border-secondary", ri % 2 === 1 && "bg-[#FCFAF9]")}>
                             <td className="px-5 py-4 text-sm font-medium text-secondary">{row.name}</td>
                             <td className="px-5 py-4 text-sm text-tertiary">{row.cap}</td>
                             <td className="px-5 py-4 text-sm">

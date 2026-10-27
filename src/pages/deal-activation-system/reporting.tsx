@@ -388,7 +388,7 @@ export const QueryBuilder = ({ pickerOpen = false }: { pickerOpen?: boolean }) =
                         </thead>
                         <tbody>
                             {resultRows.map((r, i) => (
-                                <tr key={i} className={cx("border-t border-secondary", i % 2 === 1 && "bg-secondary/30")}>
+                                <tr key={i} className={cx("border-t border-secondary", i % 2 === 1 && "bg-[#FCFAF9]")}>
                                     <td className="px-5 py-3 text-sm font-medium text-primary">{r.campaign}</td>
                                     <td className="px-5 py-3 text-sm text-secondary">{r.unit}</td>
                                     <td className="px-5 py-3 text-sm text-secondary">{r.kw}</td>

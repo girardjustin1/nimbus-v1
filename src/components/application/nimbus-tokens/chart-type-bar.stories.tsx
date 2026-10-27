@@ -15,7 +15,7 @@ const meta = {
         docs: {
             description: {
                 component:
-                    "`ChartTypeBar` — chart type buttons that fill the band's height, the chosen one teal on a teal tint, the rest pink. Each option carries its own icon so the chart icons from the original Sketch files can be swapped in without touching the component (pending: Product is sending them). Product, 26 Oct: “You can tokenize these buttons though. See how they fill the bar.”",
+                    "`ChartTypeBar` — chart type buttons that fill the band's height, the chosen one teal on a teal tint, the rest pink. Staging's look (27 Oct): Nimbus' Sketch chart icons, bold uppercase pink labels, and the chosen type a full-height pale teal block with teal text — no rounding, no ring on click. One shared component (`@/components/application/chart-type-bar`) used by v4 and v5 Full performance and the App Screens Performance Insights and Saved Queries. Product, 26 Oct: “You can tokenize these buttons though. See how they fill the bar.”",
             },
         },
     },
@@ -30,7 +30,7 @@ export const InABand: Story = {
         return (
             <TokenPage>
                 <Rule title="Fills the Chart Type band" route="view-d">
-                    Full performance in v5. Icons are placeholders until the Sketch icons arrive.
+                    Full performance in v5, with the Sketch chart icons.
                 </Rule>
                 <Bands>
                     <Band label="Chart Type" flush>

@@ -1,23 +1,12 @@
-import type { FC, ReactNode } from "react";
-import {
-    Activity,
-    BarChart01,
-    BarChartSquare02,
-    ChevronDown,
-    ChevronUp,
-    Folder,
-    PieChart01,
-    Plus,
-    Table as TableIcon,
-    TrendUp01,
-    XClose,
-} from "@untitledui/icons";
+import type { ReactNode } from "react";
+import { ChevronDown, ChevronUp, Folder, Plus, TrendUp01, XClose } from "@untitledui/icons";
 import { GlobalNav } from "@/components/application/global-nav/global-nav";
 import { Button } from "@/components/base/buttons/button";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Input } from "@/components/base/input/input";
 import { RadioButton, RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
 import { Toggle } from "@/components/base/toggle/toggle";
+import { ChartTypeBar, type ChartTypeBarOption, NIMBUS_CHART_ICONS } from "@/components/application/chart-type-bar/chart-type-bar";
 import { cx } from "@/utils/cx";
 
 /**
@@ -378,7 +367,7 @@ export const DataTable = () => (
             </thead>
             <tbody>
                 {tableRows.map((row, i) => (
-                    <tr key={i} className={cx("border-b border-secondary", i % 2 === 1 && "bg-secondary")}>
+                    <tr key={i} className={cx("border-b border-secondary", i % 2 === 1 && "bg-[#FCFAF9]")}>
                         {row.map((cell, j) => (
                             <td key={j} className={cx("border-b border-secondary px-6 py-4 text-sm", j === 5 ? "font-medium" : "text-secondary")} style={j === 5 ? { color: TEAL } : undefined}>
                                 {cell}
@@ -400,13 +389,15 @@ export const DataTable = () => (
 
 /* ------------------------------------------------ Chart-type button config --- */
 
-const chartTypes: { id: ChartType; label: string; icon: FC<{ className?: string }> }[] = [
-    { id: "table", label: "TABLE", icon: TableIcon },
-    { id: "stacked-line", label: "STACKED LINE", icon: Activity },
-    { id: "bar", label: "BAR", icon: BarChart01 },
-    { id: "stacked-bar", label: "STACKED BAR", icon: BarChartSquare02 },
-    { id: "pie", label: "PIE", icon: PieChart01 },
-    { id: "line", label: "LINE", icon: Activity },
+// 27 Oct: staging's chart type tabs and Sketch icons (the shared ChartTypeBar). Stacked
+// line takes the two-line icon staging calls Area.
+const chartTypes: ChartTypeBarOption<ChartType>[] = [
+    { id: "table", label: "TABLE", icon: NIMBUS_CHART_ICONS.table },
+    { id: "stacked-line", label: "STACKED LINE", icon: NIMBUS_CHART_ICONS.area },
+    { id: "bar", label: "BAR", icon: NIMBUS_CHART_ICONS.bar },
+    { id: "stacked-bar", label: "STACKED BAR", icon: NIMBUS_CHART_ICONS.stacked },
+    { id: "pie", label: "PIE", icon: NIMBUS_CHART_ICONS.pie },
+    { id: "line", label: "LINE", icon: NIMBUS_CHART_ICONS.line },
 ];
 
 /* --------------------------------------------------------- Shared bits --- */
@@ -496,30 +487,13 @@ const ConfigPanel = ({ chartType }: { chartType: ChartType | null }) => {
 
             {/* Chart type row */}
             <div className="flex flex-wrap items-center">
-                <div className="flex flex-1 flex-wrap items-center gap-6 px-6 py-4">
-                    <RowLabel>Chart Type:</RowLabel>
-                    <div className="flex flex-wrap items-center gap-2">
-                        {chartTypes.map(({ id, label, icon: Icon }) => {
-                            const active = id === chartType;
-                            return (
-                                <button
-                                    key={id}
-                                    type="button"
-                                    aria-pressed={active}
-                                    className={cx(
-                                        "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold tracking-wide whitespace-nowrap uppercase transition duration-100 ease-linear",
-                                        active ? "text-[#37b6b7]" : "hover:bg-secondary_hover",
-                                    )}
-                                    style={active ? { backgroundColor: "#e0f5f4" } : { color: PINK_DEEP }}
-                                >
-                                    <Icon className="size-5" aria-hidden="true" />
-                                    {label}
-                                </button>
-                            );
-                        })}
+                <div className="flex flex-1 flex-wrap items-stretch gap-x-6 px-6">
+                    <div className="flex items-center py-4">
+                        <RowLabel>Chart Type:</RowLabel>
                     </div>
+                    <ChartTypeBar options={chartTypes} value={chartType} />
                     {!isEmpty && (
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3 py-4">
                             <span className="text-md font-semibold text-primary">Show Activity:</span>
                             <Toggle aria-label="Show activity" />
                         </div>
@@ -572,7 +546,7 @@ export const SavedQueriesView = () => (
             </thead>
             <tbody>
                 {savedRows.map((row, i) => (
-                    <tr key={i} className={cx(i % 2 === 1 && "bg-secondary")}>
+                    <tr key={i} className={cx(i % 2 === 1 && "bg-[#FCFAF9]")}>
                         <td className="border-b border-secondary px-6 py-4 text-sm font-medium" style={{ color: TEAL }}>
                             Report Name
                         </td>

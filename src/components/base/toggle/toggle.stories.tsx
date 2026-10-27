@@ -3,7 +3,7 @@ import { Toggle } from "@/components/base/toggle/toggle";
 
 /**
  * Components → Toggle
- * The selected track uses the Nimbus brand-solid (pink) token.
+ * Staging's look (27 Oct): on is a pink track with a white check and a pink-ringed knob; off is a light grey track with a white ✕ and a grey-ringed knob.
  */
 const meta = {
     title: "Base Components/Toggle",

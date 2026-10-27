@@ -3,7 +3,7 @@ import { RadioButton, RadioGroup } from "@/components/base/radio-buttons/radio-b
 
 /**
  * Components → Radio Buttons
- * Selected state uses the Nimbus brand-solid (pink) token. Sizing is set on the
+ * Staging's look (26 Oct): a very light grey ring when off; a thin teal ring, white gap and solid teal dot when selected. Sizing is set on the
  * RadioGroup and shared with its RadioButton children via context.
  */
 const meta = {

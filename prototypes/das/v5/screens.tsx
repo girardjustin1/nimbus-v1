@@ -1,4 +1,6 @@
 import type { ProtoScreen } from "../../shared/prototype-frame";
+import { screens as piRound1 } from "../../performance-insights/v1/screens";
+import { DasOverview, QueryBuilder } from "../v1/screens/reporting";
 import { ViewOnePage } from "./screens/campaign-view";
 import { FullPerformance } from "./screens/full-performance";
 import { ManageCampaigns } from "./screens/manage-campaigns";
@@ -28,6 +30,23 @@ const assets = s("3 · Manage assets");
 const keywords = s("4 · Manage keywords");
 const campaigns = s("5 · Manage campaigns");
 const view = s("6 · After publishing");
+const dasReporting = s("7 · Early Performance Insights · DAS Round 1 reporting");
+
+/**
+ * 7 · The early Performance Insights concepts, so they can be walked from v5 (27 Oct).
+ *
+ * Reused as they were reviewed, not copied: the Performance Insights Round 1 prototype
+ * (22 Sep: start page, question bar, explorer, saved queries) and DAS Round 1's reporting
+ * concepts. They keep their own screen ids, because their buttons link to each other by
+ * id (#/start, #/question-bar, #/saved…); none clash with v5's. The sidebar's
+ * "performance insights" item opens the first of them.
+ */
+const earlyPerformanceInsights: ProtoScreen[] = [
+    ...piRound1.map((screen) => ({ ...screen, area: `7 · Early Performance Insights · ${screen.area}` })),
+    dasReporting({ id: "reporting", title: "A · DAS overview", description: "DAS vs Open Marketplace, campaign delivery, keyword aggregates.", render: () => <DasOverview /> }),
+    dasReporting({ id: "reporting-builder", title: "B · Query builder", description: "Metrics, breakdowns and filters as chips.", render: () => <QueryBuilder /> }),
+    dasReporting({ id: "reporting-picker", title: "B · Breakdown picker open", description: "Grouped, searchable picker; Keyword locked to CSV/API.", render: () => <QueryBuilder pickerOpen /> }),
+];
 
 export const screens: ProtoScreen[] = [
     /* 1 · Setup, empty to ready. Click any field to fill it, or use Fill page. */
@@ -268,4 +287,7 @@ export const screens: ProtoScreen[] = [
     view({ id: "view-d", title: "Full performance", description: "Styled like Performance Insights. Break down by creative, platform, geo, app, keyword and device language; download the view as CSV.", render: () => <FullPerformance /> }),
     view({ id: "view-d-pivot", title: "Full performance · pivot", description: "Creative against Platform.", render: () => <FullPerformance breakdown={["Creative", "Platform"]} /> }),
     view({ id: "view-d-keywords", title: "Full performance · by keyword", description: "Keywords match on ANY and report on screen, one row each (19 Oct).", render: () => <FullPerformance id="c3" breakdown={["Keyword"]} /> }),
+
+    /* 7 · Early Performance Insights concepts (27 Oct). */
+    ...earlyPerformanceInsights,
 ];

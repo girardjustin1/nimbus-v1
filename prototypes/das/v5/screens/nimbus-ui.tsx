@@ -1,10 +1,10 @@
 import { type CSSProperties, type ReactNode, useState } from "react";
-import { Activity, BarChart07, BarChart10, ChevronDown, ChevronRight, ChevronUp, LineChartUp01, PieChart01, Plus, Table, XClose } from "@untitledui/icons";
+import { ChevronDown, ChevronRight, ChevronUp, Plus, XClose } from "@untitledui/icons";
+import { NIMBUS_CHART_ICONS } from "@/components/application/chart-type-bar/chart-type-bar";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { cx } from "@/utils/cx";
 import { PINK, TEAL } from "./das-shell";
 import { LABEL } from "./type-rules";
-import "./nimbus-controls.css";
 
 /**
  * Nimbus UI tokens — Round 5 (26 Oct review with Product).
@@ -22,9 +22,9 @@ import "./nimbus-controls.css";
  *   UiControlButton   buttons that only change the UI ("Collapse") — name to confirm with Berna
  *   StateAction       actions on the current state ("Save Query", "Download .CSV"),
  *                     inactive when there is no state — name to confirm with Berna
- *   TealControls      checkboxes and radios as on staging: pale teal fill with a teal
- *                     check; a teal ring around a solid teal dot (nimbus-controls.css)
- *   ChartTypeBar      chart type buttons that fill the band, with swappable icons
+ *   TealControls      teal for the controls in a region; the checkbox and radio shapes
+ *                     themselves (staging's) now live in the base components
+ *   ChartTypeBar      staging's chart type tabs and Sketch chart icons (shared component)
  *   FilterControl     Performance Insights' filter menu: + ADD → category / values →
  *                     SAVE; chosen values become checkboxes to toggle; ✕ clears all
  *
@@ -34,8 +34,13 @@ import "./nimbus-controls.css";
 
 export const TEAL_DARK = "#1F7F80";
 export const CHARCOAL = "#101828";
-/** Reports alternate rows in a warm off-white ("the alternating tan"). */
-export const REPORT_STRIPE = "#F8F6F1";
+/**
+ * Every striped table alternates white (#FFF) and this warm off-white, as on staging
+ * (27 Oct). Lists and reports use the same pair.
+ */
+export const ROW_STRIPE = "#FCFAF9";
+/** The report stripe; the same colour as ROW_STRIPE. */
+export const REPORT_STRIPE = ROW_STRIPE;
 
 /* -------------------------------------------------------------- Selection --- */
 
@@ -45,8 +50,6 @@ export const REPORT_STRIPE = "#F8F6F1";
  * radio and tag-checkbox inside it without touching pink buttons or toggles.
  */
 export const tealControls = {
-    // Marks the region for nimbus-controls.css (staging's checkbox and radio shapes).
-    "--nimbus-controls": "on",
     "--background-color-brand-solid": TEAL,
     "--ring-color-brand-solid": TEAL,
     "--border-color-brand-solid": TEAL,
@@ -117,14 +120,14 @@ export const TABLE = {
     list: {
         th: "border-r border-b-2 border-secondary px-4 py-3 align-bottom font-bold whitespace-nowrap text-primary first:pl-8 last:border-r-0 last:pr-8",
         td: "border-r border-secondary px-4 py-4 text-secondary first:pl-8 last:border-r-0 last:pr-8",
-        stripe: "bg-secondary/40",
+        stripe: "bg-[#FCFAF9]",
         sortIcon: "text-fg-quaternary",
         sortIconOn: "text-fg-primary",
     },
     report: {
         th: "border-r border-white/15 px-4 py-3 align-bottom font-bold whitespace-nowrap text-white first:pl-8 last:border-r-0 last:pr-8",
         td: "border-r border-secondary px-4 py-3 text-primary first:pl-8 last:border-r-0 last:pr-8",
-        stripe: "bg-[#F8F6F1]",
+        stripe: "bg-[#FCFAF9]",
         sortIcon: "text-white/50",
         sortIconOn: "text-white",
         foot: "border-t-2 border-secondary font-bold text-primary",
@@ -250,37 +253,13 @@ export const StateAction = ({ children, onPress, disabled, quiet }: { children: 
 
 /* ------------------------------------------------------------- Chart type --- */
 
-export interface ChartTypeOption<T extends string> {
-    id: T;
-    label: string;
-    /** Swap in the Sketch-file chart icons here when they arrive. */
-    icon: typeof Table;
-}
-
-export const DEFAULT_CHART_ICONS = { table: Table, line: LineChartUp01, area: Activity, bar: BarChart07, stacked: BarChart10, pie: PieChart01 };
-
-/** Chart type buttons that fill the band's height; the chosen one is teal on a teal tint. */
-export const ChartTypeBar = <T extends string>({ options, value, onChange }: { options: ChartTypeOption<T>[]; value: T; onChange: (v: T) => void }) => (
-    <div role="radiogroup" aria-label="Chart type" className="flex h-full flex-wrap items-stretch">
-        {options.map((t) => {
-            const on = value === t.id;
-            return (
-                <button
-                    key={t.id}
-                    type="button"
-                    role="radio"
-                    aria-checked={on}
-                    onClick={() => onChange(t.id)}
-                    className={cx("inline-flex items-center gap-2 px-4 py-4 text-md font-bold whitespace-nowrap uppercase transition duration-100 ease-linear", !on && "hover:bg-secondary")}
-                    style={on ? { color: TEAL_DARK, backgroundColor: `${TEAL}1f` } : { color: PINK }}
-                >
-                    <t.icon className="size-5" aria-hidden="true" />
-                    {t.label}
-                </button>
-            );
-        })}
-    </div>
-);
+/**
+ * The staging chart type tabs (27 Oct): one shared component, also used by v4's Full
+ * performance and the App Screens replicas. The Sketch-file chart icons are in.
+ */
+export { ChartTypeBar } from "@/components/application/chart-type-bar/chart-type-bar";
+export type { ChartTypeBarOption as ChartTypeOption } from "@/components/application/chart-type-bar/chart-type-bar";
+export const DEFAULT_CHART_ICONS = NIMBUS_CHART_ICONS;
 
 /* ----------------------------------------------------------------- Filters --- */
 

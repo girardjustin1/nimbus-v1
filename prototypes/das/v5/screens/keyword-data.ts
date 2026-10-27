@@ -430,7 +430,9 @@ export const totals = () => {
         distinctSeen: DISTINCT_SEEN_7D,
         defined,
         definedNotSeen,
-        seenNotDefined: DISTINCT_SEEN_7D - (defined - definedNotSeen),
+        // Counted from the traffic itself: subtracting the library's seen keywords went
+        // negative once the library held keywords the sample traffic doesn't carry.
+        seenNotDefined: incoming.filter((i) => !keywords.some((k) => k.value.toLowerCase() === i.value)).length,
     };
 };
 
