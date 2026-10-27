@@ -76,6 +76,7 @@ import {
     Zap,
 } from "@untitledui/icons";
 import type { FC } from "react";
+import { NimbusBrandIcons as NimbusBrandIconsPage } from "./nimbus-brand-icons/nimbus-brand-icons";
 
 type IconType = FC<{ className?: string }>;
 
@@ -240,3 +241,6 @@ export const CheckList: Story = {
         </div>
     ),
 };
+
+/** The Library redrawn in Nimbus' own icon style, plus DAS and Performance Insights icons (27 Oct). */
+export const NimbusBrandIcons: Story = { name: "Nimbus Brand Icons", render: () => <NimbusBrandIconsPage /> };

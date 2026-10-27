@@ -74,7 +74,7 @@ by side, and the **components** it uses.
 <Changed>
   <ul>
     <li><b>Stat cards</b> take the realtime dashboard's styling: uppercase label, large teal value, grey detail line.</li>
-    <li><b>Detailed reporting → Performance Insights.</b> A placeholder link to Performance Insights as a whole; the wording will change when there's somewhere specific to land.</li>
+    <li><b>Detailed reporting → Performance Insights.</b> The link opens Performance Insights (the Full performance screen); the wording may change when the redesign defines where it lands.</li>
     <li><b>Search</b> sits left above the table, at the same width as on the asset and keyword libraries.</li>
     <li><b>The table runs full bleed</b>, edge to edge of the content area like staging, with a light header, bold black labels and a rule between every column. It's a list, so no charcoal.</li>
   </ul>
@@ -143,7 +143,7 @@ by side, and the **components** it uses.
     <li><b>Quick picker</b> (Flight to date / Last 14 / Last 7 days) and <b>group-by</b> (By Day / By Week) are Performance Insights' bare dropdowns.</li>
     <li><b>Collapse</b> (a UI controller button) folds the bands away; <b>Download .CSV</b> (a state action) goes inactive when no metric is ticked.</li>
     <li><b>Checkboxes match staging</b>: a pale teal box with a teal border and teal check when ticked, white with a grey border when not — teal, not pink.</li>
-    <li><b>Chart type</b> — the chosen type fills the band's height, teal on a teal tint. The icons will be swapped for the ones in the original Sketch files.</li>
+    <li><b>Chart type</b> — the chosen type fills the band's height, teal on a teal tint. The icons are Nimbus' own from the Sketch files, and the tabs match staging (27 Oct).</li>
   </ul>
 </Changed>
 
@@ -280,6 +280,7 @@ by side, and the **components** it uses.
   <ul>
     <li>Keywords mirror assets: the same tabs, no <b>Keywords</b> label, search left, Actions and the add button right, and a full-bleed list table.</li>
     <li><b>Keyword Health</b> is treated as a <b>list</b>, not a report: it checks which keywords your apps send and holds no spend or impressions.</li>
+    <li><b>Keyword Health order (27 Oct):</b> <i>Defined, but not arriving</i> and <i>Arriving, but not defined</i> come first, side by side at a fixed, equal height. Each shows the first few keywords, and <b>View more</b> opens the full list in a modal. <i>What your apps are sending</i> follows below as a full-bleed table, like every other v5 table.</li>
   </ul>
 </Changed>
 
@@ -289,6 +290,7 @@ by side, and the **components** it uses.
   <ol>
     <li>Switch between Keyword Setup, View All Keywords and Keyword Health — the tabs match assets.</li>
     <li>Confirm Keyword Health should be a list (light header) rather than a report.</li>
+    <li>On Keyword Health, press <b>View more</b> on either panel: the modal lists every keyword. Then scroll to the apps table and check that it runs edge to edge.</li>
   </ol>
 </Check>
 
@@ -387,8 +389,8 @@ draw from the same source. Change one, and every screen that uses it follows.
   <tbody>
     <tr><td style={td}>Total spend chip</td><td style={td}><Status tone="Kept" /></td><td style={td}>Product to decide whether lifetime spend is the right highlight, or whether to scope or replace it.</td></tr>
     <tr><td style={td}>Progress bars, paused and alert banners</td><td style={td}><Status tone="Kept" /></td><td style={td}>Kept to show people and gather reactions.</td></tr>
-    <tr><td style={td}>Chart type icons</td><td style={td}><Status tone="Pending" /></td><td style={td}>To come from the original Sketch files; they swap in one place.</td></tr>
-    <tr><td style={td}>Checkboxes and radios</td><td style={td}><Status tone="Applied" /></td><td style={td}>Matched to staging, sampled from your call screenshots: pale teal fill, teal-grey border and teal check; a thin teal ring, white gap and solid teal dot.</td></tr>
+    <tr><td style={td}>Chart type icons</td><td style={td}><Status tone="Applied" /></td><td style={td}>The Sketch chart icons, in staging's tab style, everywhere the chart type picker appears (27 Oct).</td></tr>
+    <tr><td style={td}>Checkboxes and radios</td><td style={td}><Status tone="Applied" /></td><td style={td}>Matched to staging, sampled from your call screenshots: pale teal fill, teal-grey border and teal check; a thin teal ring, white gap and solid teal dot. Since 27 Oct this is the base <code>Checkbox</code> and <code>RadioButton</code> in Storybook, so every component shows it.</td></tr>
     <tr><td style={td}>"UI controller" and "state action" names</td><td style={td}><Status tone="To confirm" /></td><td style={td}>Working names; check with engineering whether they're already named.</td></tr>
     <tr><td style={td}>Type sizes</td><td style={td}><Status tone="Kept" /></td><td style={td}>Labels stay at the 15px floor, so they're a little larger than staging's 10–12px.</td></tr>
     <tr><td style={td}>Staging's own table inconsistencies</td><td style={td}><Status tone="To confirm" /></td><td style={td}>Manage Active Demand is charcoal; Nimbus+ Payments and Payouts are light though they're reporting. To settle in the Performance Insights redesign.</td></tr>

@@ -1,23 +1,11 @@
-import type { FC, ReactNode, SVGProps } from "react";
-import {
-    BarChart01,
-    BarChartSquare02,
-    ChevronDown,
-    ChevronLeft,
-    Folder,
-    LineChartUp01,
-    Plus,
-    PieChart01,
-    SearchLg,
-    Table as TableIcon,
-    TrendUp01,
-    X,
-} from "@untitledui/icons";
+import type { ReactNode } from "react";
+import { ChevronDown, ChevronLeft, Folder, Plus, SearchLg, X } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Toggle } from "@/components/base/toggle/toggle";
 import { GlobalNav } from "@/components/application/global-nav/global-nav";
 import { Table, TableCard } from "@/components/application/table/table";
+import { ChartTypeBar, type ChartTypeBarOption, NIMBUS_CHART_ICONS } from "@/components/application/chart-type-bar/chart-type-bar";
 import { cx } from "@/utils/cx";
 
 /**
@@ -260,13 +248,14 @@ const MetricCheckbox = ({ label }: { label: string }) => <Checkbox size="md" lab
 const METRICS = ["Revenue", "eCPM", "Requests", "Impressions", "Wins", "Win Rate", "Render Rate", "Clicks", "CTR", "rCPM", "Avg. Winning Bid"];
 const BREAKDOWNS = ["Platform", "Position", "Ad Type", "Ad ID", "Demand Source", "Geo Region", "Geo: Country"];
 
-const CHART_TYPES: { label: string; icon: FC<SVGProps<SVGSVGElement>> }[] = [
-    { label: "Table", icon: TableIcon },
-    { label: "Stacked Line", icon: TrendUp01 },
-    { label: "Bar", icon: BarChart01 },
-    { label: "Stacked Bar", icon: BarChartSquare02 },
-    { label: "Pie", icon: PieChart01 },
-    { label: "Line", icon: LineChartUp01 },
+// 27 Oct: staging's chart type tabs and Sketch icons (the shared ChartTypeBar).
+const CHART_TYPES: ChartTypeBarOption<string>[] = [
+    { id: "table", label: "Table", icon: NIMBUS_CHART_ICONS.table },
+    { id: "stacked-line", label: "Stacked Line", icon: NIMBUS_CHART_ICONS.area },
+    { id: "bar", label: "Bar", icon: NIMBUS_CHART_ICONS.bar },
+    { id: "stacked-bar", label: "Stacked Bar", icon: NIMBUS_CHART_ICONS.stacked },
+    { id: "pie", label: "Pie", icon: NIMBUS_CHART_ICONS.pie },
+    { id: "line", label: "Line", icon: NIMBUS_CHART_ICONS.line },
 ];
 
 /** The Breakdown "More Options" / "+2 More" popover with a Version search. */
@@ -362,26 +351,9 @@ const QueryBuilderView = ({ tooltip, breakdownOpen, moreLabel }: { tooltip?: boo
         </ConfigRow>
 
         {/* Chart type + Show activity */}
-        <div className="flex items-center gap-6 border-b border-secondary px-8 py-4">
-            <span className="w-28 shrink-0 text-md font-semibold text-primary">Chart Type:</span>
-            <div className="flex flex-1 flex-wrap items-center gap-2">
-                {CHART_TYPES.map(({ label, icon: Icon }) => {
-                    const active = label === "Line";
-                    return (
-                        <button
-                            key={label}
-                            type="button"
-                            className={cx(
-                                "inline-flex items-center gap-2 rounded-md px-3 py-2 text-xs font-semibold tracking-wide uppercase transition duration-100 ease-linear",
-                                active ? "bg-[#37b6b7]/12 text-[#37b6b7]" : "text-[#DA6EA3] hover:bg-secondary_hover",
-                            )}
-                        >
-                            <Icon className="size-4" aria-hidden="true" />
-                            {label}
-                        </button>
-                    );
-                })}
-            </div>
+        <div className="flex items-stretch gap-6 border-b border-secondary px-8">
+            <span className="flex w-28 shrink-0 items-center text-md font-semibold text-primary">Chart Type:</span>
+            <ChartTypeBar options={CHART_TYPES} value="line" className="flex-1" />
             <div className="flex items-center gap-3">
                 <span className="text-md font-semibold text-primary">Show Activity:</span>
                 <Toggle size="md" aria-label="Show activity" />

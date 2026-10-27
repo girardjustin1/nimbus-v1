@@ -10,7 +10,7 @@ const meta = {
         docs: {
             description: {
                 component:
-                    "`TABLE` and `tableHead` — table styles by context. **Report**: charcoal #101828 header with white labels, warm alternating rows, totals. **List**: light header with bold black labels. Both have vertical rules between columns and run full bleed on a page (`TABLE.bleed`), the first and last cells taking the page padding back so text lines up with what's above. The full rule, and where each v5 table sits, is in Application UI › Table › List vs Report.",
+                    "`TABLE` and `tableHead` — table styles by context. **Report**: charcoal #101828 header with white labels, warm alternating rows, totals. **List**: light header with bold black labels. Striped rows alternate white `#FFF` and `#FCFAF9` in both (27 Oct). Both have vertical rules between columns and run full bleed on a page (`TABLE.bleed`), the first and last cells taking the page padding back so text lines up with what's above. The full rule, and where each v5 table sits, is in Application UI › Table › List vs Report.",
             },
         },
     },

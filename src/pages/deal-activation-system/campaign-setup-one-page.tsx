@@ -213,7 +213,7 @@ const CreativeSection = ({ state }: { state: SetupState }) => {
                             key={c.name}
                             className={cx(
                                 "flex items-center gap-4 border-b border-secondary px-4 py-3 last:border-b-0",
-                                i % 2 === 1 && "bg-secondary/40",
+                                i % 2 === 1 && "bg-[#FCFAF9]",
                                 mismatched && "bg-error-primary",
                             )}
                         >

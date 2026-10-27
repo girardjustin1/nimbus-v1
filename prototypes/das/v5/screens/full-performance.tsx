@@ -56,8 +56,8 @@ import { LABEL } from "./type-rules";
  *   - Filters is Performance Insights' filter menu: + ADD → category and values → SAVE.
  *     Saved values become checkboxes to toggle one off and compare (iOS against
  *     Android); the ✕ at the far right clears them all. The old chip UI is gone.
- *   - Chart type buttons fill the band. Icons come from DEFAULT_CHART_ICONS until the
- *     Sketch-file icons arrive.
+ *   - Chart type buttons fill the band, in staging's tab style with the Sketch-file
+ *     chart icons (27 Oct; the shared ChartTypeBar).
  *   - The results table is a report, so it takes the charcoal header and alternating
  *     warm rows, full bleed like staging.
  *
@@ -174,7 +174,7 @@ const axisMetric = (m: Metric, v: number) => (m === "Impressions" ? compact(v) :
 
 /* -------------------------------------------------------- Chart types --- */
 
-/** One place for the chart type icons: swap in the Sketch-file icons here. */
+/** The chart types, with the Sketch-file chart icons. */
 const CHART_TYPES: ChartTypeOption<ChartKind>[] = [
     { id: "table", label: "Table", icon: DEFAULT_CHART_ICONS.table },
     { id: "line", label: "Line", icon: DEFAULT_CHART_ICONS.line },

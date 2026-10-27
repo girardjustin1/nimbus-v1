@@ -20,7 +20,8 @@ import { Button } from "./type-rules";
  *
  *   1. Live campaigns
  *   2. Queued campaigns — replaces "Ending in 7 days"
- *   3. Total spend — links to Performance Insights (26 Oct: was "Detailed reporting")
+ *   3. Total spend — links to Performance Insights, the Full performance screen (26 Oct:
+ *      was "Detailed reporting"; linked 27 Oct)
  *   4. Campaign Health — was "Behind pace", now a traffic light
  *
  * Live, Queued and Campaign Health also filter the table when clicked.
@@ -298,9 +299,7 @@ export const ManageCampaigns = ({
                         label="Total spend"
                         sub={
                             <a
-                                href="#/campaigns"
-                                onClick={(e) => e.preventDefault()}
-                                title="Placeholder: opens Performance Insights, outside this prototype. The final link text is still to come."
+                                href="#/view-d"
                                 className="inline-flex items-center gap-1 font-semibold uppercase"
                                 style={{ color: PINK }}
                             >

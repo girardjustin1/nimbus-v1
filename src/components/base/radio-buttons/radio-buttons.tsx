@@ -21,20 +21,24 @@ export interface RadioButtonBaseProps {
     isDisabled?: boolean;
 }
 
+/**
+ * Nimbus radio, as on staging (26 Oct review): a very light grey ring when off; when
+ * selected, a thin teal ring, a white gap and a large solid teal dot.
+ */
 export const RadioButtonBase = ({ className, isFocusVisible, isSelected, isDisabled, size = "sm" }: RadioButtonBaseProps) => {
     return (
         <div
             className={cx(
-                "flex size-4 shrink-0 cursor-pointer appearance-none items-center justify-center rounded-full bg-primary ring-1 ring-primary ring-inset",
+                "flex size-4 shrink-0 cursor-pointer appearance-none items-center justify-center rounded-full bg-primary ring-1 ring-[#dcdcdc] ring-inset",
                 size === "md" && "size-5",
-                isSelected && "bg-brand-solid ring-brand-solid",
+                isSelected && "ring-[#37b6b7]",
                 isDisabled && "cursor-not-allowed opacity-50",
                 isDisabled && !isSelected && "bg-tertiary",
                 isFocusVisible && "outline-2 outline-offset-2 outline-focus-ring",
                 className,
             )}
         >
-            <div className={cx("size-1.5 rounded-full bg-fg-white opacity-0 transition-inherit-all", size === "md" && "size-2", isSelected && "opacity-100")} />
+            <div className={cx("size-[60%] rounded-full bg-[#04a6aa] opacity-0 transition-inherit-all", isSelected && "opacity-100")} />
         </div>
     );
 };

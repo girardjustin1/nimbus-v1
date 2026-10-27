@@ -29,7 +29,7 @@ const Sortable = ({ kind, label }: { kind: TableKind; label: string }) => (
     </span>
 );
 
-/** A list: light header, bold black labels, vertical rules, light stripes. Full bleed. */
+/** A list: light header, bold black labels, vertical rules, rows alternating #FFF / #FCFAF9. Full bleed. */
 export const ListTableExample = ({ bleed = true }: { bleed?: boolean }) => (
     <div className={bleed ? TABLE.bleed : "overflow-x-auto rounded-xl ring-1 ring-secondary"}>
         <table className={TABLE.table}>
@@ -63,7 +63,7 @@ export const ListTableExample = ({ bleed = true }: { bleed?: boolean }) => (
     </div>
 );
 
-/** A report: charcoal header, white labels, warm alternating rows, totals. Full bleed. */
+/** A report: charcoal header, white labels, rows alternating #FFF / #FCFAF9, totals. Full bleed. */
 export const ReportTableExample = ({ bleed = true }: { bleed?: boolean }) => (
     <div className={bleed ? TABLE.bleed : "overflow-x-auto rounded-xl ring-1 ring-secondary"}>
         <table className={TABLE.table}>

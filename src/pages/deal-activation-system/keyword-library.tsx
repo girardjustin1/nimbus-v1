@@ -90,7 +90,7 @@ const KeywordTable = ({ rows }: { rows: Keyword[] }) => (
             </thead>
             <tbody>
                 {rows.map((k, i) => (
-                    <tr key={k.id} className={cx("border-t border-secondary", i % 2 === 1 && "bg-secondary/30")}>
+                    <tr key={k.id} className={cx("border-t border-secondary", i % 2 === 1 && "bg-[#FCFAF9]")}>
                         <td className="px-5 py-4">
                             <KeywordChip value={k.value} />
                         </td>

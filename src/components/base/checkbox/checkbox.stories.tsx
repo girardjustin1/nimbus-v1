@@ -3,7 +3,7 @@ import { Checkbox } from "@/components/base/checkbox/checkbox";
 
 /**
  * Components → Checkbox
- * Selected/indeterminate states use the Nimbus brand-solid (pink) token.
+ * Staging's look (26 Oct): white with a grey border when unticked; pale teal fill, teal-grey border and a teal check when ticked or indeterminate; warm grey when disabled.
  */
 const meta = {
     title: "Base Components/Checkbox",

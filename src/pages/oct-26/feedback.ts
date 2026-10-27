@@ -55,7 +55,7 @@ export const items: FeedbackItem[] = [
             "List → light header with bold black labels: Manage campaigns (confirmed on the call), View All Assets, View All Keywords, Keyword Health, the overview's creatives, selected items.",
             "Written down in Application UI › Table › List vs Report, with staging's known exceptions to settle in the Performance Insights redesign.",
         ],
-        touches: ["prototypes/das/v5/screens/nimbus-ui.tsx", "prototypes/das/v5/screens/full-performance.tsx"],
+        touches: ["src/components/application/chart-type-bar/chart-type-bar.tsx", "prototypes/das/v5/screens/nimbus-ui.tsx", "prototypes/das/v5/screens/full-performance.tsx"],
     },
     {
         slug: "list-headers",
@@ -93,7 +93,7 @@ export const items: FeedbackItem[] = [
             "The radio has the exact same stroke fill, and when it's selected it gets the green dot instead of the checkmark.",
         ],
         decision: ["Checkboxes and radios take staging's look, sampled from the call screenshots: a ticked checkbox is a pale teal box with a teal-grey border and a teal check; a selected radio is a thin teal ring, a white gap and a solid teal dot. Unticked controls are white with a light grey border. One typography for every checkbox and radio; pink buttons and toggles are untouched."],
-        touches: ["prototypes/das/v5/screens/nimbus-ui.tsx", "prototypes/das/v5/screens/nimbus-controls.css"],
+        touches: ["prototypes/das/v5/screens/nimbus-ui.tsx", "src/components/base/checkbox/checkbox.tsx", "src/components/base/radio-buttons/radio-buttons.tsx"],
     },
     {
         slug: "filters",
@@ -107,18 +107,18 @@ export const items: FeedbackItem[] = [
             "Round 4's DAS-only filter chips are gone. + ADD opens Performance Insights' two-pane menu — categories, then values with Clear Selections — and CANCEL / SAVE.",
             "Saved values sit in the Filters band as checkboxes, so you can toggle one off to compare; the ✕ at the far right clears every filter.",
         ],
-        touches: ["prototypes/das/v5/screens/nimbus-ui.tsx", "prototypes/das/v5/screens/full-performance.tsx"],
+        touches: ["src/components/application/chart-type-bar/chart-type-bar.tsx", "prototypes/das/v5/screens/nimbus-ui.tsx", "prototypes/das/v5/screens/full-performance.tsx"],
     },
     {
         slug: "chart-type",
         title: "Chart type buttons fill the band",
-        status: "Pending",
+        status: "Applied",
         quotes: ["Chart type, good. You can tokenize these buttons though. See how they fill the bar. And these were in the original Sketch files I sent you — these graphics too."],
         decision: [
             "The chart type buttons fill the band's height, the chosen one teal on a teal tint.",
-            "Pending: the icons. They come from the original Sketch files; until then the bar keeps placeholder icons, and swapping them is a change to the options, not the component.",
+            "27 Oct: the Sketch chart icons are in, and the tabs match staging (bold uppercase pink, the chosen one teal on a full-height tint, no ring on click). One shared component across v4, v5 and the App Screens.",
         ],
-        touches: ["prototypes/das/v5/screens/nimbus-ui.tsx", "prototypes/das/v5/screens/full-performance.tsx"],
+        touches: ["src/components/application/chart-type-bar/chart-type-bar.tsx", "prototypes/das/v5/screens/nimbus-ui.tsx", "prototypes/das/v5/screens/full-performance.tsx"],
     },
     {
         slug: "dates",
@@ -126,14 +126,14 @@ export const items: FeedbackItem[] = [
         status: "Applied",
         quotes: ["When you represent dates, even if they're not selectable, they should share the layout of this. It's close in yours — just a little bit bigger."],
         decision: ["START DATE / END DATE on Full performance use Performance Insights' cell: small uppercase label over the value, divided by a rule, at its width. The value drops a size to match; the label stays at the 15px type floor."],
-        touches: ["prototypes/das/v5/screens/nimbus-ui.tsx", "prototypes/das/v5/screens/full-performance.tsx"],
+        touches: ["src/components/application/chart-type-bar/chart-type-bar.tsx", "prototypes/das/v5/screens/nimbus-ui.tsx", "prototypes/das/v5/screens/full-performance.tsx"],
     },
     {
         slug: "pi-link",
         title: "“Detailed reporting” becomes “Performance Insights”",
         status: "Applied",
         quotes: ["Change Detailed reporting to just have it say Performance Insights. This is going to be something that links to Performance Insights later — for now let's be really obvious about what we're doing there."],
-        decision: ["The Total spend chip's link reads Performance Insights and goes to Performance Insights as a whole. A placeholder: the wording will change when the redesign defines where it lands."],
+        decision: ["The Total spend chip's link reads Performance Insights and opens Performance Insights (the Full performance screen, linked 27 Oct). The wording may change when the redesign defines where it lands."],
         touches: ["prototypes/das/v5/screens/manage-campaigns.tsx"],
     },
     {

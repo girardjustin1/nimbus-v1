@@ -1,6 +1,7 @@
 import { type ReactNode, useMemo, useState } from "react";
-import { Activity, BarChart07, BarChart10, ChevronDown, LineChartUp01, PieChart01, Plus, Table, TrendUp01, XClose } from "@untitledui/icons";
+import { ChevronDown, Plus, TrendUp01, XClose } from "@untitledui/icons";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { ChartTypeBar, type ChartTypeBarOption, NIMBUS_CHART_ICONS } from "@/components/application/chart-type-bar/chart-type-bar";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { cx } from "@/utils/cx";
 import { downloadCsv } from "./batch-data";
@@ -191,13 +192,15 @@ const PiAction = ({ children, onPress, quiet }: { children: ReactNode; onPress: 
     </button>
 );
 
-const CHART_TYPES: { id: ChartKind; label: string; icon: typeof Table }[] = [
-    { id: "table", label: "Table", icon: Table },
-    { id: "line", label: "Line", icon: LineChartUp01 },
-    { id: "area", label: "Area", icon: Activity },
-    { id: "bar", label: "Bar", icon: BarChart07 },
-    { id: "stacked", label: "Stacked bar", icon: BarChart10 },
-    { id: "pie", label: "Pie", icon: PieChart01 },
+// 27 Oct: staging's chart type tabs and Sketch icons, shared with v5 (on request, so
+// Storybook's Round 4 → 5 comparison shows them too).
+const CHART_TYPES: ChartTypeBarOption<ChartKind>[] = [
+    { id: "table", label: "Table", icon: NIMBUS_CHART_ICONS.table },
+    { id: "line", label: "Line", icon: NIMBUS_CHART_ICONS.line },
+    { id: "area", label: "Area", icon: NIMBUS_CHART_ICONS.area },
+    { id: "bar", label: "Bar", icon: NIMBUS_CHART_ICONS.bar },
+    { id: "stacked", label: "Stacked bar", icon: NIMBUS_CHART_ICONS.stacked },
+    { id: "pie", label: "Pie", icon: NIMBUS_CHART_ICONS.pie },
 ];
 
 /* --------------------------------------------------------------- Page --- */
@@ -526,27 +529,10 @@ export const FullPerformance = ({
                         </div>
                     </BuilderRow>
 
-                    <BuilderRow label="Chart Type">
-                        <div role="radiogroup" aria-label="Chart type" className="flex flex-wrap gap-1">
-                            {CHART_TYPES.map((t) => {
-                                const on = chart === t.id;
-                                return (
-                                    <button
-                                        key={t.id}
-                                        type="button"
-                                        role="radio"
-                                        aria-checked={on}
-                                        onClick={() => setChart(t.id)}
-                                        className="inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-md font-bold uppercase transition duration-100 ease-linear hover:bg-secondary"
-                                        style={on ? { color: "#1F7F80", backgroundColor: `${TEAL}1f` } : { color: PINK }}
-                                    >
-                                        <t.icon className="size-5" aria-hidden="true" />
-                                        {t.label}
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </BuilderRow>
+                    <div className="grid grid-cols-1 gap-x-6 border-t border-secondary px-5 md:grid-cols-[150px_minmax(0,1fr)] md:items-stretch">
+                        <span className={cx(LABEL, "pt-4 md:flex md:items-center md:pt-0")}>Chart Type:</span>
+                        <ChartTypeBar options={CHART_TYPES} value={chart} onChange={setChart} />
+                    </div>
                 </div>
 
                 {ordered.length === 0 ? (

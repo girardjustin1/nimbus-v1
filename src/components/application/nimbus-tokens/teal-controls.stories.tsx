@@ -12,7 +12,7 @@ const meta = {
         docs: {
             description: {
                 component:
-                    "`TealControls` (and `tealControls` style) — checkboxes and radios as on staging, not the theme's pink: a ticked checkbox is a pale teal box with a teal-grey border and a teal check; a selected radio is a thin teal ring, a white gap and a solid teal dot (`nimbus-controls.css`). Only checkboxes and radios inside the wrapper change; pink buttons and toggles don't. `Bands` apply it automatically. Product, 26 Oct: “the checkboxes are green, not pink … the radio has the exact same stroke fill, and when it's selected it gets the green dot.” Same typography for every checkbox and radio.",
+                    "`TealControls` (and `tealControls` style) — checkboxes and radios as on staging, not the theme's pink: a ticked checkbox is a pale teal box with a teal-grey border and a teal check; a selected radio is a thin teal ring, a white gap and a solid teal dot. Those shapes now live in the base `Checkbox` and `RadioButton` (27 Oct), so they look the same everywhere; the wrapper still turns brand-coloured controls in its region teal. Pink buttons and toggles don't change. `Bands` apply it automatically. Product, 26 Oct: “the checkboxes are green, not pink … the radio has the exact same stroke fill, and when it's selected it gets the green dot.” Same typography for every checkbox and radio.",
             },
         },
     },

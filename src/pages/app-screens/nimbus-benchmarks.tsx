@@ -460,7 +460,7 @@ export const BenchmarksTable = () => (
             </thead>
             <tbody>
                 {benchmarkRows.map((row, i) => (
-                    <tr key={i} className={cx("border-b border-secondary", i % 2 === 1 && "bg-secondary/40")}>
+                    <tr key={i} className={cx("border-b border-secondary", i % 2 === 1 && "bg-[#FCFAF9]")}>
                         <td className="px-6 py-5 text-md text-primary">{row.date}</td>
                         <td className="px-6 py-5 text-md text-secondary">{row.app}</td>
                         <td className="px-6 py-5 text-md text-secondary">{row.win}</td>

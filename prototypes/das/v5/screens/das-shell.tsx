@@ -1,7 +1,7 @@
 import type { CSSProperties, MouseEvent, ReactNode } from "react";
 import { useScreenNotes } from "../../../shared/screen-notes";
 import { ChevronDown, Lightbulb02, XClose } from "@untitledui/icons";
-import type { GlobalNavItem } from "@/components/application/global-nav/config";
+import type { GlobalNavItem, GlobalNavSection } from "@/components/application/global-nav/config";
 import { GlobalNav } from "@/components/application/global-nav/global-nav";
 import { dasNavSections } from "../../v1/screens/das-nav";
 import { cx } from "@/utils/cx";
@@ -48,13 +48,21 @@ export interface DasShellProps {
  * rendered in the page. It is commentary about a design, not part of it — in the page it
  * ate the width the form needed and baked our notes into every screenshot.
  */
+/** 27 Oct: "performance insights" opens the early concepts (screen picker › 7). */
+const withReportingLinks = (sections: GlobalNavSection[]): GlobalNavSection[] =>
+    sections.map((section) =>
+        section.id === "reporting"
+            ? { ...section, items: section.items.map((item) => (item.key === "performance insights" ? { ...item, href: "#/start" } : item)) }
+            : section,
+    );
+
 export const DasShell = ({ navKey, tabs, footer, concept, navItems, children }: DasShellProps) => {
     useScreenNotes(concept ? { label: concept.label, title: concept.title, notes: concept.notes.map(String) } : null);
     return (
     // The shared Global Nav sets its footer links at 13px; the 15px minimum is applied
     // from here rather than by editing the shared component.
     <div className="flex min-h-screen bg-secondary [&_footer]:text-md">
-        <GlobalNav sections={dasNavSections(navItems)} defaultActiveKey={navKey} />
+        <GlobalNav sections={withReportingLinks(dasNavSections(navItems))} defaultActiveKey={navKey} />
 
         <main className={cx("flex min-w-0 flex-1 flex-col bg-primary", FIELD_TYPE)}>
             <header className="flex items-center justify-between gap-4 border-b border-secondary px-8 py-5">
