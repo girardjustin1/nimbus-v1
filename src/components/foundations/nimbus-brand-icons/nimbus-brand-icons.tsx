@@ -7,6 +7,10 @@
  * cut into one SVG per icon by scripts/split-icon-sheet.mjs. The SVGs are drawn in
  * #AAAAAA; here that becomes currentColor, so they take the text colour like the Library's.
  * White shapes inside an icon are knockouts (e.g. the check cut from a solid shield).
+ *
+ * Pass 2 (27 Oct) redrew the icons Product flagged, cuter and more modern, with the chart
+ * type tabs as the reference: both trends, both line charts, the chevrons, File02, Platform,
+ * Device language, and CSV export (after Material Symbols' file_export).
  */
 
 const files = import.meta.glob<string>("./**/*.svg", { eager: true, query: "?raw", import: "default" });
