@@ -23,7 +23,7 @@ import { type CommonProps, SelectContext, type SelectItemType, sizes } from "./s
 
 const searchSizes = {
     sm: { wrapper: "py-1", root: "px-3 py-2 gap-2 *:data-icon:size-4 *:data-icon:stroke-[2.25px]", text: "text-sm" },
-    md: { wrapper: "py-0.5", root: "px-3 py-2 gap-2 *:data-icon:size-5", text: "text-md" },
+    md: { wrapper: "py-0.5", root: "px-3 py-[11px] gap-2 *:data-icon:size-5", text: "text-md" },
     lg: { wrapper: "py-0.5", root: "px-3.5 py-2.5 gap-2 *:data-icon:size-5", text: "text-md" },
 };
 
@@ -213,9 +213,9 @@ const MultiSelectRoot = ({
                         onClick={onResize}
                         className={(state) =>
                             cx(
-                                "relative flex w-full cursor-pointer items-center rounded-lg bg-primary shadow-xs ring-1 ring-primary outline-hidden transition duration-100 ease-linear ring-inset",
-                                (state.isFocusVisible || state.isPressed) && "ring-2 ring-brand",
-                                state.isDisabled && "cursor-not-allowed opacity-50",
+                                "relative flex w-full cursor-pointer items-center rounded bg-field ring-1 ring-field outline-hidden transition duration-100 ease-linear ring-inset",
+                                (state.isFocusVisible || state.isPressed) && "ring-1 ring-focus",
+                                state.isDisabled && "cursor-not-allowed bg-field-disabled text-tertiary",
                             )
                         }
                     >

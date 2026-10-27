@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { AlertTriangle, ArrowLeft, InfoCircle, PlayCircle, Trash01 } from "@untitledui/icons";
-import { Button } from "./type-rules";
+import { AlertTriangle, InfoCircle, PlayCircle, Trash01 } from "@untitledui/icons";
 import { Dropdown } from "@/components/base/dropdown/dropdown";
 import { Input } from "@/components/base/input/input";
 import { Select } from "@/components/base/select/select";
 import { cx } from "@/utils/cx";
 import { currentFillMode, useRegisterPageFill } from "../../../shared/demo-fill";
 import { Fillable } from "../../../shared/demo-fill-ui";
-import { DasShell, PINK, PinkAction, TEAL } from "./das-shell";
 import { AD_SIZES, AD_TYPES, type AdSize, type AdType, assetById, deleteAsset, findMacros, isWrappedVast, updateAsset, useAssets } from "./asset-data";
-
+import { BreadcrumbStrip } from "./campaign-ui";
+import { DasShell, PinkAction, TEAL } from "./das-shell";
 import { V3_NAV_ITEMS } from "./nav";
+import { Button } from "./type-rules";
 
 /**
  * An asset you already have: change it, add a tracker to it, or delete it.
@@ -22,8 +22,12 @@ import { V3_NAV_ITEMS } from "./nav";
  * and be able to add a tracker to this asset or delete it."
  *
  * The part that needed deciding: an asset attached to a live campaign is already serving.
- * Editing its markup changes what people see, with no publish step in between, so the
- * screen says so and delete is blocked outright rather than warned about.
+ * Editing its markup changes what people see, with no publish step in between, and
+ * delete is blocked outright rather than warned about.
+ *
+ * 27 Oct review: the orange "Serving now in …" bar is gone. It was ours, not staging's,
+ * and it read as if the asset belonged to one campaign — an asset can be in several, and
+ * Associated Campaigns already lists them.
  */
 
 const Label = ({ children, required }: { children: React.ReactNode; required?: boolean }) => (
@@ -35,15 +39,21 @@ const Label = ({ children, required }: { children: React.ReactNode; required?: b
 
 const DeleteGuard = ({ name, campaigns, onCancel }: { name: string; campaigns: string[]; onCancel: () => void }) => (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4" onClick={onCancel}>
-        <div role="dialog" aria-modal="true" aria-label={`Can't delete ${name}`} onClick={(e) => e.stopPropagation()} className="w-full max-w-md overflow-hidden rounded-2xl bg-primary shadow-2xl">
+        <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Can't delete ${name}`}
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-md overflow-hidden rounded-2xl bg-primary shadow-2xl"
+        >
             <div className="flex flex-col gap-3 px-6 py-5">
                 <p className="flex items-center gap-2 text-lg font-extrabold text-primary">
                     <AlertTriangle className="size-5 shrink-0 text-warning-primary" aria-hidden="true" />
                     This asset is live
                 </p>
                 <p className="text-md text-secondary">
-                    <span className="font-mono text-md">{name}</span> is serving in {campaigns.length} campaign{campaigns.length === 1 ? "" : "s"}. Deleting it would
-                    stop delivery immediately.
+                    <span className="font-mono text-md">{name}</span> is serving in {campaigns.length} campaign{campaigns.length === 1 ? "" : "s"}. Deleting it
+                    would stop delivery immediately.
                 </p>
                 <ul className="flex flex-col gap-1 rounded-xl bg-secondary/60 px-4 py-3">
                     {campaigns.map((c) => (
@@ -77,8 +87,12 @@ export const AssetDetail = ({ id = "a1", confirmingDelete = false }: { id?: stri
 
     useRegisterPageFill(() => {
         const bad = currentFillMode() === "bad";
-        setImps((v) => v.map((x, i) => x || (i === 1 ? (bad ? "verify.example-dsp.com/pixel/imp/added" : "https://verify.example-dsp.com/pixel/imp/added") : x)));
-        setClicks((v) => v.map((x, i) => x || (i === 0 ? (bad ? "https://track.example.com/clk?cb=%%CACHEBUSTER%%" : "https://track.example.com/clk?cid=10482") : x)));
+        setImps((v) =>
+            v.map((x, i) => x || (i === 1 ? (bad ? "verify.example-dsp.com/pixel/imp/added" : "https://verify.example-dsp.com/pixel/imp/added") : x)),
+        );
+        setClicks((v) =>
+            v.map((x, i) => x || (i === 0 ? (bad ? "https://track.example.com/clk?cb=%%CACHEBUSTER%%" : "https://track.example.com/clk?cid=10482") : x)),
+        );
         setSaved(false);
     });
 
@@ -138,7 +152,9 @@ export const AssetDetail = ({ id = "a1", confirmingDelete = false }: { id?: stri
                     />
                 </Fillable>
             ))}
-            <span className="text-md text-tertiary">{values.filter(Boolean).length} of {values.length} used.</span>
+            <span className="text-md text-tertiary">
+                {values.filter(Boolean).length} of {values.length} used.
+            </span>
         </div>
     );
 
@@ -151,16 +167,15 @@ export const AssetDetail = ({ id = "a1", confirmingDelete = false }: { id?: stri
                 title: "Editing an asset that is already serving",
                 notes: [
                     "Not in the charter — it covers asset-level reporting and editing campaigns, never editing an asset. It is in the product: on staging the asset name is a link and each row has a delete.",
-                    "An asset in a live campaign is serving now. Changing its markup changes what people see, with no publish step in between, so the page says so rather than letting you find out.",
+                    "An asset in a live campaign is serving now; changing its markup changes what people see. The 27 Oct review dropped the warning bar — Associated Campaigns already lists where it runs.",
                     "Delete is blocked, not warned, while a campaign still uses it — the same rule as a keyword in use.",
                 ],
             }}
         >
+            {/* 27 Oct: the campaign overview's breadcrumb strip, so every detail page
+                goes back the same way. */}
+            <BreadcrumbStrip trail={[{ label: "Assets", href: "#/asset-view" }, { label: asset.name }]} />
             <div className="flex flex-col gap-5 px-8 py-8">
-                <a href="#/asset-view" className="inline-flex items-center gap-1.5 self-start text-md font-semibold" style={{ color: PINK }}>
-                    <ArrowLeft className="size-4" aria-hidden="true" /> All assets
-                </a>
-
                 <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="flex flex-col gap-1">
                         <h2 className="text-display-xs font-extrabold text-primary">{asset.name}</h2>
@@ -192,13 +207,6 @@ export const AssetDetail = ({ id = "a1", confirmingDelete = false }: { id?: stri
                         </Dropdown.Root>
                     </div>
                 </div>
-
-                {live && (
-                    <p className="flex items-start gap-2 rounded-xl px-4 py-3 text-md" style={{ backgroundColor: "#FFF4E5", color: "#B54708" }}>
-                        <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                        Serving now in {asset.campaigns.join(", ")}. Changes take effect on the next ad request — there is no publish step for an asset.
-                    </p>
-                )}
 
                 <div className="grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_340px]">
                     <div className="flex min-w-0 flex-col gap-5">
@@ -259,8 +267,8 @@ export const AssetDetail = ({ id = "a1", confirmingDelete = false }: { id?: stri
                                 rows={9}
                                 spellCheck={false}
                                 className={cx(
-                                    "w-full rounded-lg bg-primary px-3.5 py-3 font-mono text-md text-primary shadow-xs ring-1 ring-inset outline-none focus:ring-2",
-                                    markupError ? "ring-error_subtle" : "ring-primary focus:ring-brand",
+                                    "w-full rounded bg-field px-3.5 py-3 font-mono text-md text-primary ring-1 outline-none ring-inset",
+                                    markupError ? "ring-error_subtle focus:ring-2" : "ring-field focus:ring-focus",
                                 )}
                             />
                             {markupError && <span className="text-md text-error-primary">{markupError}</span>}

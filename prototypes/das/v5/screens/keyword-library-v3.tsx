@@ -1,20 +1,20 @@
 import { useState } from "react";
-import { Activity, CheckSquare, ChevronDown, Download01, Edit03, InfoCircle, Plus, SearchLg, Trash01 } from "@untitledui/icons";
-import { Button } from "./type-rules";
+import { CheckSquare, ChevronDown, Download01, Edit03, InfoCircle, Plus, SearchLg, Trash01 } from "@untitledui/icons";
 import { Dropdown } from "@/components/base/dropdown/dropdown";
 import { Input } from "@/components/base/input/input";
 import { cx } from "@/utils/cx";
 import { currentFillMode, useRegisterPageFill } from "../../../shared/demo-fill";
 import { Fillable } from "../../../shared/demo-fill-ui";
-import { DasShell, KeywordChip, PinkAction, TEAL } from "./das-shell";
-import { V3_NAV_ITEMS } from "./nav";
-import { SEARCH_WIDTH } from "./manage-campaigns";
-import { TABLE, tealControls } from "./nimbus-ui";
 import { peekReturn } from "./asset-data";
-import { Card, IntegrationGuide, KeywordTabs } from "./keyword-common";
-import { type Keyword, addKeywords, deleteKeyword, liveCampaigns, parseKeywordList, useKeywords } from "./keyword-data";
 import { BatchAction, BatchBar, BatchBlocked, BatchCell, BatchDanger, BatchHeadCell } from "./batch-actions";
 import { downloadCsv, useBatch } from "./batch-data";
+import { DasShell, KeywordChip, TEAL } from "./das-shell";
+import { Card, IntegrationGuide, KeywordTabs } from "./keyword-common";
+import { type Keyword, addKeywords, deleteKeyword, liveCampaigns, parseKeywordList, useKeywords } from "./keyword-data";
+import { SEARCH_FILL } from "./manage-campaigns";
+import { V3_NAV_ITEMS } from "./nav";
+import { TABLE, tealControls } from "./nimbus-ui";
+import { Button } from "./type-rules";
 
 /**
  * Manage keywords — Keyword Setup and View All Keywords.
@@ -42,6 +42,10 @@ import { downloadCsv, useBatch } from "./batch-data";
  *
  * 26 Oct: like View All Assets, the "Keywords" heading is gone, the search bar sits top
  * left with Actions and Add Keywords on the right, and the table is a full-bleed list.
+ *
+ * 27 Oct review: Keyword Health is gone, and with it the Check Traffic action and the In
+ * Traffic column — knowing whether a keyword is arriving would mean pinging the system
+ * near real time, which Product called unrealistic.
  * Device language was dropped on 1 Oct and restored on 19 Oct as its own target.
  *
  * Every term on this screen carries an ADDED chip at the page level: keywords do not
@@ -114,16 +118,24 @@ export const KeywordSetup = ({ filled = false }: { filled?: boolean }) => {
                                     rows={8}
                                     spellCheck={false}
                                     placeholder={"One per line, or comma-separated\ne.g. commuter, night-owl"}
-                                    className="w-full rounded-lg bg-primary px-3.5 py-3 font-mono text-md text-primary shadow-xs ring-1 ring-primary ring-inset outline-none focus:ring-2 focus:ring-brand"
+                                    className="w-full rounded bg-field px-3.5 py-3 font-mono text-md text-primary ring-1 ring-field outline-none ring-inset focus:ring-focus"
                                 />
                             </Fillable>
                             <span className="text-md text-tertiary">
-                                Saved lower-case. Matching is exact and case-insensitive, against <code className="font-mono text-md">user.keywords</code> in the request.
+                                Saved lower-case. Matching is exact and case-insensitive, against <code className="font-mono text-md">user.keywords</code> in
+                                the request.
                             </span>
                         </div>
 
                         <div className="flex flex-wrap gap-3">
-                            <Button color="secondary" className="uppercase" onClick={() => { setText(""); setSaved(0); }}>
+                            <Button
+                                color="secondary"
+                                className="uppercase"
+                                onClick={() => {
+                                    setText("");
+                                    setSaved(0);
+                                }}
+                            >
                                 Clear Form
                             </Button>
                             <Button color="primary-pink" className="uppercase" isDisabled={!fresh.length || blocked.length > 0} onClick={save}>
@@ -137,18 +149,18 @@ export const KeywordSetup = ({ filled = false }: { filled?: boolean }) => {
                         </div>
 
                         {/* Bulk add was a second page doing what this one already does.
-                            Every line is checked here — casing, characters, duplicates,
-                            and whether your apps are actually sending it. */}
+                            Every line is checked here — casing, characters and duplicates. */}
                         <p className="text-md text-tertiary">
-                            Paste as many as you like, one per line or comma-separated. Every line is checked — casing, characters, duplicates, and whether your apps are
-                            actually sending it.
+                            Paste as many as you like, one per line or comma-separated. Every line is checked — casing, characters and duplicates.
                         </p>
                     </div>
 
                     <aside className="flex flex-col gap-3 rounded-2xl bg-primary p-5 ring-1 ring-secondary xl:sticky xl:top-14">
                         <h2 className="text-lg font-extrabold text-primary">Preview ({parsed.length})</h2>
                         {parsed.length === 0 ? (
-                            <p className="rounded-xl border border-dashed border-secondary p-6 text-center text-md text-tertiary">Type above to see what gets added.</p>
+                            <p className="rounded-xl border border-dashed border-secondary p-6 text-center text-md text-tertiary">
+                                Type above to see what gets added.
+                            </p>
                         ) : (
                             <>
                                 <div className="flex flex-wrap gap-1.5">
@@ -217,8 +229,16 @@ export const ViewAllKeywords = ({ search = "", empty = false }: { search?: strin
                 ) : (
                     <>
                         <div className="flex flex-wrap items-center justify-between gap-3">
-                            <div className={cx(SEARCH_WIDTH, "min-w-0 flex-1")}>
-                                <Input aria-label="Search Keywords" size="md" icon={SearchLg} placeholder="Search Keywords" value={query} onChange={setQuery} wrapperClassName="w-full" />
+                            <div className={SEARCH_FILL}>
+                                <Input
+                                    aria-label="Search Keywords"
+                                    size="md"
+                                    icon={SearchLg}
+                                    placeholder="Search Keywords"
+                                    value={query}
+                                    onChange={setQuery}
+                                    wrapperClassName="w-full"
+                                />
                             </div>
                             <div className="flex shrink-0 items-center gap-3">
                                 {/* Everything that acts on the table lives behind Actions, so
@@ -273,7 +293,7 @@ export const ViewAllKeywords = ({ search = "", empty = false }: { search?: strin
                                 <thead>
                                     <tr>
                                         {batch.on && <BatchHeadCell batch={batch} />}
-                                        {["Status", "Keyword", "Associated Campaigns", "In Traffic", "Updated", ""].map((h) => (
+                                        {["Status", "Keyword", "Associated Campaigns", "Updated", ""].map((h) => (
                                             <th key={h} className={th}>
                                                 {h}
                                             </th>
@@ -288,7 +308,11 @@ export const ViewAllKeywords = ({ search = "", empty = false }: { search?: strin
                                                 {batch.on && <BatchCell batch={batch} id={k.id} label={k.value} />}
                                                 <td className={td}>
                                                     <span className="inline-flex items-center gap-2">
-                                                        <span className="size-2 rounded-full" style={{ backgroundColor: live ? TEAL : "#98A2B3" }} aria-hidden="true" />
+                                                        <span
+                                                            className="size-2 rounded-full"
+                                                            style={{ backgroundColor: live ? TEAL : "#98A2B3" }}
+                                                            aria-hidden="true"
+                                                        />
                                                         {live ? "Running" : "Paused"}
                                                     </span>
                                                 </td>
@@ -298,25 +322,26 @@ export const ViewAllKeywords = ({ search = "", empty = false }: { search?: strin
                                                     </a>
                                                 </td>
                                                 <td className={td}>{k.campaigns.length ? `${k.campaigns.length} · ${live} live` : "None"}</td>
-                                                <td className={td}>{k.seenInTraffic ? "Seen last 7 days" : <span className="text-warning-primary">Not seen</span>}</td>
                                                 <td className={td}>{k.updated}</td>
                                                 <td className={cx(td, "whitespace-nowrap")}>
-                                                    {/* Same shape as the asset table: one action in the open,
-                                                        the destructive one behind the dots. Removing a keyword
-                                                        can quietly narrow a live campaign's targeting, so it
-                                                        shouldn't sit next to the button you press most. */}
+                                                    {/* The destructive action sits behind the dots: removing a
+                                                        keyword can quietly narrow a live campaign's targeting.
+                                                        27 Oct: Check Traffic is gone with Keyword Health. */}
                                                     <span className="flex items-center justify-end gap-3">
-                                                        <PinkAction icon={Activity} onPress={() => (window.location.hash = "#/keyword-health")}>
-                                                            Check Traffic
-                                                        </PinkAction>
                                                         <Dropdown.Root>
                                                             <Dropdown.DotsButton />
                                                             <Dropdown.Popover className="w-48">
                                                                 <Dropdown.Menu>
-                                                                    <Dropdown.Item icon={Edit03} onAction={() => window.location.assign(`#/keyword-detail?k=${k.id}`)}>
+                                                                    <Dropdown.Item
+                                                                        icon={Edit03}
+                                                                        onAction={() => window.location.assign(`#/keyword-detail?k=${k.id}`)}
+                                                                    >
                                                                         Edit keyword
                                                                     </Dropdown.Item>
-                                                                    <Dropdown.Item icon={Trash01} onAction={() => window.location.assign(`#/keyword-delete-guard?k=${k.id}`)}>
+                                                                    <Dropdown.Item
+                                                                        icon={Trash01}
+                                                                        onAction={() => window.location.assign(`#/keyword-delete-guard?k=${k.id}`)}
+                                                                    >
                                                                         Remove
                                                                     </Dropdown.Item>
                                                                 </Dropdown.Menu>
@@ -329,7 +354,7 @@ export const ViewAllKeywords = ({ search = "", empty = false }: { search?: strin
                                     })}
                                     {visible.length === 0 && (
                                         <tr>
-                                            <td colSpan={batch.on ? 7 : 6} className="px-8 py-10 text-center text-md text-tertiary">
+                                            <td colSpan={batch.on ? 6 : 5} className="px-8 py-10 text-center text-md text-tertiary">
                                                 No keywords match “{query}”.
                                             </td>
                                         </tr>
@@ -363,10 +388,10 @@ export const ViewAllKeywords = ({ search = "", empty = false }: { search?: strin
 const keywordCsv = (rows: Keyword[]) =>
     downloadCsv(
         "keywords",
-        ["Keyword", "Status", "Associated Campaigns", "Live Campaigns", "In Traffic", "Updated"],
+        ["Keyword", "Status", "Associated Campaigns", "Live Campaigns", "Updated"],
         rows.map((k) => {
             const live = liveCampaigns(k).length;
-            return [k.value, live ? "Running" : "Paused", k.campaigns.length, live, k.seenInTraffic ? "Seen last 7 days" : "Not seen", k.updated];
+            return [k.value, live ? "Running" : "Paused", k.campaigns.length, live, k.updated];
         }),
     );
 
@@ -375,21 +400,13 @@ const EmptyLibrary = () => (
         <div className="flex flex-col items-start gap-4 rounded-2xl border border-dashed border-secondary p-8">
             <h2 className="text-display-xs font-extrabold text-primary">No keywords yet</h2>
             <p className="max-w-2xl text-md text-tertiary">
-                A keyword is a word your app puts on the bid request — a segment you already know about, like <code className="font-mono text-md">over21</code> or{" "}
-                <code className="font-mono text-md">power-user</code>. Define it here and a DAS campaign can target it. Nimbus doesn't invent keywords and can't read them from
-                anywhere else.
+                A keyword is a word your app puts on the bid request — a segment you already know about, like <code className="font-mono text-md">over21</code>{" "}
+                or <code className="font-mono text-md">power-user</code>. Define it here and a DAS campaign can target it. Nimbus doesn't invent keywords and
+                can't read them from anywhere else.
             </p>
-            <div className="flex flex-wrap gap-3">
-                <Button color="primary-pink" iconLeading={Plus} className="uppercase" onClick={() => (window.location.hash = "#/keyword-setup")}>
-                    Add Keywords
-                </Button>
-                <Button color="secondary" className="uppercase" onClick={() => (window.location.hash = "#/keyword-health")}>
-                    See What's Arriving
-                </Button>
-            </div>
-            <p className="text-md text-tertiary">
-                Not sure what your apps already send? Keyword Health lists every keyword Nimbus has seen in the last 7 days — starting there is usually faster than typing.
-            </p>
+            <Button color="primary-pink" iconLeading={Plus} className="uppercase" onClick={() => (window.location.hash = "#/keyword-setup")}>
+                Add Keywords
+            </Button>
         </div>
 
         <Card title="Before you start">

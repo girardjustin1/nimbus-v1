@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { MessageTextSquare02 } from "@untitledui/icons";
 import { PINK } from "../deal-activation-system/das-shell";
-import type { FeedbackItem } from "./feedback";
+import { type FeedbackItem, review27 } from "./feedback";
 
 /**
  * Oct 26 — annotation chrome for the Round 5 stories.
@@ -17,20 +17,25 @@ const TONE: Record<FeedbackItem["status"], string> = {
     Pending: "#B54708",
 };
 
+/** Which review an item came from: the 26 Oct call, or the 27 Oct pass folded into this round. */
+const dayOf = (item: FeedbackItem) => (review27.includes(item) ? "27 Oct" : "26 Oct");
+
 export const ReviewNote = ({ item, quote = 0 }: { item: FeedbackItem; quote?: number }) => (
     <aside className="flex gap-3 rounded-xl border border-dashed px-4 py-3" style={{ borderColor: `${PINK}80`, backgroundColor: `${PINK}0d` }}>
         <MessageTextSquare02 className="mt-0.5 size-5 shrink-0" style={{ color: PINK }} aria-hidden="true" />
         <div className="flex min-w-0 flex-col gap-2">
             <p className="text-md font-bold text-primary">
-                <span style={{ color: PINK }}>Oct 26 review</span> · {item.title}
+                <span style={{ color: PINK }}>{dayOf(item)} review</span> · {item.title}
                 <span className="ml-2 rounded-full px-2 py-0.5 text-md font-semibold" style={{ color: TONE[item.status], backgroundColor: `${PINK}24` }}>
                     {item.status}
                 </span>
             </p>
-            <blockquote className="border-l-2 pl-3 text-md text-secondary italic" style={{ borderColor: `${PINK}66` }}>
-                “{item.quotes[Math.min(quote, item.quotes.length - 1)]}”
-                <footer className="mt-0.5 text-md text-tertiary not-italic">Product, 26 Oct review</footer>
-            </blockquote>
+            {item.quotes.length > 0 && (
+                <blockquote className="border-l-2 pl-3 text-md text-secondary italic" style={{ borderColor: `${PINK}66` }}>
+                    “{item.quotes[Math.min(quote, item.quotes.length - 1)]}”
+                    <footer className="mt-0.5 text-md text-tertiary not-italic">Product, {dayOf(item)} review</footer>
+                </blockquote>
+            )}
             <ul className="list-disc space-y-0.5 pl-4 text-md text-tertiary">
                 {item.decision.map((d, i) => (
                     <li key={i}>{d}</li>

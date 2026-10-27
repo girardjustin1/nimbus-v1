@@ -174,10 +174,10 @@ const Results = ({
                                     title={row.disabledReason && copy.text(row.disabledReason)}
                                     onMouseMove={() => cursor.move(i)}
                                     onClick={() => onPick(row)}
-                                    style={active ? activeRowStyle(PINK) : undefined}
+                                    style={active ? activeRowStyle() : undefined}
                                     className={cx(
                                         "flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors",
-                                        already || blocked ? "cursor-not-allowed opacity-50" : !active && "hover:bg-secondary",
+                                        already || blocked ? "cursor-not-allowed opacity-50" : !active && "hover:bg-field-option",
                                     )}
                                 >
                                     <span className="flex min-w-0 flex-1 flex-col">
@@ -383,7 +383,7 @@ export const InlineSearchSelect = ({
                         }}
                     />
                     {open && (
-                        <div ref={panelRef} className="absolute top-full right-0 left-0 z-30 mt-1 overflow-hidden rounded-xl bg-primary shadow-lg ring-1 ring-secondary">
+                        <div ref={panelRef} className="absolute top-full right-0 left-0 z-30 mt-1 overflow-hidden rounded bg-primary shadow-lg ring-1 ring-secondary">
                             <PanelHeader label={label} matched={hits.length} total={rows.length} noun={noun} filtering={Boolean(q)} />
                             <Results
                                 shown={shown}
@@ -508,7 +508,7 @@ export const SingleSearchSelect = ({
                     <ChevronDown className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-fg-quaternary" aria-hidden="true" />
                 )}
                 {open && !isDisabled && (
-                    <div ref={panelRef} className="absolute top-full right-0 left-0 z-30 mt-1 overflow-hidden rounded-xl bg-primary shadow-lg ring-1 ring-secondary">
+                    <div ref={panelRef} className="absolute top-full right-0 left-0 z-30 mt-1 overflow-hidden rounded bg-primary shadow-lg ring-1 ring-secondary">
                         <PanelHeader label={label} matched={hits.length} total={rows.length} noun={noun} filtering={Boolean(q)} />
                         {shown.length === 0 ? (
                             <div className="px-4 py-6 text-center text-md text-tertiary">
@@ -526,8 +526,8 @@ export const SingleSearchSelect = ({
                                             data-active={active}
                                             onMouseMove={() => cursor.move(i)}
                                             onClick={() => choose(row)}
-                                            style={active ? activeRowStyle(PINK) : undefined}
-                                            className={cx("flex w-full flex-col items-start px-4 py-2 text-left", !active && "hover:bg-secondary")}
+                                            style={active ? activeRowStyle() : undefined}
+                                            className={cx("flex w-full flex-col items-start px-4 py-2 text-left", !active && "hover:bg-field-option")}
                                         >
                                             <span className={cx("text-md text-primary", chosenOne && "font-semibold")} style={chosenOne ? { color: TEAL } : undefined}>
                                                 {row.label}
@@ -682,7 +682,7 @@ export const ModalSearchSelect = ({
                                         key={row.id}
                                         data-active={active}
                                         onMouseMove={() => cursor.move(i)}
-                                        style={active ? activeRowStyle(PINK) : undefined}
+                                        style={active ? activeRowStyle() : undefined}
                                         className={cx("flex items-center gap-3 px-6 py-3", (already || blocked) && "opacity-50")}
                                     >
                                         <Checkbox style={tealControls}
@@ -765,13 +765,4 @@ export const TargetBlock = ({ title, trailing, children }: { title: string; trai
         </div>
         {children}
     </div>
-);
-
-export const TrafficBadge = ({ seen }: { seen: boolean }) => (
-    <span
-        className="shrink-0 rounded-md px-2 py-0.5 text-md font-semibold whitespace-nowrap"
-        style={seen ? { color: "#1F7F80", backgroundColor: `${TEAL}1f` } : { color: "#B54708", backgroundColor: "#FEF0C7" }}
-    >
-        <Copy>{seen ? "In traffic" : "Not seen"}</Copy>
-    </span>
 );

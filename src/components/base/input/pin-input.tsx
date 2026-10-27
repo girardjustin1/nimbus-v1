@@ -96,8 +96,8 @@ const Slot = ({ index, className, ...props }: ComponentPropsWithRef<"div"> & { i
             className={cx(
                 "relative flex items-center justify-center rounded-xl bg-primary text-center text-placeholder/40 shadow-xs ring-1 ring-primary transition-[box-shadow,background-color] duration-100 ease-linear ring-inset",
                 styles[size].slot,
-                isFocused && slot?.isActive && "ring-2 ring-brand outline-2 outline-offset-2 outline-brand",
-                slot?.char && "text-brand-tertiary_alt ring-2 ring-brand",
+                isFocused && slot?.isActive && "ring-2 ring-focus outline-2 outline-offset-2 outline-focus-ring",
+                slot?.char && "text-brand-tertiary_alt ring-2 ring-focus",
                 disabled && "opacity-50",
                 invalid && "text-error-primary ring-error_subtle",
                 className,

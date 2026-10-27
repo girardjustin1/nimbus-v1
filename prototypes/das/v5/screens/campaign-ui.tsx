@@ -1,9 +1,10 @@
-import type { ReactNode } from "react";
+import { type ReactNode, useContext } from "react";
 import { ArrowLeft } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
 import { type Campaign, HEALTH_COLOR, HEALTH_LABEL, HEALTH_MEANING, type Health, healthOf } from "./campaign-data";
 import { TEAL } from "./das-shell";
-import { TEAL_DARK } from "./nimbus-ui";
+import { CHARCOAL, TEAL_DARK } from "./nimbus-ui";
+import { StatLookContext } from "./stat-look";
 
 /**
  * Round 4 building blocks shared by Manage campaigns, the campaign overview and Full
@@ -69,12 +70,9 @@ export const HealthBadge = ({ campaign }: { campaign: Campaign }) => {
 
 /**
  * One of the highlight chips above the table. When `onPress` is given it filters the
- * table, and shows that it is doing so.
- *
- * 26 Oct: typeset like the realtime dashboard's stat blocks — small uppercase label, a
- * large teal value, the detail in grey beneath. Teal is the darker #1F7F80 so the value
- * passes contrast; anything a caller colours itself (health dots, "of $X booked") keeps
- * its own colour. Shared by the Campaigns chips and the campaign overview cards.
+ * table, and shows that it is doing so. Shared by the Campaigns chips and the campaign
+ * overview cards. Anything a caller colours itself (health dots, "of $X booked") keeps
+ * its own colour.
  */
 export const StatChip = ({
     label,
@@ -91,24 +89,29 @@ export const StatChip = ({
     active?: boolean;
     className?: string;
 }) => {
+    const look = useContext(StatLookContext);
+    const flat = look === "flat";
     const body = (
         <>
-            <span className="text-md font-bold tracking-wide text-tertiary uppercase">{label}</span>
-            <span className="text-display-xs font-bold" style={{ color: TEAL_DARK }}>
+            <span className={flat ? "text-md font-bold tracking-wide text-tertiary uppercase" : "text-lg font-bold text-primary"}>{label}</span>
+            <span className="text-display-xs font-extrabold" style={{ color: flat || active ? TEAL_DARK : CHARCOAL }}>
                 {children}
             </span>
             {sub && <span className="text-md text-tertiary">{sub}</span>}
         </>
     );
-    const base = "flex min-w-0 flex-col gap-1 rounded-xl p-4 text-left ring-1 transition duration-100 ease-linear";
-    if (!onPress) return <div className={cx(base, "ring-secondary", className)}>{body}</div>;
+    const base = flat
+        ? "flex min-w-0 flex-col gap-1 border-l border-secondary py-1 pr-2 pl-4 text-left transition duration-100 ease-linear"
+        : "flex min-w-0 flex-col gap-1.5 rounded-sm border bg-primary p-5 text-left shadow-[0_1px_4px_rgba(16,24,40,0.08)] transition duration-100 ease-linear";
+    const rest = flat ? "" : "border-[#E4E4E4]";
+    if (!onPress) return <div className={cx(base, rest, className)}>{body}</div>;
     return (
         <button
             type="button"
             aria-pressed={active}
             onClick={onPress}
-            className={cx(base, active ? "ring-2" : "ring-secondary hover:bg-secondary/50", "outline-focus-ring focus-visible:outline-2", className)}
-            style={active ? { ["--tw-ring-color" as string]: TEAL, backgroundColor: `${TEAL}0d` } : undefined}
+            className={cx(base, !active && rest, !active && "hover:bg-secondary/50", "outline-focus-ring focus-visible:outline-2", className)}
+            style={active ? { borderColor: TEAL, backgroundColor: `${TEAL}0f` } : undefined}
         >
             {body}
         </button>

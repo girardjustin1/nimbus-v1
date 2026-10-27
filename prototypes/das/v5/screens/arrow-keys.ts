@@ -152,7 +152,11 @@ export const useListCursor = ({
 };
 
 /** The highlight. Pink at low alpha reads as "you are here" without competing with selection. */
-export const activeRowStyle = (pink: string) => ({ backgroundColor: `${pink}14`, outline: `1px solid ${pink}`, outlineOffset: "-1px" });
+/**
+ * The keyboard-highlighted option in a picker list. 27 Oct review: staging's list
+ * highlight (warm off-white) with the teal focus rule — focus is teal everywhere now.
+ */
+export const activeRowStyle = () => ({ backgroundColor: "var(--color-bg-field-option)", outline: "1px solid var(--color-focus-ring)", outlineOffset: "-1px" });
 
 /** "7 of 50 keywords" while filtering, "50 keywords" while browsing. */
 export const resultCount = (matched: number, total: number, noun: string, filtering: boolean) =>

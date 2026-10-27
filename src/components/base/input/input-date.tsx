@@ -78,7 +78,7 @@ export const InputDateBase = ({
             shortcut: "pr-2.5",
         },
         md: {
-            root: cx("px-3 py-2 text-md", hasTrailingIcon && "pr-9", hasLeadingIcon && "pl-10"),
+            root: cx("px-3 py-[11px] text-md", hasTrailingIcon && "pr-9", hasLeadingIcon && "pl-10"),
             iconLeading: "left-3 size-5",
             iconTrailing: "right-3",
             shortcut: "pr-2.5",
@@ -97,13 +97,13 @@ export const InputDateBase = ({
             ref={groupRef}
             className={({ isFocusWithin, isDisabled, isInvalid }) =>
                 cx(
-                    "group/input relative flex w-full flex-row place-content-center place-items-center rounded-lg bg-primary shadow-xs ring-1 ring-primary transition-shadow duration-100 ease-linear ring-inset",
+                    "group/input relative flex w-full flex-row place-content-center place-items-center rounded bg-field ring-1 ring-field transition-shadow duration-100 ease-linear ring-inset",
 
-                    isFocusWithin && !isDisabled && "ring-2 ring-brand",
+                    isFocusWithin && !isDisabled && "ring-1 ring-focus",
 
                     // Disabled state styles
-                    isDisabled && "cursor-not-allowed opacity-50 in-data-input-wrapper:opacity-100",
-                    "group-disabled:cursor-not-allowed group-disabled:opacity-50 in-data-input-wrapper:group-disabled:opacity-100",
+                    isDisabled && "cursor-not-allowed bg-field-disabled text-tertiary",
+                    "group-disabled:cursor-not-allowed group-disabled:bg-field-disabled",
 
                     // Invalid state styles
                     isInvalid && "ring-error_subtle",

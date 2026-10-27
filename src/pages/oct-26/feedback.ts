@@ -52,7 +52,7 @@ export const items: FeedbackItem[] = [
         ],
         decision: [
             "Report → charcoal #101828 header, white labels, warm alternating rows: Full performance and its per-keyword view.",
-            "List → light header with bold black labels: Manage campaigns (confirmed on the call), View All Assets, View All Keywords, Keyword Health, the overview's creatives, selected items.",
+            "List → light header with bold black labels: Manage campaigns (confirmed on the call), View All Assets, View All Keywords, the overview's creatives, selected items.",
             "Written down in Application UI › Table › List vs Report, with staging's known exceptions to settle in the Performance Insights redesign.",
         ],
         touches: ["src/components/application/chart-type-bar/chart-type-bar.tsx", "prototypes/das/v5/screens/nimbus-ui.tsx", "prototypes/das/v5/screens/full-performance.tsx"],
@@ -63,7 +63,7 @@ export const items: FeedbackItem[] = [
         status: "Applied",
         quotes: ["See the bold, the black bold headers on this table — you don't have that, and you don't have the vertical line separating the columns."],
         decision: ["Every list table now has Manage campaigns' header: bold black labels and a vertical rule between every column. The asset and keyword libraries had a light-grey header with neither."],
-        touches: ["prototypes/das/v5/screens/asset-library.tsx", "prototypes/das/v5/screens/keyword-library-v3.tsx", "prototypes/das/v5/screens/keyword-health.tsx"],
+        touches: ["prototypes/das/v5/screens/asset-library.tsx", "prototypes/das/v5/screens/keyword-library-v3.tsx"],
     },
     {
         slug: "search",
@@ -155,6 +155,7 @@ export const items: FeedbackItem[] = [
         decision: [
             "The summary cards on Manage campaigns and the campaign overview use the realtime dashboard's stat styling: small uppercase label, large teal value, small supporting lines.",
             "To confirm: “these guys” read as the summary cards, from what was on screen at the time.",
+            "27 Oct review: superseded — see “Summary cards: the key metrics card, scaled down”.",
         ],
         touches: ["prototypes/das/v5/screens/campaign-ui.tsx"],
     },
@@ -185,7 +186,103 @@ export const items: FeedbackItem[] = [
     },
 ];
 
-export const bySlug = (slug: string) => items.find((i) => i.slug === slug)!;
+/**
+ * 27 Oct — a second, shorter review of v5 with Product, folded into this round rather
+ * than cut as a new one. Same shape as `items`.
+ */
+export const review27Framing = {
+    quote: "Let's do these little changes … and then I'll get a review time set up for engineering to look through this.",
+    decision:
+        "Cuts on the keyword pages, the forms matched to staging, and one summary-card style. Next: engineering reviews DAS before work moves to Performance Insights.",
+};
+
+export const review27: FeedbackItem[] = [
+    {
+        slug: "kill-health",
+        title: "Keyword Health is gone",
+        status: "Applied",
+        quotes: ["Let's just kill this keyword health page. Because I don't even know what that would be. And a lot of that's probably on the pub side.", "The pink button that says check traffic … just kill that."],
+        decision: [
+            "The Keyword Health page and its tab are removed; Manage keywords has two tabs, like Manage assets.",
+            "Check Traffic is gone from every row of View All Keywords, and the empty state no longer points to Keyword Health.",
+        ],
+        touches: ["prototypes/das/v5/screens/keyword-common.tsx", "prototypes/das/v5/screens/keyword-library-v3.tsx", "prototypes/das/v5/screens.tsx"],
+    },
+    {
+        slug: "no-traffic",
+        title: "No real-time traffic readouts",
+        status: "To confirm",
+        quotes: ["This is probably unrealistic. It's in traffic thing. It's gonna require pinging the system probably too much, because it's sort of a real-time thing."],
+        decision: [
+            "Everything that said whether a keyword is arriving is removed: the In Traffic column on View All Keywords and in its CSV, the In traffic badge in setup's Keywords table, and the “not in traffic” check when adding keywords.",
+            "To confirm: the call named the In traffic card on keyword detail; we removed the same readout everywhere it appeared, since it all needs the same real-time check.",
+        ],
+        touches: ["prototypes/das/v5/screens/keyword-library-v3.tsx", "prototypes/das/v5/screens/keyword-target.tsx", "prototypes/das/v5/screens/keyword-data.ts"],
+    },
+    {
+        slug: "keyword-detail",
+        title: "Keyword detail: campaigns, history, Delete",
+        status: "Applied",
+        quotes: ["All right, so kill the sidebar, kill the keyword little boxy thing, and kill the export button. Everything else is fine."],
+        decision: [
+            "The sidebar (In traffic, Deleting this keyword), the Keyword card and Export keyword CSV are removed. Delete Keyword stays top right; Campaigns using this keyword and History stay.",
+            "The delete rules still apply: a keyword in a live campaign can't be deleted, and the dialog says which campaigns to take it off first.",
+        ],
+        touches: ["prototypes/das/v5/screens/keyword-detail.tsx"],
+    },
+    {
+        slug: "asset-bar",
+        title: "No “Serving now” bar on an asset",
+        status: "Applied",
+        quotes: ["I think you can kill that because it's possible that they can be in multiple campaigns … it says what campaigns it's in in this column."],
+        decision: ["The orange warning bar on asset detail is removed. Associated Campaigns already lists where an asset runs; delete is still blocked while a campaign uses it."],
+        touches: ["prototypes/das/v5/screens/asset-detail.tsx"],
+    },
+    {
+        slug: "breadcrumbs",
+        title: "Detail pages share the breadcrumb strip",
+        status: "Applied",
+        quotes: [],
+        decision: [
+            "Keyword detail and asset detail go back the way the campaign overview does: the breadcrumb strip under the header — “← Keywords : sports”, “← Assets : SampleApp_MREC_Garden” — in place of a small back link. One component, BreadcrumbStrip, on all three.",
+        ],
+        touches: ["prototypes/das/v5/screens/campaign-ui.tsx", "prototypes/das/v5/screens/keyword-detail.tsx", "prototypes/das/v5/screens/asset-detail.tsx"],
+    },
+    {
+        slug: "fields",
+        title: "Fields and dropdowns match staging",
+        status: "Applied",
+        quotes: ["Can you style the forms this way? The way we have them. See how they're not white?", "And dropdown also.", "Do you want to do teal as a universal? — Yeah, might as well."],
+        decision: [
+            "Every text field, dropdown, text area, date field and picker takes staging's look, sampled from the call screenshots: a #F8F8F8 fill, a faint warm rule, square-ish corners, 46px tall like staging's; disabled fields fill solid #D8D8D8.",
+            "Dropdown lists match staging's: white, options edge to edge, the highlighted one in warm #FCFAF9. The Actions and ⋯ menus and the setup pickers use the same list.",
+            "Focus is teal everywhere — fields, buttons, checkboxes — in place of the pink and the browser's blue.",
+            "These live in the base components and theme tokens, so every story and every round shows them. Whether staging's field size is right is a global change for engineering.",
+        ],
+        touches: ["src/styles/theme.css", "src/components/base/input/input.tsx", "src/components/base/select/select.tsx", "src/components/base/select/select-item.tsx", "src/components/base/textarea/textarea.tsx", "src/components/base/dropdown/dropdown.tsx", "prototypes/das/v5/screens/arrow-keys.ts"],
+    },
+    {
+        slug: "search-full",
+        title: "Search runs full width",
+        status: "Applied",
+        quotes: ["You might as well make it across all the way. And then accommodate — if it has any buttons to the right of it, those can be inline and it can be shorter."],
+        decision: ["Manage campaigns' search runs the full width of the page. On View All Assets and View All Keywords, Actions and Add stay inline on the right and search takes the rest of the row."],
+        touches: ["prototypes/das/v5/screens/manage-campaigns.tsx", "prototypes/das/v5/screens/asset-library.tsx", "prototypes/das/v5/screens/keyword-library-v3.tsx"],
+    },
+    {
+        slug: "stat-cards",
+        title: "Summary cards: the key metrics card, scaled down",
+        status: "Applied",
+        quotes: ["If they are contained, let's do them closer to this. If they are not, then let's do them like this. You can decide what you think looks better."],
+        decision: [
+            "No third style. The cards on Manage campaigns and the campaign overview take the key metrics card, scaled down: square corners, a light rule and soft shadow, a bold black title and a black value.",
+            "Contained, because the Campaigns cards are filters you click — a card reads as something to press. The flat option, the realtime dashboard's blocks, is in Oct 26 › Applied Changes to compare.",
+        ],
+        touches: ["prototypes/das/v5/screens/campaign-ui.tsx", "prototypes/das/v5/screens/stat-look.ts"],
+    },
+];
+
+export const bySlug = (slug: string) => [...items, ...review27].find((i) => i.slug === slug)!;
 
 /** Where to see each change: prototype v5 routes, and Storybook story ids. */
 export const links: Record<string, { prototype: [string, string][]; stories: [string, string][] }> = {
@@ -244,5 +341,37 @@ export const links: Record<string, { prototype: [string, string][]; stories: [st
     tokens: {
         prototype: [],
         stories: [["Nimbus Tokens", "application-ui-nimbus-tokens-00-overview--docs"]],
+    },
+    "kill-health": {
+        prototype: [["View All Keywords", "keyword-view"], ["Keyword Setup", "keyword-setup"]],
+        stories: [],
+    },
+    "no-traffic": {
+        prototype: [["View All Keywords", "keyword-view"], ["Setup · Targeting", "step-targeting"]],
+        stories: [],
+    },
+    "keyword-detail": {
+        prototype: [["Keyword detail", "keyword-detail"], ["Delete blocked", "keyword-delete-guard"]],
+        stories: [["Round 4 → 5 · Keyword detail", "oct-26-applied-changes--keyword-detail-after"]],
+    },
+    "asset-bar": {
+        prototype: [["Asset detail", "asset-detail?a=a1"]],
+        stories: [["Round 4 → 5 · Asset detail", "oct-26-applied-changes--asset-detail-after"]],
+    },
+    breadcrumbs: {
+        prototype: [["Keyword detail", "keyword-detail?k=k1"], ["Asset detail", "asset-detail?a=a1"], ["Campaign overview", "view-a?c=c1"]],
+        stories: [["Round 4 → 5 · Keyword detail", "oct-26-applied-changes--keyword-detail-after"]],
+    },
+    fields: {
+        prototype: [["Asset Setup", "asset-setup"], ["Setup · General", "step-general"]],
+        stories: [["Fields", "oct-26-applied-changes--fields"], ["Input", "base-components-input--docs"]],
+    },
+    "search-full": {
+        prototype: [["Manage campaigns", "campaigns"], ["View All Assets", "asset-view"]],
+        stories: [],
+    },
+    "stat-cards": {
+        prototype: [["Manage campaigns", "campaigns"], ["Campaign overview", "view-a"]],
+        stories: [["Contained vs flat", "oct-26-applied-changes--summary-cards"]],
     },
 };

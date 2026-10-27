@@ -1,12 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { AssetDetail as AssetDetailV4 } from "../../../prototypes/das/v4/screens/asset-detail";
 import { ViewAllAssets as ViewAllAssetsV4 } from "../../../prototypes/das/v4/screens/asset-library";
 import { ViewOnePage as ViewOnePageV4 } from "../../../prototypes/das/v4/screens/campaign-view";
 import { FullPerformance as FullPerformanceV4 } from "../../../prototypes/das/v4/screens/full-performance";
+import { KeywordDetail as KeywordDetailV4 } from "../../../prototypes/das/v4/screens/keyword-detail";
 import { ManageCampaigns as ManageCampaignsV4 } from "../../../prototypes/das/v4/screens/manage-campaigns";
-import { ViewAllAssets } from "../../../prototypes/das/v5/screens/asset-library";
+import { AssetDetail } from "../../../prototypes/das/v5/screens/asset-detail";
+import { AssetSetup, ViewAllAssets } from "../../../prototypes/das/v5/screens/asset-library";
 import { ViewOnePage } from "../../../prototypes/das/v5/screens/campaign-view";
 import { FullPerformance } from "../../../prototypes/das/v5/screens/full-performance";
+import { KeywordDetail } from "../../../prototypes/das/v5/screens/keyword-detail";
 import { ManageCampaigns } from "../../../prototypes/das/v5/screens/manage-campaigns";
+import { StatLookContext } from "../../../prototypes/das/v5/screens/stat-look";
 import { bySlug } from "./feedback";
 import { Compare } from "./note";
 
@@ -14,7 +19,11 @@ import { Compare } from "./note";
  * Oct 26 · the changes decided on the 26 Oct call, in prototype v5.
  *
  * Each one is a pair: Round 4 as it was reviewed (frozen, untouched) and Round 5 as
- * built, so what changed is easy to see and easy to put back.
+ * built, so what changed is easy to see and easy to put back. Stories 6–9 are the
+ * 27 Oct review, folded into this round.
+ *
+ * Round 4 shares the base components, so since 27 Oct its text fields and dropdowns
+ * show staging's grey fields too; its own text areas, pickers and layout are untouched.
  */
 const meta = {
     title: "Oct 26/Applied Changes",
@@ -106,6 +115,65 @@ export const PausedAfter: Story = {
     render: () => (
         <Compare items={[bySlug("kept")]} kind="Round 5" title="The paused warning banner and the spend progress bar stay until user feedback">
             <ViewOnePage id="c4" />
+        </Compare>
+    ),
+};
+
+/* ------------------------------------------------------ 27 Oct review --- */
+
+export const KeywordDetailBefore: Story = {
+    name: "6 · Keyword detail · Round 4",
+    render: () => (
+        <Compare items={[bySlug("keyword-detail")]} kind="Round 4" title="Keyword card, In traffic sidebar, Export keyword CSV">
+            <KeywordDetailV4 id="k1" />
+        </Compare>
+    ),
+};
+
+export const KeywordDetailAfter: Story = {
+    name: "6 · Keyword detail · Round 5",
+    render: () => (
+        <Compare items={[bySlug("keyword-detail"), bySlug("no-traffic"), bySlug("breadcrumbs")]} kind="Round 5" title="Campaigns and History; Delete top right; the breadcrumb strip">
+            <KeywordDetail id="k1" />
+        </Compare>
+    ),
+};
+
+export const AssetDetailBefore: Story = {
+    name: "7 · Asset detail · Round 4",
+    render: () => (
+        <Compare items={[bySlug("asset-bar")]} kind="Round 4" title="An orange “Serving now” bar above the form">
+            <AssetDetailV4 id="a1" />
+        </Compare>
+    ),
+};
+
+export const AssetDetailAfter: Story = {
+    name: "7 · Asset detail · Round 5",
+    render: () => (
+        <Compare items={[bySlug("asset-bar"), bySlug("breadcrumbs")]} kind="Round 5" title="No bar; Associated Campaigns says where it runs; the breadcrumb strip">
+            <AssetDetail id="a1" />
+        </Compare>
+    ),
+};
+
+export const Fields: Story = {
+    name: "8 · Fields and dropdowns · Round 5",
+    render: () => (
+        <Compare items={[bySlug("fields")]} kind="Round 5" title="Staging's grey fields, 46px tall, teal focus — click a field or open Ad Type">
+            <AssetSetup />
+        </Compare>
+    ),
+};
+
+export const SummaryCards: Story = {
+    name: "9 · Summary cards · contained (v5) vs flat",
+    render: () => (
+        <Compare items={[bySlug("stat-cards")]} kind="Round 5" title="Top: contained, the key metrics card scaled down (in v5). Bottom: flat, the realtime dashboard's blocks">
+            <ManageCampaigns />
+            <StatLookContext value="flat">
+                <ManageCampaigns />
+            </StatLookContext>
         </Compare>
     ),
 };

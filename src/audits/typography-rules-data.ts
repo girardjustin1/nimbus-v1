@@ -30,7 +30,7 @@ export const TEXT_STYLES: TextStyle[] = [
     { name: "Eyebrow", use: "Group labels in the rail and modals", className: "text-md font-semibold uppercase text-tertiary", sample: "Worth knowing", source: "uppercase span" },
     { name: "Text action", use: "Browse, Clear all, Add keyword, Edit", className: "text-md font-semibold uppercase", color: "#DA6EA3", sample: "Clear all", source: "PinkAction" },
     { name: "Error", use: "Field errors, section errors, the review banner", className: "text-md font-medium text-error-primary", sample: "Budget is required", source: "hint / FieldMessage" },
-    { name: "Status", use: "Pace and traffic states", className: "text-md font-semibold uppercase", color: "#37B6B7", sample: "On track", source: "PaceLabel / TrafficBadge" },
+    { name: "Status", use: "Pace states", className: "text-md font-semibold uppercase", color: "#37B6B7", sample: "On track", source: "PaceLabel" },
     { name: "Data, mono", use: "Keywords, bundle IDs, deal IDs in chips, markup", className: "font-mono text-md text-secondary", sample: "com.testpublisher.auroraalarm", source: "font-mono text-md" },
     { name: "Stat value", use: "KPI numbers (campaigns, keyword health)", className: "text-display-xs font-semibold text-primary", sample: "1,284,902", source: "StatCard value" },
     { name: "Required mark", use: "After a required label", className: "text-md font-bold text-brand-tertiary", sample: "*", source: "Field required" },

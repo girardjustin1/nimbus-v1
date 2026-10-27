@@ -9,7 +9,7 @@ import { currentFillMode, useRegisterPageFill } from "../../../shared/demo-fill"
 import { Fillable } from "../../../shared/demo-fill-ui";
 import { DasShell, PinkAction, TEAL } from "./das-shell";
 import { V3_NAV_ITEMS } from "./nav";
-import { SEARCH_WIDTH } from "./manage-campaigns";
+import { SEARCH_FILL } from "./manage-campaigns";
 import { PageTabs, TABLE, tealControls } from "./nimbus-ui";
 import { BatchAction, BatchBar, BatchBlocked, BatchCell, BatchDanger, BatchHeadCell } from "./batch-actions";
 import { downloadCsv, useBatch } from "./batch-data";
@@ -240,8 +240,8 @@ const MarkupField = ({
             <Fillable filled={Boolean(value)} onFill={() => sample("good")} hint="Click to paste sample markup">
                 <div
                     className={cx(
-                        "relative flex overflow-hidden rounded-lg bg-primary shadow-xs ring-1 ring-inset",
-                        bad ? "ring-error_subtle" : "ring-primary focus-within:ring-2 focus-within:ring-brand",
+                        "relative flex overflow-hidden rounded bg-field ring-1 ring-inset",
+                        bad ? "ring-error_subtle" : "ring-field focus-within:ring-focus",
                     )}
                 >
                     <div
@@ -577,7 +577,7 @@ export const ViewAllAssets = ({ search = "" }: { search?: string }) => {
             <Tabs active="view" />
             <div className="flex flex-col gap-5 px-8 py-8">
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div className={cx(SEARCH_WIDTH, "min-w-0 flex-1")}>
+                    <div className={SEARCH_FILL}>
                         <Input aria-label="Search Assets" size="md" icon={SearchLg} placeholder="Search Assets" value={query} onChange={setQuery} wrapperClassName="w-full" />
                     </div>
                     <div className="flex shrink-0 items-center gap-3">

@@ -3,7 +3,7 @@ import { Input } from "@/components/base/input/input";
 import { RadioButton, RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
 import { cx } from "@/utils/cx";
 import { Fillable } from "../../../shared/demo-fill-ui";
-import { PINK, Section, TEAL } from "./das-shell";
+import { Section, TEAL } from "./das-shell";
 import { LABEL } from "./type-rules";
 import { ORIGINAL, useCopy } from "./copy-deck";
 import { Copy } from "./copy-deck-ui";
@@ -131,7 +131,7 @@ export const NumberPicker = ({
                 onFocus={() => setOpen(true)}
             />
             {open && !disabled && (
-                <div ref={panelRef} className="absolute top-full right-0 left-0 z-30 mt-1 overflow-hidden rounded-lg bg-primary shadow-lg ring-1 ring-secondary">
+                <div ref={panelRef} className="absolute top-full right-0 left-0 z-30 mt-1 overflow-hidden rounded bg-primary shadow-lg ring-1 ring-secondary">
                     <div className="flex items-center justify-between gap-3 border-b border-secondary px-3 py-2">
                         <span className="text-md font-semibold text-tertiary uppercase">
                             <Copy>{name}</Copy>
@@ -156,8 +156,8 @@ export const NumberPicker = ({
                                         data-active={active}
                                         onMouseMove={() => cursor.move(i)}
                                         onClick={() => pick(n)}
-                                        className={cx("flex w-full items-center px-3 py-2 text-left text-md", !active && "hover:bg-secondary", value === n && "font-semibold")}
-                                        style={{ ...(value === n ? { color: TEAL } : {}), ...(active ? activeRowStyle(PINK) : {}) }}
+                                        className={cx("flex w-full items-center px-3 py-2 text-left text-md", !active && "hover:bg-field-option", value === n && "font-semibold")}
+                                        style={{ ...(value === n ? { color: TEAL } : {}), ...(active ? activeRowStyle() : {}) }}
                                     >
                                         {labelFor(n)}
                                     </button>
