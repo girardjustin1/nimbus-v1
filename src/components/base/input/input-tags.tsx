@@ -197,7 +197,7 @@ export const InputTags = ({
             iconTrailing: "right-3",
         },
         md: {
-            root: cx("gap-2 px-3 py-2 text-md", !isEmpty && "pl-2", hasTrailingIcon && "pr-9"),
+            root: cx("gap-2 px-3 py-[11px] text-md", !isEmpty && "pl-2", hasTrailingIcon && "pr-9"),
             iconTrailing: "right-3",
         },
         lg: {
@@ -215,9 +215,9 @@ export const InputTags = ({
                 isInvalid={isInvalid}
                 className={({ isFocusWithin, isDisabled, isInvalid }) =>
                     cx(
-                        "group/input relative flex w-full items-center rounded-lg bg-primary shadow-xs ring-1 ring-primary outline-hidden transition duration-100 ease-linear ring-inset",
-                        isDisabled && "cursor-not-allowed opacity-50",
-                        isFocusWithin && !isDisabled && "ring-2 ring-brand",
+                        "group/input relative flex w-full items-center rounded bg-field ring-1 ring-field outline-hidden transition duration-100 ease-linear ring-inset",
+                        isDisabled && "cursor-not-allowed bg-field-disabled text-tertiary",
+                        isFocusWithin && !isDisabled && "ring-1 ring-focus",
                         isInvalid && !isFocusWithin && "ring-error_subtle",
                         isInvalid && isFocusWithin && "ring-2 ring-error",
                         sizes[size].root,

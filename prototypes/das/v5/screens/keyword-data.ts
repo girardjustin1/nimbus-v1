@@ -24,8 +24,8 @@ import { useSyncExternalStore } from "react";
  *     We allow a–z, 0–9, dot, colon, hyphen and underscore, and require the first
  *     character to be alphanumeric.
  *   - The 64-character ceiling, as a cheap first brake on cardinality.
- *   - The severity split: a malformed keyword is blocked, a redundant one is skipped,
- *     and one that no app has ever sent is only a warning — it may be shipping next week.
+ *   - The severity split: a malformed keyword is blocked and a redundant one is skipped.
+ *     (Until 27 Oct one no app had sent was a warning; traffic checks are gone.)
  *   - Request volume per keyword is treated as integration health, not reporting. We
  *     show counts of requests carrying a keyword; we never show impressions, revenue or
  *     fill rate per keyword, and we never chart a keyword.
@@ -161,7 +161,6 @@ const seed: Keyword[] = [
     },
 ];
 
-
 /**
  * The other 45, so the library is the length a real one is.
  *
@@ -180,11 +179,52 @@ const seed: Keyword[] = [
  * all did. `library-coverage.test.ts` holds that down.
  */
 const FILLER = [
-    "commuter", "night-owl", "weekend-warrior", "zodiac-reader", "binge-watcher", "casual-gamer", "hardcore-gamer", "sports-bettor",
-    "fantasy-football", "nfl", "esports", "xmas-shopper", "soccer", "golf", "running", "audiobook", "yoga", "parent", "new-parent", "pet-owner",
-    "dog-owner", "kids-apps", "homeowner", "video-streamer", "frequent-flyer", "road-tripper", "foodie", "luxury-shopper", "coffee", "quiz-player",
-    "wine", "fashion", "sneakerhead", "beauty", "meal-kit", "diy", "gardening", "investor", "crypto", "small-business", "student",
-    "job-seeker", "podcast-listener", "urban", "news-junkie", "cord-cutter",
+    "commuter",
+    "night-owl",
+    "weekend-warrior",
+    "zodiac-reader",
+    "binge-watcher",
+    "casual-gamer",
+    "hardcore-gamer",
+    "sports-bettor",
+    "fantasy-football",
+    "nfl",
+    "esports",
+    "xmas-shopper",
+    "soccer",
+    "golf",
+    "running",
+    "audiobook",
+    "yoga",
+    "parent",
+    "new-parent",
+    "pet-owner",
+    "dog-owner",
+    "kids-apps",
+    "homeowner",
+    "video-streamer",
+    "frequent-flyer",
+    "road-tripper",
+    "foodie",
+    "luxury-shopper",
+    "coffee",
+    "quiz-player",
+    "wine",
+    "fashion",
+    "sneakerhead",
+    "beauty",
+    "meal-kit",
+    "diy",
+    "gardening",
+    "investor",
+    "crypto",
+    "small-business",
+    "student",
+    "job-seeker",
+    "podcast-listener",
+    "urban",
+    "news-junkie",
+    "cord-cutter",
 ];
 
 /**
@@ -219,7 +259,11 @@ let keywords: Keyword[] = [...seed, ...filler];
 const listeners = new Set<() => void>();
 const emit = () => listeners.forEach((l) => l());
 
-export const useKeywords = () => useSyncExternalStore((l) => (listeners.add(l), () => listeners.delete(l)), () => keywords);
+export const useKeywords = () =>
+    useSyncExternalStore(
+        (l) => (listeners.add(l), () => listeners.delete(l)),
+        () => keywords,
+    );
 
 /** Read without subscribing — for validation that runs inside a render or a click. */
 export const allKeywords = () => keywords;
@@ -229,20 +273,18 @@ export const getKeyword = (id: string) => keywords.find((k) => k.id === id);
 export const addKeywords = (values: { value: string }[]) => {
     const now = Date.now();
     keywords = [
-        ...values.map(
-            (v, i): Keyword => ({
-                id: `k-new-${now}-${i}`,
-                value: v.value,
-                campaigns: [],
-                seenInTraffic: incomingByValue(v.value) !== undefined,
-                lastSeen: incomingByValue(v.value) ? "just now" : null,
-                requests7d: incomingByValue(v.value)?.requests7d ?? 0,
-                sources: incomingByValue(v.value)?.sources ?? [],
-                apps: incomingByValue(v.value)?.apps ?? [],
-                updated: "Just now",
-                history: [{ when: "Just now", what: "Added to the library", who: "you@testpublisher.example" }],
-            }),
-        ),
+        ...values.map((v, i): Keyword => ({
+            id: `k-new-${now}-${i}`,
+            value: v.value,
+            campaigns: [],
+            seenInTraffic: incomingByValue(v.value) !== undefined,
+            lastSeen: incomingByValue(v.value) ? "just now" : null,
+            requests7d: incomingByValue(v.value)?.requests7d ?? 0,
+            sources: incomingByValue(v.value)?.sources ?? [],
+            apps: incomingByValue(v.value)?.apps ?? [],
+            updated: "Just now",
+            history: [{ when: "Just now", what: "Added to the library", who: "you@testpublisher.example" }],
+        })),
         ...keywords,
     ];
     emit();
@@ -284,7 +326,7 @@ export const resetKeywords = () => {
 export const KEYWORD_PATTERN = /^[a-z0-9][a-z0-9._:-]*$/;
 export const MAX_KEYWORD_LENGTH = 64;
 
-export type ProblemCode = "invalid-characters" | "too-long" | "duplicate-in-paste" | "casing-collision" | "already-in-library" | "not-in-traffic";
+export type ProblemCode = "invalid-characters" | "too-long" | "duplicate-in-paste" | "casing-collision" | "already-in-library";
 
 export type Severity = "blocked" | "skipped" | "warning";
 
@@ -310,7 +352,6 @@ const problemText: Record<ProblemCode, string> = {
     "duplicate-in-paste": "Listed more than once in this paste.",
     "casing-collision": "Differs only by case from another keyword. Matching is case-insensitive, so these are the same keyword.",
     "already-in-library": "Already in your library.",
-    "not-in-traffic": "No app has sent this in the last 7 days. It won't match anything until one does.",
 };
 
 const severityOf: Record<ProblemCode, Severity> = {
@@ -319,7 +360,6 @@ const severityOf: Record<ProblemCode, Severity> = {
     "duplicate-in-paste": "skipped",
     "casing-collision": "skipped",
     "already-in-library": "skipped",
-    "not-in-traffic": "warning",
 };
 
 const problem = (code: ProblemCode): Problem => ({ code, severity: severityOf[code], text: problemText[code] });
@@ -344,13 +384,11 @@ export const parseKeywordList = (text: string, existing: Keyword[] = keywords): 
         if (value.length > MAX_KEYWORD_LENGTH) problems.push(problem("too-long"));
         if (!KEYWORD_PATTERN.test(value)) problems.push(problem("invalid-characters"));
 
-        const malformed = problems.length > 0;
-
         if (seenExact.has(raw)) problems.push(problem("duplicate-in-paste"));
         else if (seenNormalised.has(value)) problems.push(problem("casing-collision"));
         else if (existing.some((k) => k.value === value)) problems.push(problem("already-in-library"));
-        // A malformed keyword obviously isn't in traffic; saying so twice is just noise.
-        else if (!malformed && !incomingByValue(value)) problems.push(problem("not-in-traffic"));
+        // 27 Oct review: no "not in traffic" warning — checking traffic means pinging the
+        // system near real time, which Product called unrealistic.
 
         seenExact.add(raw);
         seenNormalised.add(value);
@@ -376,10 +414,46 @@ export interface AppTraffic {
 
 /** Sample integration picture. One app deliberately sends nothing at all. */
 export const appTraffic: AppTraffic[] = [
-    { app: "Sample App", platform: "iOS", pattern: "Remote config", sdk: "2.28.0", requests7d: 4210880, withKeywords: 0.978, sources: ["user.keywords", "content.keywords"], distinctKeywords: 34 },
-    { app: "Sample App", platform: "Android", pattern: "Remote config", sdk: "2.28.0", requests7d: 3884112, withKeywords: 0.964, sources: ["user.keywords", "content.keywords"], distinctKeywords: 31 },
-    { app: "Sample App Lite", platform: "iOS", pattern: "Hardcoded", sdk: "2.19.4", requests7d: 1102340, withKeywords: 0.612, sources: ["user.keywords"], distinctKeywords: 6 },
-    { app: "Test Sports App", platform: "Android", pattern: "Server-side", sdk: "2.27.1", requests7d: 2004556, withKeywords: 0.889, sources: ["user.keywords", "app.keywords"], distinctKeywords: 18 },
+    {
+        app: "Sample App",
+        platform: "iOS",
+        pattern: "Remote config",
+        sdk: "2.28.0",
+        requests7d: 4210880,
+        withKeywords: 0.978,
+        sources: ["user.keywords", "content.keywords"],
+        distinctKeywords: 34,
+    },
+    {
+        app: "Sample App",
+        platform: "Android",
+        pattern: "Remote config",
+        sdk: "2.28.0",
+        requests7d: 3884112,
+        withKeywords: 0.964,
+        sources: ["user.keywords", "content.keywords"],
+        distinctKeywords: 31,
+    },
+    {
+        app: "Sample App Lite",
+        platform: "iOS",
+        pattern: "Hardcoded",
+        sdk: "2.19.4",
+        requests7d: 1102340,
+        withKeywords: 0.612,
+        sources: ["user.keywords"],
+        distinctKeywords: 6,
+    },
+    {
+        app: "Test Sports App",
+        platform: "Android",
+        pattern: "Server-side",
+        sdk: "2.27.1",
+        requests7d: 2004556,
+        withKeywords: 0.889,
+        sources: ["user.keywords", "app.keywords"],
+        distinctKeywords: 18,
+    },
     { app: "Test Puzzle App", platform: "iOS", pattern: "Not detected", sdk: "2.12.0", requests7d: 940221, withKeywords: 0, sources: [], distinctKeywords: 0 },
 ];
 

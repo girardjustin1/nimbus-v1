@@ -28,10 +28,8 @@ import { Button } from "./type-rules";
  * gone that footer was cramped and the panel came out narrow and tall.
  */
 
-const PINK = "#DA6EA3";
-
 const segmentClass = ({ isFocused, isPlaceholder, type }: { isFocused: boolean; isPlaceholder: boolean; type: string }) =>
-    cx("rounded px-0.5 tabular-nums outline-hidden", type === "literal" && "text-quaternary", isPlaceholder && "text-placeholder", isFocused && "bg-[#FCE7F1] text-[#A94579]");
+    cx("rounded px-0.5 tabular-nums outline-hidden", type === "literal" && "text-quaternary", isPlaceholder && "text-placeholder", isFocused && "bg-[#E6F6F6] text-[#1F7F80]");
 
 export const DatePicker = ({
     label,
@@ -66,15 +64,13 @@ export const DatePicker = ({
         <AriaDialogTrigger isOpen={open} onOpenChange={onOpenChange}>
             <AriaButton
                 aria-label={`${label}: ${value ? longDay(value) : "not set"}`}
-                className={({ isFocusVisible, isHovered }) =>
+                className={({ isFocusVisible }) =>
                     cx(
-                        "flex h-11 w-full items-center gap-2.5 rounded-lg bg-primary px-3.5 text-md shadow-xs ring-1 transition duration-100 ease-linear ring-inset outline-hidden",
-                        invalid ? "ring-error_subtle" : open || isFocusVisible ? "ring-2" : "ring-primary",
-                        isHovered && !open && !invalid && "bg-primary_hover",
+                        "flex h-[46px] w-full items-center gap-2.5 rounded bg-field px-3.5 text-md ring-1 transition duration-100 ease-linear ring-inset outline-hidden",
+                        invalid ? "ring-error_subtle" : open || isFocusVisible ? "ring-focus" : "ring-field",
                     )
                 }
-                style={open && !invalid ? { ["--tw-ring-color" as string]: PINK } : undefined}
-            >
+                            >
                 <CalendarIcon className="size-5 text-fg-quaternary" aria-hidden="true" />
                 {value ? (
                     <span className="font-semibold whitespace-nowrap text-secondary">{longDay(value)}</span>
@@ -101,7 +97,7 @@ export const DatePicker = ({
                                             minValue={minValue}
                                             className="flex-1"
                                         >
-                                            <AriaDateInput className="flex h-10 w-full items-center rounded-lg bg-primary px-3 text-md text-primary shadow-xs ring-1 ring-primary ring-inset focus-within:ring-2 focus-within:[--tw-ring-color:#DA6EA3]">
+                                            <AriaDateInput className="flex h-10 w-full items-center rounded bg-field px-3 text-md text-primary ring-1 ring-field ring-inset focus-within:ring-focus">
                                                 {(segment) => <AriaDateSegment segment={segment} className={({ isFocused, isPlaceholder }) => segmentClass({ isFocused, isPlaceholder, type: segment.type })} />}
                                             </AriaDateInput>
                                         </AriaDateField>

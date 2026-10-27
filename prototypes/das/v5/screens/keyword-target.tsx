@@ -4,7 +4,7 @@ import { useCopy } from "./copy-deck";
 import { Copy } from "./copy-deck-ui";
 import { PinkAction } from "./das-shell";
 import { useKeywords } from "./keyword-data";
-import { ChosenTable, InlineSearchSelect, ModalSearchSelect, type SelectableRow, TargetBlock, TrafficBadge } from "./search-select";
+import { ChosenTable, InlineSearchSelect, ModalSearchSelect, type SelectableRow, TargetBlock } from "./search-select";
 import { Button } from "./type-rules";
 
 /**
@@ -34,7 +34,6 @@ const useKeywordRows = (): SelectableRow[] => {
         id: k.value,
         label: k.value,
         meta: copy.text(usedBy(k.campaigns.length)),
-        trailing: <TrafficBadge seen={k.seenInTraffic} />,
     }));
 };
 
@@ -77,7 +76,6 @@ export const KeywordTargetBlock = ({
                 <span key="k" className="font-mono font-medium text-primary">
                     {v}
                 </span>,
-                row?.trailing ?? <TrafficBadge seen={false} />,
                 <span key="c" className="text-tertiary">
                     <Copy>{keyword ? usedBy(keyword.campaigns.length) : "Not in your library"}</Copy>
                 </span>,
@@ -113,7 +111,7 @@ export const KeywordTargetBlock = ({
             )}
 
             <ChosenTable
-                columns={[copy.text("Keyword") ?? "", copy.text("In traffic") ?? "", copy.text("Also used by") ?? ""]}
+                columns={[copy.text("Keyword") ?? "", copy.text("Also used by") ?? ""]}
                 rows={chosen}
                 onRemove={(id) => onChange(value.filter((v) => v !== id))}
                 empty={

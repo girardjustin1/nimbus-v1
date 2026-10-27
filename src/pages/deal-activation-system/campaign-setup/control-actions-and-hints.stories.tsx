@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { PinkAction } from "../../../../prototypes/das/v5/screens/das-shell";
-import { DoneButton, KeyHint, TrafficBadge } from "../../../../prototypes/das/v5/screens/search-select";
+import { DoneButton, KeyHint } from "../../../../prototypes/das/v5/screens/search-select";
 import { Surface } from "./harness";
 
 /**
- * The small pieces: Done closes a picker panel, the pink text action (Clear all, Add keyword, Browse), the keyboard hint in panel footers, and the traffic badge in the Keywords table.
+ * The small pieces: Done closes a picker panel, the pink text action (Clear all, Add keyword, Browse), and the keyboard hint in panel footers. (The traffic badge in the Keywords table was removed on 27 Oct.)
  */
 const meta = {
     title: "Deal Activation System/Campaign Setup/Controls/Actions & Hints",
@@ -39,19 +39,6 @@ export const KeyHintStory: Story = {
     render: () => (
         <Surface>
             <KeyHint />
-        </Surface>
-    ),
-};
-
-/** Whether a keyword is arriving in traffic. */
-export const Traffic: Story = {
-    name: "Traffic badge",
-    render: () => (
-        <Surface>
-            <div className="flex gap-3">
-                <TrafficBadge seen />
-                <TrafficBadge seen={false} />
-            </div>
         </Surface>
     ),
 };

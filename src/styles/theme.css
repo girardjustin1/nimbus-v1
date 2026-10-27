@@ -356,6 +356,9 @@
     --color-border-error_subtle: var(--color-red-300);
     --color-border-brand: var(--color-brand-500);
     --color-border-brand_alt: var(--color-teal-secondary);
+    /* 27 Oct review: form fields take staging's look — a #F8F8F8 fill and a faint warm
+       rule instead of a white box with a grey border. Sampled from staging. */
+    --color-border-field: rgb(239 237 236);
 
     /* FOREGROUND COLORS */
     --color-fg-secondary: var(--color-neutral-700);
@@ -380,6 +383,11 @@
 
     /* BACKGROUND COLORS */
     --color-bg-primary: var(--color-white);
+    --color-bg-field: rgb(248 248 248);
+    /* A highlighted option in a field's dropdown list — staging's warm off-white. */
+    --color-bg-field-option: rgb(252 250 249);
+    /* A disabled field: staging fills it solid grey rather than fading it. */
+    --color-bg-field-disabled: rgb(216 216 216);
     --color-bg-tertiary: var(--color-neutral-100);
     --color-bg-brand-primary: var(--color-brand-50);
     --color-bg-error-secondary: var(--color-red-100);
@@ -418,7 +426,9 @@
     --color-featured-icon-light-fg-success: var(--color-green-600);
     --color-featured-icon-light-fg-warning: var(--color-yellow-600);
     --color-focus-ring-error: var(--color-red-500);
-    --color-focus-ring: var(--color-brand-500);
+    /* 27 Oct review: focus is teal everywhere ("Do you want to do teal as a universal?" —
+       "Yeah, might as well"). Was the pink brand colour. */
+    --color-focus-ring: var(--color-teal-secondary);
     --color-footer-button-fg: var(--color-brand-200);
     --color-footer-button-fg_hover: var(--color-white);
     --color-icon-fg-brand: var(--color-brand-600);
@@ -434,6 +444,9 @@
 
     /* BACKGROUND PROPERTY COLORS */
     --background-color-primary: var(--color-bg-primary);
+    --background-color-field: var(--color-bg-field);
+    --background-color-field-option: var(--color-bg-field-option);
+    --background-color-field-disabled: var(--color-bg-field-disabled);
     --background-color-tertiary: var(--color-bg-tertiary);
     --background-color-brand-primary: var(--color-bg-brand-primary);
     --background-color-error-secondary: var(--color-bg-error-secondary);
@@ -499,6 +512,7 @@
     --border-color-error: var(--color-border-error);
     --border-color-error_subtle: var(--color-border-error_subtle);
     --border-color-brand: var(--color-border-brand);
+    --border-color-field: var(--color-border-field);
     --border-color-brand_alt: var(--color-border-brand_alt);
     --border-color-brand-solid: var(--color-bg-brand-solid);
     --border-color-brand-solid_hover: var(--color-bg-brand-solid_hover);
@@ -514,6 +528,8 @@
     --ring-color-brand_alt: var(--color-border-brand_alt);
     --ring-color-brand-solid: var(--color-bg-brand-solid);
     --ring-color-brand-solid_hover: var(--color-bg-brand-solid_hover);
+    --ring-color-field: var(--color-border-field);
+    --ring-color-focus: var(--color-focus-ring);
 
     /* OUTLINE PROPERTY COLORS */
     --outline-color-primary: var(--color-border-primary);
@@ -717,6 +733,7 @@
         --color-border-error: var(--color-red-400);
         --color-border-tertiary: var(--color-neutral-800);
         --color-border-brand_alt: var(--color-neutral-700);
+        --color-border-field: var(--color-neutral-800);
         --color-border-secondary_alt: var(--color-neutral-800);
 
         --color-fg-secondary: var(--color-neutral-300);
@@ -740,6 +757,9 @@
         --color-fg-brand-secondary_hover: var(--color-neutral-500);
 
         --color-bg-primary: var(--color-neutral-950);
+        --color-bg-field: var(--color-neutral-900);
+        --color-bg-field-option: var(--color-neutral-800);
+        --color-bg-field-disabled: var(--color-neutral-700);
         --color-bg-tertiary: var(--color-neutral-800);
         --color-bg-brand-primary: var(--color-brand-500);
         --color-bg-error-secondary: var(--color-red-600);
@@ -777,7 +797,7 @@
         --color-featured-icon-light-fg-success: var(--color-green-200);
         --color-featured-icon-light-fg-warning: var(--color-yellow-200);
         --color-focus-ring-error: var(--color-red-500);
-        --color-focus-ring: var(--color-brand-500);
+        --color-focus-ring: var(--color-teal-secondary);
         --color-footer-button-fg: var(--color-neutral-300);
         --color-footer-button-fg_hover: var(--color-neutral-100);
         --color-icon-fg-brand: var(--color-neutral-400);
@@ -859,6 +879,7 @@
         --border-color-error: var(--color-border-error);
         --border-color-error_subtle: var(--color-border-error_subtle);
         --border-color-brand: var(--color-border-brand);
+        --border-color-field: var(--color-border-field);
         --border-color-brand_alt: var(--color-border-brand_alt);
         --border-color-brand-solid: var(--color-bg-brand-solid);
         --border-color-brand-solid_hover: var(--color-bg-brand-solid_hover);
@@ -874,6 +895,8 @@
         --ring-color-brand-solid: var(--color-bg-brand-solid);
         --ring-color-brand-solid_hover: var(--color-bg-brand-solid_hover);
         --ring-color-brand_alt: var(--color-border-brand_alt);
+        --ring-color-field: var(--color-border-field);
+        --ring-color-focus: var(--color-focus-ring);
 
         /* OUTLINE PROPERTY COLORS */
         --outline-color-primary: var(--color-border-primary);

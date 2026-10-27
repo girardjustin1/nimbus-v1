@@ -8,7 +8,6 @@ import { AssetDetail } from "./screens/asset-detail";
 import { AssetSetup, ViewAllAssets } from "./screens/asset-library";
 import { CampaignSetup } from "./screens/campaign-setup";
 import { KeywordDetail } from "./screens/keyword-detail";
-import { KeywordHealth } from "./screens/keyword-health";
 import { KeywordSetup, ViewAllKeywords } from "./screens/keyword-library-v3";
 
 /**
@@ -246,14 +245,8 @@ export const screens: ProtoScreen[] = [
     keywords({
         id: "keyword-detail",
         title: "Keyword detail",
-        description: "One keyword: its note, the campaigns matching on it, whether it's arriving, and its history.",
+        description: "One keyword: the campaigns matching on it, and its history. Delete sits top right.",
         render: () => <KeywordDetail id="k1" />,
-    }),
-    keywords({
-        id: "keyword-detail-unseen",
-        title: "Keyword detail · never arrived",
-        description: "Defined, spelled fine, and no app has ever sent it — so it can't match. Why, and where to look.",
-        render: () => <KeywordDetail id="k5" />,
     }),
     keywords({
         id: "keyword-delete-guard",
@@ -266,12 +259,6 @@ export const screens: ProtoScreen[] = [
         title: "Delete · nothing live is using it",
         description: "The same guard when the keyword is free. Reporting already written keeps it.",
         render: () => <KeywordDetail id="k5" confirmDelete />,
-    }),
-    keywords({
-        id: "keyword-health",
-        title: "Keyword Health",
-        description: "What your apps actually send against what you've defined. Aggregates only — no per-keyword charts.",
-        render: () => <KeywordHealth />,
     }),
 
     /* 5 · Campaigns — the staging table, with four highlight chips (16 Oct). Campaign Health as counts (19 Oct). */

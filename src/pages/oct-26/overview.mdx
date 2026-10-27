@@ -1,5 +1,5 @@
 import { Meta } from "@storybook/addon-docs/blocks";
-import { framing, items, links } from "./feedback";
+import { framing, items, links, review27, review27Framing } from "./feedback";
 
 <Meta title="Oct 26/Overview" />
 
@@ -79,6 +79,34 @@ v4 as it was reviewed.
   </table>
 </div>
 
+## 27 Oct review
+
+A second, shorter pass over v5 with Product on 27 October, folded into this round rather
+than cut as a new one.
+
+> “{review27Framing.quote}”
+>
+> — Product, 27 Oct review
+
+{review27Framing.decision}
+
+<div style={{ overflowX: "auto", border: "1px solid #EAECF0", borderRadius: 12, margin: "12px 0 24px" }}>
+  <table style={{ width: "100%", borderCollapse: "collapse", margin: 0 }}>
+    <thead><tr><th style={{ ...th, width: 220 }}>Change</th><th style={th}>What it does, and where to see it</th></tr></thead>
+    <tbody>
+      {review27.map((i) => (
+        <tr key={i.slug}>
+          <td style={{ ...td, fontWeight: 700, color: "#101828" }}>{i.title}<div style={{ marginTop: 6 }}><Chip tone={i.status} /></div></td>
+          <td style={{ ...td, color: "#475467" }}>
+            {i.decision.map((d, k) => <p key={k} style={{ margin: k ? "6px 0 0" : 0 }}>{d}</p>)}
+            <div style={{ marginTop: 10 }}><Where slug={i.slug} /></div>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
 Each change links to the **prototype** screens it shows on (pink, opens prototype v5) and
 to its **Storybook** stories (teal, stays here). *Oct 26 › Applied Changes* shows each
 screen as Round 4 beside Round 5.
@@ -100,6 +128,10 @@ screen as Round 4 beside Round 5.
 - **Total spend framing** — Product.
 - **Token names** — “UI controller” (Collapse) and “state action” (Save Query, Download
   .CSV) are working names, to confirm with engineering.
+- **Field size** — fields match staging's size; whether that size is right is a global
+  change for engineering (27 Oct).
+- **Engineering review** — engineering reviews DAS before work moves to Performance
+  Insights (27 Oct).
 
 ## Tokens, for the Performance Insights redesign
 
@@ -121,8 +153,8 @@ stripes follow staging.
 
 ## Next
 
-Engineering starts building DAS (it doesn't need the new endpoints to begin); sprint planning is
-Wednesday. Then Performance Insights: expanded metrics, possibly a generative component,
+Engineering reviews DAS, then starts building it (it doesn't need the new endpoints to
+begin). Then Performance Insights: expanded metrics, possibly a generative component,
 saveable dashboards and a default view — built from these tokens.
 
 </div>

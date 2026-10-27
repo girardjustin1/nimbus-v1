@@ -61,10 +61,20 @@ const SHOTS = [
         },
     ],
     ["12-keywords", "keyword-view"],
-    ["13-keyword-health", "keyword-health"],
+    ["13-keyword-detail", "keyword-detail"],
     ["14-setup", "setup-empty"],
     ["15-setup-rules", "step-rules"],
     ["16-setup-targeting", "step-targeting"],
+    ["17-asset-setup-fields", "asset-setup", async (p) => p.getByRole("textbox", { name: "Creative Name" }).focus()],
+    [
+        "18-dropdown-open",
+        "asset-setup",
+        async (p) => {
+            await p.getByRole("button", { name: /Ad Type/i }).first().click();
+            await p.getByRole("option", { name: "HTML" }).hover();
+        },
+    ],
+    ["19-asset-detail", "asset-detail?a=a1"],
 ];
 
 const browser = await chromium.launch();

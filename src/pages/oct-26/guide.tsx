@@ -118,10 +118,14 @@ export const Check = ({ children }: { children: ReactNode }) => (
     </div>
 );
 
-/** A line from the 26 Oct call, with the minute it was said. */
-export const Said = ({ at, children }: { at: string; children: ReactNode }) => (
+/** A line from a review call: the 26 Oct call with the minute it was said, or another day. */
+export const Said = ({ at, day = "26 Oct", children }: { at?: string; day?: string; children: ReactNode }) => (
     <blockquote style={{ margin: "12px 0", padding: "4px 0 4px 14px", borderLeft: `3px solid ${PINK_DARK}`, fontSize: 16, lineHeight: 1.55, color: "#475467" }}>
-        “{children}”<span style={{ marginLeft: 8, fontSize: 15, color: "#98A2B3", whiteSpace: "nowrap" }}>— Product, 26 Oct · {at}</span>
+        “{children}”
+        <span style={{ marginLeft: 8, fontSize: 15, color: "#98A2B3", whiteSpace: "nowrap" }}>
+            — Product, {day}
+            {at && ` · ${at}`}
+        </span>
     </blockquote>
 );
 

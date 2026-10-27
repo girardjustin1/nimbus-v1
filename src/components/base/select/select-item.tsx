@@ -18,14 +18,14 @@ const sizes = {
         checkbox: "sm" as const,
     },
     md: {
-        root: "p-2 pr-2.5 gap-2 *:data-icon:size-5",
+        root: "px-4 py-2.5 gap-2 *:data-icon:size-5",
         text: "text-md",
         textContainer: "gap-x-2",
         check: "size-5",
         checkbox: "sm" as const,
     },
     lg: {
-        root: "p-2.5 pl-2 gap-2 *:data-icon:size-5",
+        root: "px-4 py-3 gap-2 *:data-icon:size-5",
         text: "text-md",
         textContainer: "gap-x-2",
         check: "size-5",
@@ -78,14 +78,16 @@ export const SelectItem = ({
             isDisabled={isDisabled}
             {...props}
             className={(state) =>
-                cx("w-full py-px outline-hidden", size === "sm" ? "px-1" : "px-1.5", typeof className === "function" ? className(state) : className)
+                cx("w-full outline-hidden", typeof className === "function" ? className(state) : className)
             }
         >
             {(state) => (
                 <div
                     className={cx(
-                        "flex cursor-pointer items-center rounded-md outline-hidden select-none",
-                        (state.isFocused || state.isHovered || (state.isSelected && selectionIndicator !== "checkbox")) && "bg-primary_hover",
+                        // 27 Oct review: staging's list — options run edge to edge, the highlighted
+                        // one in a warm off-white, no rounded pill.
+                        "flex cursor-pointer items-center outline-hidden select-none",
+                        (state.isFocused || state.isHovered || (state.isSelected && selectionIndicator !== "checkbox")) && "bg-field-option",
                         state.isDisabled && "cursor-not-allowed opacity-50",
                         state.isFocusVisible && "ring-2 ring-focus-ring ring-inset",
 
@@ -120,7 +122,7 @@ export const SelectItem = ({
                     </div>
 
                     {state.isSelected && selectionIndicator === "checkmark" && (
-                        <Check aria-hidden="true" className={cx("ml-auto text-fg-brand-primary", sizes[size].check)} />
+                        <Check aria-hidden="true" className={cx("ml-auto text-fg-brand-secondary", sizes[size].check)} />
                     )}
 
                     {!isLeft && selectionIndicator === "checkbox" && (

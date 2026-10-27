@@ -233,11 +233,11 @@ const Row = ({
             }}
             className={cx(
                 "flex items-center gap-1 rounded-md py-1.5 pr-2 select-none",
-                !active && "hover:bg-secondary",
+                !active && "hover:bg-field-option",
                 state !== "off" && !active && "bg-secondary/40",
                 branch && "cursor-pointer",
             )}
-            style={{ paddingLeft: 8 + depth * 20, ...(active ? activeRowStyle(PINK) : {}) }}
+            style={{ paddingLeft: 8 + depth * 20, ...(active ? activeRowStyle() : {}) }}
         >
             {branch ? (
                 <button
@@ -440,8 +440,8 @@ export const TaxonomyPicker = ({
                     outline. The focus state is an outline, which sits outside the box and
                     cannot be overlapped, and overflow-hidden keeps chips inside the radius. */}
                 <div
-                    className="flex w-full flex-col overflow-hidden rounded-lg border border-secondary bg-primary shadow-xs"
-                    style={open ? { outline: `2px solid ${PINK}` } : undefined}
+                    className="flex w-full flex-col overflow-hidden rounded border border-field bg-field"
+                    style={open ? { outline: "1px solid var(--color-focus-ring)" } : undefined}
                 >
                     {(anyApplied || open) && (
                         <div ref={stripRef} className={cx("flex flex-col gap-2 overflow-y-auto overscroll-contain p-2", open ? "min-h-10" : "max-h-60")}>
@@ -530,7 +530,7 @@ export const TaxonomyPicker = ({
                 </div>
 
                 {open && (
-                    <div ref={panelRef} className="absolute top-full right-0 left-0 z-30 mt-1 overflow-hidden rounded-xl bg-primary shadow-lg ring-1 ring-secondary">
+                    <div ref={panelRef} className="absolute top-full right-0 left-0 z-30 mt-1 overflow-hidden rounded bg-primary shadow-lg ring-1 ring-secondary">
                         <div className="flex items-center justify-between gap-3 border-b border-secondary px-3 py-2">
                             <span className="flex items-baseline gap-2">
                                 <span className="text-md font-semibold text-tertiary uppercase">

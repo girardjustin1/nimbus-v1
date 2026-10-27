@@ -33,10 +33,16 @@ import { Button } from "./type-rules";
  * 26 Oct: the table is a list, so it takes the list style (light header, bold black
  * labels, column rules) and runs full bleed like staging's; the search bar sits at the
  * top left at the same width as the asset and keyword libraries (SEARCH_WIDTH).
+ *
+ * 27 Oct review: search runs the full width of the page ("you might as well make it across
+ * all the way"). Where buttons sit to its right (assets, keywords) they stay inline and
+ * the search takes the rest of the row (SEARCH_FILL).
  */
 
-/** One search width for every DAS table: campaigns, assets, keywords. */
-export const SEARCH_WIDTH = "w-full max-w-xl";
+/** Search with nothing beside it: the full width of the content area. */
+export const SEARCH_WIDTH = "w-full";
+/** Search sharing its row with buttons: it fills whatever the buttons leave. */
+export const SEARCH_FILL = "min-w-0 flex-1";
 
 export type HealthVariant = "counts" | "bar" | "attention";
 type Filter = "live" | "queued" | "attention";

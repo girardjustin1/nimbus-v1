@@ -20,9 +20,12 @@ import s09 from "./screens/09-by-keyword.jpg";
 import s10 from "./screens/10-assets.jpg";
 import s11 from "./screens/11-assets-batch.jpg";
 import s12 from "./screens/12-keywords.jpg";
-import s13 from "./screens/13-keyword-health.jpg";
+import s13 from "./screens/13-keyword-detail.jpg";
 import s15 from "./screens/15-setup-rules.jpg";
 import s16 from "./screens/16-setup-targeting.jpg";
+import s17 from "./screens/17-asset-setup-fields.jpg";
+import s18 from "./screens/18-dropdown-open.jpg";
+import s19 from "./screens/19-asset-detail.jpg";
 
 <Meta title="Oct 26/Introduction" />
 
@@ -60,10 +63,11 @@ by side, and the **components** it uses.
     <tr><td style={td}>4</td><td style={td}><a href="#step-4">Full performance · filters</a></td><td style={td}>Performance Insights' filter menu, toggle to compare, clear all</td></tr>
     <tr><td style={td}>5</td><td style={td}><a href="#step-5">Full performance · report table</a></td><td style={td}>Charcoal header, warm rows, by keyword</td></tr>
     <tr><td style={td}>6</td><td style={td}><a href="#step-6">View All Assets</a></td><td style={td}>Tabs, no Assets label, search left, list table, batch selection</td></tr>
-    <tr><td style={td}>7</td><td style={td}><a href="#step-7">Keywords</a></td><td style={td}>Same treatment as assets; Keyword Health</td></tr>
+    <tr><td style={td}>7</td><td style={td}><a href="#step-7">Keywords</a></td><td style={td}>Same treatment as assets; keyword detail trimmed (27 Oct)</td></tr>
     <tr><td style={td}>8</td><td style={td}><a href="#step-8">Campaign setup</a></td><td style={td}>Teal radios and checkboxes; selected-items tables</td></tr>
     <tr><td style={td}>9</td><td style={td}><a href="#step-9">The shared components</a></td><td style={td}>Every piece above, in one place, live</td></tr>
-    <tr><td style={td}>10</td><td style={td}><a href="#step-10">Kept, and still open</a></td><td style={td}>What didn't change on purpose, and the decisions left</td></tr>
+    <tr><td style={td}>10</td><td style={td}><a href="#step-10">27 Oct review</a></td><td style={td}>Fields and dropdowns, teal focus, full-width search, summary cards, cuts</td></tr>
+    <tr><td style={td}>11</td><td style={td}><a href="#step-11">Kept, and still open</a></td><td style={td}>What didn't change on purpose, and the decisions left</td></tr>
   </tbody>
 </table>
 
@@ -73,9 +77,9 @@ by side, and the **components** it uses.
 
 <Changed>
   <ul>
-    <li><b>Stat cards</b> take the realtime dashboard's styling: uppercase label, large teal value, grey detail line.</li>
+    <li><b>Stat cards</b> take the key metrics card, scaled down: bold black title, black value, a light rule and soft shadow (27 Oct review — they first took the realtime dashboard's type).</li>
     <li><b>Detailed reporting → Performance Insights.</b> The link opens Performance Insights (the Full performance screen); the wording may change when the redesign defines where it lands.</li>
-    <li><b>Search</b> sits left above the table, at the same width as on the asset and keyword libraries.</li>
+    <li><b>Search</b> sits above the table and runs the full width of the page (27 Oct review).</li>
     <li><b>The table runs full bleed</b>, edge to edge of the content area like staging, with a light header, bold black labels and a rule between every column. It's a list, so no charcoal.</li>
   </ul>
 </Changed>
@@ -272,30 +276,31 @@ by side, and the **components** it uses.
 <Step n={7} title="Keywords">
 
 <ShotPair>
-  <Shot src={s12} caption="View All Keywords" />
-  <Shot src={s13} caption="Keyword Health" />
+  <Shot src={s12} caption="View All Keywords — two tabs, no traffic column" />
+  <Shot src={s13} caption="Keyword detail — campaigns and history" />
 </ShotPair>
 
 <Changed>
   <ul>
-    <li>Keywords mirror assets: the same tabs, no <b>Keywords</b> label, search left, Actions and the add button right, and a full-bleed list table.</li>
-    <li><b>Keyword Health</b> is treated as a <b>list</b>, not a report: it checks which keywords your apps send and holds no spend or impressions.</li>
-    <li><b>Keyword Health order (27 Oct):</b> <i>Defined, but not arriving</i> and <i>Arriving, but not defined</i> come first, side by side at a fixed, equal height. Each shows the first few keywords, and <b>View more</b> opens the full list in a modal. <i>What your apps are sending</i> follows below as a full-bleed table, like every other v5 table.</li>
+    <li>Keywords mirror assets: the same tabs, no <b>Keywords</b> label, search beside Actions and the add button, and a full-bleed list table.</li>
+    <li><b>27 Oct review:</b> Keyword Health is gone — the page, its tab and every Check Traffic button. So is every real-time traffic readout: the In Traffic column, its CSV column and the traffic badge in setup.</li>
+    <li><b>27 Oct review:</b> keyword detail keeps <b>Campaigns using this keyword</b>, <b>History</b> and <b>Delete Keyword</b>. The Keyword card, the sidebar and Export keyword CSV are gone; the delete rules live in the Delete dialog.</li>
   </ul>
 </Changed>
 
-<Said at="8:17">And not in keywords, but you have it in the campaign setup.</Said>
+<Said day="27 Oct">Let's just kill this keyword health page.</Said>
+<Said day="27 Oct">So kill the sidebar, kill the keyword little boxy thing, and kill the export button. Everything else is fine.</Said>
 
 <Check>
   <ol>
-    <li>Switch between Keyword Setup, View All Keywords and Keyword Health — the tabs match assets.</li>
-    <li>Confirm Keyword Health should be a list (light header) rather than a report.</li>
-    <li>On Keyword Health, press <b>View more</b> on either panel: the modal lists every keyword. Then scroll to the apps table and check that it runs edge to edge.</li>
+    <li>Manage keywords has two tabs: Keyword Setup and View All Keywords.</li>
+    <li>Open <b>sports</b> — campaigns and history only; <b>Delete Keyword</b> says it's in two live campaigns.</li>
   </ol>
 </Check>
 
 <Links
-  proto={[["View All Keywords", "keyword-view"], ["Keyword Health", "keyword-health"]]}
+  proto={[["View All Keywords", "keyword-view"], ["Keyword detail", "keyword-detail"]]}
+  compare={[["Round 4", "oct-26-applied-changes--keyword-detail-before"], ["Round 5", "oct-26-applied-changes--keyword-detail-after"]]}
   tokens={[["Page tabs", "application-ui-nimbus-tokens-page-tabs--keywords"]]}
 />
 
@@ -382,7 +387,49 @@ draw from the same source. Change one, and every screen that uses it follows.
 
 </Step>
 
-<Step n={10} title="Kept, and still open">
+<Step n={10} title="27 Oct review">
+
+A second, shorter pass over v5 with Product. Everything here is in prototype v5; the
+change list is on <a href={docUrl("oct-26-overview--docs")} target="_top">Oct 26 › Overview</a>.
+
+<ShotPair>
+  <Shot src={s17} caption="Asset Setup — staging's grey fields, teal focus" />
+  <Shot src={s18} caption="A dropdown open — staging's list" />
+</ShotPair>
+
+<Changed>
+  <ul>
+    <li><b>Fields and dropdowns match staging:</b> a #F8F8F8 fill and a faint rule instead of a white box, square-ish corners, 46px tall; disabled fields solid grey. Dropdown lists are white with options edge to edge and a warm highlight — the Actions menus and setup pickers too.</li>
+    <li><b>Focus is teal everywhere</b>, in place of the pink and the browser's blue.</li>
+    <li><b>Search runs full width.</b> Where Actions and Add sit beside it, they stay inline and search takes the rest of the row.</li>
+    <li><b>Summary cards</b> take the key metrics card, scaled down. Contained, because the Campaigns cards are filters you click. The flat alternative is in Applied Changes to compare.</li>
+    <li><b>No “Serving now” bar</b> on an asset: it can run in several campaigns, and Associated Campaigns already lists them.</li>
+    <li><b>Detail pages share the breadcrumb strip.</b> Keyword detail and asset detail go back the way the campaign overview does — “← Keywords : sports”, “← Assets : SampleApp_MREC_Garden”.</li>
+  </ul>
+</Changed>
+
+<Shot src={s19} caption="Asset detail — no warning bar" />
+
+<Said day="27 Oct">Can you style the forms this way? The way we have them. See how they're not white?</Said>
+<Said day="27 Oct">You might as well make it across all the way.</Said>
+<Said day="27 Oct">If they are contained, let's do them closer to this. If they are not, then let's do them like this.</Said>
+
+<Check>
+  <ol>
+    <li>Put Asset Setup next to staging's: fill, rule, height, and the teal outline when you click a field.</li>
+    <li>Open <b>Ad Type</b> and the <b>Actions</b> menu on View All Keywords — the same list.</li>
+    <li>Compare the two card looks in <i>Applied Changes › 9</i>.</li>
+  </ol>
+</Check>
+
+<Links
+  proto={[["Asset Setup", "asset-setup"], ["Manage campaigns", "campaigns"], ["Asset detail", "asset-detail?a=a1"]]}
+  compare={[["Fields", "oct-26-applied-changes--fields"], ["Cards: contained vs flat", "oct-26-applied-changes--summary-cards"], ["Asset detail · Round 5", "oct-26-applied-changes--asset-detail-after"]]}
+/>
+
+</Step>
+
+<Step n={11} title="Kept, and still open">
 
 <table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
   <thead><tr><th style={th}>Item</th><th style={th}>Status</th><th style={th}>Notes</th></tr></thead>
@@ -392,6 +439,8 @@ draw from the same source. Change one, and every screen that uses it follows.
     <tr><td style={td}>Chart type icons</td><td style={td}><Status tone="Applied" /></td><td style={td}>The Sketch chart icons, in staging's tab style, everywhere the chart type picker appears (27 Oct).</td></tr>
     <tr><td style={td}>Checkboxes and radios</td><td style={td}><Status tone="Applied" /></td><td style={td}>Matched to staging, sampled from your call screenshots: pale teal fill, teal-grey border and teal check; a thin teal ring, white gap and solid teal dot. Since 27 Oct this is the base <code>Checkbox</code> and <code>RadioButton</code> in Storybook, so every component shows it.</td></tr>
     <tr><td style={td}>"UI controller" and "state action" names</td><td style={td}><Status tone="To confirm" /></td><td style={td}>Working names; check with engineering whether they're already named.</td></tr>
+    <tr><td style={td}>Field size</td><td style={td}><Status tone="Pending" /></td><td style={td}>Fields match staging's size (27 Oct). Whether that size is right is a global change for engineering.</td></tr>
+    <tr><td style={td}>Real-time traffic readouts</td><td style={td}><Status tone="To confirm" /></td><td style={td}>Removed everywhere, not only the keyword detail card the call named, since they all need the same real-time check.</td></tr>
     <tr><td style={td}>Type sizes</td><td style={td}><Status tone="Kept" /></td><td style={td}>Labels stay at the 15px floor, so they're a little larger than staging's 10–12px.</td></tr>
     <tr><td style={td}>Staging's own table inconsistencies</td><td style={td}><Status tone="To confirm" /></td><td style={td}>Manage Active Demand is charcoal; Nimbus+ Payments and Payouts are light though they're reporting. To settle in the Performance Insights redesign.</td></tr>
   </tbody>

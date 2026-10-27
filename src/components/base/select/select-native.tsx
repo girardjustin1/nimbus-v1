@@ -18,7 +18,7 @@ const styles = {
         icon: "size-4 right-2.5 stroke-[2.25px]",
     },
     md: {
-        root: "py-2 pl-3 text-md",
+        root: "py-[11px] pl-3 text-md",
         icon: "size-4 stroke-[2.25px] right-3",
     },
     lg: {
@@ -47,7 +47,7 @@ export const NativeSelect = ({ label, hint, options, className, selectClassName,
                     aria-describedby={hintId}
                     aria-labelledby={selectId}
                     className={cx(
-                        "appearance-none rounded-lg bg-primary font-medium text-primary shadow-xs ring-1 ring-primary outline-hidden transition duration-100 ease-linear ring-inset placeholder:text-fg-quaternary focus-visible:ring-2 focus-visible:ring-brand disabled:cursor-not-allowed disabled:opacity-50",
+                        "appearance-none rounded bg-field font-medium text-primary ring-1 ring-field outline-hidden transition duration-100 ease-linear ring-inset placeholder:text-fg-quaternary focus-visible:ring-1 focus-visible:ring-focus disabled:cursor-not-allowed disabled:bg-field-disabled disabled:text-tertiary",
 
                         styles[size].root,
 

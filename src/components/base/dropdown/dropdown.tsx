@@ -80,7 +80,7 @@ const DropdownItem = ({ label, children, addon, icon: Icon, avatarUrl, unstyled,
             {...props}
             className={(state) =>
                 cx(
-                    "group block cursor-pointer px-1.5 py-px outline-hidden",
+                    "group block cursor-pointer outline-hidden",
                     state.isDisabled && "cursor-not-allowed opacity-50",
                     typeof props.className === "function" ? props.className(state) : props.className,
                 )
@@ -89,9 +89,11 @@ const DropdownItem = ({ label, children, addon, icon: Icon, avatarUrl, unstyled,
             {(state) => (
                 <div
                     className={cx(
-                        "relative flex items-center rounded-md px-2.5 py-2 outline-focus-ring transition duration-100 ease-linear",
-                        !state.isDisabled && "group-hover:bg-primary_hover",
-                        state.isFocused && "bg-primary_hover",
+                        // 27 Oct review: the same list as a field's dropdown — rows edge to edge,
+                        // highlighted in staging's warm off-white.
+                        "relative flex items-center px-4 py-2.5 outline-focus-ring transition duration-100 ease-linear",
+                        !state.isDisabled && "group-hover:bg-field-option",
+                        state.isFocused && "bg-field-option",
                         state.isFocusVisible && "outline-2 -outline-offset-2",
                         state.hasSubmenu && "pr-1.5",
                     )}
@@ -143,7 +145,7 @@ const DropdownPopover = (props: DropdownPopoverProps) => {
             {...props}
             className={(state) =>
                 cx(
-                    "w-62 origin-(--trigger-anchor-point) overflow-auto rounded-lg bg-primary shadow-lg ring-1 ring-secondary_alt will-change-transform",
+                    "w-62 origin-(--trigger-anchor-point) overflow-auto rounded bg-primary shadow-lg ring-1 ring-secondary_alt will-change-transform",
                     state.isEntering &&
                         "duration-150 ease-out animate-in fade-in placement-right:slide-in-from-left-0.5 placement-top:slide-in-from-bottom-0.5 placement-bottom:slide-in-from-top-0.5",
                     state.isExiting &&
