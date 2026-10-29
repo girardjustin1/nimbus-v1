@@ -1,0 +1,115 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { framing, items, links, outside } from "./feedback";
+
+<Meta title="Oct 29 Edits/Overview" />
+
+export const protoUrl = (route) =>
+  (typeof window !== "undefined" && /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname) ? "http://localhost:5190/das/v6/" : "./das/v6/") + `#/${route}`;
+export const storyUrl = (id) => (id.endsWith("--docs") ? `./?path=/docs/${id}` : `./?path=/story/${id}`);
+
+export const Pill = ({ href, kind, children }) => (
+  <a href={href} target="_top" style={{
+    display: "inline-block", whiteSpace: "nowrap", textDecoration: "none", fontSize: 15, fontWeight: 600, padding: "2px 9px", borderRadius: 999,
+    color: kind === "proto" ? "#A94579" : "#1F7F80",
+    background: kind === "proto" ? "#FCE7F1" : "#E6F6F6",
+  }}>{children}</a>
+);
+
+export const LinkRow = ({ label, children }) => (
+  <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 6, margin: "2px 0" }}>
+    <span style={{ fontSize: 15, fontWeight: 700, color: "#667085", textTransform: "uppercase", letterSpacing: 0.4, minWidth: 92 }}>{label}</span>
+    {children}
+  </div>
+);
+
+export const Where = ({ slug }) => {
+  const l = links[slug];
+  if (!l) return null;
+  return (
+    <div>
+      {l.prototype.length > 0 && <LinkRow label="Prototype">{l.prototype.map(([t, r]) => <Pill key={t} kind="proto" href={protoUrl(r)}>{t} ↗</Pill>)}</LinkRow>}
+      {l.stories.length > 0 && <LinkRow label="Storybook">{l.stories.map(([t, id]) => <Pill key={t} kind="story" href={storyUrl(id)}>{t} →</Pill>)}</LinkRow>}
+    </div>
+  );
+};
+
+export const TONES = {
+  Applied: ["#E6F6F6", "#1F7F80"],
+  Concept: ["#EEF4FF", "#3538CD"],
+  "To confirm": ["#FBE9F1", "#A94579"],
+  Pending: ["#FFF4E5", "#B54708"],
+};
+
+export const Chip = ({ tone }) => (
+  <span style={{ background: TONES[tone][0], color: TONES[tone][1], borderRadius: 999, padding: "1px 8px", fontSize: 15, fontWeight: 700, whiteSpace: "nowrap" }}>{tone}</span>
+);
+
+export const th = { textAlign: "left", fontSize: 15, fontWeight: 700, color: "#101828", padding: "9px 12px", borderBottom: "1px solid #EAECF0", background: "#F9FAFB" };
+export const td = { fontSize: 15, color: "#344054", padding: "10px 12px", borderBottom: "1px solid #EAECF0", verticalAlign: "top" };
+
+<div style={{ maxWidth: 920 }}>
+
+# Oct 29 Edits · Round 6
+
+DAS reporting was reviewed with engineering on 28 October. The decision: **one spend
+number everywhere**. Spend in DAS becomes the trued-up figure Performance Insights shows,
+labelled “Subject to true-up”, and **pacing** is what stays live. Full performance stays in
+DAS and gets more metrics and breakdowns. Everything below is built into prototype **v6**;
+Round 5 stays frozen at v5 as it was reviewed.
+
+> “{framing.quote}”
+>
+> — Product, 28 Oct review
+
+{framing.decision}
+
+## The changes
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
+  <thead><tr><th style={th}>Change</th><th style={th}>Status</th><th style={th}>What we did, and where to see it</th></tr></thead>
+  <tbody>
+    {items.map((item) => (
+      <tr key={item.slug}>
+        <td style={{ ...td, fontWeight: 700, color: "#101828", minWidth: 200 }}>{item.title}</td>
+        <td style={td}><Chip tone={item.status} /></td>
+        <td style={td}>
+          <ul style={{ margin: "0 0 6px", paddingLeft: 18 }}>{item.decision.map((d, i) => <li key={i} style={{ fontSize: 15 }}>{d}</li>)}</ul>
+          <Where slug={item.slug} />
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## Pacing, in numbers
+
+Pacing is the share of the budget delivered divided by the share of the flight gone,
+shown to the nearest 0.5%. The colour cut-offs are **placeholders** until Product sets
+the real ones.
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
+  <thead><tr><th style={th}>Colour</th><th style={th}>Word</th><th style={th}>Placeholder rule</th><th style={th}>Sample campaign</th></tr></thead>
+  <tbody>
+    <tr><td style={td}><span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 99, background: "#17B26A" }} /> Green</td><td style={td}>On target</td><td style={td}>95% and up</td><td style={td}>Sports fans · 102.0%</td></tr>
+    <tr><td style={td}><span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 99, background: "#FDB022" }} /> Yellow</td><td style={td}>Behind</td><td style={td}>80% to 95%</td><td style={td}>Over 21 Midwest · 92.0%, Morning commuters · 84.0%</td></tr>
+    <tr><td style={td}><span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 99, background: "#D92D20" }} /> Red</td><td style={td}>At risk</td><td style={td}>Under 80%</td><td style={td}>Sports fans (Spanish) · 54.5%</td></tr>
+  </tbody>
+</table>
+
+## Outside the prototype
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
+  <thead><tr><th style={th}>Item</th><th style={th}>Status</th><th style={th}>Notes</th></tr></thead>
+  <tbody>
+    {outside.map((o) => (
+      <tr key={o.title}><td style={{ ...td, fontWeight: 700, color: "#101828" }}>{o.title}</td><td style={td}><Chip tone={o.status} /></td><td style={td}>{o.note}</td></tr>
+    ))}
+  </tbody>
+</table>
+
+## Next
+
+Revisions any time by the end of next week, then a walk-through of the Campaign
+Delivery column together.
+
+</div>

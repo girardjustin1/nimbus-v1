@@ -66,27 +66,28 @@ single button to a full application screen — in both light and dark modes.
 <div style={{ display: "flex", flexWrap: "wrap", gap: 28, background: "#FFFFFF", border: "1px solid #EAECF0", borderLeft: "4px solid #A94579", borderRadius: 16, padding: "24px 26px", margin: "8px 0 28px" }}>
   <div style={{ flex: "1 1 300px", display: "flex", flexDirection: "column", gap: 12 }}>
     <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-      <span style={{ background: "#A94579", color: "#FFFFFF", fontSize: 12, fontWeight: 700, letterSpacing: 0.4, textTransform: "uppercase", padding: "3px 10px", borderRadius: 999 }}>Round 5 · current</span>
-      <span style={{ fontSize: 13, color: "#667085" }}>Deal Activation System · v5 · Oct 26, 2026</span>
+      <span style={{ background: "#A94579", color: "#FFFFFF", fontSize: 12, fontWeight: 700, letterSpacing: 0.4, textTransform: "uppercase", padding: "3px 10px", borderRadius: 999 }}>Round 6 · current</span>
+      <span style={{ fontSize: 13, color: "#667085" }}>Deal Activation System · v6 · Oct 29, 2026</span>
     </div>
-    <div style={{ fontSize: 22, fontWeight: 800, lineHeight: 1.3, color: "#101828" }}>Officially in the Nimbus elements</div>
-    <div style={{ fontSize: 15, lineHeight: 1.6, color: "#475467" }}>The 26 Oct review, built. Setup and reporting are approved; this round makes DAS match the rest of the dashboard: full-bleed tables, charcoal headers for reports only, Performance Insights’ bands, filter menu and teal checkboxes, one search position — and the pieces tokenized for the Performance Insights redesign.</div>
+    <div style={{ fontSize: 22, fontWeight: 800, lineHeight: 1.3, color: "#101828" }}>One spend number, live pacing</div>
+    <div style={{ fontSize: 15, lineHeight: 1.6, color: "#475467" }}>The 28 Oct reporting review, built. Every spend figure is the trued-up one Performance Insights shows, labelled “Subject to true-up”; what stays live is pacing. Campaign Health is now Pacing, a sortable column in Manage campaigns; a campaign shows its pacing to the nearest 0.5%; Full performance stays in DAS with render rate, clicks, CTR and new breakdowns. Round 5 stays frozen at v5.</div>
     <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 12, marginTop: 4 }}>
-      <a href={protoUrl("das/v5")} target="_top" style={{ background: "#A94579", color: "#FFFFFF", padding: "9px 18px", borderRadius: 999, fontSize: 14, fontWeight: 700, textDecoration: "none" }}>Open prototype →</a>
-      <span style={{ fontSize: 13, color: "#667085" }}>46 screens · <strong>Fill page</strong> fills any form</span>
+      <a href={protoUrl("das/v6")} target="_top" style={{ background: "#A94579", color: "#FFFFFF", padding: "9px 18px", borderRadius: 999, fontSize: 14, fontWeight: 700, textDecoration: "none" }}>Open prototype →</a>
+      <span style={{ fontSize: 13, color: "#667085" }}>49 DAS screens · <strong>Fill page</strong> fills any form</span>
     </div>
     <div style={{ marginTop: "auto", background: "#FFF7FB", border: "1px dashed #F7D6E6", borderRadius: 12, padding: "10px 12px", fontSize: 13, lineHeight: 1.55, color: "#475467" }}>
-      <strong style={{ color: "#A94579" }}>Waiting on:</strong> the chart-type icons from the original Sketch files; Product’s call on how Total spend is framed; engineering’s names for the UI controller and state action buttons. Campaign Health maths is still being settled with engineering.
+      <strong style={{ color: "#A94579" }}>Waiting on:</strong> the pacing thresholds (green, yellow and red are placeholders); sales sign-off on dropping real-time spend; whether DAS records view-through; a walk-through of the Campaign Delivery concept; engineering’s names for the UI controller and state action buttons.
     </div>
   </div>
   <div style={{ flex: "1.4 1 380px", display: "flex", flexDirection: "column", gap: 14 }}>
     <DestGroup label="In the prototype">
-      <Dest href={`${protoUrl("das/v5")}#/campaigns`} title="Manage campaigns" note="Full-bleed list table; Total spend now links to Performance Insights." />
-      <Dest href={`${protoUrl("das/v5")}#/view-d`} title="Full performance" note="Performance Insights’ bands, filter menu and chart-type bar; charcoal report table." />
-      <Dest href={`${protoUrl("das/v5")}#/asset-view`} title="View All Assets" note="Search top left, no Assets label; bold headers and column rules." />
-      <Dest href={`${protoUrl("das/v5")}#/setup-empty`} title="Campaign setup" note="Approved for build. Unchanged since Round 4." />
+      <Dest href={`${protoUrl("das/v6")}#/campaigns`} title="Manage campaigns" note="A sortable Pacing column; spend says “Subject to true-up”." />
+      <Dest href={`${protoUrl("das/v6")}#/view-a-at-risk`} title="Campaign overview" note="Real-time pacing to 0.5%; expected against actual as a percentage." />
+      <Dest href={`${protoUrl("das/v6")}#/view-d-new-metrics`} title="Full performance" note="Render rate, clicks and CTR; account, position, region and country." />
+      <Dest href={`${protoUrl("das/v6")}#/campaigns-lifecycle`} title="Campaign Delivery · concept" note="Pacing while in flight, budget and spend once complete." />
     </DestGroup>
     <DestGroup label="In Storybook">
+      <Dest href="./?path=/docs/oct-29-edits-introduction--docs" title="Oct 29 Edits" note="The 28 Oct review: what changed, Round 5 beside Round 6, and what is open." />
       <Dest href="./?path=/docs/oct-26-overview--docs" title="Oct 26 review" note="What changed, Round 4 beside Round 5, what was kept, and what is pending." />
       <Dest href="./?path=/docs/application-ui-nimbus-tokens-00-overview--docs" title="Nimbus tokens" note="Tabs, bands, dates, dropdowns, buttons, checkboxes, chart type, filters, tables — for the Performance Insights redesign." />
       <Dest href="./?path=/docs/application-ui-table-list-vs-report--docs" title="List vs Report" note="Reports get the charcoal header; lists keep a light one." />

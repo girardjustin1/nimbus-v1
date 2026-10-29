@@ -1,0 +1,208 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Changed, Check, Links, Said, Shot, ShotPair, Status, Step, protoUrl, docUrl, th, td } from "./guide";
+import s01 from "./screens/01-campaigns.jpg";
+import s02 from "./screens/02-campaigns-sorted.jpg";
+import s03 from "./screens/03-true-up.jpg";
+import s04 from "./screens/04-lifecycle.jpg";
+import s05 from "./screens/05-overview-at-risk.jpg";
+import s06 from "./screens/06-overview-on-target.jpg";
+import s07 from "./screens/07-fp-metrics.jpg";
+import s08 from "./screens/08-fp-region-country.jpg";
+import s09 from "./screens/09-overview-complete.jpg";
+
+<Meta title="Oct 29 Edits/Introduction" />
+
+<div style={{ maxWidth: 1040 }}>
+
+# Round 6 · review guide
+
+On 28 October Product walked DAS reporting with engineering. Customers' complaint is
+that DAS and Performance Insights show **two different spend numbers**, so the decision
+was to show one: the trued-up figure, labelled “Subject to true-up”, everywhere. What
+stays live is **pacing**. This guide walks every Round 6 change **in the order to review
+it**: the campaigns list, a campaign, then its full performance.
+
+Each step has a screenshot of v6, what changed and why (in the words from the call), how
+to check it, and links: the screen in the **prototype**, and **Round 5 → 6** side by side.
+
+<div style={{ display: "flex", flexWrap: "wrap", gap: 10, margin: "18px 0 6px" }}>
+  <a href={protoUrl("campaigns")} target="_blank" rel="noreferrer" style={{ background: "#DA6EA3", color: "#fff", padding: "10px 20px", borderRadius: 999, fontSize: 15, fontWeight: 700, textDecoration: "none" }}>Open prototype v6 ↗</a>
+  <a href={docUrl("oct-29-edits-overview--docs")} target="_top" style={{ background: "#E6F6F6", color: "#1F7F80", padding: "10px 20px", borderRadius: 999, fontSize: 15, fontWeight: 700, textDecoration: "none" }}>Change list (Overview) →</a>
+</div>
+
+<p style={{ fontSize: 15, color: "#667085" }}>Round 5 stays frozen at v5 as it was reviewed. Pick any round from the version menu at the top of the prototype.</p>
+
+## The review, in order
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0 0" }}>
+  <thead><tr><th style={th}>#</th><th style={th}>Screen</th><th style={th}>What to look at</th></tr></thead>
+  <tbody>
+    <tr><td style={td}>1</td><td style={td}><a href="#step-1">Campaigns · Pacing column</a></td><td style={td}>Campaign Health renamed Pacing, in the list, sortable worst first</td></tr>
+    <tr><td style={td}>2</td><td style={td}><a href="#step-2">One spend number</a></td><td style={td}>“Subject to true-up” wherever spend appears; nothing called real time</td></tr>
+    <tr><td style={td}>3</td><td style={td}><a href="#step-3">Campaign Delivery · concept</a></td><td style={td}>One column that shows pacing in flight and settles to budget and spend</td></tr>
+    <tr><td style={td}>4</td><td style={td}><a href="#step-4">Campaign overview · pacing</a></td><td style={td}>Real-time pacing to 0.5%; expected against actual as a percentage</td></tr>
+    <tr><td style={td}>5</td><td style={td}><a href="#step-5">Full performance · metrics</a></td><td style={td}>Revenue, render rate, clicks, CTR; view-through if available</td></tr>
+    <tr><td style={td}>6</td><td style={td}><a href="#step-6">Full performance · breakdowns</a></td><td style={td}>Account, account manager, app category, position, region and country</td></tr>
+    <tr><td style={td}>7</td><td style={td}><a href="#step-7">Open, and outside the prototype</a></td><td style={td}>Thresholds, sales sign-off, Performance Insights, next week</td></tr>
+  </tbody>
+</table>
+
+<Step n={1} title="Campaigns · Pacing column">
+
+<Shot src={s01} caption="v6 · Deal Activation System › manage campaigns" />
+
+<Changed>
+  <ul>
+    <li><b>Campaign Health is Pacing</b> — on the chip, in the overview, the filter and the tooltips.</li>
+    <li><b>Pacing is a column</b> beside Status: the colour, the percentage and its word (On target, Behind, At risk).</li>
+    <li><b>It sorts worst first.</b> One click puts at-risk campaigns at the top, then behind, then on target. Campaigns that aren't pacing — queued, paused, complete, Fallback — say why in grey and always sort last.</li>
+    <li><b>Budget and Spend stay.</b> On the call they were going to go; once spend became the trued-up number everywhere, they stay, with the true-up note on Spend.</li>
+  </ul>
+</Changed>
+
+<Shot src={s02} caption="Sorted by pacing — the campaigns that need attention at the top" />
+
+<Said>Let's have a column called pacing … let's elevate it to this page so you can sort by pacing, and then all the ones that [need help] will come up to the top.</Said>
+
+<Check>
+  <ol>
+    <li>Click the <b>Pacing</b> header once: at risk, then behind, then on target. Click again to reverse — the campaigns not pacing stay at the bottom either way.</li>
+    <li>Click the <b>Pacing</b> card: the table narrows to behind and at risk.</li>
+  </ol>
+</Check>
+
+<Links proto={[["Manage campaigns", "campaigns"], ["Sorted by pacing", "campaigns-pacing-sorted"]]} compare={[["Round 5", "oct-29-edits-applied-changes--campaigns-before"], ["Round 6", "oct-29-edits-applied-changes--campaigns-after"]]} />
+
+</Step>
+
+<Step n={2} title="One spend number">
+
+<Shot src={s03} caption="Hovering the ⓘ beside Total spend" />
+
+<Changed>
+  <ul>
+    <li><b>Spend is the trued-up number</b> Performance Insights shows, so DAS never shows a second figure.</li>
+    <li><b>Every spend figure carries an ⓘ:</b> “Subject to true-up. Updated hourly. The last 48 hours can still be corrected, so this can move a little up or down.” On Total spend and the Spend column here, the Spend card and delivery rail on a campaign, and Revenue in Full performance.</li>
+    <li><b>Nothing says real time.</b> The delivery rail's “Live delivery” heading is now “Delivery”. The only live figure in DAS is pacing.</li>
+  </ul>
+</Changed>
+
+<Said>The actual specific numbers that we're hanging our hat on are all the same across the whole platform, and we label every single thing subject to true-up.</Said>
+<Said>Showing 2 different numbers is just a big no-no.</Said>
+
+<Links proto={[["Manage campaigns", "campaigns"], ["Campaign overview", "view-a"], ["Full performance", "view-d"]]} />
+
+</Step>
+
+<Step n={3} title="Campaign Delivery · concept">
+
+<Status tone="Concept" /> Built to explore, not decided — to talk through together.
+
+<Shot src={s04} caption="Concept · Campaign Delivery beside Status (full page)" />
+
+<Changed>
+  <ul>
+    <li><b>One column, two cells.</b> While a campaign is in flight they read as one: “In flight · on target · 102.0% pacing”, or behind, or at risk.</li>
+    <li><b>Once it's complete</b> the same cells settle to its final Budget and Spend — two columns so each still sorts. A badly paced campaign doesn't stay red forever (Back to school, at the bottom).</li>
+    <li><b>Sorting:</b> Campaign Delivery sorts by pacing, worst first; Budget and Spend sort the completed campaigns, with those in flight after them.</li>
+  </ul>
+</Changed>
+
+<Said>This column could change to campaign delivery. And when the campaign is in flight, it can say in-flight pacing on target or in-flight pacing behind.</Said>
+<Said>At least the bad visual goes away and it just settles to budget and spend.</Said>
+
+<Links proto={[["Campaign Delivery concept", "campaigns-lifecycle"]]} compare={[["Concept", "oct-29-edits-applied-changes--campaign-delivery"]]} />
+
+</Step>
+
+<Step n={4} title="Campaign overview · pacing">
+
+<ShotPair>
+  <Shot src={s05} caption="At risk — 54.5%" />
+  <Shot src={s06} caption="On target — 102.0%" />
+</ShotPair>
+
+<Changed>
+  <ul>
+    <li><b>A real-time Pacing card</b>, to the nearest 0.5%: the share of the budget delivered ÷ the share of the flight gone. 100% is exactly on pace. Under it: “Live · 31% delivered · 57% expected by now”.</li>
+    <li><b>The chart plots expected against actual</b> as a share of the goal, 0% to 100%, not dollars. Fallback campaigns, with no goal, still chart impressions.</li>
+    <li><b>The behind / at-risk banner</b> leads with the pacing figure.</li>
+    <li><b>A complete campaign</b> shows no pacing — just its final, trued-up spend.</li>
+  </ul>
+</Changed>
+
+<Shot src={s09} caption="Complete — no pacing, the final spend" />
+
+<Said who="Engineering">What if we just do pacing as a percent in real time? … We could go to the nearest half percent.</Said>
+<Said who="Engineering">And then that chart can show expected and real. As a percent.</Said>
+
+<Check>
+  <ol>
+    <li>Hover the chart: each day reads as a percentage of the goal.</li>
+    <li>Open <b>Overview · behind</b> and <b>Overview · complete</b> from the screen menu.</li>
+  </ol>
+</Check>
+
+<Links proto={[["At risk", "view-a-at-risk"], ["Behind", "view-a-behind"], ["Complete", "view-a-complete"]]} compare={[["Round 5", "oct-29-edits-applied-changes--overview-before"], ["Round 6", "oct-29-edits-applied-changes--overview-after"]]} />
+
+</Step>
+
+<Step n={5} title="Full performance · metrics">
+
+<Shot src={s07} caption="Render rate, Clicks and CTR by Position" />
+
+<Changed>
+  <ul>
+    <li><b>Full performance stays in DAS.</b> Performance Insights keeps DAS at deal and campaign level.</li>
+    <li><b>Metrics:</b> Revenue (was Spend — the same money, named as Performance Insights names it), Impressions, eCPM, and new <b>Render rate</b>, <b>Clicks</b> and <b>CTR</b>.</li>
+    <li><b>View-through</b> has its checkbox, off and marked “if available”, until engineering confirms DAS records it.</li>
+    <li>Nothing that needs a request (fill rate, win rate): a request can't be told apart as DAS or Open Marketplace.</li>
+  </ul>
+</Changed>
+
+<Said>This is essentially revenue, impressions, eCPM. We'll put CTR here. If we have view-through, they're going to want that too.</Said>
+<Said>We all feel like it's appropriate to have this whole full performance thing, kind of a deep dive, in the DAS section, not inside Performance Insights.</Said>
+
+<Links proto={[["New metrics", "view-d-new-metrics"], ["Full performance", "view-d"]]} compare={[["Round 5", "oct-29-edits-applied-changes--performance-before"], ["Round 6", "oct-29-edits-applied-changes--performance-after"]]} />
+
+</Step>
+
+<Step n={6} title="Full performance · breakdowns">
+
+<Shot src={s08} caption="Region against Country" />
+
+<Changed>
+  <ul>
+    <li><b>New breakdowns:</b> Account, Account manager, App category and Position — the name publishers give a placement.</li>
+    <li><b>Geo is two splits.</b> Region bundles the US, Canada and Mexico under North America; Country keeps them apart. <Status tone="To confirm" /> We replaced Geo with the two; say if you want Geo kept as well.</li>
+    <li>Creative, Platform, App, Keyword and Device Language stay. Still two at once, to pivot.</li>
+  </ul>
+</Changed>
+
+<Said>Yes, we want position. No, we don't want placement. And then yes, we want region.</Said>
+<Said>Some people think about things by country and some people absolutely think about things by region. So we actually needed the option for both.</Said>
+
+<Links proto={[["Region and country", "view-d-region-country"]]} compare={[["Region and country", "oct-29-edits-applied-changes--region-country"]]} />
+
+</Step>
+
+<Step n={7} title="Open, and outside the prototype">
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
+  <thead><tr><th style={th}>Item</th><th style={th}>Status</th><th style={th}>Notes</th></tr></thead>
+  <tbody>
+    <tr><td style={td}>Pacing thresholds</td><td style={td}><Status tone="Pending" /></td><td style={td}>Green, yellow and red are on placeholder cut-offs (95% and 80%). Product sets the real ones; it's a one-line change.</td></tr>
+    <tr><td style={td}>Campaign Delivery column</td><td style={td}><Status tone="Concept" /></td><td style={td}>To talk through together after these revisions.</td></tr>
+    <tr><td style={td}>Sales sign-off</td><td style={td}><Status tone="Pending" /></td><td style={td}>Product is checking with sales that publishers don't expect live spend.</td></tr>
+    <tr><td style={td}>Performance Insights drops the DAS asset breakdown</td><td style={td}><Status tone="Pending" /></td><td style={td}>The only change to Performance Insights. Engineering, outside the prototype.</td></tr>
+    <tr><td style={td}>Quick fix on today's product</td><td style={td}><Status tone="Pending" /></td><td style={td}>Engineering may add a plain pacing percentage and the true-up tooltips to today's Manage campaigns ahead of this project.</td></tr>
+    <tr><td style={td}>View-through</td><td style={td}><Status tone="To confirm" /></td><td style={td}>In place, off, until engineering confirms DAS has it.</td></tr>
+    <tr><td style={td}>Revenue, not Spend, in Full performance</td><td style={td}><Status tone="To confirm" /></td><td style={td}>Named as your notes and Performance Insights name it. Manage campaigns and the overview keep staging's Budget and Spend.</td></tr>
+  </tbody>
+</table>
+
+<p style={{ fontSize: 15, color: "#667085" }}>Next: revisions any time by the end of next week, then the Campaign Delivery walk-through.</p>
+
+</Step>
+
+</div>

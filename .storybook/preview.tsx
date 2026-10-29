@@ -83,6 +83,9 @@ const preview: Preview = {
                         ],
                     ],
                     "*",
+                    // 8b) Oct 29 Edits — Round 6, from the 28 Oct reporting review. Newest first.
+                    "Oct 29 Edits",
+                    ["Introduction", "Overview", "Applied Changes"],
                     // 8a) Oct 26 review batch — Round 5, from the 26 Oct review. Newest first.
                     "Oct 26",
                     ["Introduction", "Overview", "Applied Changes"],
