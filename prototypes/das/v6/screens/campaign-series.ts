@@ -131,7 +131,7 @@ export const axis = { tickLine: false, axisLine: false, tick: { fontSize: 15, fi
 /* ------------------------------------------------------ Delivery chart --- */
 
 /** The campaign overview's Delivery chart: Round 6 and the 6 Nov concepts (delivery-chart.tsx). */
-export type DeliveryVariant = "pacing" | "overlay" | "bars" | "stacked" | "indexed" | "strip";
+export type DeliveryVariant = "pacing" | "overlay" | "bars" | "stacked" | "indexed" | "strip" | "labelled" | "backdrop" | "scaled" | "bands";
 
 /** What each variant is, for the overview's section description. */
 export const DELIVERY_DESCRIPTION: Record<DeliveryVariant, string> = {
@@ -141,16 +141,24 @@ export const DELIVERY_DESCRIPTION: Record<DeliveryVariant, string> = {
     stacked: "Expected against actual delivery, and below it the opportunity each day: ad requests and active users.",
     indexed: "Each day against normal: delivery against the daily plan, requests and active users against a normal day.",
     strip: "Expected against actual delivery, with each day's requests and active users beneath it.",
+    labelled: "Expected against actual delivery as a share of the goal (left), with the day's requests and active users (right).",
+    backdrop: "Expected against actual delivery, with the day's requests and active users faint behind it.",
+    scaled: "One scale: delivery as a share of the goal; requests and active users as a share of a normal day.",
+    bands: "Expected against actual delivery. Shaded days had fewer requests or active users than normal.",
 };
 
 /** The toolbar's Chart menu: each option, in the order Product reviews them. */
-export const DELIVERY_OPTIONS: { id: DeliveryVariant; label: string }[] = [
-    { id: "pacing", label: "Round 6 · pacing only" },
-    { id: "overlay", label: "A · Four lines, one chart" },
-    { id: "bars", label: "B · Users as bars" },
-    { id: "stacked", label: "C · Two charts, one timeline" },
-    { id: "indexed", label: "D · Everything against normal" },
-    { id: "strip", label: "E · Heat strip" },
+export const DELIVERY_OPTIONS: { id: DeliveryVariant; label: string; group: string }[] = [
+    { id: "pacing", label: "Round 6 · pacing only", group: "Round 6" },
+    { id: "overlay", label: "A · Four lines, one chart", group: "6 Nov · first batch" },
+    { id: "bars", label: "B · Users as bars", group: "6 Nov · first batch" },
+    { id: "stacked", label: "C · Two charts, one timeline", group: "6 Nov · first batch" },
+    { id: "indexed", label: "D · Everything against normal", group: "6 Nov · first batch" },
+    { id: "strip", label: "E · Heat strip", group: "6 Nov · first batch" },
+    { id: "labelled", label: "F · One chart, labelled axes", group: "6 Nov · on one chart" },
+    { id: "backdrop", label: "G · Opportunity behind pacing", group: "6 Nov · on one chart" },
+    { id: "scaled", label: "H · One scale for all four", group: "6 Nov · on one chart" },
+    { id: "bands", label: "I · Shaded dips", group: "6 Nov · on one chart" },
 ];
 
 /**

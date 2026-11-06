@@ -11,6 +11,10 @@ import s08 from "./screens/08-concept-e.jpg";
 import s09 from "./screens/09-assets-sorted.jpg";
 import s10 from "./screens/10-fp-sorted.jpg";
 import s11 from "./screens/11-keywords-sorted.jpg";
+import s12 from "./screens/12-concept-f.jpg";
+import s13 from "./screens/13-concept-g.jpg";
+import s14 from "./screens/14-concept-h.jpg";
+import s15 from "./screens/15-concept-i.jpg";
 
 <Meta title="Nov 6 Edits/Introduction" />
 
@@ -42,9 +46,10 @@ to check it, and links: the screen in the **prototype**, and **Round 6 → 6 Nov
   <tbody>
     <tr><td style={td}>1</td><td style={td}><a href="#step-1">Campaign overview · opportunity</a></td><td style={td}>Requests and active users under the pacing chart, on the same days</td></tr>
     <tr><td style={td}>2</td><td style={td}><a href="#step-2">Fewer users, or fewer slots?</a></td><td style={td}>Two campaigns behind for two different reasons, told apart at a glance</td></tr>
-    <tr><td style={td}>3</td><td style={td}><a href="#step-3">Five chart concepts</a></td><td style={td}>A to E: pick the one the overview should keep</td></tr>
-    <tr><td style={td}>4</td><td style={td}><a href="#step-4">Every table sorts</a></td><td style={td}>Assets, keywords, Full performance, creatives, selected items</td></tr>
-    <tr><td style={td}>5</td><td style={td}><a href="#step-5">Open, and outside the prototype</a></td><td style={td}>DAUs feed, red and yellow, the global style proposal</td></tr>
+    <tr><td style={td}>3</td><td style={td}><a href="#step-3">Five chart concepts</a></td><td style={td}>A to E, the first batch</td></tr>
+    <tr><td style={td}>4</td><td style={td}><a href="#step-4">On one chart · four overlays</a></td><td style={td}>F to I: everything on the same chart, each without A's problems</td></tr>
+    <tr><td style={td}>5</td><td style={td}><a href="#step-5">Every table sorts</a></td><td style={td}>Assets, keywords, Full performance, creatives, selected items</td></tr>
+    <tr><td style={td}>6</td><td style={td}><a href="#step-6">Open, and outside the prototype</a></td><td style={td}>DAUs feed, red and yellow, the global style proposal</td></tr>
   </tbody>
 </table>
 
@@ -127,7 +132,7 @@ volume. All five show the same campaign and the same numbers. <Status tone="Conc
 <Check>
   <ol>
     <li>Open <b>All five, side by side</b> and hover the same day in each.</li>
-    <li>In the prototype, open any campaign overview and use the <b>Chart</b> menu in the top toolbar to switch between Round 6 and A–E in the page. The choice holds as you move between campaigns.</li>
+    <li>In the prototype, open any campaign overview and use the <b>Chart</b> menu in the top toolbar to switch between Round 6 and A–I in the page. The choice holds as you move between campaigns.</li>
     <li>Say which one the overview should keep.</li>
   </ol>
 </Check>
@@ -136,7 +141,45 @@ volume. All five show the same campaign and the same numbers. <Status tone="Conc
 
 </Step>
 
-<Step n={4} title="Every table sorts">
+<Step n={4} title="On one chart · four overlays">
+
+Product's follow-up: “Can we overlay them on the same chart rather than 2 separate? Or am I
+missing an alternate version?” A and B already overlay — the page opens on C, so they're
+one pick away in the **Chart** menu. F to I are a second batch that keeps everything on one
+chart and deals with A's second axis a different way each. <Status tone="Concept" />
+
+<ShotPair>
+  <Shot src={s12} caption="F · One chart, labelled axes — titled, tinted axes; switch requests and users off" />
+  <Shot src={s13} caption="G · Opportunity behind pacing — faint, no second axis, figures on hover" />
+</ShotPair>
+<ShotPair>
+  <Shot src={s14} caption="H · One scale for all four — % of goal and % of a normal day" />
+  <Shot src={s15} caption="I · Shaded dips — the days opportunity fell, labelled" />
+</ShotPair>
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "12px 0 0" }}>
+  <thead><tr><th style={th}>Overlay</th><th style={th}>Works because</th><th style={th}>Watch for</th></tr></thead>
+  <tbody>
+    <tr><td style={{ ...td, fontWeight: 700 }}>F · Labelled axes</td><td style={td}>Everything on one chart, as asked; each axis says what it measures; series switch off.</td><td style={td}>Still two scales; the busiest of the four.</td></tr>
+    <tr><td style={{ ...td, fontWeight: 700 }}>G · Behind pacing</td><td style={td}>One visible scale; pacing stays in front; the dip reads at a glance.</td><td style={td}>Requests and users have no numbers on the chart, only on hover.</td></tr>
+    <tr><td style={{ ...td, fontWeight: 700 }}>H · One scale</td><td style={td}>All four on one honest axis, keeping the cumulative pacing line.</td><td style={td}>Two meanings of “%” on one axis.</td></tr>
+    <tr><td style={{ ...td, fontWeight: 700 }}>I · Shaded dips</td><td style={td}>Says why pacing slowed, in words; pacing untouched.</td><td style={td}>Ordinary days show no opportunity; the 20% cut-off is ours to set.</td></tr>
+  </tbody>
+</table>
+
+<Check>
+  <ol>
+    <li>On any campaign overview, open the <b>Chart</b> menu: F to I are under “On one chart”.</li>
+    <li>In F, switch Requests and Daily active users off and on above the chart.</li>
+    <li>Open <b>Overview · behind</b> with G or I: users hold while requests fall.</li>
+  </ol>
+</Check>
+
+<Links proto={[["F", "view-a-chart-labelled"], ["G", "view-a-chart-backdrop"], ["H", "view-a-chart-scaled"], ["I", "view-a-chart-bands"]]} compare={[["All four", "nov-6-edits-on-one-chart--all-four"], ["F in the page", "nov-6-edits-on-one-chart--in-the-page"]]} />
+
+</Step>
+
+<Step n={5} title="Every table sorts">
 
 <Shot src={s09} caption="View All Assets, sorted by Ad Size" />
 
@@ -166,12 +209,12 @@ volume. All five show the same campaign and the same numbers. <Status tone="Conc
 
 </Step>
 
-<Step n={5} title="Open, and outside the prototype">
+<Step n={6} title="Open, and outside the prototype">
 
 <table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
   <thead><tr><th style={th}>Item</th><th style={th}>Status</th><th style={th}>Notes</th></tr></thead>
   <tbody>
-    <tr><td style={td}>Which chart concept</td><td style={td}><Status tone="Concept" /></td><td style={td}>The overview opens on C; the toolbar's Chart menu switches it. Product picks one.</td></tr>
+    <tr><td style={td}>Which chart concept</td><td style={td}><Status tone="Concept" /></td><td style={td}>The overview opens on C; the toolbar's Chart menu switches between all nine. Product picks one.</td></tr>
     <tr><td style={td}>Daily active users from the backend</td><td style={td}><Status tone="Pending" /></td><td style={td}>The backend team is pulling DAUs; Product expects them before launch.</td></tr>
     <tr><td style={td}>Red and yellow pacing</td><td style={td}><Status tone="Pending" /></td><td style={td}>Left as it is. Product and sales are still deciding whether to show the colours.</td></tr>
     <tr><td style={td}>A global style proposal for engineering</td><td style={td}><Status tone="Pending" /></td><td style={td}>Engineering has started building DAS and is asking about styles. Design sends a list of global changes, drawn from the Typography Audit, Typography Rules and this Storybook.</td></tr>

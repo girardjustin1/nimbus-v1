@@ -43,6 +43,10 @@ const SHOTS = [
     ["09-assets-sorted", "asset-view", null, sortBy("Ad Size")],
     ["10-fp-sorted", "view-d", "table", sortBy("Revenue")],
     ["11-keywords-sorted", "keyword-view", null, sortBy("Updated", 2)],
+    ["12-concept-f", "view-a-chart-labelled", "#v-delivery", null],
+    ["13-concept-g", "view-a-chart-backdrop", "#v-delivery", null],
+    ["14-concept-h", "view-a-chart-scaled", "#v-delivery", null],
+    ["15-concept-i", "view-a-chart-bands", "#v-delivery", null],
 ];
 
 const browser = await chromium.launch();

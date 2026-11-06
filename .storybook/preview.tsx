@@ -84,7 +84,7 @@ const preview: Preview = {
                     // 7b) Nov 6 Edits — Round 6 tweaks from the 6 Nov pacing-chart review. Sits right
                     //     under Performance Insights, ahead of the older review batches.
                     "Nov 6 Edits",
-                    ["Introduction", "Overview", "Chart Concepts", "Applied Changes"],
+                    ["Introduction", "Overview", "Chart Concepts", "On One Chart", "Applied Changes"],
                     "*",
                     // 8b) Oct 29 Edits — Round 6, from the 28 Oct reporting review. Newest first.
                     "Oct 29 Edits",

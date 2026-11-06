@@ -4,7 +4,7 @@ import { PINK } from "./das-shell";
 
 /**
  * 6 Nov: the Chart menu in the dark prototype toolbar, on every campaign overview. It
- * switches the Delivery chart between Round 6 and concepts A–E in the page itself, and
+ * switches the Delivery chart between Round 6 and concepts A–I in the page itself, and
  * the choice holds as you move between campaigns. Prototype chrome, not product UI: it
  * matches the toolbar's 12px controls, like the Copy switch (see type-rules.test.ts).
  */
@@ -29,11 +29,15 @@ export const ChartPicker = () => {
                             : { backgroundColor: "rgb(255 255 255 / 0.05)", color: "white" }
                     }
                 >
-                    {DELIVERY_OPTIONS.map((o) => (
-                        <option key={o.id} value={o.id} className="bg-white text-black">
-                            {o.label}
-                            {o.id === "stacked" ? " (default)" : ""}
-                        </option>
+                    {[...new Set(DELIVERY_OPTIONS.map((o) => o.group))].map((group) => (
+                        <optgroup key={group} label={group} className="bg-white text-black">
+                            {DELIVERY_OPTIONS.filter((o) => o.group === group).map((o) => (
+                                <option key={o.id} value={o.id} className="bg-white text-black">
+                                    {o.label}
+                                    {o.id === "stacked" ? " (default)" : ""}
+                                </option>
+                            ))}
+                        </optgroup>
                     ))}
                 </select>
                 <ChevronDown className="pointer-events-none absolute right-2 size-3.5" style={{ color: changed ? "#101828" : "white" }} aria-hidden="true" />
