@@ -380,6 +380,31 @@ export const screens: ProtoScreen[] = [
         description: "The pacing chart with a strip of requests and users beneath it.",
         render: () => <ViewOnePage id="c2" presetChart="strip" />,
     }),
+    // 6 Nov, second batch: "Can we overlay them on the same chart rather than 2 separate?"
+    view({
+        id: "view-a-chart-labelled",
+        title: "Delivery chart · F · one chart, labelled axes",
+        description: "Everything on one chart: each axis titled and tinted to its series; switch requests and users on and off.",
+        render: () => <ViewOnePage id="c2" presetChart="labelled" />,
+    }),
+    view({
+        id: "view-a-chart-backdrop",
+        title: "Delivery chart · G · opportunity behind pacing",
+        description: "Requests and users faint behind the pacing lines, with no second axis; figures on hover.",
+        render: () => <ViewOnePage id="c2" presetChart="backdrop" />,
+    }),
+    view({
+        id: "view-a-chart-scaled",
+        title: "Delivery chart · H · one scale for all four",
+        description: "One % axis: pacing as a share of the goal, requests and users as a share of a normal day.",
+        render: () => <ViewOnePage id="c2" presetChart="scaled" />,
+    }),
+    view({
+        id: "view-a-chart-bands",
+        title: "Delivery chart · I · shaded dips",
+        description: "The pacing chart, with the days opportunity fell shaded and labelled.",
+        render: () => <ViewOnePage id="c2" presetChart="bands" />,
+    }),
 
     view({
         id: "view-d",

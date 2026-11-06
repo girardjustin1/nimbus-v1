@@ -52,7 +52,7 @@ export const items: FeedbackItem[] = [
         ],
         decision: [
             "The campaign overview's Delivery chart now carries the day's ad requests across the campaign's apps.",
-            "The overview opens on concept C (pacing above, opportunity below, one shared hover); the toolbar's Chart menu switches any overview between Round 6 and A–E, and Chart Concepts shows them side by side.",
+            "The overview opens on concept C (pacing above, opportunity below, one shared hover); the toolbar's Chart menu switches any overview between Round 6 and A–I, and Chart Concepts shows them side by side.",
             "Sample requests swing with the week, busiest on Saturdays, as Performance Insights showed on the call.",
         ],
         touches: [v6("delivery-chart.tsx"), v6("campaign-series.ts"), v6("campaign-view.tsx")],
@@ -89,6 +89,23 @@ export const items: FeedbackItem[] = [
             "C, D and E keep one scale per chart. C is recommended and is the overview's default; the choice is yours.",
         ],
         touches: [v6("delivery-chart.tsx"), "prototypes/das/v6/screens.tsx"],
+    },
+    {
+        slug: "one-chart",
+        title: "On one chart: four overlays",
+        status: "Concept",
+        quotes: [
+            {
+                who: "Product",
+                text: "Can we overlay them on the same chart rather than 2 separate? Or am I missing an alternate version?",
+            },
+        ],
+        decision: [
+            "Not missing one: A and B already overlay, but the page opens on C, so they're one pick away in the toolbar's Chart menu.",
+            "A second batch, F to I, keeps everything on one chart and answers A's second axis a different way each: F titles and tints both axes and lets you switch requests and users off; G puts opportunity faint behind pacing with no second axis; H puts all four on one % scale; I shades the days opportunity fell and labels the drop.",
+            "Same campaign and numbers as the first batch. The overview still opens on C until Product picks.",
+        ],
+        touches: [v6("delivery-chart.tsx"), v6("campaign-series.ts"), v6("chart-picker-ui.tsx"), "prototypes/das/v6/screens.tsx"],
     },
     {
         slug: "sortable",
@@ -173,6 +190,15 @@ export const links: Record<string, { prototype: [string, string][]; stories: [st
             ["E", "view-a-chart-strip"],
         ],
         stories: [["Chart Concepts", "nov-6-edits-chart-concepts--all-five"]],
+    },
+    "one-chart": {
+        prototype: [
+            ["F", "view-a-chart-labelled"],
+            ["G", "view-a-chart-backdrop"],
+            ["H", "view-a-chart-scaled"],
+            ["I", "view-a-chart-bands"],
+        ],
+        stories: [["On One Chart", "nov-6-edits-on-one-chart--all-four"]],
     },
     sortable: {
         prototype: [

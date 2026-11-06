@@ -1,5 +1,19 @@
-import type { ReactNode } from "react";
-import { Area, Bar, BarChart, CartesianGrid, Cell, ComposedChart, Line, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { type ReactNode, useState } from "react";
+import {
+    Area,
+    Bar,
+    BarChart,
+    CartesianGrid,
+    Cell,
+    ComposedChart,
+    Line,
+    ReferenceArea,
+    ReferenceLine,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis,
+} from "recharts";
 import { type Campaign, compact } from "./campaign-data";
 import { type DeliveryVariant, axis, dailyDelivery, dailyOpportunity, flightDay, flightWeekday } from "./campaign-series";
 import { ChartTooltip } from "./campaign-ui";
@@ -25,6 +39,18 @@ import { PINK, TEAL } from "./das-shell";
  * A and B put two scales on one chart: the chart reads correctly only if you check which
  * axis each line belongs to, and the lines cross where the scales happen to meet, not
  * where anything happens. C, D and E keep one scale per chart.
+ *
+ * Second batch (6 Nov feedback: "Can we overlay them on the same chart rather than 2
+ * separate?"). Everything on one chart, each answering A's problem a different way:
+ *
+ *   labelled  F · A, made to read: each axis titled and tinted to its series, requests
+ *             as a soft area, and Requests / DAUs switch on and off above the chart.
+ *   backdrop  G · requests as faint bars and users as a faint line behind pacing, with
+ *             no second axis: they show shape only, the figures are on hover.
+ *   scaled    H · one % axis for all four: pacing as a share of the goal, requests and
+ *             users as a share of a normal day.
+ *   bands     I · the pacing chart, with the days opportunity fell shaded and labelled
+ *             ("Requests −48% · users −45%").
  *
  * Colours: teal and pink stay Actual and Expected (Expected is dashed, so the pair still
  * reads for colour-blind users); Requests navy, DAUs brown — both pass the colour-blind
@@ -305,15 +331,198 @@ const Strip = ({ c, data, syncId }: { c: Campaign; data: Point[]; syncId: string
     );
 };
 
+/* ------------------------------------------------- Overlays (F to I) --- */
+
+const TEAL_TEXT = "#1F7F80";
+
+/** F: two axes, but each titled and tinted to its series; Requests and DAUs switch on and off. */
+const Labelled = ({ c, data }: { c: Campaign; data: Point[] }) => {
+    const [show, setShow] = useState({ Requests: true, DAUs: true });
+    const vol = show.Requests || show.DAUs;
+    const toggle = (k: keyof typeof show) => setShow((cur) => ({ ...cur, [k]: !cur[k] }));
+    return (
+        <div className="flex flex-col gap-3">
+            <div className="flex flex-wrap items-center gap-2">
+                <span className="text-md font-semibold text-secondary">Show on the chart</span>
+                {(
+                    [
+                        ["Requests", REQUESTS],
+                        ["DAUs", DAUS],
+                    ] as const
+                ).map(([k, color]) => (
+                    <button
+                        key={k}
+                        type="button"
+                        aria-pressed={show[k]}
+                        onClick={() => toggle(k)}
+                        className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-md font-semibold ring-1 transition-colors"
+                        style={
+                            show[k] ? { color, backgroundColor: `${color}14`, borderColor: color, boxShadow: `inset 0 0 0 1px ${color}` } : { color: "#667085" }
+                        }
+                    >
+                        <span className="size-2.5 rounded-full" style={{ backgroundColor: show[k] ? color : "#D0D5DD" }} aria-hidden="true" />
+                        {k === "DAUs" ? "Daily active users" : "Requests"}
+                    </button>
+                ))}
+            </div>
+            <div style={{ height: 320 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                    <ComposedChart data={data} margin={{ ...MARGIN, left: 8 }}>
+                        <ActualArea c={c} />
+                        <CartesianGrid yAxisId="pace" vertical={false} className="[&_line]:stroke-border-secondary" />
+                        {xAxis(c)}
+                        <YAxis
+                            yAxisId="pace"
+                            {...axis}
+                            tick={{ ...axis.tick, fill: TEAL_TEXT }}
+                            width={76}
+                            domain={[0, 100]}
+                            ticks={[0, 25, 50, 75, 100]}
+                            tickFormatter={pct}
+                            label={{ value: "% of goal", angle: -90, position: "insideLeft", fill: TEAL_TEXT, fontSize: 15, fontWeight: 700, dy: 36 }}
+                        />
+                        {vol && (
+                            <YAxis
+                                yAxisId="vol"
+                                orientation="right"
+                                {...axis}
+                                tick={{ ...axis.tick, fill: REQUESTS }}
+                                width={84}
+                                tickFormatter={compact}
+                                label={{ value: "Per day", angle: 90, position: "insideRight", fill: REQUESTS, fontSize: 15, fontWeight: 700, dy: -24 }}
+                            />
+                        )}
+                        {tip(c)}
+                        {show.Requests && (
+                            <Area
+                                yAxisId="vol"
+                                type="monotone"
+                                dataKey="Requests"
+                                stroke={REQUESTS}
+                                strokeWidth={1.5}
+                                fill={REQUESTS}
+                                fillOpacity={0.1}
+                                isAnimationActive={false}
+                            />
+                        )}
+                        {show.DAUs && <Line yAxisId="vol" type="monotone" dataKey="DAUs" stroke={DAUS} strokeWidth={2} dot={false} isAnimationActive={false} />}
+                        {paceSeries(c, "pace")}
+                    </ComposedChart>
+                </ResponsiveContainer>
+            </div>
+        </div>
+    );
+};
+
+/** G: opportunity as a faint backdrop on a hidden scale — its shape behind pacing, its figures on hover. */
+const Backdrop = ({ c, data }: { c: Campaign; data: Point[] }) => (
+    <div style={{ height: 300 }}>
+        <ResponsiveContainer width="100%" height="100%">
+            <ComposedChart data={data} margin={MARGIN} barCategoryGap={2}>
+                <ActualArea c={c} />
+                <CartesianGrid yAxisId="pace" vertical={false} className="[&_line]:stroke-border-secondary" />
+                {xAxis(c)}
+                {paceAxis(c, "pace")}
+                {/* Headroom so the tallest bar stays below the 100% line. */}
+                <YAxis yAxisId="vol" hide domain={[0, (max: number) => max * 1.25]} />
+                {tip(c)}
+                <Bar yAxisId="vol" dataKey="Requests" fill={REQUESTS} fillOpacity={0.16} radius={[4, 4, 0, 0]} isAnimationActive={false} />
+                <Line yAxisId="vol" type="monotone" dataKey="DAUs" stroke={DAUS} strokeOpacity={0.55} strokeWidth={2} dot={false} isAnimationActive={false} />
+                {paceSeries(c, "pace")}
+            </ComposedChart>
+        </ResponsiveContainer>
+    </div>
+);
+
+/** H: one % axis — pacing as a share of the goal, requests and users as a share of a normal day. */
+const Scaled = ({ c, data }: { c: Campaign; data: Point[] }) => (
+    <div style={{ height: 320 }}>
+        <ResponsiveContainer width="100%" height="100%">
+            <ComposedChart data={data} margin={MARGIN}>
+                <ActualArea c={c} />
+                <CartesianGrid vertical={false} className="[&_line]:stroke-border-secondary" />
+                {xAxis(c)}
+                <YAxis {...axis} width={64} domain={[0, 150]} ticks={[0, 25, 50, 75, 100, 125, 150]} tickFormatter={pct} allowDataOverflow />
+                {tip(c)}
+                <Line
+                    type="monotone"
+                    dataKey="RequestsIdx"
+                    name="Requests (vs normal)"
+                    stroke={REQUESTS}
+                    strokeWidth={2}
+                    dot={false}
+                    isAnimationActive={false}
+                />
+                <Line type="monotone" dataKey="DAUsIdx" name="DAUs (vs normal)" stroke={DAUS} strokeWidth={2} dot={false} isAnimationActive={false} />
+                {paceSeries(c)}
+            </ComposedChart>
+        </ResponsiveContainer>
+    </div>
+);
+
+/** Runs of days when requests or users were at least 20% under a normal day. */
+const dips = (data: Point[]) => {
+    const low = (d: Point) => (d.RequestsIdx ?? 100) < 80 || (d.DAUsIdx ?? 100) < 80;
+    const runs: { from: number; to: number }[] = [];
+    data.forEach((d, i) => {
+        if (!low(d)) return;
+        const last = runs[runs.length - 1];
+        if (last && last.to === i - 1) last.to = i;
+        else runs.push({ from: i, to: i });
+    });
+    const avg = (xs: number[]) => Math.round(xs.reduce((a, b) => a + b, 0) / (xs.length || 1));
+    return runs.map((r) => {
+        const days = data.slice(r.from, r.to + 1);
+        const req = 100 - avg(days.map((d) => d.RequestsIdx ?? 100));
+        const users = 100 - avg(days.map((d) => d.DAUsIdx ?? 100));
+        const part = (name: string, drop: number) => (drop >= 10 ? `${name} −${drop}%` : `${name} steady`);
+        return { ...r, label: `${part("Requests", req)} · ${part("users", users)}` };
+    });
+};
+
+/** I: the pacing chart, with the days opportunity fell shaded and labelled. Hover any day for the figures. */
+const Bands = ({ c, data }: { c: Campaign; data: Point[] }) => (
+    <div style={{ height: 300 }}>
+        <ResponsiveContainer width="100%" height="100%">
+            <ComposedChart data={data} margin={{ ...MARGIN, top: 36 }}>
+                <ActualArea c={c} />
+                <CartesianGrid vertical={false} className="[&_line]:stroke-border-secondary" />
+                {xAxis(c)}
+                {paceAxis(c)}
+                <YAxis yAxisId="vol" hide />
+                {dips(data).map((d) => (
+                    <ReferenceArea
+                        key={d.from}
+                        yAxisId="0"
+                        x1={data[d.from].day}
+                        x2={data[d.to].day}
+                        fill="#98A2B3"
+                        fillOpacity={0.16}
+                        ifOverflow="visible"
+                        label={{ value: d.label, position: "top", fill: "#344054", fontSize: 15, fontWeight: 600, offset: 10 }}
+                    />
+                ))}
+                {tip(c)}
+                {/* Invisible, so the hover lists the day's requests and users too. */}
+                <Line yAxisId="vol" dataKey="Requests" stroke={REQUESTS} strokeOpacity={0} dot={false} activeDot={false} isAnimationActive={false} />
+                <Line yAxisId="vol" dataKey="DAUs" stroke={DAUS} strokeOpacity={0} dot={false} activeDot={false} isAnimationActive={false} />
+                {paceSeries(c)}
+            </ComposedChart>
+        </ResponsiveContainer>
+    </div>
+);
+
 /* ------------------------------------------------------------- Legend --- */
 
-type Mark = "line" | "dash" | "bar" | "cell";
+type Mark = "line" | "dash" | "bar" | "cell" | "area" | "band";
 const Key = ({ mark, color, children }: { mark: Mark; color: string; children: ReactNode }) => (
     <span className="inline-flex items-center gap-1.5">
         {mark === "line" && <span className="h-0.5 w-4 rounded" style={{ backgroundColor: color }} />}
         {mark === "dash" && <span className="h-0 w-4 border-t-2 border-dashed" style={{ borderColor: color }} />}
         {mark === "bar" && <span className="size-3 rounded-sm" style={{ backgroundColor: color }} />}
         {mark === "cell" && <span className="h-3 w-5 rounded-sm" style={{ background: `linear-gradient(90deg, ${shade(color, 0)}, ${color})` }} />}
+        {mark === "area" && <span className="h-3 w-4 rounded-sm border-t-2" style={{ borderColor: color, backgroundColor: `${color}1a` }} />}
+        {mark === "band" && <span className="h-3 w-5 rounded-sm" style={{ backgroundColor: color }} />}
         {children}
     </span>
 );
@@ -337,6 +546,19 @@ const LEGEND: Record<DeliveryVariant, [Mark, string, string][]> = {
         ["cell", REQUESTS, "Requests per day"],
         ["cell", DAUS, "Daily active users · darker is busier"],
     ],
+    labelled: [
+        ["area", REQUESTS, "Requests per day (right axis)"],
+        ["line", DAUS, "Daily active users (right axis)"],
+    ],
+    backdrop: [
+        ["bar", `${REQUESTS}40`, "Requests per day, behind (shape only; hover for figures)"],
+        ["line", `${DAUS}8c`, "Daily active users, behind"],
+    ],
+    scaled: [
+        ["line", REQUESTS, "Requests against a normal day"],
+        ["line", DAUS, "Daily active users against a normal day"],
+    ],
+    bands: [["band", "#98A2B329", "Shaded: requests or users at least 20% under a normal day (hover for figures)"]],
 };
 
 const Legend = ({ c, variant }: { c: Campaign; variant: DeliveryVariant }) => {
@@ -401,6 +623,10 @@ export const DeliveryChart = ({ c, variant = "stacked" }: { c: Campaign; variant
                 </div>
             )}
             {v === "indexed" && <Indexed c={c} data={data} />}
+            {v === "labelled" && <Labelled c={c} data={data} />}
+            {v === "backdrop" && <Backdrop c={c} data={data} />}
+            {v === "scaled" && <Scaled c={c} data={data} />}
+            {v === "bands" && <Bands c={c} data={data} />}
             {v === "strip" && (
                 <div className="flex flex-col gap-2">
                     <PaceOnly c={c} data={data} height={260} syncId={sync} />

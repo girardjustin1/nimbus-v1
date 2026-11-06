@@ -4,6 +4,7 @@ import { campaigns } from "../../../prototypes/das/v6/screens/campaign-data";
 import type { DeliveryVariant } from "../../../prototypes/das/v6/screens/campaign-series";
 import { ViewOnePage } from "../../../prototypes/das/v6/screens/campaign-view";
 import { DeliveryChart } from "../../../prototypes/das/v6/screens/delivery-chart";
+import { ConceptCard as Card, type Concept } from "./concept-card";
 import { bySlug } from "./feedback";
 import { ReviewNote, Variant } from "./note";
 
@@ -24,15 +25,6 @@ type Story = StoryObj<typeof meta>;
 
 const atRisk = campaigns.find((c) => c.id === "c2")!;
 const behind = campaigns.find((c) => c.id === "c8")!;
-
-interface Concept {
-    variant: DeliveryVariant;
-    letter: string;
-    title: string;
-    how: string;
-    good: string[];
-    watch: string[];
-}
 
 const CONCEPTS: Concept[] = [
     {
@@ -87,36 +79,6 @@ const CONCEPTS: Concept[] = [
         watch: ["Shade is approximate; the exact figures are on hover.", "Two hues to learn, and shade is harder to compare than height."],
     },
 ];
-
-const Card = ({ concept, c = atRisk }: { concept: Concept; c?: typeof atRisk }) => (
-    <Variant
-        kind={concept.variant === "stacked" ? "6 Nov" : "Concept"}
-        title={`${concept.letter} · ${concept.title}${concept.variant === "stacked" ? " (the overview's default)" : ""}`}
-    >
-        <div className="flex flex-col gap-5 rounded-2xl bg-primary p-6 ring-1 ring-secondary">
-            <p className="max-w-[820px] text-md text-secondary">{concept.how}</p>
-            <DeliveryChart c={c} variant={concept.variant} />
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div>
-                    <p className="text-md font-bold text-primary">Works because</p>
-                    <ul className="mt-1 list-disc space-y-0.5 pl-5 text-md text-secondary">
-                        {concept.good.map((g) => (
-                            <li key={g}>{g}</li>
-                        ))}
-                    </ul>
-                </div>
-                <div>
-                    <p className="text-md font-bold text-primary">Watch for</p>
-                    <ul className="mt-1 list-disc space-y-0.5 pl-5 text-md text-secondary">
-                        {concept.watch.map((w) => (
-                            <li key={w}>{w}</li>
-                        ))}
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </Variant>
-);
 
 const Page = ({ children }: { children: ReactNode }) => <div className="flex flex-col gap-6 bg-secondary p-6">{children}</div>;
 
