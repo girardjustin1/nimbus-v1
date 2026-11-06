@@ -1,12 +1,13 @@
 import type { CSSProperties, MouseEvent, ReactNode } from "react";
-import { useScreenNotes } from "../../../shared/screen-notes";
 import { ChevronDown, Lightbulb02, XClose } from "@untitledui/icons";
-import type { GlobalNavItem, GlobalNavSection } from "@/components/application/global-nav/config";
+import type { GlobalNavItem } from "@/components/application/global-nav/config";
 import { GlobalNav } from "@/components/application/global-nav/global-nav";
-import { dasNavSections } from "../../v1/screens/das-nav";
 import { cx } from "@/utils/cx";
-import { FIELD_TYPE, HEADLINE, LABEL } from "./type-rules";
+import { useScreenNotes } from "../../../shared/screen-notes";
 import { type Campaign, type CampaignStatus, type PaceState, paceOf } from "../../v1/screens/das-data";
+import { dasNavSections } from "../../v1/screens/das-nav";
+import { withReportingLinks } from "./nav";
+import { FIELD_TYPE, HEADLINE, LABEL } from "./type-rules";
 
 /**
  * Deal Activation System — shared prototype chrome and building blocks.
@@ -48,63 +49,55 @@ export interface DasShellProps {
  * rendered in the page. It is commentary about a design, not part of it — in the page it
  * ate the width the form needed and baked our notes into every screenshot.
  */
-/** 27 Oct: "performance insights" opens the early concepts (screen picker › 7). */
-const withReportingLinks = (sections: GlobalNavSection[]): GlobalNavSection[] =>
-    sections.map((section) =>
-        section.id === "reporting"
-            ? { ...section, items: section.items.map((item) => (item.key === "performance insights" ? { ...item, href: "#/start" } : item)) }
-            : section,
-    );
-
 export const DasShell = ({ navKey, tabs, footer, concept, navItems, children }: DasShellProps) => {
     useScreenNotes(concept ? { label: concept.label, title: concept.title, notes: concept.notes.map(String) } : null);
     return (
-    // The shared Global Nav sets its footer links at 13px; the 15px minimum is applied
-    // from here rather than by editing the shared component.
-    <div className="flex min-h-screen bg-secondary [&_footer]:text-md">
-        <GlobalNav sections={withReportingLinks(dasNavSections(navItems))} defaultActiveKey={navKey} />
+        // The shared Global Nav sets its footer links at 13px; the 15px minimum is applied
+        // from here rather than by editing the shared component.
+        <div className="flex min-h-screen bg-secondary [&_footer]:text-md">
+            <GlobalNav sections={withReportingLinks(dasNavSections(navItems))} defaultActiveKey={navKey} />
 
-        <main className={cx("flex min-w-0 flex-1 flex-col bg-primary", FIELD_TYPE)}>
-            <header className="flex items-center justify-between gap-4 border-b border-secondary px-8 py-5">
-                <div className="flex min-w-0 items-center gap-3">
-                    <h1 className={cx("truncate text-display-xs text-primary", HEADLINE)}>Test Publisher</h1>
-                    <span className="rounded-md px-2 py-0.5 text-md font-semibold" style={{ color: TEAL, backgroundColor: `${TEAL}1f` }}>
-                        TP
-                    </span>
-                </div>
-                <button type="button" aria-label="Switch account" className="transition duration-100 ease-linear hover:opacity-80">
-                    <ChevronDown className="size-6" style={{ color: PINK }} aria-hidden="true" />
-                </button>
-            </header>
+            <main className={cx("flex min-w-0 flex-1 flex-col bg-primary", FIELD_TYPE)}>
+                <header className="flex items-center justify-between gap-4 border-b border-secondary px-8 py-5">
+                    <div className="flex min-w-0 items-center gap-3">
+                        <h1 className={cx("truncate text-display-xs text-primary", HEADLINE)}>Test Publisher</h1>
+                        <span className="rounded-md px-2 py-0.5 text-md font-semibold" style={{ color: TEAL, backgroundColor: `${TEAL}1f` }}>
+                            TP
+                        </span>
+                    </div>
+                    <button type="button" aria-label="Switch account" className="transition duration-100 ease-linear hover:opacity-80">
+                        <ChevronDown className="size-6" style={{ color: PINK }} aria-hidden="true" />
+                    </button>
+                </header>
 
-            {tabs && (
-                <div className="flex border-b border-secondary px-8">
-                    {tabs.map((tab) => (
-                        <a
-                            key={tab.label}
-                            href={tab.href}
-                            aria-current={tab.active ? "page" : undefined}
-                            className={cx(
-                                "-mb-px border-b-2 px-6 py-4 text-md font-semibold transition-colors duration-100 ease-linear",
-                                tab.active ? "border-current" : "border-transparent hover:opacity-80",
-                            )}
-                            style={{ color: TEAL, backgroundColor: tab.active ? `${TEAL}14` : undefined }}
-                        >
-                            {tab.label}
-                        </a>
-                    ))}
-                </div>
-            )}
+                {tabs && (
+                    <div className="flex border-b border-secondary px-8">
+                        {tabs.map((tab) => (
+                            <a
+                                key={tab.label}
+                                href={tab.href}
+                                aria-current={tab.active ? "page" : undefined}
+                                className={cx(
+                                    "-mb-px border-b-2 px-6 py-4 text-md font-semibold transition-colors duration-100 ease-linear",
+                                    tab.active ? "border-current" : "border-transparent hover:opacity-80",
+                                )}
+                                style={{ color: TEAL, backgroundColor: tab.active ? `${TEAL}14` : undefined }}
+                            >
+                                {tab.label}
+                            </a>
+                        ))}
+                    </div>
+                )}
 
-            <div className="flex-1">{children}</div>
+                <div className="flex-1">{children}</div>
 
-            {footer && (
-                <footer className="sticky bottom-0 z-10 border-t border-secondary bg-primary px-8 py-4 shadow-[0_-1px_2px_rgba(10,13,18,0.05)]">
-                    {footer}
-                </footer>
-            )}
-        </main>
-    </div>
+                {footer && (
+                    <footer className="sticky bottom-0 z-10 border-t border-secondary bg-primary px-8 py-4 shadow-[0_-1px_2px_rgba(10,13,18,0.05)]">
+                        {footer}
+                    </footer>
+                )}
+            </main>
+        </div>
     );
 };
 
