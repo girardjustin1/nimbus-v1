@@ -6,6 +6,7 @@ import { GlobalNav } from "@/components/application/global-nav/global-nav";
 import { dasNavSections } from "./das-nav";
 import { cx } from "@/utils/cx";
 import { type Campaign, type CampaignStatus, type PaceState, paceOf } from "./das-data";
+import { tabLink } from "./tab-links";
 
 /**
  * Deal Activation System — shared prototype chrome and building blocks.
@@ -68,7 +69,7 @@ export const DasShell = ({ navKey, tabs, footer, concept, navItems, children }: 
                     {tabs.map((tab) => (
                         <a
                             key={tab.label}
-                            href={tab.href}
+                            href={tab.href ?? tabLink(tab.label)}
                             aria-current={tab.active ? "page" : undefined}
                             className={cx(
                                 "-mb-px border-b-2 px-6 py-4 text-md font-semibold transition-colors duration-100 ease-linear",

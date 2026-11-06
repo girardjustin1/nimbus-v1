@@ -4,6 +4,7 @@ import { setNavSectionsOverride } from "../../performance-insights/v1/screens/na
 import { type ProtoScreen, PrototypeApp } from "../../shared/prototype-frame";
 import "../../shared/prototype.css";
 import { setDasNavItems } from "../v1/screens/das-nav";
+import { setTabLinks } from "../v1/screens/tab-links";
 import { meta } from "../versions";
 import { screens } from "./screens";
 import { ChartPicker } from "./screens/chart-picker-ui";
@@ -15,6 +16,9 @@ setDasNavItems(V3_NAV_ITEMS);
 // The early Performance Insights screens (section 7) bring their own shell; give it v6's
 // linked nav so their sidebar leads back to DAS instead of dead-ending.
 setNavSectionsOverride(V6_NAV_SECTIONS);
+// DAS Round 1's reporting screens (section 7) were reviewed with label-only tabs; in v6
+// they lead to the Saved Queries concept and back to the query builder.
+setTabLinks({ "Saved Queries": "#/saved", "New Query": "#/reporting-builder" });
 
 // The copy deck covers the campaign setup form: every screen that renders <CampaignSetup>.
 const copyDeckCovers = (s: ProtoScreen) => /^(setup|step|rail)-/.test(s.id) && s.id !== "setup-published";
