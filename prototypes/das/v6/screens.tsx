@@ -340,6 +340,47 @@ export const screens: ProtoScreen[] = [
         render: () => <ViewOnePage id="c9" />,
     }),
     view({ id: "view-a-queued", title: "Overview · queued", render: () => <ViewOnePage id="c6" /> }),
+    // 6 Nov: the Delivery chart with requests and active users — five concepts, all on the
+    // at-risk campaign (c2), whose dip comes from losing users. Each screen opens with the
+    // toolbar's Chart menu set to its concept; the menu switches any overview, and C is the
+    // default.
+    view({
+        id: "view-a-chart-round-6",
+        title: "Delivery chart · Round 6 (pacing only)",
+        description: "The chart as reviewed on 29 Oct, for comparison.",
+        render: () => <ViewOnePage id="c2" presetChart="pacing" />,
+    }),
+    view({
+        id: "view-a-chart-overlay",
+        title: "Delivery chart · A · four lines, one chart",
+        description: "Requests and active users as two more lines, on a second axis.",
+        render: () => <ViewOnePage id="c2" presetChart="overlay" />,
+    }),
+    view({
+        id: "view-a-chart-bars",
+        title: "Delivery chart · B · users as bars",
+        description: "Active users as bars (a volume), requests and pacing as lines.",
+        render: () => <ViewOnePage id="c2" presetChart="bars" />,
+    }),
+    view({
+        id: "view-a-chart-stacked",
+        title: "Delivery chart · C · two charts, one timeline",
+        description: "Pacing above, opportunity below, one shared hover. The default.",
+        render: () => <ViewOnePage id="c2" presetChart="stacked" />,
+    }),
+    view({
+        id: "view-a-chart-indexed",
+        title: "Delivery chart · D · everything against normal",
+        description: "One axis: each line is a percentage of a normal day.",
+        render: () => <ViewOnePage id="c2" presetChart="indexed" />,
+    }),
+    view({
+        id: "view-a-chart-strip",
+        title: "Delivery chart · E · heat strip",
+        description: "The pacing chart with a strip of requests and users beneath it.",
+        render: () => <ViewOnePage id="c2" presetChart="strip" />,
+    }),
+
     view({
         id: "view-d",
         title: "Full performance",

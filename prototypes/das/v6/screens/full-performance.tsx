@@ -22,11 +22,13 @@ import {
     FilterControl,
     type FilterState,
     REPORT_STRIPE,
+    SortTh,
     StateAction,
     TABLE,
     filterExcluded,
     tableHead,
 } from "./nimbus-ui";
+import { useTableSort } from "./table-sort";
 import { languageLabel } from "./target-data";
 import { LABEL } from "./type-rules";
 
@@ -395,6 +397,18 @@ export const FullPerformance = ({
     const chartMetric = ordered[0];
     // Rates don't add up, so they don't stack or slice into a pie.
     const rateOnly = RATES.includes(chartMetric) && (chart === "stacked" || chart === "pie");
+    // 6 Nov: every table sorts — by a breakdown column ("d:0"…), a metric, or the share.
+    const table = useTableSort(groups, (g, id) =>
+        id.startsWith("d:")
+            ? breakdown.length
+                ? g.values[Number(id.slice(2))]
+                : g.key
+            : id === "share"
+              ? fallback
+                  ? g.impressions
+                  : g.spend
+              : metricOf(id as Metric, g),
+    );
 
     const toggleMetric = (m: Metric) => setMetrics((cur) => (cur.includes(m) ? cur.filter((x) => x !== m) : [...cur, m]));
     const toggleDim = (d: Dim) => setBreakdown((cur) => (cur.includes(d) ? cur.filter((x) => x !== d) : cur.length >= MAX_BREAKDOWN ? cur : [...cur, d]));
@@ -716,26 +730,32 @@ export const FullPerformance = ({
                             <table className={TABLE.table}>
                                 <thead style={tableHead("report")}>
                                     <tr>
-                                        {(breakdown.length ? breakdown : ["Slice"]).map((d) => (
-                                            <th key={d} scope="col" className={TABLE.report.th}>
+                                        {(breakdown.length ? breakdown : ["Slice"]).map((d, i) => (
+                                            <SortTh key={d} id={`d:${i}`} kind="report" sort={table.sort} onSort={table.onSort}>
                                                 {d}
-                                            </th>
+                                            </SortTh>
                                         ))}
-                                        {[...ordered, fallback ? "Share" : "Share of revenue"].map((h) => (
-                                            <th key={h} scope="col" className={cx(TABLE.report.th, "text-right")}>
-                                                {h === "Revenue" ? (
-                                                    <span className="inline-flex items-center justify-end gap-1.5 [&_svg]:text-white/70">
-                                                        Revenue <TrueUp />
-                                                    </span>
-                                                ) : (
-                                                    h
-                                                )}
-                                            </th>
+                                        {ordered.map((m) => (
+                                            <SortTh
+                                                key={m}
+                                                id={m}
+                                                kind="report"
+                                                align="right"
+                                                sort={table.sort}
+                                                onSort={table.onSort}
+                                                className="[&_svg]:text-white/70"
+                                                hint={m === "Revenue" ? <TrueUp /> : undefined}
+                                            >
+                                                {m}
+                                            </SortTh>
                                         ))}
+                                        <SortTh id="share" kind="report" align="right" sort={table.sort} onSort={table.onSort}>
+                                            {fallback ? "Share" : "Share of revenue"}
+                                        </SortTh>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {groups.map((g, gi) => (
+                                    {table.rows.map((g, gi) => (
                                         <tr key={g.key} style={gi % 2 === 1 ? { backgroundColor: REPORT_STRIPE } : undefined}>
                                             {(breakdown.length ? g.values : [g.key]).map((v, i) => (
                                                 <td key={i} className={cx(TABLE.report.td, breakdown[i] === "Keyword" && "font-mono")}>
