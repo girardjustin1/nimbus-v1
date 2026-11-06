@@ -28,6 +28,10 @@ campaign falls behind, so the chart keeps its place and gains **context**: the a
 requests and daily active users behind each day. And **every table sorts**. Both are
 built into prototype **v6**; nothing else in Round 6 moved.
 
+<div style={{ background: "#E6F6F6", borderLeft: "4px solid #1F7F80", borderRadius: 10, padding: "12px 16px", margin: "16px 0", fontSize: 15, color: "#101828" }}>
+  <b>Decided, 6 Nov:</b> chart <b>A</b> — actual numbers on one chart, nothing against normal. The prototype shows A on every campaign; the other concepts below are kept for reference. And no coaching: the yellow pacing strip is gone, so the overview only states the data.
+</div>
+
 Each step has a screenshot of v6, what changed and why (in the words from the call), how
 to check it, and links: the screen in the **prototype**, and **Round 6 → 6 Nov** side by side.
 
@@ -44,44 +48,47 @@ to check it, and links: the screen in the **prototype**, and **Round 6 → 6 Nov
 <table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0 0" }}>
   <thead><tr><th style={th}>#</th><th style={th}>Screen</th><th style={th}>What to look at</th></tr></thead>
   <tbody>
-    <tr><td style={td}>1</td><td style={td}><a href="#step-1">Campaign overview · opportunity</a></td><td style={td}>Requests and active users under the pacing chart, on the same days</td></tr>
+    <tr><td style={td}>1</td><td style={td}><a href="#step-1">Campaign overview · chart A, no coaching</a></td><td style={td}>Requests and active users on the pacing chart, in real numbers; no warning strip</td></tr>
     <tr><td style={td}>2</td><td style={td}><a href="#step-2">Fewer users, or fewer slots?</a></td><td style={td}>Two campaigns behind for two different reasons, told apart at a glance</td></tr>
-    <tr><td style={td}>3</td><td style={td}><a href="#step-3">Five chart concepts</a></td><td style={td}>A to E, the first batch</td></tr>
-    <tr><td style={td}>4</td><td style={td}><a href="#step-4">On one chart · four overlays</a></td><td style={td}>F to I: everything on the same chart, each without A's problems</td></tr>
+    <tr><td style={td}>3</td><td style={td}><a href="#step-3">Five chart concepts</a></td><td style={td}>A to E, the first batch (A chosen)</td></tr>
+    <tr><td style={td}>4</td><td style={td}><a href="#step-4">On one chart · four overlays</a></td><td style={td}>F to I, for reference</td></tr>
     <tr><td style={td}>5</td><td style={td}><a href="#step-5">Every table sorts</a></td><td style={td}>Assets, keywords, Full performance, creatives, selected items</td></tr>
     <tr><td style={td}>6</td><td style={td}><a href="#step-6">Open, and outside the prototype</a></td><td style={td}>DAUs feed, red and yellow, the global style proposal</td></tr>
   </tbody>
 </table>
 
-<Step n={1} title="Campaign overview · opportunity">
+<Step n={1} title="Campaign overview · chart A, no coaching">
 
-<Shot src={s01} caption="v6 · campaign overview · Sports fans (Spanish), at risk — hover any day for both charts" />
+<Shot src={s01} caption="v6 · campaign overview · Sports fans (Spanish), at risk — chart A" />
 
 <Changed>
   <ul>
-    <li><b>The pacing chart stays as it was</b> — actual against expected, as a share of the goal.</li>
-    <li><b>Opportunity sits beneath it</b>, on the same days: the day's <b>ad requests</b> as bars and <b>daily active users</b> as a line. One hover shows both charts.</li>
-    <li>The sample campaign lost about half its users from Sep 6. The bars drop the same day the pacing line flattens — the shortfall reads as less opportunity, not Nimbus falling short.</li>
+    <li><b>One chart, actual numbers (A):</b> actual against expected pacing as a share of the goal on the left axis; the day's <b>ad requests</b> and <b>daily active users</b>, in real figures, on the right. One hover shows all four.</li>
+    <li>The sample campaign lost about half its users from Sep 6. Requests and users drop the same day the pacing line flattens — the shortfall reads as less opportunity, not Nimbus falling short.</li>
+    <li><b>No coaching.</b> The yellow strip that said what to spend and offered Raise eCPM is gone; pacing is in its card and the chart. A paused campaign's strip is grey and only states the facts.</li>
     <li>Requests swing with the week, busiest on Saturdays, as Performance Insights showed on the call.</li>
   </ul>
 </Changed>
 
 <ShotPair>
   <Shot src={s03} caption="Round 6 · pacing only, as reviewed on 29 Oct" />
-  <Shot src={s01} caption="6 Nov · with opportunity beneath" />
+  <Shot src={s01} caption="6 Nov · chart A" />
 </ShotPair>
 
 <Said>We want to show what you have: actual pacing, expected pacing. We want to add requests, which is data that we currently have.</Said>
 <Said>Requests are ad requests. It means a user got to a place that an ad can go.</Said>
+<Said>We can't do anything vs normal. It has to just be actual numbers … I think A is what we want.</Said>
+<Said>Kill the yellow warning strip. No coaching, no telling the pub what to do, just flatly saying what the data is.</Said>
 
 <Check>
   <ol>
-    <li>Hover the chart around Sep 6: pacing flattens and the requests bars halve on the same day.</li>
+    <li>Hover the chart around Sep 6: pacing flattens and requests halve on the same day.</li>
+    <li>No yellow strip above the cards; open a paused campaign: a grey strip with the facts only.</li>
     <li>Open <b>Overview · on target</b>: steady opportunity, Saturday peaks, pacing on the line.</li>
   </ol>
 </Check>
 
-<Links proto={[["At risk", "view-a-at-risk"], ["On target", "view-a"]]} compare={[["Round 6", "nov-6-edits-applied-changes--overview-before"], ["6 Nov", "nov-6-edits-applied-changes--overview-after"]]} />
+<Links proto={[["At risk", "view-a-at-risk"], ["On target", "view-a"], ["Paused", "view-a?c=c4"]]} compare={[["Round 6", "nov-6-edits-applied-changes--overview-before"], ["6 Nov", "nov-6-edits-applied-changes--overview-after"]]} />
 
 </Step>
 
@@ -132,12 +139,11 @@ volume. All five show the same campaign and the same numbers. <Status tone="Conc
 <Check>
   <ol>
     <li>Open <b>All five, side by side</b> and hover the same day in each.</li>
-    <li>In the prototype, open any campaign overview and use the <b>Chart</b> menu in the top toolbar to switch between Round 6 and A–I in the page. The choice holds as you move between campaigns.</li>
-    <li>Say which one the overview should keep.</li>
+    <li>Decided: A.</li>
   </ol>
 </Check>
 
-<Links proto={[["A", "view-a-chart-overlay"], ["B", "view-a-chart-bars"], ["C", "view-a-chart-stacked"], ["D", "view-a-chart-indexed"], ["E", "view-a-chart-strip"]]} compare={[["All five", "nov-6-edits-chart-concepts--all-five"], ["C in the page", "nov-6-edits-chart-concepts--in-the-page"]]} />
+<Links compare={[["All five", "nov-6-edits-chart-concepts--all-five"], ["C in the page", "nov-6-edits-chart-concepts--in-the-page"]]} />
 
 </Step>
 
@@ -169,13 +175,12 @@ chart and deals with A's second axis a different way each. <Status tone="Concept
 
 <Check>
   <ol>
-    <li>On any campaign overview, open the <b>Chart</b> menu: F to I are under “On one chart”.</li>
     <li>In F, switch Requests and Daily active users off and on above the chart.</li>
-    <li>Open <b>Overview · behind</b> with G or I: users hold while requests fall.</li>
+    <li>Open <b>Users or slots?</b> in On One Chart: users hold while requests fall.</li>
   </ol>
 </Check>
 
-<Links proto={[["F", "view-a-chart-labelled"], ["G", "view-a-chart-backdrop"], ["H", "view-a-chart-scaled"], ["I", "view-a-chart-bands"]]} compare={[["All four", "nov-6-edits-on-one-chart--all-four"], ["F in the page", "nov-6-edits-on-one-chart--in-the-page"]]} />
+<Links compare={[["All four", "nov-6-edits-on-one-chart--all-four"], ["F in the page", "nov-6-edits-on-one-chart--in-the-page"]]} />
 
 </Step>
 
@@ -214,7 +219,7 @@ chart and deals with A's second axis a different way each. <Status tone="Concept
 <table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
   <thead><tr><th style={th}>Item</th><th style={th}>Status</th><th style={th}>Notes</th></tr></thead>
   <tbody>
-    <tr><td style={td}>Which chart concept</td><td style={td}><Status tone="Concept" /></td><td style={td}>The overview opens on C; the toolbar's Chart menu switches between all nine. Product picks one.</td></tr>
+    <tr><td style={td}>Which chart concept</td><td style={td}><Status tone="Applied" /></td><td style={td}>Decided 6 Nov: A, actual numbers on one chart. The others stay in Storybook.</td></tr>
     <tr><td style={td}>Daily active users from the backend</td><td style={td}><Status tone="Pending" /></td><td style={td}>The backend team is pulling DAUs; Product expects them before launch.</td></tr>
     <tr><td style={td}>Red and yellow pacing</td><td style={td}><Status tone="Pending" /></td><td style={td}>Left as it is. Product and sales are still deciding whether to show the colours.</td></tr>
     <tr><td style={td}>A global style proposal for engineering</td><td style={td}><Status tone="Pending" /></td><td style={td}>Engineering has started building DAS and is asking about styles. Design sends a list of global changes, drawn from the Typography Audit, Typography Rules and this Storybook.</td></tr>

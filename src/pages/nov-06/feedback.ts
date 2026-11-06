@@ -37,6 +37,39 @@ export const framing = {
 
 export const items: FeedbackItem[] = [
     {
+        slug: "chart-a",
+        title: "Chart A: actual numbers, one chart",
+        status: "Applied",
+        quotes: [
+            {
+                who: "Product",
+                text: "We can't do anything vs normal. It has to just be actual numbers … I think A is what we want (for that reason).",
+            },
+        ],
+        decision: [
+            "The campaign overview shows A on every campaign: actual and expected pacing as a share of the goal on the left axis, the day's requests and active users in real figures on the right.",
+            "The Chart menu and the A–I screens are gone from the prototype. Every concept stays here in Storybook (Chart Concepts, On One Chart) for reference.",
+            "Ruled out: D and H, which measure against a normal day.",
+        ],
+        touches: [v6("delivery-chart.tsx"), v6("campaign-view.tsx"), v6("campaign-series.ts"), "prototypes/das/v6/main.tsx", "prototypes/das/v6/screens.tsx"],
+    },
+    {
+        slug: "no-coaching",
+        title: "No coaching: the overview states the data",
+        status: "Applied",
+        quotes: [
+            {
+                who: "Product",
+                text: "Kill the yellow warning strip. No coaching, no telling the pub what to do, just flatly saying what the data is.",
+            },
+        ],
+        decision: [
+            "The yellow pacing strip is gone, with its daily target, its Raise eCPM button and its warning about deal terms. Pacing is in its card and the chart.",
+            "A paused campaign's strip is grey and factual: when it paused, the days left in the flight and the budget not yet spent. No daily target, no Resume prompt; Resume stays in the header.",
+        ],
+        touches: [v6("campaign-view.tsx")],
+    },
+    {
         slug: "requests",
         title: "Requests on the Delivery chart",
         status: "Applied",
@@ -52,7 +85,7 @@ export const items: FeedbackItem[] = [
         ],
         decision: [
             "The campaign overview's Delivery chart now carries the day's ad requests across the campaign's apps.",
-            "The overview opens on concept C (pacing above, opportunity below, one shared hover); the toolbar's Chart menu switches any overview between Round 6 and A–I, and Chart Concepts shows them side by side.",
+            "Decided 6 Nov: the overview shows A (see Chart A). The other concepts are side by side in Chart Concepts and On One Chart.",
             "Sample requests swing with the week, busiest on Saturdays, as Performance Insights showed on the call.",
         ],
         touches: [v6("delivery-chart.tsx"), v6("campaign-series.ts"), v6("campaign-view.tsx")],
@@ -101,11 +134,11 @@ export const items: FeedbackItem[] = [
             },
         ],
         decision: [
-            "Not missing one: A and B already overlay, but the page opens on C, so they're one pick away in the toolbar's Chart menu.",
+            "Not missing one: A and B already overlay; the page opened on C at the time. Decided afterwards: A.",
             "A second batch, F to I, keeps everything on one chart and answers A's second axis a different way each: F titles and tints both axes and lets you switch requests and users off; G puts opportunity faint behind pacing with no second axis; H puts all four on one % scale; I shades the days opportunity fell and labels the drop.",
-            "Same campaign and numbers as the first batch. The overview still opens on C until Product picks.",
+            "Same campaign and numbers as the first batch. Kept for reference now that A is chosen.",
         ],
-        touches: [v6("delivery-chart.tsx"), v6("campaign-series.ts"), v6("chart-picker-ui.tsx"), "prototypes/das/v6/screens.tsx"],
+        touches: [v6("delivery-chart.tsx"), v6("campaign-series.ts"), "prototypes/das/v6/screens.tsx"],
     },
     {
         slug: "sortable",
@@ -170,6 +203,20 @@ export const bySlug = (slug: string) => items.find((i) => i.slug === slug)!;
 
 /** Where to see each change: prototype v6 routes, and story ids in this Storybook. */
 export const links: Record<string, { prototype: [string, string][]; stories: [string, string][] }> = {
+    "chart-a": {
+        prototype: [
+            ["Overview · at risk", "view-a-at-risk"],
+            ["Overview · behind", "view-a-behind"],
+        ],
+        stories: [["Concept A", "nov-6-edits-chart-concepts--overlay"]],
+    },
+    "no-coaching": {
+        prototype: [
+            ["At risk", "view-a-at-risk"],
+            ["Paused", "view-a?c=c4"],
+        ],
+        stories: [],
+    },
     requests: {
         prototype: [
             ["Overview · at risk", "view-a-at-risk"],
@@ -182,22 +229,11 @@ export const links: Record<string, { prototype: [string, string][]; stories: [st
         stories: [["Fewer slots, same users", "nov-6-edits-applied-changes--overview-behind"]],
     },
     "chart-concepts": {
-        prototype: [
-            ["A", "view-a-chart-overlay"],
-            ["B", "view-a-chart-bars"],
-            ["C", "view-a-chart-stacked"],
-            ["D", "view-a-chart-indexed"],
-            ["E", "view-a-chart-strip"],
-        ],
+        prototype: [],
         stories: [["Chart Concepts", "nov-6-edits-chart-concepts--all-five"]],
     },
     "one-chart": {
-        prototype: [
-            ["F", "view-a-chart-labelled"],
-            ["G", "view-a-chart-backdrop"],
-            ["H", "view-a-chart-scaled"],
-            ["I", "view-a-chart-bands"],
-        ],
+        prototype: [],
         stories: [["On One Chart", "nov-6-edits-on-one-chart--all-four"]],
     },
     sortable: {

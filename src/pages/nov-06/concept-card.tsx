@@ -18,8 +18,8 @@ const atRisk = campaigns.find((c) => c.id === "c2")!;
 
 export const ConceptCard = ({ concept, c = atRisk }: { concept: Concept; c?: Campaign }) => (
     <Variant
-        kind={concept.variant === "stacked" ? "6 Nov" : "Concept"}
-        title={`${concept.letter} · ${concept.title}${concept.variant === "stacked" ? " (the overview's default)" : ""}`}
+        kind={concept.variant === "overlay" ? "6 Nov" : "Concept"}
+        title={`${concept.letter} · ${concept.title}${concept.variant === "overlay" ? " (chosen 6 Nov)" : ""}`}
     >
         <div className="flex flex-col gap-5 rounded-2xl bg-primary p-6 ring-1 ring-secondary">
             <p className="max-w-[820px] text-md text-secondary">{concept.how}</p>

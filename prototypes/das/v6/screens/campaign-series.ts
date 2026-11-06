@@ -1,6 +1,6 @@
-import { useState, useSyncExternalStore } from "react";
+import { useState } from "react";
 import { nextMonth, shortDay } from "@/pages/deal-activation-system/dates";
-import { readHashParams, writeHashParams } from "../../v1/screens/route";
+import { readHashParams } from "../../v1/screens/route";
 import { type Campaign, campaigns, elapsedDays } from "./campaign-data";
 
 /**
@@ -130,7 +130,11 @@ export const axis = { tickLine: false, axisLine: false, tick: { fontSize: 15, fi
 
 /* ------------------------------------------------------ Delivery chart --- */
 
-/** The campaign overview's Delivery chart: Round 6 and the 6 Nov concepts (delivery-chart.tsx). */
+/**
+ * The campaign overview's Delivery chart: Round 6 and the 6 Nov concepts (delivery-chart.tsx).
+ * 6 Nov (Product): A, actual numbers on one chart, is the one the overview shows; the
+ * others stay in Storybook › Nov 6 Edits for reference.
+ */
 export type DeliveryVariant = "pacing" | "overlay" | "bars" | "stacked" | "indexed" | "strip" | "labelled" | "backdrop" | "scaled" | "bands";
 
 /** What each variant is, for the overview's section description. */
@@ -146,45 +150,3 @@ export const DELIVERY_DESCRIPTION: Record<DeliveryVariant, string> = {
     scaled: "One scale: delivery as a share of the goal; requests and active users as a share of a normal day.",
     bands: "Expected against actual delivery. Shaded days had fewer requests or active users than normal.",
 };
-
-/** The toolbar's Chart menu: each option, in the order Product reviews them. */
-export const DELIVERY_OPTIONS: { id: DeliveryVariant; label: string; group: string }[] = [
-    { id: "pacing", label: "Round 6 · pacing only", group: "Round 6" },
-    { id: "overlay", label: "A · Four lines, one chart", group: "6 Nov · first batch" },
-    { id: "bars", label: "B · Users as bars", group: "6 Nov · first batch" },
-    { id: "stacked", label: "C · Two charts, one timeline", group: "6 Nov · first batch" },
-    { id: "indexed", label: "D · Everything against normal", group: "6 Nov · first batch" },
-    { id: "strip", label: "E · Heat strip", group: "6 Nov · first batch" },
-    { id: "labelled", label: "F · One chart, labelled axes", group: "6 Nov · on one chart" },
-    { id: "backdrop", label: "G · Opportunity behind pacing", group: "6 Nov · on one chart" },
-    { id: "scaled", label: "H · One scale for all four", group: "6 Nov · on one chart" },
-    { id: "bands", label: "I · Shaded dips", group: "6 Nov · on one chart" },
-];
-
-/**
- * 6 Nov: which Delivery chart every campaign overview shows, chosen from the prototype
- * toolbar's Chart menu so the concepts can be compared in the page. Global: it holds
- * across campaigns, and rides in the link as ?chart= so a shared URL opens on the same
- * chart. C is the default. Storybook passes the chart directly and never touches this.
- */
-const DEFAULT_CHART: DeliveryVariant = "stacked";
-const chartFromLink = (): DeliveryVariant => {
-    if (typeof window === "undefined") return DEFAULT_CHART;
-    const v = readHashParams().get("chart");
-    return DELIVERY_OPTIONS.some((o) => o.id === v) ? (v as DeliveryVariant) : DEFAULT_CHART;
-};
-let deliveryChoice = chartFromLink();
-const chartListeners = new Set<() => void>();
-const subscribeChart = (l: () => void) => {
-    chartListeners.add(l);
-    return () => chartListeners.delete(l);
-};
-
-export const setDeliveryChoice = (next: DeliveryVariant) => {
-    if (next === deliveryChoice) return;
-    deliveryChoice = next;
-    writeHashParams({ ...Object.fromEntries(readHashParams()), chart: next === DEFAULT_CHART ? undefined : next });
-    chartListeners.forEach((l) => l());
-};
-
-export const useDeliveryChoice = () => useSyncExternalStore(subscribeChart, () => deliveryChoice);

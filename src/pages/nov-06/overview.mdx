@@ -86,15 +86,15 @@ sorts**. Everything below is in prototype **v6**.
 All of them show the same campaign, Sports fans (Spanish), which lost about half its users
 from 6 September. **A to E** are the first batch (**Chart Concepts**). **F to I** are the
 second, after Product asked for everything **on one chart** (**On One Chart**). Every one is
-in the prototype's **Chart** menu on any campaign overview.
+in Storybook for reference; the prototype shows **A**.
 
 <table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
   <thead><tr><th style={th}>Concept</th><th style={th}>How it shows requests and users</th><th style={th}>Scales</th><th style={th}>See it</th></tr></thead>
   <tbody>
     {[
-      ["A · Four lines, one chart", "Two more lines, as asked on the call", "Two on one chart", "view-a-chart-overlay", "overlay"],
+      ["A · Four lines, one chart (chosen)", "Two more lines, as asked on the call", "Two on one chart", "view-a-chart-overlay", "overlay"],
       ["B · Users as bars", "Users as bars, requests as a line, like the realtime dashboard", "Two on one chart", "view-a-chart-bars", "bars"],
-      ["C · Two charts, one timeline (default)", "A second chart under pacing: requests as bars, users as a line, one shared hover", "One per chart", "view-a-chart-stacked", "stacked"],
+      ["C · Two charts, one timeline", "A second chart under pacing: requests as bars, users as a line, one shared hover", "One per chart", "view-a-chart-stacked", "stacked"],
       ["D · Everything against normal", "Delivery, requests and users as a % of a normal day, on one axis", "One", "view-a-chart-indexed", "indexed"],
       ["E · Heat strip", "A strip of shaded cells under the pacing chart, one a day", "One, plus shade", "view-a-chart-strip", "strip"],
       ["F · One chart, labelled axes", "A, with each axis titled and tinted to its series; requests and users switch on and off", "Two on one chart", "view-a-chart-labelled", "on-one-chart--labelled"],
@@ -106,22 +106,16 @@ in the prototype's **Chart** menu on any campaign overview.
         <td style={{ ...td, fontWeight: 700, color: "#101828" }}>{name}</td>
         <td style={td}>{how}</td>
         <td style={td}>{scales}</td>
-        <td style={td}><div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}><Pill kind="proto" href={protoUrl(route)}>Prototype ↗</Pill><Pill kind="story" href={storyUrl(story.includes("--") ? `nov-6-edits-${story}` : `nov-6-edits-chart-concepts--${story}`)}>Story →</Pill></div></td>
+        <td style={td}><div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}><Pill kind="story" href={storyUrl(story.includes("--") ? `nov-6-edits-${story}` : `nov-6-edits-chart-concepts--${story}`)}>Story →</Pill></div></td>
       </tr>
     ))}
   </tbody>
 </table>
 
-**First batch, recommendation: C.** A and B are the most literal answer, but two scales on one chart
-make the reader check which axis each line belongs to, and the lines cross wherever the
-two scales happen to meet. C keeps the pacing chart as Product and sales saw it and adds
-opportunity beneath it on the same days. D is the strongest if one picture matters more
-than the cumulative pacing line. The overview opens on C; the **Chart** menu in the prototype toolbar switches any campaign overview between Round 6 and A–I.
-
-**On one chart, recommendation: G or I.** Both keep one visible scale, so there's nothing
-to match up. G shows the shape of every day's opportunity behind pacing; I says in words
-why pacing slowed and leaves ordinary days alone. F is the overlay as asked, made easier to
-read, but it still has two scales.
+**Decided (6 Nov): A.** Product: “We can't do anything vs normal. It has to just be actual
+numbers.” A puts actual and expected pacing and the day's requests and active users on one
+chart, in real figures. D and H, which measure against a normal day, are ruled out. The
+prototype shows A on every campaign overview; the Chart menu is gone.
 
 ## Outside the prototype
 
