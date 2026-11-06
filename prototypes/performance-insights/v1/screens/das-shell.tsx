@@ -4,6 +4,7 @@ import { type GlobalNavSection, navSections } from "@/components/application/glo
 import { GlobalNav } from "@/components/application/global-nav/global-nav";
 import { cx } from "@/utils/cx";
 import { type Campaign, type CampaignStatus, type PaceState, paceOf } from "./das-data";
+import { navSectionsOverride } from "./nav-override";
 
 /**
  * Deal Activation System — shared prototype chrome and building blocks.
@@ -52,7 +53,7 @@ export interface DasShellProps {
 
 export const DasShell = ({ navKey, tabs, footer, concept, children }: DasShellProps) => (
     <div className="flex min-h-screen bg-secondary">
-        <GlobalNav sections={dasNavSections} defaultActiveKey={navKey} />
+        <GlobalNav sections={navSectionsOverride() ?? dasNavSections} defaultActiveKey={navKey} />
 
         <main className="flex min-w-0 flex-1 flex-col bg-primary">
             <header className="flex items-center justify-between gap-4 border-b border-secondary px-8 py-5">
