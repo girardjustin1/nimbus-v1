@@ -1,5 +1,4 @@
 import type { Preview } from "@storybook/react-vite";
-
 // Import the Untitled UI + Nimbus design system styles (Tailwind + theme tokens)
 // so components render with the correct teal brand theme inside Storybook.
 import "../src/styles/globals.css";
@@ -82,6 +81,10 @@ const preview: Preview = {
                             "Chart Card & Legend",
                         ],
                     ],
+                    // 7b) Nov 6 Edits — Round 6 tweaks from the 6 Nov pacing-chart review. Sits right
+                    //     under Performance Insights, ahead of the older review batches.
+                    "Nov 6 Edits",
+                    ["Introduction", "Overview", "Chart Concepts", "Applied Changes"],
                     "*",
                     // 8b) Oct 29 Edits — Round 6, from the 28 Oct reporting review. Newest first.
                     "Oct 29 Edits",

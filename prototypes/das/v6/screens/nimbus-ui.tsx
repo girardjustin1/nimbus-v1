@@ -1,9 +1,10 @@
 import { type CSSProperties, type ReactNode, useState } from "react";
-import { ChevronDown, ChevronRight, ChevronUp, Plus, XClose } from "@untitledui/icons";
+import { ChevronDown, ChevronRight, ChevronSelectorVertical, ChevronUp, Plus, XClose } from "@untitledui/icons";
 import { NIMBUS_CHART_ICONS } from "@/components/application/chart-type-bar/chart-type-bar";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { cx } from "@/utils/cx";
 import { PINK, TEAL } from "./das-shell";
+import { type SortState, ariaSort } from "./table-sort";
 import { LABEL } from "./type-rules";
 
 /**
@@ -15,6 +16,7 @@ import { LABEL } from "./type-rules";
  *
  *   PageTabs          tabs across the top of a page (bold; teal fill + rule when active)
  *   TABLE / tableHead table styles by context: "list" (light header) vs "report" (charcoal)
+ *   SortTh            a sortable column header; every table sorts (6 Nov)
  *   Bands / Band      full-span sections of UI with a band label ("Metrics:", "Filters:")
  *   DateCell          a date shown in Performance Insights' START DATE / END DATE layout,
  *                     selectable or not
@@ -137,6 +139,49 @@ export const TABLE = {
 /** The <thead> style for a table kind (charcoal for reports). */
 export const tableHead = (kind: TableKind): CSSProperties | undefined => (kind === "report" ? { backgroundColor: CHARCOAL } : undefined);
 
+/**
+ * A sortable column header (6 Nov: every table sorts). The whole label is the button; the
+ * chevrons show the state — both when unsorted, one when sorted. Numeric columns pass
+ * `align="right"` so the label stays over the figures. Logic lives in table-sort.ts.
+ */
+export const SortTh = ({
+    id,
+    sort,
+    onSort,
+    kind = "list",
+    align = "left",
+    className,
+    hint,
+    children,
+}: {
+    id: string;
+    sort: SortState;
+    onSort: (id: string) => void;
+    kind?: TableKind;
+    align?: "left" | "right";
+    className?: string;
+    hint?: ReactNode;
+    children: ReactNode;
+}) => {
+    const on = sort?.id === id;
+    const Icon = !on ? ChevronSelectorVertical : sort.dir === 1 ? ChevronUp : ChevronDown;
+    return (
+        <th scope="col" aria-sort={ariaSort(sort, id)} className={cx(TABLE[kind].th, className)}>
+            <span className={cx("flex items-center gap-1.5", align === "right" && "justify-end")}>
+                <button
+                    type="button"
+                    onClick={() => onSort(id)}
+                    className={cx("flex min-w-0 items-center gap-3 font-bold", align === "left" && "flex-1 justify-between")}
+                >
+                    {children}
+                    <Icon className={cx("size-4 shrink-0", on ? TABLE[kind].sortIconOn : TABLE[kind].sortIcon)} aria-hidden="true" />
+                </button>
+                {hint}
+            </span>
+        </th>
+    );
+};
+
 /* ------------------------------------------------------------------ Bands --- */
 
 /** A stack of full-span bands: full bleed, one rule between each. */
@@ -184,7 +229,17 @@ export const DateCell = ({ label, children, onPress }: { label: string; children
 };
 
 /** Performance Insights' bare dropdowns: the quick picker ("Last 7 days") and group-by ("By Day"). */
-export const BareSelect = <T extends string>({ label, value, options, onChange }: { label: string; value: T; options: { id: T; label: string }[]; onChange: (v: T) => void }) => (
+export const BareSelect = <T extends string>({
+    label,
+    value,
+    options,
+    onChange,
+}: {
+    label: string;
+    value: T;
+    options: { id: T; label: string }[];
+    onChange: (v: T) => void;
+}) => (
     <label className="relative flex w-56 items-center border-r border-secondary">
         <span className="sr-only">{label}</span>
         <select
@@ -213,7 +268,17 @@ export const DateRow = ({ children, trailing }: { children: ReactNode; trailing?
 /* ---------------------------------------------------------------- Buttons --- */
 
 /** Buttons that only change the UI, not the data ("Collapse" / "Expand"). Grey outline pill. */
-export const UiControlButton = ({ children, icon: Icon, onPress, pressed }: { children: ReactNode; icon?: typeof ChevronUp; onPress: () => void; pressed?: boolean }) => (
+export const UiControlButton = ({
+    children,
+    icon: Icon,
+    onPress,
+    pressed,
+}: {
+    children: ReactNode;
+    icon?: typeof ChevronUp;
+    onPress: () => void;
+    pressed?: boolean;
+}) => (
     <button
         type="button"
         aria-pressed={pressed}
@@ -325,7 +390,13 @@ export const FilterControl = ({ dims, value, onChange }: { dims: FilterDim[]; va
     return (
         <div className="flex flex-col gap-3">
             <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-                <button type="button" onClick={() => (open ? setOpen(false) : openMenu())} aria-expanded={open} className="inline-flex items-center gap-1 text-md font-bold uppercase" style={{ color: PINK }}>
+                <button
+                    type="button"
+                    onClick={() => (open ? setOpen(false) : openMenu())}
+                    aria-expanded={open}
+                    className="inline-flex items-center gap-1 text-md font-bold uppercase"
+                    style={{ color: PINK }}
+                >
                     <Plus className="size-4" aria-hidden="true" /> Add
                 </button>
                 {dims.map((d) => {
@@ -335,13 +406,26 @@ export const FilterControl = ({ dims, value, onChange }: { dims: FilterDim[]; va
                         <span key={d.id} className="inline-flex flex-wrap items-center gap-x-4 gap-y-2">
                             <span className="text-md font-semibold text-tertiary">{d.label}</span>
                             {f.values.map((v) => (
-                                <Checkbox key={v} size="md" label={<span className="text-md text-primary">{v}</span>} isSelected={!f.off.includes(v)} onChange={() => toggle(d.id, v)} />
+                                <Checkbox
+                                    key={v}
+                                    size="md"
+                                    label={<span className="text-md text-primary">{v}</span>}
+                                    isSelected={!f.off.includes(v)}
+                                    onChange={() => toggle(d.id, v)}
+                                />
                             ))}
                         </span>
                     );
                 })}
                 {any && (
-                    <button type="button" aria-label="Clear all filters" title="Clear all filters" onClick={() => onChange({})} className="ml-auto rounded-md p-1 transition duration-100 ease-linear hover:bg-secondary" style={{ color: PINK }}>
+                    <button
+                        type="button"
+                        aria-label="Clear all filters"
+                        title="Clear all filters"
+                        onClick={() => onChange({})}
+                        className="ml-auto rounded-md p-1 transition duration-100 ease-linear hover:bg-secondary"
+                        style={{ color: PINK }}
+                    >
                         <XClose className="size-5" aria-hidden="true" />
                     </button>
                 )}
@@ -360,7 +444,10 @@ export const FilterControl = ({ dims, value, onChange }: { dims: FilterDim[]; va
                                             type="button"
                                             onClick={() => setCat(d.id)}
                                             aria-current={on ? "true" : undefined}
-                                            className={cx("flex w-full items-center justify-between px-4 py-2 text-left text-md", on ? "font-bold" : "text-secondary hover:bg-secondary")}
+                                            className={cx(
+                                                "flex w-full items-center justify-between px-4 py-2 text-left text-md",
+                                                on ? "font-bold" : "text-secondary hover:bg-secondary",
+                                            )}
                                             style={on ? { color: TEAL_DARK, backgroundColor: `${TEAL}14` } : undefined}
                                         >
                                             <span>
@@ -394,7 +481,10 @@ export const FilterControl = ({ dims, value, onChange }: { dims: FilterDim[]; va
                                                 type="button"
                                                 aria-pressed={chosen}
                                                 onClick={() => pick(current.id, v)}
-                                                className={cx("w-full px-4 py-2 text-left text-md", chosen ? "font-semibold" : "text-secondary hover:bg-secondary")}
+                                                className={cx(
+                                                    "w-full px-4 py-2 text-left text-md",
+                                                    chosen ? "font-semibold" : "text-secondary hover:bg-secondary",
+                                                )}
                                                 style={chosen ? { color: TEAL_DARK, backgroundColor: `${TEAL}1f` } : undefined}
                                             >
                                                 {v}

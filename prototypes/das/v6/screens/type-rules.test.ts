@@ -7,9 +7,9 @@ import { describe, expect, it } from "vitest";
  * Rules): nothing under 15px. This keeps the classes that would break it out of v3.
  */
 const dir = __dirname;
-// Prototype chrome, not product UI: the Copy switch sits in the dark prototype toolbar
-// and matches its 12px controls (an exception on the Typography Rules page).
-const CHROME = new Set(["copy-deck-ui.tsx"]);
+// Prototype chrome, not product UI: the Copy switch and the Chart menu sit in the dark
+// prototype toolbar and match its 12px controls (an exception on the Typography Rules page).
+const CHROME = new Set(["copy-deck-ui.tsx", "chart-picker-ui.tsx"]);
 const files = readdirSync(dir).filter((f) => f.endsWith(".tsx") && !CHROME.has(f));
 
 const offences = (pattern: RegExp) =>

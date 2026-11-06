@@ -1,0 +1,184 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Changed, Check, Links, Said, Shot, ShotPair, Status, Step, protoUrl, docUrl, th, td } from "./guide";
+import s01 from "./screens/01-delivery-at-risk.jpg";
+import s02 from "./screens/02-delivery-behind.jpg";
+import s03 from "./screens/03-round-6.jpg";
+import s04 from "./screens/04-concept-a.jpg";
+import s05 from "./screens/05-concept-b.jpg";
+import s06 from "./screens/06-concept-c.jpg";
+import s07 from "./screens/07-concept-d.jpg";
+import s08 from "./screens/08-concept-e.jpg";
+import s09 from "./screens/09-assets-sorted.jpg";
+import s10 from "./screens/10-fp-sorted.jpg";
+import s11 from "./screens/11-keywords-sorted.jpg";
+
+<Meta title="Nov 6 Edits/Introduction" />
+
+<div style={{ maxWidth: 1040 }}>
+
+# Round 6 · 6 Nov review guide
+
+On 6 November Product came back from showing DAS to sales with two asks. Sales liked the
+campaign overview's **pacing chart** but worried it could make Nimbus look bad when a
+campaign falls behind, so the chart keeps its place and gains **context**: the ad
+requests and daily active users behind each day. And **every table sorts**. Both are
+built into prototype **v6**; nothing else in Round 6 moved.
+
+Each step has a screenshot of v6, what changed and why (in the words from the call), how
+to check it, and links: the screen in the **prototype**, and **Round 6 → 6 Nov** side by side.
+
+<div style={{ display: "flex", flexWrap: "wrap", gap: 10, margin: "18px 0 6px" }}>
+  <a href={protoUrl("view-a-at-risk")} target="_blank" rel="noreferrer" style={{ background: "#DA6EA3", color: "#fff", padding: "10px 20px", borderRadius: 999, fontSize: 15, fontWeight: 700, textDecoration: "none" }}>Open prototype v6 ↗</a>
+  <a href={docUrl("nov-6-edits-overview--docs")} target="_top" style={{ background: "#E6F6F6", color: "#1F7F80", padding: "10px 20px", borderRadius: 999, fontSize: 15, fontWeight: 700, textDecoration: "none" }}>Change list (Overview) →</a>
+  <a href={docUrl("nov-6-edits-chart-concepts--all-five")} target="_top" style={{ background: "#EEF4FF", color: "#3538CD", padding: "10px 20px", borderRadius: 999, fontSize: 15, fontWeight: 700, textDecoration: "none" }}>All five chart concepts →</a>
+</div>
+
+<p style={{ fontSize: 15, color: "#667085" }}>Daily active users are sample data until the backend feed is ready; requests are data Nimbus has today, shown here as sample figures like the rest of the prototype.</p>
+
+## The review, in order
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0 0" }}>
+  <thead><tr><th style={th}>#</th><th style={th}>Screen</th><th style={th}>What to look at</th></tr></thead>
+  <tbody>
+    <tr><td style={td}>1</td><td style={td}><a href="#step-1">Campaign overview · opportunity</a></td><td style={td}>Requests and active users under the pacing chart, on the same days</td></tr>
+    <tr><td style={td}>2</td><td style={td}><a href="#step-2">Fewer users, or fewer slots?</a></td><td style={td}>Two campaigns behind for two different reasons, told apart at a glance</td></tr>
+    <tr><td style={td}>3</td><td style={td}><a href="#step-3">Five chart concepts</a></td><td style={td}>A to E: pick the one the overview should keep</td></tr>
+    <tr><td style={td}>4</td><td style={td}><a href="#step-4">Every table sorts</a></td><td style={td}>Assets, keywords, Full performance, creatives, selected items</td></tr>
+    <tr><td style={td}>5</td><td style={td}><a href="#step-5">Open, and outside the prototype</a></td><td style={td}>DAUs feed, red and yellow, the global style proposal</td></tr>
+  </tbody>
+</table>
+
+<Step n={1} title="Campaign overview · opportunity">
+
+<Shot src={s01} caption="v6 · campaign overview · Sports fans (Spanish), at risk — hover any day for both charts" />
+
+<Changed>
+  <ul>
+    <li><b>The pacing chart stays as it was</b> — actual against expected, as a share of the goal.</li>
+    <li><b>Opportunity sits beneath it</b>, on the same days: the day's <b>ad requests</b> as bars and <b>daily active users</b> as a line. One hover shows both charts.</li>
+    <li>The sample campaign lost about half its users from Sep 6. The bars drop the same day the pacing line flattens — the shortfall reads as less opportunity, not Nimbus falling short.</li>
+    <li>Requests swing with the week, busiest on Saturdays, as Performance Insights showed on the call.</li>
+  </ul>
+</Changed>
+
+<ShotPair>
+  <Shot src={s03} caption="Round 6 · pacing only, as reviewed on 29 Oct" />
+  <Shot src={s01} caption="6 Nov · with opportunity beneath" />
+</ShotPair>
+
+<Said>We want to show what you have: actual pacing, expected pacing. We want to add requests, which is data that we currently have.</Said>
+<Said>Requests are ad requests. It means a user got to a place that an ad can go.</Said>
+
+<Check>
+  <ol>
+    <li>Hover the chart around Sep 6: pacing flattens and the requests bars halve on the same day.</li>
+    <li>Open <b>Overview · on target</b>: steady opportunity, Saturday peaks, pacing on the line.</li>
+  </ol>
+</Check>
+
+<Links proto={[["At risk", "view-a-at-risk"], ["On target", "view-a"]]} compare={[["Round 6", "nov-6-edits-applied-changes--overview-before"], ["6 Nov", "nov-6-edits-applied-changes--overview-after"]]} />
+
+</Step>
+
+<Step n={2} title="Fewer users, or fewer slots?">
+
+<Shot src={s02} caption="Morning commuters, behind — users hold steady while requests fall" />
+
+<Changed>
+  <ul>
+    <li><b>Daily active users</b> are on the chart as sample data, labelled as such under it, until the backend feed lands. <Status tone="Pending" /></li>
+    <li>With both lines, two kinds of shortfall look different. <b>Sports fans (Spanish)</b> lost users: both lines fall. <b>Morning commuters</b> kept its users, but they reached fewer ad slots: users flat, requests down — the frequency-cap case from the call.</li>
+  </ul>
+</Changed>
+
+<Said>If we have daily active users plus requests, that's going to give the full picture of opportunity.</Said>
+<Said>Here's how many users you had, here's how many requests they produced, and here's how you're pacing.</Said>
+
+<Links proto={[["Behind", "view-a-behind"]]} compare={[["Same users, fewer slots", "nov-6-edits-applied-changes--overview-behind"], ["C and D on this dip", "nov-6-edits-chart-concepts--same-users-fewer-slots"]]} />
+
+</Step>
+
+<Step n={3} title="Five chart concepts">
+
+Offered on the call: alternative layouts, including active users as bars because they're a
+volume. All five show the same campaign and the same numbers. <Status tone="Concept" />
+
+<ShotPair>
+  <Shot src={s04} caption="A · Four lines, one chart — the literal ask, on a second axis" />
+  <Shot src={s05} caption="B · Users as bars — like the realtime dashboard" />
+</ShotPair>
+<ShotPair>
+  <Shot src={s06} caption="C · Two charts, one timeline — recommended, the overview's default" />
+  <Shot src={s07} caption="D · Everything against normal — one axis, 100% is a normal day" />
+</ShotPair>
+<Shot src={s08} caption="E · Heat strip — the pacing chart as it was, a shaded cell a day beneath it" />
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "12px 0 0" }}>
+  <thead><tr><th style={th}>Concept</th><th style={th}>Works because</th><th style={th}>Watch for</th></tr></thead>
+  <tbody>
+    <tr><td style={{ ...td, fontWeight: 700 }}>A · Four lines</td><td style={td}>Closest to the request; no new space.</td><td style={td}>Two scales on one chart: each line has to be matched to its axis, and lines cross where the scales happen to meet, not where anything happens.</td></tr>
+    <tr><td style={{ ...td, fontWeight: 700 }}>B · Users as bars</td><td style={td}>Bars read as “how much”, lines as “how it's going”; familiar from the realtime dashboard.</td><td style={td}>Still two scales; three kinds of mark in one plot.</td></tr>
+    <tr><td style={{ ...td, fontWeight: 700 }}>C · Two charts</td><td style={td}>One scale per chart; pacing keeps its Round 6 look; the dip lines up day for day.</td><td style={td}>About 180px taller.</td></tr>
+    <tr><td style={{ ...td, fontWeight: 700 }}>D · Against normal</td><td style={td}>Cause and effect in one picture; no second axis; the shortest.</td><td style={td}>Drops the cumulative line, so “on track for the goal?” moves to the Pacing card.</td></tr>
+    <tr><td style={{ ...td, fontWeight: 700 }}>E · Heat strip</td><td style={td}>Lightest touch: the chart sales liked stays as it is.</td><td style={td}>Shade is approximate; exact figures on hover.</td></tr>
+  </tbody>
+</table>
+
+<Check>
+  <ol>
+    <li>Open <b>All five, side by side</b> and hover the same day in each.</li>
+    <li>In the prototype, open any campaign overview and use the <b>Chart</b> menu in the top toolbar to switch between Round 6 and A–E in the page. The choice holds as you move between campaigns.</li>
+    <li>Say which one the overview should keep.</li>
+  </ol>
+</Check>
+
+<Links proto={[["A", "view-a-chart-overlay"], ["B", "view-a-chart-bars"], ["C", "view-a-chart-stacked"], ["D", "view-a-chart-indexed"], ["E", "view-a-chart-strip"]]} compare={[["All five", "nov-6-edits-chart-concepts--all-five"], ["C in the page", "nov-6-edits-chart-concepts--in-the-page"]]} />
+
+</Step>
+
+<Step n={4} title="Every table sorts">
+
+<Shot src={s09} caption="View All Assets, sorted by Ad Size" />
+
+<Changed>
+  <ul>
+    <li><b>One sortable header for every table in DAS</b>, the rule Manage campaigns already had: click to sort ascending, again for descending, a third time to go back. Empty values (“—”, None) sort last either way.</li>
+    <li><b>Newly sortable:</b> View All Assets, View All Keywords, the Full performance table (each breakdown, every metric and the share), the campaign overview's creative list, and the selected-items tables in setup — keywords, apps, assets and languages.</li>
+    <li>Report tables keep their charcoal header, with white chevrons; list tables keep their light one.</li>
+  </ul>
+</Changed>
+
+<ShotPair>
+  <Shot src={s10} caption="Full performance, by Revenue ascending" />
+  <Shot src={s11} caption="View All Keywords, most recently updated first" />
+</ShotPair>
+
+<Said>Every table needs to be sortable … everything's sortable.</Said>
+
+<Check>
+  <ol>
+    <li>Click any header three times: ascending, descending, back to the table's own order.</li>
+    <li>Search first, then sort: the sort applies to what the search left.</li>
+  </ol>
+</Check>
+
+<Links proto={[["View All Assets", "asset-view"], ["View All Keywords", "keyword-view"], ["Full performance", "view-d"]]} compare={[["Assets", "nov-6-edits-applied-changes--assets-sortable"], ["Keywords", "nov-6-edits-applied-changes--keywords-sortable"], ["Full performance", "nov-6-edits-applied-changes--performance-sortable"]]} />
+
+</Step>
+
+<Step n={5} title="Open, and outside the prototype">
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
+  <thead><tr><th style={th}>Item</th><th style={th}>Status</th><th style={th}>Notes</th></tr></thead>
+  <tbody>
+    <tr><td style={td}>Which chart concept</td><td style={td}><Status tone="Concept" /></td><td style={td}>The overview opens on C; the toolbar's Chart menu switches it. Product picks one.</td></tr>
+    <tr><td style={td}>Daily active users from the backend</td><td style={td}><Status tone="Pending" /></td><td style={td}>The backend team is pulling DAUs; Product expects them before launch.</td></tr>
+    <tr><td style={td}>Red and yellow pacing</td><td style={td}><Status tone="Pending" /></td><td style={td}>Left as it is. Product and sales are still deciding whether to show the colours.</td></tr>
+    <tr><td style={td}>A global style proposal for engineering</td><td style={td}><Status tone="Pending" /></td><td style={td}>Engineering has started building DAS and is asking about styles. Design sends a list of global changes, drawn from the Typography Audit, Typography Rules and this Storybook.</td></tr>
+    <tr><td style={td}>How much restyling DAS takes on</td><td style={td}><Status tone="Pending" /></td><td style={td}>For now engineering leans on the current styles and keeps a running list of global updates for approval; Product checks the level of effort so style work doesn't hold up features.</td></tr>
+  </tbody>
+</table>
+
+</Step>
+
+</div>

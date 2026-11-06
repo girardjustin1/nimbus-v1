@@ -1,0 +1,132 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { framing, items, links, outside } from "./feedback";
+
+<Meta title="Nov 6 Edits/Overview" />
+
+export const protoUrl = (route) =>
+  (typeof window !== "undefined" && /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname) ? "http://localhost:5190/das/v6/" : "./das/v6/") + `#/${route}`;
+export const storyUrl = (id) => (id.endsWith("--docs") ? `./?path=/docs/${id}` : `./?path=/story/${id}`);
+
+export const Pill = ({ href, kind, children }) => (
+  <a href={href} target="_top" style={{
+    display: "inline-block", whiteSpace: "nowrap", textDecoration: "none", fontSize: 15, fontWeight: 600, padding: "2px 9px", borderRadius: 999,
+    color: kind === "proto" ? "#A94579" : "#1F7F80",
+    background: kind === "proto" ? "#FCE7F1" : "#E6F6F6",
+  }}>{children}</a>
+);
+
+export const LinkRow = ({ label, children }) => (
+  <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 6, margin: "2px 0" }}>
+    <span style={{ fontSize: 15, fontWeight: 700, color: "#667085", textTransform: "uppercase", letterSpacing: 0.4, minWidth: 92 }}>{label}</span>
+    {children}
+  </div>
+);
+
+export const Where = ({ slug }) => {
+  const l = links[slug];
+  if (!l) return null;
+  return (
+    <div>
+      {l.prototype.length > 0 && <LinkRow label="Prototype">{l.prototype.map(([t, r]) => <Pill key={t} kind="proto" href={protoUrl(r)}>{t} ↗</Pill>)}</LinkRow>}
+      {l.stories.length > 0 && <LinkRow label="Storybook">{l.stories.map(([t, id]) => <Pill key={t} kind="story" href={storyUrl(id)}>{t} →</Pill>)}</LinkRow>}
+    </div>
+  );
+};
+
+export const TONES = {
+  Applied: ["#E6F6F6", "#1F7F80"],
+  Concept: ["#EEF4FF", "#3538CD"],
+  "To confirm": ["#FBE9F1", "#A94579"],
+  Pending: ["#FFF4E5", "#B54708"],
+};
+
+export const Chip = ({ tone }) => (
+  <span style={{ background: TONES[tone][0], color: TONES[tone][1], borderRadius: 999, padding: "1px 8px", fontSize: 15, fontWeight: 700, whiteSpace: "nowrap" }}>{tone}</span>
+);
+
+export const th = { textAlign: "left", fontSize: 15, fontWeight: 700, color: "#101828", padding: "9px 12px", borderBottom: "1px solid #EAECF0", background: "#F9FAFB" };
+export const td = { fontSize: 15, color: "#344054", padding: "10px 12px", borderBottom: "1px solid #EAECF0", verticalAlign: "top" };
+
+<div style={{ maxWidth: 920 }}>
+
+# Nov 6 Edits · Round 6
+
+A short review of the campaign overview's **Delivery chart** with Product, after Product
+showed DAS to sales. The pacing chart stays, but with context: the **ad requests** and
+**daily active users** behind each day, so a slow stretch reads as less opportunity
+rather than Nimbus falling short. Plus one rule for the whole of DAS: **every table
+sorts**. Everything below is in prototype **v6**.
+
+> “{framing.quote}”
+>
+> — Product, 6 Nov review
+
+{framing.decision}
+
+## The changes
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
+  <thead><tr><th style={th}>Change</th><th style={th}>Status</th><th style={th}>What we did, and where to see it</th></tr></thead>
+  <tbody>
+    {items.map((item) => (
+      <tr key={item.slug}>
+        <td style={{ ...td, fontWeight: 700, color: "#101828", minWidth: 200 }}>{item.title}</td>
+        <td style={td}><Chip tone={item.status} /></td>
+        <td style={td}>
+          <ul style={{ margin: "0 0 6px", paddingLeft: 18 }}>{item.decision.map((d, i) => <li key={i} style={{ fontSize: 15 }}>{d}</li>)}</ul>
+          <Where slug={item.slug} />
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## The five chart concepts
+
+All five show the same campaign, Sports fans (Spanish), which lost about half its users
+from 6 September. Open **Chart Concepts** to compare them, or the prototype screens to
+see each one in the page.
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
+  <thead><tr><th style={th}>Concept</th><th style={th}>How it shows requests and users</th><th style={th}>Scales</th><th style={th}>See it</th></tr></thead>
+  <tbody>
+    {[
+      ["A · Four lines, one chart", "Two more lines, as asked on the call", "Two on one chart", "view-a-chart-overlay", "overlay"],
+      ["B · Users as bars", "Users as bars, requests as a line, like the realtime dashboard", "Two on one chart", "view-a-chart-bars", "bars"],
+      ["C · Two charts, one timeline (default)", "A second chart under pacing: requests as bars, users as a line, one shared hover", "One per chart", "view-a-chart-stacked", "stacked"],
+      ["D · Everything against normal", "Delivery, requests and users as a % of a normal day, on one axis", "One", "view-a-chart-indexed", "indexed"],
+      ["E · Heat strip", "A strip of shaded cells under the pacing chart, one a day", "One, plus shade", "view-a-chart-strip", "strip"],
+    ].map(([name, how, scales, route, story]) => (
+      <tr key={name}>
+        <td style={{ ...td, fontWeight: 700, color: "#101828" }}>{name}</td>
+        <td style={td}>{how}</td>
+        <td style={td}>{scales}</td>
+        <td style={td}><div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}><Pill kind="proto" href={protoUrl(route)}>Prototype ↗</Pill><Pill kind="story" href={storyUrl(`nov-6-edits-chart-concepts--${story}`)}>Story →</Pill></div></td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+**Recommendation: C.** A and B are the most literal answer, but two scales on one chart
+make the reader check which axis each line belongs to, and the lines cross wherever the
+two scales happen to meet. C keeps the pacing chart as Product and sales saw it and adds
+opportunity beneath it on the same days. D is the strongest if one picture matters more
+than the cumulative pacing line. The overview opens on C; the **Chart** menu in the prototype toolbar switches any campaign overview between Round 6 and A–E.
+
+## Outside the prototype
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
+  <thead><tr><th style={th}>Item</th><th style={th}>Status</th><th style={th}>Notes</th></tr></thead>
+  <tbody>
+    {outside.map((o) => (
+      <tr key={o.title}><td style={{ ...td, fontWeight: 700, color: "#101828" }}>{o.title}</td><td style={td}><Chip tone={o.status} /></td><td style={td}>{o.note}</td></tr>
+    ))}
+  </tbody>
+</table>
+
+## Next
+
+Product picks a chart concept. DAUs replace the sample data when the backend feed lands.
+Red and yellow pacing stay as they are until Product and sales decide whether to show them.
+
+</div>

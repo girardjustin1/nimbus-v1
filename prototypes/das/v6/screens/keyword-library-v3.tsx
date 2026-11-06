@@ -13,7 +13,8 @@ import { Card, IntegrationGuide, KeywordTabs } from "./keyword-common";
 import { type Keyword, addKeywords, deleteKeyword, liveCampaigns, parseKeywordList, useKeywords } from "./keyword-data";
 import { SEARCH_FILL } from "./manage-campaigns";
 import { V3_NAV_ITEMS } from "./nav";
-import { TABLE, tealControls } from "./nimbus-ui";
+import { SortTh, TABLE, tealControls } from "./nimbus-ui";
+import { type SortValue, useTableSort } from "./table-sort";
 import { Button } from "./type-rules";
 
 /**
@@ -192,6 +193,20 @@ export const KeywordSetup = ({ filled = false }: { filled?: boolean }) => {
 
 /* ------------------------------------------------------ View All Keywords --- */
 
+/** View All Keywords columns and how each sorts (6 Nov: every table sorts). */
+const KEYWORD_COLUMNS = [
+    ["status", "Status"],
+    ["keyword", "Keyword"],
+    ["campaigns", "Associated Campaigns"],
+    ["updated", "Updated"],
+] as const;
+const KEYWORD_SORT: Record<string, (k: Keyword) => SortValue> = {
+    status: (k) => (liveCampaigns(k).length ? "Running" : "Paused"),
+    keyword: (k) => k.value,
+    campaigns: (k) => k.campaigns.length || undefined,
+    updated: (k) => Date.parse(k.updated),
+};
+
 export const ViewAllKeywords = ({ search = "", empty = false }: { search?: string; empty?: boolean }) => {
     const stored = useKeywords();
     const rows = empty ? [] : stored;
@@ -199,7 +214,9 @@ export const ViewAllKeywords = ({ search = "", empty = false }: { search?: strin
     const q = query.trim().toLowerCase();
     const shown = q ? rows.filter((k) => k.value.toLowerCase().includes(q)) : rows;
     const batch = useBatch(shown);
-    const visible = batch.onlySelected ? batch.selected : shown;
+    // 6 Nov: every table sorts.
+    const sorted = useTableSort(batch.onlySelected ? batch.selected : shown, (k, id) => KEYWORD_SORT[id]?.(k));
+    const visible = sorted.rows;
     // A keyword on a live campaign can't be removed in bulk — the same guard the single
     // Remove enforces, applied before the batch rather than after it.
     const removable = batch.selected.filter((k) => liveCampaigns(k).length === 0);
@@ -293,11 +310,12 @@ export const ViewAllKeywords = ({ search = "", empty = false }: { search?: strin
                                 <thead>
                                     <tr>
                                         {batch.on && <BatchHeadCell batch={batch} />}
-                                        {["Status", "Keyword", "Associated Campaigns", "Updated", ""].map((h) => (
-                                            <th key={h} className={th}>
+                                        {KEYWORD_COLUMNS.map(([id, h]) => (
+                                            <SortTh key={id} id={id} sort={sorted.sort} onSort={sorted.onSort} className={th}>
                                                 {h}
-                                            </th>
+                                            </SortTh>
                                         ))}
+                                        <th className={th} />
                                     </tr>
                                 </thead>
                                 <tbody>

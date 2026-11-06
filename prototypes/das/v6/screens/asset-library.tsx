@@ -1,19 +1,47 @@
 import { useRef, useState } from "react";
-import { AlertTriangle, CheckCircle, CheckDone01, CheckSquare, ChevronDown, Download01, Edit03, InfoCircle, PlayCircle, SearchLg, Trash01, XCircle } from "@untitledui/icons";
-import { Button } from "./type-rules";
+import {
+    AlertTriangle,
+    CheckCircle,
+    CheckDone01,
+    CheckSquare,
+    ChevronDown,
+    Download01,
+    Edit03,
+    InfoCircle,
+    PlayCircle,
+    SearchLg,
+    Trash01,
+    XCircle,
+} from "@untitledui/icons";
 import { Dropdown } from "@/components/base/dropdown/dropdown";
 import { Input } from "@/components/base/input/input";
 import { Select } from "@/components/base/select/select";
 import { cx } from "@/utils/cx";
 import { currentFillMode, useRegisterPageFill } from "../../../shared/demo-fill";
 import { Fillable } from "../../../shared/demo-fill-ui";
-import { DasShell, PinkAction, TEAL } from "./das-shell";
-import { V3_NAV_ITEMS } from "./nav";
-import { SEARCH_FILL } from "./manage-campaigns";
-import { PageTabs, TABLE, tealControls } from "./nimbus-ui";
+import {
+    AD_SIZES,
+    AD_TYPES,
+    type AdSize,
+    type AdType,
+    type Asset,
+    type MarkupIssue,
+    addAsset,
+    deleteAsset,
+    findMacros,
+    isWrappedVast,
+    peekReturn,
+    useAssets,
+    validateMarkup,
+} from "./asset-data";
 import { BatchAction, BatchBar, BatchBlocked, BatchCell, BatchDanger, BatchHeadCell } from "./batch-actions";
 import { downloadCsv, useBatch } from "./batch-data";
-import { AD_SIZES, AD_TYPES, type AdSize, type AdType, type Asset, type MarkupIssue, addAsset, deleteAsset, findMacros, isWrappedVast, peekReturn, useAssets, validateMarkup } from "./asset-data";
+import { DasShell, PinkAction, TEAL } from "./das-shell";
+import { SEARCH_FILL } from "./manage-campaigns";
+import { V3_NAV_ITEMS } from "./nav";
+import { PageTabs, SortTh, TABLE, tealControls } from "./nimbus-ui";
+import { type SortValue, useTableSort } from "./table-sort";
+import { Button } from "./type-rules";
 
 /**
  * Manage assets — Asset Setup and View All Assets.
@@ -115,9 +143,12 @@ const SAMPLE_CLICK_URLS = [
 ];
 
 /** In bad mode: one macro, one missing its scheme, one fine — so all three errors show. */
-const BAD_IMPRESSION_URLS = ["https://track.example.com/imp?cb=%%CACHEBUSTER%%", "track.example.com/imp?id=2", "https://agency.example.net/t/i?campaign=fall-launch"];
+const BAD_IMPRESSION_URLS = [
+    "https://track.example.com/imp?cb=%%CACHEBUSTER%%",
+    "track.example.com/imp?id=2",
+    "https://agency.example.net/t/i?campaign=fall-launch",
+];
 const BAD_CLICK_URLS = ["https://track.example.com/clk?ts=[TIMESTAMP]", "clk.example.com/go", ""];
-
 
 const Label = ({ children, required }: { children: React.ReactNode; required?: boolean }) => (
     <span className="text-md font-semibold text-primary">
@@ -227,11 +258,21 @@ const MarkupField = ({
                 <Label required>Add Markup</Label>
                 <span className="flex items-center gap-1.5 text-md text-tertiary">
                     Load a sample:
-                    <button type="button" onClick={() => sample("good")} className="rounded-md px-1.5 py-0.5 font-semibold hover:bg-secondary" style={{ color: "#1F7F80" }}>
+                    <button
+                        type="button"
+                        onClick={() => sample("good")}
+                        className="rounded-md px-1.5 py-0.5 font-semibold hover:bg-secondary"
+                        style={{ color: "#1F7F80" }}
+                    >
                         valid
                     </button>
                     <span aria-hidden="true">/</span>
-                    <button type="button" onClick={() => sample("bad")} className="rounded-md px-1.5 py-0.5 font-semibold hover:bg-secondary" style={{ color: AMBER }}>
+                    <button
+                        type="button"
+                        onClick={() => sample("bad")}
+                        className="rounded-md px-1.5 py-0.5 font-semibold hover:bg-secondary"
+                        style={{ color: AMBER }}
+                    >
                         with errors
                     </button>
                 </span>
@@ -253,7 +294,15 @@ const MarkupField = ({
                         {lines.map((_, i) => {
                             const tone = toneOf(i + 1);
                             return (
-                                <div key={i} className="pr-2" style={{ height: LINE_HEIGHT, color: tone === "error" ? RED : tone === "warning" ? AMBER : "#98A2B3", fontWeight: tone ? 700 : 400 }}>
+                                <div
+                                    key={i}
+                                    className="pr-2"
+                                    style={{
+                                        height: LINE_HEIGHT,
+                                        color: tone === "error" ? RED : tone === "warning" ? AMBER : "#98A2B3",
+                                        fontWeight: tone ? 700 : 400,
+                                    }}
+                                >
                                     {i + 1}
                                 </div>
                             );
@@ -265,7 +314,15 @@ const MarkupField = ({
                         <div ref={stripesRef} className="py-3">
                             {lines.map((_, i) => {
                                 const tone = toneOf(i + 1);
-                                return <div key={i} style={{ height: LINE_HEIGHT, backgroundColor: tone === "error" ? `${RED}14` : tone === "warning" ? `${AMBER}14` : "transparent" }} />;
+                                return (
+                                    <div
+                                        key={i}
+                                        style={{
+                                            height: LINE_HEIGHT,
+                                            backgroundColor: tone === "error" ? `${RED}14` : tone === "warning" ? `${AMBER}14` : "transparent",
+                                        }}
+                                    />
+                                );
                             })}
                         </div>
                     </div>
@@ -321,7 +378,11 @@ const MarkupField = ({
                                 className="flex items-center gap-2 px-4 py-3 text-md font-semibold"
                                 style={errors.length ? { backgroundColor: `${RED}0f`, color: RED } : { backgroundColor: `${AMBER}0f`, color: AMBER }}
                             >
-                                {errors.length ? <XCircle className="size-4 shrink-0" aria-hidden="true" /> : <AlertTriangle className="size-4 shrink-0" aria-hidden="true" />}
+                                {errors.length ? (
+                                    <XCircle className="size-4 shrink-0" aria-hidden="true" />
+                                ) : (
+                                    <AlertTriangle className="size-4 shrink-0" aria-hidden="true" />
+                                )}
                                 {errors.length > 0 && `${errors.length} ${errors.length === 1 ? "problem" : "problems"} to fix`}
                                 {errors.length > 0 && warnings.length > 0 && ", "}
                                 {warnings.length > 0 && `${warnings.length} ${warnings.length === 1 ? "thing" : "things"} worth checking`}
@@ -337,7 +398,10 @@ const MarkupField = ({
                                         >
                                             <span
                                                 className="mt-px shrink-0 rounded px-1.5 py-0.5 font-mono text-md font-bold"
-                                                style={{ color: issue.severity === "error" ? RED : AMBER, backgroundColor: issue.severity === "error" ? `${RED}14` : `${AMBER}14` }}
+                                                style={{
+                                                    color: issue.severity === "error" ? RED : AMBER,
+                                                    backgroundColor: issue.severity === "error" ? `${RED}14` : `${AMBER}14`,
+                                                }}
                                             >
                                                 {issue.line}
                                             </span>
@@ -439,23 +503,25 @@ export const AssetSetup = ({ filled = false, invalid = false, macros: withMacros
             <Label>{label}</Label>
             {values.map((v, i) => (
                 <Fillable key={i} filled={Boolean(v)} onFill={() => set(values.map((x, j) => (j === i ? samples[i % samples.length] : x)))}>
-                <Input
-                    aria-label={`${label} ${i + 1}`}
-                    size="md"
-                    value={v}
-                    onChange={(next) => set(values.map((x, j) => (j === i ? next : x)))}
-                    isInvalid={Boolean(v) && (!/^https?:\/\//.test(v) || findMacros(v).length > 0)}
-                    hint={
-                        v && !/^https?:\/\//.test(v)
-                            ? "Must be a full https:// URL"
-                            : v && findMacros(v).length > 0
-                              ? `Macros aren't supported in trackers: ${findMacros(v).join(", ")}`
-                              : undefined
-                    }
-                />
+                    <Input
+                        aria-label={`${label} ${i + 1}`}
+                        size="md"
+                        value={v}
+                        onChange={(next) => set(values.map((x, j) => (j === i ? next : x)))}
+                        isInvalid={Boolean(v) && (!/^https?:\/\//.test(v) || findMacros(v).length > 0)}
+                        hint={
+                            v && !/^https?:\/\//.test(v)
+                                ? "Must be a full https:// URL"
+                                : v && findMacros(v).length > 0
+                                  ? `Macros aren't supported in trackers: ${findMacros(v).join(", ")}`
+                                  : undefined
+                        }
+                    />
                 </Fillable>
             ))}
-            <span className="text-md text-tertiary">{values.filter(Boolean).length} of {values.length} used. Macros aren't supported here.</span>
+            <span className="text-md text-tertiary">
+                {values.filter(Boolean).length} of {values.length} used. Macros aren't supported here.
+            </span>
         </div>
     );
 
@@ -475,7 +541,14 @@ export const AssetSetup = ({ filled = false, invalid = false, macros: withMacros
                         <div className="flex flex-col gap-1.5">
                             <Label required>Creative Name</Label>
                             <Fillable filled={Boolean(name)} onFill={() => setName("SampleApp_MREC_Autumn")}>
-                                <Input aria-label="Creative Name" size="md" value={name} onChange={setName} isInvalid={Boolean(name) && !name.trim()} hint={name && !name.trim() ? "Name the creative" : undefined} />
+                                <Input
+                                    aria-label="Creative Name"
+                                    size="md"
+                                    value={name}
+                                    onChange={setName}
+                                    isInvalid={Boolean(name) && !name.trim()}
+                                    hint={name && !name.trim() ? "Name the creative" : undefined}
+                                />
                             </Fillable>
                         </div>
 
@@ -510,14 +583,7 @@ export const AssetSetup = ({ filled = false, invalid = false, macros: withMacros
                             </div>
                         </div>
 
-                        <MarkupField
-                            value={markup}
-                            onChange={setMarkup}
-                            type={type}
-                            liveError={markupError}
-                            report={report}
-                            onReport={setReport}
-                        />
+                        <MarkupField value={markup} onChange={setMarkup} type={type} liveError={markupError} report={report} onReport={setReport} />
 
                         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                             {urlRow(imps, setImps, "Impression Tracking URL(s)", SAMPLE_IMPRESSION_URLS)}
@@ -538,7 +604,6 @@ export const AssetSetup = ({ filled = false, invalid = false, macros: withMacros
                             )}
                         </div>
                     </div>
-
                 </div>
             </div>
         </DasShell>
@@ -547,13 +612,35 @@ export const AssetSetup = ({ filled = false, invalid = false, macros: withMacros
 
 /* -------------------------------------------------------- View All Assets --- */
 
+/** View All Assets columns and how each sorts (6 Nov: every table sorts). */
+const ASSET_COLUMNS = [
+    ["status", "Status"],
+    ["name", "Asset Name"],
+    ["campaigns", "Associated Campaigns"],
+    ["type", "Ad Type"],
+    ["size", "Ad Size"],
+    ["impressions", "Impression Trackers"],
+    ["clicks", "Click Trackers"],
+] as const;
+const ASSET_SORT: Record<string, (a: Asset) => SortValue> = {
+    status: (a) => a.status,
+    name: (a) => a.name,
+    campaigns: (a) => (a.campaigns.length ? a.campaigns.join(", ") : undefined),
+    type: (a) => a.type,
+    size: (a) => a.size,
+    impressions: (a) => a.impressionTrackers.length || undefined,
+    clicks: (a) => a.clickTrackers.length || undefined,
+};
+
 export const ViewAllAssets = ({ search = "" }: { search?: string }) => {
     const assets = useAssets();
     const [query, setQuery] = useState(search);
     const q = query.trim().toLowerCase();
     const rows = q ? assets.filter((a) => `${a.name} ${a.type} ${a.size} ${a.campaigns.join(" ")}`.toLowerCase().includes(q)) : assets;
     const batch = useBatch(rows);
-    const visible = batch.onlySelected ? batch.selected : rows;
+    // 6 Nov: every table sorts. Batch selection follows the rows, not their order.
+    const sorted = useTableSort(batch.onlySelected ? batch.selected : rows, (a, id) => ASSET_SORT[id]?.(a));
+    const visible = sorted.rows;
     // An asset on a campaign can't be deleted in bulk either — same guard as the single
     // Delete, applied before the batch rather than after it.
     const deletable = batch.selected.filter((a) => a.campaigns.length === 0);
@@ -578,7 +665,15 @@ export const ViewAllAssets = ({ search = "" }: { search?: string }) => {
             <div className="flex flex-col gap-5 px-8 py-8">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className={SEARCH_FILL}>
-                        <Input aria-label="Search Assets" size="md" icon={SearchLg} placeholder="Search Assets" value={query} onChange={setQuery} wrapperClassName="w-full" />
+                        <Input
+                            aria-label="Search Assets"
+                            size="md"
+                            icon={SearchLg}
+                            placeholder="Search Assets"
+                            value={query}
+                            onChange={setQuery}
+                            wrapperClassName="w-full"
+                        />
                     </div>
                     <div className="flex shrink-0 items-center gap-3">
                         {/* Same Actions menu as manage keywords, so the two libraries behave
@@ -631,11 +726,12 @@ export const ViewAllAssets = ({ search = "" }: { search?: string }) => {
                         <thead>
                             <tr>
                                 {batch.on && <BatchHeadCell batch={batch} />}
-                                {["Status", "Asset Name", "Associated Campaigns", "Ad Type", "Ad Size", "Impression Trackers", "Click Trackers", ""].map((h) => (
-                                    <th key={h} className={th}>
+                                {ASSET_COLUMNS.map(([id, h]) => (
+                                    <SortTh key={id} id={id} sort={sorted.sort} onSort={sorted.onSort} className={th}>
                                         {h}
-                                    </th>
+                                    </SortTh>
                                 ))}
+                                <th className={th} />
                             </tr>
                         </thead>
                         <tbody>
@@ -644,7 +740,11 @@ export const ViewAllAssets = ({ search = "" }: { search?: string }) => {
                                     {batch.on && <BatchCell batch={batch} id={a.id} label={a.name} />}
                                     <td className={td}>
                                         <span className="inline-flex items-center gap-2">
-                                            <span className="size-2 rounded-full" style={{ backgroundColor: a.status === "Running" ? TEAL : "#98A2B3" }} aria-hidden="true" />
+                                            <span
+                                                className="size-2 rounded-full"
+                                                style={{ backgroundColor: a.status === "Running" ? TEAL : "#98A2B3" }}
+                                                aria-hidden="true"
+                                            />
                                             {a.status}
                                         </span>
                                     </td>
@@ -673,7 +773,9 @@ export const ViewAllAssets = ({ search = "" }: { search?: string }) => {
                                                         </Dropdown.Item>
                                                         <Dropdown.Item
                                                             icon={Trash01}
-                                                            onAction={() => window.location.assign(`#/asset-detail?a=${a.id}${a.campaigns.length ? "&confirm=1" : ""}`)}
+                                                            onAction={() =>
+                                                                window.location.assign(`#/asset-detail?a=${a.id}${a.campaigns.length ? "&confirm=1" : ""}`)
+                                                            }
                                                         >
                                                             Delete
                                                         </Dropdown.Item>

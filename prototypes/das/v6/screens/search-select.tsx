@@ -1,16 +1,17 @@
 import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, Plus, SearchLg, XClose } from "@untitledui/icons";
-import { Button } from "./type-rules";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Input } from "@/components/base/input/input";
 import { cx } from "@/utils/cx";
+import { type ListCursor, activeRowStyle, resultCount, useListCursor } from "./arrow-keys";
 import { useCopy } from "./copy-deck";
 import { Copy } from "./copy-deck-ui";
 import { PINK, TEAL } from "./das-shell";
-import { type ListCursor, activeRowStyle, resultCount, useListCursor } from "./arrow-keys";
+import { SortTh, TABLE, tealControls } from "./nimbus-ui";
 import { usePanelPlacement } from "./panel-placement";
 import { useScrollLock } from "./scroll-lock";
-import { TABLE, tealControls } from "./nimbus-ui";
+import { textKey, useTableSort } from "./table-sort";
+import { Button } from "./type-rules";
 
 /**
  * Search and select — Product's name for it, on 2 Oct.
@@ -242,6 +243,8 @@ export const ChosenTable = ({
     onRemove: (id: string) => void;
     empty: ReactNode;
 }) => {
+    // 6 Nov: every table sorts — by what each cell shows, in the order picked until then.
+    const sorted = useTableSort(rows, (r, id) => textKey(r.cells[Number(id)]));
     if (rows.length === 0)
         return (
             <div className="rounded-xl border border-dashed border-secondary px-6 py-8 text-center text-md text-tertiary">
@@ -254,17 +257,21 @@ export const ChosenTable = ({
             <table className={TABLE.table}>
                 <thead>
                     <tr>
-                        {columns.map((c, i) => (
+                        {columns.map((c, i) =>
                             // By position: headers can repeat (one is blank) and callers may pass "" when copy is hidden.
-                            <th key={i} className={CHOSEN_TH}>
-                                <Copy>{c}</Copy>
-                            </th>
-                        ))}
+                            c ? (
+                                <SortTh key={i} id={String(i)} sort={sorted.sort} onSort={sorted.onSort} className="first:pl-4 last:pr-4">
+                                    <Copy>{c}</Copy>
+                                </SortTh>
+                            ) : (
+                                <th key={i} className={CHOSEN_TH} />
+                            ),
+                        )}
                         <th className={cx(CHOSEN_TH, "w-10")} />
                     </tr>
                 </thead>
                 <tbody>
-                    {rows.map((r, n) => (
+                    {sorted.rows.map((r, n) => (
                         <tr key={r.id} className={cx(n % 2 === 1 && TABLE.list.stripe, r.invalid && "bg-error-primary")}>
                             {r.cells.map((cell, i) => (
                                 <td key={i} className={CHOSEN_TD}>
@@ -383,7 +390,10 @@ export const InlineSearchSelect = ({
                         }}
                     />
                     {open && (
-                        <div ref={panelRef} className="absolute top-full right-0 left-0 z-30 mt-1 overflow-hidden rounded bg-primary shadow-lg ring-1 ring-secondary">
+                        <div
+                            ref={panelRef}
+                            className="absolute top-full right-0 left-0 z-30 mt-1 overflow-hidden rounded bg-primary shadow-lg ring-1 ring-secondary"
+                        >
                             <PanelHeader label={label} matched={hits.length} total={rows.length} noun={noun} filtering={Boolean(q)} />
                             <Results
                                 shown={shown}
@@ -508,7 +518,10 @@ export const SingleSearchSelect = ({
                     <ChevronDown className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-fg-quaternary" aria-hidden="true" />
                 )}
                 {open && !isDisabled && (
-                    <div ref={panelRef} className="absolute top-full right-0 left-0 z-30 mt-1 overflow-hidden rounded bg-primary shadow-lg ring-1 ring-secondary">
+                    <div
+                        ref={panelRef}
+                        className="absolute top-full right-0 left-0 z-30 mt-1 overflow-hidden rounded bg-primary shadow-lg ring-1 ring-secondary"
+                    >
                         <PanelHeader label={label} matched={hits.length} total={rows.length} noun={noun} filtering={Boolean(q)} />
                         {shown.length === 0 ? (
                             <div className="px-4 py-6 text-center text-md text-tertiary">
@@ -529,7 +542,10 @@ export const SingleSearchSelect = ({
                                             style={active ? activeRowStyle() : undefined}
                                             className={cx("flex w-full flex-col items-start px-4 py-2 text-left", !active && "hover:bg-field-option")}
                                         >
-                                            <span className={cx("text-md text-primary", chosenOne && "font-semibold")} style={chosenOne ? { color: TEAL } : undefined}>
+                                            <span
+                                                className={cx("text-md text-primary", chosenOne && "font-semibold")}
+                                                style={chosenOne ? { color: TEAL } : undefined}
+                                            >
                                                 {row.label}
                                             </span>
                                             {row.meta && <span className="text-md text-tertiary">{row.meta}</span>}
@@ -685,7 +701,8 @@ export const ModalSearchSelect = ({
                                         style={active ? activeRowStyle() : undefined}
                                         className={cx("flex items-center gap-3 px-6 py-3", (already || blocked) && "opacity-50")}
                                     >
-                                        <Checkbox style={tealControls}
+                                        <Checkbox
+                                            style={tealControls}
                                             size="sm"
                                             aria-label={row.label}
                                             isSelected={already || picked.includes(row.id)}

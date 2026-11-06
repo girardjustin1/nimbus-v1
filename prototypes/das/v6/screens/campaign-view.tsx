@@ -1,6 +1,5 @@
-import type { ReactNode } from "react";
+import { type ReactNode, useLayoutEffect } from "react";
 import { AlertTriangle, ArrowRight, CheckCircle, Clock, Copy01, Edit03, PauseCircle, PlayCircle, TrendUp01 } from "@untitledui/icons";
-import { Area, CartesianGrid, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { cx } from "@/utils/cx";
 import {
     type Campaign,
@@ -23,11 +22,13 @@ import {
     pacingPct,
     usd,
 } from "./campaign-data";
-import { axis, dailyDelivery, effectiveEcpm, flightDay, useCampaign } from "./campaign-series";
-import { BreadcrumbStrip, ChartTooltip, PaceDot, StatChip, TrueUp } from "./campaign-ui";
+import { DELIVERY_DESCRIPTION, type DeliveryVariant, effectiveEcpm, setDeliveryChoice, useCampaign, useDeliveryChoice } from "./campaign-series";
+import { BreadcrumbStrip, PaceDot, StatChip, TrueUp } from "./campaign-ui";
 import { DasShell, DeliveryBar, KeywordChip, PINK, Section, StatusDot, TEAL } from "./das-shell";
+import { DeliveryChart } from "./delivery-chart";
 import { V3_NAV_ITEMS } from "./nav";
-import { TABLE } from "./nimbus-ui";
+import { SortTh, TABLE } from "./nimbus-ui";
+import { useTableSort } from "./table-sort";
 import { languageLabel } from "./target-data";
 import { Button } from "./type-rules";
 import { LABEL } from "./type-rules";
@@ -63,25 +64,6 @@ import { LABEL } from "./type-rules";
 export type SummaryVariant = "cards" | "sidebar";
 
 /* ------------------------------------------------------------- Figures --- */
-
-/**
- * Cumulative delivery. Budgeted campaigns plot it as a share of the goal (0–100%) against
- * the share expected by each day; Fallback, with no goal, plots impressions.
- */
-const series = (c: Campaign) => {
-    const daily = dailyDelivery(c);
-    const fallback = c.rule === "Fallback";
-    let run = 0;
-    return Array.from({ length: c.flightDays }, (_, i) => {
-        if (i < daily.length) run += daily[i];
-        return {
-            day: flightDay(c, i),
-            n: i + 1,
-            Actual: i < daily.length ? (fallback ? Math.round(run) : +((run / c.budget) * 100).toFixed(1)) : undefined,
-            Expected: fallback ? undefined : +(((i + 1) / c.flightDays) * 100).toFixed(1),
-        };
-    });
-};
 
 /** "Daily Scores (iOS)", "Daily Scores (Android)" → "Daily Scores (iOS, Android)". */
 const groupedApps = (apps: string[]) => {
@@ -223,72 +205,6 @@ const Keywords = ({ c }: { c: Campaign }) =>
         <span className="text-tertiary">Everyone (no keyword targeting)</span>
     );
 
-const PaceChart = ({ c, height = 280 }: { c: Campaign; height?: number }) => {
-    const data = series(c);
-    const fallback = c.rule === "Fallback";
-    return (
-        <div style={{ height }}>
-            <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
-                    <defs>
-                        <linearGradient id={`pace-${c.id}`} x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor={TEAL} stopOpacity={0.3} />
-                            <stop offset="100%" stopColor={TEAL} stopOpacity={0} />
-                        </linearGradient>
-                    </defs>
-                    <CartesianGrid vertical={false} className="[&_line]:stroke-border-secondary" />
-                    <XAxis dataKey="day" {...axis} interval={Math.max(1, Math.round(c.flightDays / 6) - 1)} />
-                    <YAxis
-                        {...axis}
-                        width={64}
-                        domain={fallback ? undefined : [0, 100]}
-                        ticks={fallback ? undefined : [0, 25, 50, 75, 100]}
-                        tickFormatter={(v: number) => (fallback ? compact(v) : `${v}%`)}
-                    />
-                    <Tooltip
-                        content={
-                            <ChartTooltip
-                                format={(v) => (fallback ? `${v.toLocaleString("en-US")} impressions` : `${v.toFixed(1)}% of goal`)}
-                                title={(label) => {
-                                    const n = data.findIndex((d) => d.day === label) + 1;
-                                    return `${label} · day ${n} of ${c.flightDays}`;
-                                }}
-                            />
-                        }
-                    />
-                    <Area
-                        type="monotone"
-                        dataKey="Actual"
-                        name={fallback ? "Impressions" : "Actual"}
-                        stroke={TEAL}
-                        strokeWidth={2}
-                        fill={`url(#pace-${c.id})`}
-                        isAnimationActive={false}
-                        connectNulls={false}
-                    />
-                    {!fallback && (
-                        <Line type="linear" dataKey="Expected" stroke={PINK} strokeDasharray="5 4" strokeWidth={1.5} dot={false} isAnimationActive={false} />
-                    )}
-                </ComposedChart>
-            </ResponsiveContainer>
-        </div>
-    );
-};
-
-const Legend = ({ c }: { c: Campaign }) => (
-    <div className="flex flex-wrap gap-4 text-md text-tertiary">
-        <span className="inline-flex items-center gap-1.5">
-            <span className="h-0.5 w-4 rounded" style={{ backgroundColor: TEAL }} />{" "}
-            {c.rule === "Fallback" ? "Cumulative impressions" : "Actual: share of the goal delivered"}
-        </span>
-        {c.rule !== "Fallback" && (
-            <span className="inline-flex items-center gap-1.5">
-                <span className="h-0 w-4 border-t-2 border-dashed" style={{ borderColor: PINK }} /> Expected: the share due by each day
-            </span>
-        )}
-    </div>
-);
-
 const EmptyDelivery = ({ c }: { c: Campaign }) => (
     <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-secondary px-6 py-12 text-center">
         <Clock className="size-6 text-fg-quaternary" aria-hidden="true" />
@@ -414,8 +330,30 @@ const SummaryRail = ({ c }: { c: Campaign }) => (
 
 /* ============================================================ Overview === */
 
-export const ViewOnePage = ({ id = "c1", published = false, summary = "cards" }: { id?: string; published?: boolean; summary?: SummaryVariant }) => {
+export const ViewOnePage = ({
+    id = "c1",
+    published = false,
+    summary = "cards",
+    delivery,
+    presetChart,
+}: {
+    id?: string;
+    published?: boolean;
+    summary?: SummaryVariant;
+    /** A fixed Delivery chart (Storybook). Left out, the prototype toolbar's Chart menu picks it. */
+    delivery?: DeliveryVariant;
+    /** Opens the page with the Chart menu set to this (the prototype's A–E screens); the menu can still change it. */
+    presetChart?: DeliveryVariant;
+}) => {
+    const chosen = useDeliveryChoice();
+    useLayoutEffect(() => {
+        if (presetChart) setDeliveryChoice(presetChart);
+    }, [presetChart]);
+    // The preset lands before the first paint, so the A–E screens never flash C.
+    const chart = delivery ?? chosen;
     const c = useCampaign(id);
+    // 6 Nov: every table sorts, the creative list included.
+    const creatives = useTableSort(c.creativeList, (cr, key) => cr[key as "name" | "type" | "size"]);
     const scheduled = c.status === "Scheduled";
     const fallback = c.rule === "Fallback";
     return (
@@ -467,19 +405,12 @@ export const ViewOnePage = ({ id = "c1", published = false, summary = "cards" }:
                             title="Delivery"
                             description={
                                 fallback
-                                    ? "Fallback campaigns have no budget, so delivery is shown as impressions."
-                                    : "Expected against actual delivery, as a share of the goal."
+                                    ? "Fallback campaigns have no budget, so delivery is shown as impressions, with the opportunity each day below."
+                                    : DELIVERY_DESCRIPTION[chart]
                             }
                             trailing={scheduled ? undefined : <FullPerformanceLink c={c} />}
                         >
-                            {scheduled ? (
-                                <EmptyDelivery c={c} />
-                            ) : (
-                                <>
-                                    <PaceChart c={c} />
-                                    <Legend c={c} />
-                                </>
-                            )}
+                            {scheduled ? <EmptyDelivery c={c} /> : <DeliveryChart c={c} variant={chart} />}
                         </Section>
                         <Section id="v-deal" title="General" trailing={<EditLink />}>
                             <dl className="divide-y divide-secondary">
@@ -533,15 +464,21 @@ export const ViewOnePage = ({ id = "c1", published = false, summary = "cards" }:
                                 <table className={TABLE.table}>
                                     <thead>
                                         <tr>
-                                            {["Creative", "Ad Type", "Ad Size"].map((h) => (
-                                                <th key={h} scope="col" className={cx(TABLE.list.th, "first:pl-4 last:pr-4")}>
+                                            {(
+                                                [
+                                                    ["name", "Creative"],
+                                                    ["type", "Ad Type"],
+                                                    ["size", "Ad Size"],
+                                                ] as const
+                                            ).map(([id, h]) => (
+                                                <SortTh key={id} id={id} sort={creatives.sort} onSort={creatives.onSort} className="first:pl-4 last:pr-4">
                                                     {h}
-                                                </th>
+                                                </SortTh>
                                             ))}
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {c.creativeList.map((cr, i) => (
+                                        {creatives.rows.map((cr, i) => (
                                             <tr key={cr.name} className={cx(i % 2 === 1 && TABLE.list.stripe)}>
                                                 <td className={cx(TABLE.list.td, "py-3 font-medium text-primary first:pl-4 last:pr-4")}>{cr.name}</td>
                                                 <td className={cx(TABLE.list.td, "py-3 first:pl-4 last:pr-4")}>{cr.type}</td>
