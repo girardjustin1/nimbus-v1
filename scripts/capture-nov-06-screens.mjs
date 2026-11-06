@@ -30,23 +30,18 @@ const sortBy =
         for (let i = 0; i < times; i++) await p.getByRole("button", { name, exact: true }).first().click();
     };
 
-/** [file, route, element to capture (or null for the viewport), optional interaction] */
+/**
+ * [file, route, element to capture (or null for the viewport), optional interaction]
+ *
+ * 03–08 and 12–15 (Round 6 and concepts A–I) were captured on 6 Nov from screens that
+ * left the prototype once A was chosen; they stay as a record and aren't re-shot.
+ */
 const SHOTS = [
     ["01-delivery-at-risk", "view-a-at-risk", "#v-delivery", hoverChart()],
     ["02-delivery-behind", "view-a-behind", "#v-delivery", hoverChart(0.2)],
-    ["03-round-6", "view-a-chart-round-6", "#v-delivery", null],
-    ["04-concept-a", "view-a-chart-overlay", "#v-delivery", null],
-    ["05-concept-b", "view-a-chart-bars", "#v-delivery", null],
-    ["06-concept-c", "view-a-chart-stacked", "#v-delivery", null],
-    ["07-concept-d", "view-a-chart-indexed", "#v-delivery", null],
-    ["08-concept-e", "view-a-chart-strip", "#v-delivery", null],
     ["09-assets-sorted", "asset-view", null, sortBy("Ad Size")],
     ["10-fp-sorted", "view-d", "table", sortBy("Revenue")],
     ["11-keywords-sorted", "keyword-view", null, sortBy("Updated", 2)],
-    ["12-concept-f", "view-a-chart-labelled", "#v-delivery", null],
-    ["13-concept-g", "view-a-chart-backdrop", "#v-delivery", null],
-    ["14-concept-h", "view-a-chart-scaled", "#v-delivery", null],
-    ["15-concept-i", "view-a-chart-bands", "#v-delivery", null],
 ];
 
 const browser = await chromium.launch();

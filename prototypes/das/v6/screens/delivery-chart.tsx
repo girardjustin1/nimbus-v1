@@ -32,7 +32,7 @@ import { PINK, TEAL } from "./das-shell";
  *   bars     B · users as bars (a volume), requests and pacing as lines, like the
  *            realtime dashboard.
  *   stacked  C · two charts on one timeline: pacing above, opportunity below, one axis
- *            each and a shared hover. Recommended, and the overview's default.
+ *            each and a shared hover.
  *   indexed  D · one chart, one axis: every line is a % of a normal day.
  *   strip    E · the pacing chart, with a heat strip of requests and users beneath it.
  *
@@ -51,6 +51,10 @@ import { PINK, TEAL } from "./das-shell";
  *             users as a share of a normal day.
  *   bands     I · the pacing chart, with the days opportunity fell shaded and labelled
  *             ("Requests −48% · users −45%").
+ *
+ * Decision (6 Nov, Product): A. "It has to just be actual numbers" — nothing against
+ * normal — so A, everything on one chart in real figures, is what the overview shows. The
+ * rest stay in Storybook › Nov 6 Edits for reference.
  *
  * Colours: teal and pink stay Actual and Expected (Expected is dashed, so the pair still
  * reads for colour-blind users); Requests navy, DAUs brown — both pass the colour-blind
@@ -606,10 +610,11 @@ const Legend = ({ c, variant }: { c: Campaign; variant: DeliveryVariant }) => {
 
 /* -------------------------------------------------------------- Chart --- */
 
-export const DeliveryChart = ({ c, variant = "stacked" }: { c: Campaign; variant?: DeliveryVariant }) => {
+export const DeliveryChart = ({ c, variant = "overlay" }: { c: Campaign; variant?: DeliveryVariant }) => {
     const data = points(c);
-    // A Fallback campaign has no goal to pace against or index to; it keeps the stacked view.
-    const v: DeliveryVariant = c.rule === "Fallback" && variant !== "pacing" ? "stacked" : variant;
+    // A Fallback campaign has no goal: the views built on a share of the goal or of a normal
+    // day show it as A, impressions on the left and the day's opportunity on the right.
+    const v: DeliveryVariant = c.rule === "Fallback" && ["indexed", "scaled", "labelled"].includes(variant) ? "overlay" : variant;
     const sync = `delivery-${c.id}`;
     return (
         <div className="flex flex-col gap-4">

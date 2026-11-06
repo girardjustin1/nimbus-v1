@@ -1,5 +1,5 @@
-import { type ReactNode, useLayoutEffect } from "react";
-import { AlertTriangle, ArrowRight, CheckCircle, Clock, Copy01, Edit03, PauseCircle, PlayCircle, TrendUp01 } from "@untitledui/icons";
+import type { ReactNode } from "react";
+import { ArrowRight, CheckCircle, Clock, Copy01, Edit03, PauseCircle, PlayCircle } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
 import {
     type Campaign,
@@ -11,18 +11,15 @@ import {
     appsSummary,
     compact,
     daysLeft,
-    deliveredPct,
-    elapsedDays,
     flightRange,
     formatPct,
-    neededPerDay,
     notPacing,
     paceDetail,
     paceOf,
     pacingPct,
     usd,
 } from "./campaign-data";
-import { DELIVERY_DESCRIPTION, type DeliveryVariant, effectiveEcpm, setDeliveryChoice, useCampaign, useDeliveryChoice } from "./campaign-series";
+import { DELIVERY_DESCRIPTION, type DeliveryVariant, effectiveEcpm, useCampaign } from "./campaign-series";
 import { BreadcrumbStrip, PaceDot, StatChip, TrueUp } from "./campaign-ui";
 import { DasShell, DeliveryBar, KeywordChip, PINK, Section, StatusDot, TEAL } from "./das-shell";
 import { DeliveryChart } from "./delivery-chart";
@@ -140,22 +137,16 @@ const Banner = ({ tone, icon, children, action }: { tone: "warn" | "info"; icon:
     </div>
 );
 
+/**
+ * 6 Nov (Product): no coaching — the page states what the data is and never tells the
+ * publisher what to do. So no pacing warning strip (pacing lives in its card and the
+ * Delivery chart), and no daily target or Resume prompt on a paused campaign.
+ */
 const StatusBanner = ({ c }: { c: Campaign }) => {
-    const health = paceOf(c);
-    const pct = pacingPct(c);
     if (c.status === "Paused")
         return (
-            <Banner
-                tone="warn"
-                icon={<PauseCircle className="size-5" aria-hidden="true" />}
-                action={
-                    <Button size="sm" color="secondary">
-                        Resume
-                    </Button>
-                }
-            >
-                <strong>Paused since Sep 12.</strong> The flight keeps running, so {daysLeft(c)} days are left to spend {usd(c.budget - c.spend)}. That's{" "}
-                {usd(neededPerDay(c))} a day to finish on budget.
+            <Banner tone="info" icon={<PauseCircle className="size-5" aria-hidden="true" />}>
+                <strong>Paused since Sep 12.</strong> {daysLeft(c)} days left in the flight; {usd(c.budget - c.spend)} of the budget not yet spent.
             </Banner>
         );
     if (c.status === "Scheduled")
@@ -164,26 +155,6 @@ const StatusBanner = ({ c }: { c: Campaign }) => {
                 <strong>Queued. Starts {c.start}.</strong> Delivery and performance appear here once the first impressions are served.
             </Banner>
         );
-    if ((health === "behind" || health === "at risk") && pct !== undefined) {
-        const today = c.spend / Math.max(1, elapsedDays(c));
-        return (
-            <Banner
-                tone="warn"
-                icon={<AlertTriangle className="size-5" aria-hidden="true" />}
-                action={
-                    <Button size="sm" color="secondary" iconLeading={TrendUp01}>
-                        Raise eCPM
-                    </Button>
-                }
-            >
-                <strong>
-                    {PACE_LABEL[health]}, pacing at {formatPct(pct)}.
-                </strong>{" "}
-                {Math.round(deliveredPct(c))}% of the budget delivered with {c.flightElapsed}% of the flight gone. Finishing on budget needs about{" "}
-                {usd(neededPerDay(c))} a day; it's delivering about {usd(today)}.{health === "at risk" && " Under-delivery on a deal can breach its terms."}
-            </Banner>
-        );
-    }
     return null;
 };
 
@@ -334,23 +305,15 @@ export const ViewOnePage = ({
     id = "c1",
     published = false,
     summary = "cards",
-    delivery,
-    presetChart,
+    delivery = "overlay",
 }: {
     id?: string;
     published?: boolean;
     summary?: SummaryVariant;
-    /** A fixed Delivery chart (Storybook). Left out, the prototype toolbar's Chart menu picks it. */
+    /** 6 Nov: the Delivery chart is A (actual numbers, one chart). Storybook passes the other concepts. */
     delivery?: DeliveryVariant;
-    /** Opens the page with the Chart menu set to this (the prototype's A–E screens); the menu can still change it. */
-    presetChart?: DeliveryVariant;
 }) => {
-    const chosen = useDeliveryChoice();
-    useLayoutEffect(() => {
-        if (presetChart) setDeliveryChoice(presetChart);
-    }, [presetChart]);
-    // The preset lands before the first paint, so the A–E screens never flash C.
-    const chart = delivery ?? chosen;
+    const chart = delivery;
     const c = useCampaign(id);
     // 6 Nov: every table sorts, the creative list included.
     const creatives = useTableSort(c.creativeList, (cr, key) => cr[key as "name" | "type" | "size"]);
