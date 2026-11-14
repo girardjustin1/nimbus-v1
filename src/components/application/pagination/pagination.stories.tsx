@@ -5,7 +5,7 @@ import { PaginationDot } from "./pagination-dot";
 import { PaginationButtonGroup, PaginationCardDefault, PaginationPageDefault } from "./pagination";
 
 const meta = {
-    title: "Application UI/Pagination",
+    title: "Design System/Application UI/Pagination",
     component: PaginationPageDefault,
     parameters: { layout: "padded" },
     tags: ["autodocs"],

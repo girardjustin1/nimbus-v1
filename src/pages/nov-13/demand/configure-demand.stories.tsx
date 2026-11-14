@@ -4,7 +4,7 @@ import { ERROR_PARTNER } from "../../../../prototypes/app/v1/screens/demand/dema
 
 /** Demand → configure demand: the partner list, one partner's configuration, and its error state. */
 const meta = {
-    title: "November 13th, 2026/Demand/Configure Demand",
+    title: "Prototypes/Full application/Demand/Configure Demand",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

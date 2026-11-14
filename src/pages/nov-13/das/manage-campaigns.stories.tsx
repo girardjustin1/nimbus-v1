@@ -3,9 +3,9 @@ import { ViewOnePage } from "../../../../prototypes/app/v1/screens/campaign-view
 import { FullPerformance } from "../../../../prototypes/app/v1/screens/full-performance";
 import { ManageCampaigns } from "../../../../prototypes/app/v1/screens/manage-campaigns";
 
-/** November 13th, 2026 · Deal Activation System · Manage campaigns — from DAS Round 6, unchanged. */
+/** Full application · Deal Activation System · Manage campaigns — from DAS Round 6, unchanged. */
 const meta = {
-    title: "November 13th, 2026/Deal Activation System/Manage campaigns",
+    title: "Prototypes/Full application/Deal Activation System/Manage campaigns",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

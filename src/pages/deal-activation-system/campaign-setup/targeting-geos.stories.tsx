@@ -6,7 +6,7 @@ import { Surface, Value } from "./harness";
  * Geos — a region tree you can take whole, type to narrow, A–Z, double-click a region to open or close it, and Done.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Targeting/Geos",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Targeting/Geos",
 } satisfies Meta;
 
 export default meta;

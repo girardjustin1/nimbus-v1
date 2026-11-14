@@ -8,7 +8,7 @@ import {
 } from "./nimbus-payments";
 
 const meta = {
-    title: "App Screens/Nimbus+ Payments",
+    title: "Archive/App Screens/Nimbus+ Payments",
     component: NimbusPaymentsScreen,
     parameters: {
         layout: "fullscreen",

@@ -4,7 +4,7 @@ import { colorAt } from "../chart-theme";
 import { MetricCard } from "../reporting-charts";
 
 /** Metric card — the headline number, its change, and an optional 7-day trend. */
-const meta = { title: "Performance Insights/Charts/Metric Card", parameters: { layout: "padded" } } satisfies Meta;
+const meta = { title: "Design System/Chart library/Metric Card", parameters: { layout: "padded" } } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

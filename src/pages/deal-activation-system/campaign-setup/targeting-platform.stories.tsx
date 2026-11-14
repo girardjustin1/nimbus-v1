@@ -6,7 +6,7 @@ import { Surface, Value } from "./harness";
  * Platform — iOS and Android.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Targeting/Platform",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Targeting/Platform",
 } satisfies Meta;
 
 export default meta;

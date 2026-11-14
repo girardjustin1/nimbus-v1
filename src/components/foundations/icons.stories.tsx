@@ -86,7 +86,7 @@ type IconType = FC<{ className?: string }>;
  * Icons inherit color via currentColor (shown here in the brand teal).
  */
 const meta = {
-    title: "Styles/Icons",
+    title: "Design System/Styles/Icons",
     parameters: { layout: "fullscreen" },
     tags: ["autodocs"],
 } satisfies Meta;

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { KeyMetricsDashboardScreen } from "./key-metrics-dashboard";
 
 const meta = {
-    title: "App Screens/Key Metrics Dashboard",
+    title: "Archive/App Screens/Key Metrics Dashboard",
     component: KeyMetricsDashboardScreen,
     tags: ["autodocs"],
     parameters: {

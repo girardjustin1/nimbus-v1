@@ -1,7 +1,9 @@
 import { Meta } from "@storybook/addon-docs/blocks";
+import { ReviewHeader } from "../intro/review-header";
+import { More } from "../intro/ui";
 import { framing, items, links, review27, review27Framing } from "./feedback";
 
-<Meta title="Oct 26/Overview" />
+<Meta title="Reviews/Oct 26 · Nimbus tokens/Summary" />
 
 export const protoUrl = (route) =>
   (typeof window !== "undefined" && /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname) ? "http://localhost:5190/das/v5/" : "./das/v5/") + `#/${route}`;
@@ -46,13 +48,7 @@ export const td = { fontSize: 15, color: "#344054", padding: "10px 12px", border
 
 <div style={{ maxWidth: 920 }}>
 
-# Oct 26 · Round 5
-
-Round 4 was reviewed on 26 October. **DAS is approved** — setup and reporting both.
-Nothing structural changes; this round makes DAS read as part of the Nimbus dashboard,
-and writes the visual rules down so the Performance Insights redesign that comes next
-can reuse them. Everything below is built into prototype **v5**; Round 4 stays frozen at
-v4 as it was reviewed.
+<ReviewHeader id="oct-26" />
 
 > “{framing.quote}”
 >
@@ -60,7 +56,23 @@ v4 as it was reviewed.
 
 {framing.decision}
 
-## What changed
+## Decisions
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
+  <thead><tr><th style={th}>Decision</th><th style={{ ...th, width: 130 }}>Status</th></tr></thead>
+  <tbody>
+    {[...items, ...review27].map((item) => (
+      <tr key={item.slug}>
+        <td style={{ ...td, fontWeight: 700, color: "#101828", padding: "7px 12px" }}>{item.title}</td>
+        <td style={{ ...td, padding: "7px 12px" }}><Chip tone={item.status} /></td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+The last rows are from a shorter second pass with Product on 27 Oct, folded into this round.
+
+<More title="Each decision in full, and where to see it">
 
 <div style={{ overflowX: "auto", border: "1px solid #EAECF0", borderRadius: 12, margin: "12px 0 24px" }}>
   <table style={{ width: "100%", borderCollapse: "collapse", margin: 0 }}>
@@ -79,10 +91,7 @@ v4 as it was reviewed.
   </table>
 </div>
 
-## 27 Oct review
-
-A second, shorter pass over v5 with Product on 27 October, folded into this round rather
-than cut as a new one.
+**27 Oct follow-up.** A second, shorter pass with Product, folded into this round.
 
 > “{review27Framing.quote}”
 >
@@ -107,25 +116,23 @@ than cut as a new one.
   </table>
 </div>
 
-Each change links to the **prototype** screens it shows on (pink, opens prototype v5) and
-to its **Storybook** stories (teal, stays here). *Oct 26 › Applied Changes* shows each
-screen as Round 4 beside Round 5.
+</More>
 
-- **Applied** — decided on the call and in prototype v5.
-- **Kept** — Product asked for it to stay as it is for now.
-- **To confirm** — built on a reading that still needs an answer.
-- **Pending** — waiting on something from outside the prototype.
+<More title="What the status chips mean">
 
-## Kept as it is
+- **Applied**: decided on the call and in Round 5.
+- **Kept**: Product asked for it to stay as it is for now.
+- **To confirm**: built on a reading that still needs an answer.
+- **Pending**: waiting on something from outside the prototype.
+
+</More>
+
+## Left open
 
 - **Total spend** stays on Manage campaigns. It's ambiguous — a lifetime total, or the
   active flights? — and Product is deciding whether to keep, replace or reframe it. It may
   move into the Performance Insights landing page as DAS's headline number.
 - **Progress bars** and the **paused warning banner** stay until user feedback.
-
-## Pending
-
-- **Total spend framing** — Product.
 - **Token names** — “UI controller” (Collapse) and “state action” (Save Query, Download
   .CSV) are working names, to confirm with engineering.
 - **Field size** — fields match staging's size; whether that size is right is a global
@@ -133,28 +140,6 @@ screen as Round 4 beside Round 5.
 - **Engineering review** — engineering reviews DAS before work moves to Performance
   Insights (27 Oct).
 
-## Tokens, for the Performance Insights redesign
-
-Tabs, bands, the date cell, quick picker and group-by, UI controller and state action
-buttons, teal checkboxes and radios, the chart type bar, the filter menu and the two table
-kinds now live once, in `prototypes/das/v5/screens/nimbus-ui.tsx`.
-
-<LinkRow label="Storybook">
-  <Pill kind="story" href={storyUrl("application-ui-nimbus-tokens-00-overview--docs")}>Nimbus Tokens →</Pill>
-  <Pill kind="story" href={storyUrl("application-ui-table-list-vs-report--docs")}>List vs Report →</Pill>
-  <Pill kind="story" href={storyUrl("application-ui-table-v5-prototype-00-overview--docs")}>V5 tables →</Pill>
-</LinkRow>
-
-## The 15px type floor
-
-V5 holds text to the 15px minimum (Audits › Typography Rules). Staging's date labels and
-table headers are 10–13px, so ours read a little larger; colour, weight, rules, fills and
-stripes follow staging.
-
-## Next
-
-Engineering reviews DAS, then starts building it (it doesn't need the new endpoints to
-begin). Then Performance Insights: expanded metrics, possibly a generative component,
-saveable dashboards and a default view — built from these tokens.
+The tokens this round wrote down live in **Design System › Nimbus Tokens**.
 
 </div>

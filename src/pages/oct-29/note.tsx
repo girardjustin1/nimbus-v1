@@ -4,7 +4,7 @@ import { PINK } from "../deal-activation-system/das-shell";
 import type { FeedbackItem } from "./feedback";
 
 /**
- * Oct 29 Edits — annotation chrome for the Round 6 stories.
+ * Oct 29 · Reporting — annotation chrome for the Round 6 stories.
  *
  * Same convention as Oct 17 and Oct 26: review artefacts in pink, so they're never
  * mistaken for a concept's own teal notes, held to the 15px floor like the screens.

@@ -2,11 +2,11 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CampaignSetup } from "../../../../prototypes/app/v1/screens/campaign-setup";
 
 /**
- * November 13th, 2026 · Deal Activation System · Campaign setup — carried over from DAS
+ * Full application · Deal Activation System · Campaign setup — carried over from DAS
  * Round 6 into the full application unchanged (prototypes/app/v1).
  */
 const meta = {
-    title: "November 13th, 2026/Deal Activation System/Campaign setup",
+    title: "Prototypes/Full application/Deal Activation System/Campaign setup",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

@@ -12,7 +12,7 @@ import { Button } from "@/components/base/buttons/button";
  * `EmptyState.Description`, and `EmptyState.Footer`.
  */
 const meta = {
-    title: "Application UI/Empty State",
+    title: "Design System/Application UI/Empty State",
     component: EmptyState,
     parameters: { layout: "padded" },
     tags: ["autodocs"],

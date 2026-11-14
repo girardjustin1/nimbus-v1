@@ -12,7 +12,7 @@ import { Compare } from "../note";
  * behind or at risk. Click a chip to try it.
  */
 const meta = {
-    title: "Oct 17/Concepts/Campaign Health",
+    title: "Reviews/Oct 17 · After publishing/Concepts/Campaign Health",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

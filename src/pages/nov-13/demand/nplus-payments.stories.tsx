@@ -3,7 +3,7 @@ import { NplusPayments } from "../../../../prototypes/app/v1/screens/demand/nplu
 
 /** Demand → n+ payments: Overview and Completed Payments tabs. */
 const meta = {
-    title: "November 13th, 2026/Demand/n+ Payments",
+    title: "Prototypes/Full application/Demand/n+ Payments",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { DetailedBlocklistTableExamples } from "@/pages/app-screens/ad-blocking-blocklists";
 
 const meta = {
-    title: "Application UI/Table/102326/Detailed Blocklists",
+    title: "Research/Table audit/Detailed Blocklists",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

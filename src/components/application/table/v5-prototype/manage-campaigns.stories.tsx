@@ -3,7 +3,7 @@ import { ManageCampaigns } from "../../../../../prototypes/das/v5/screens/manage
 import { PrototypeTableContext } from "./context";
 
 const meta = {
-    title: "Application UI/Table/V5 Prototype/Manage Campaigns",
+    title: "Design System/Application UI/Table/V5 Prototype/Manage Campaigns",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

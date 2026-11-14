@@ -10,7 +10,7 @@ import { KpiStripAfter, KpiStripBefore } from "./revised/kpi-strip";
  * exactly the problem on an account running fifty campaigns.
  */
 const meta = {
-    title: "Sept 22/4 Behind pace is clickable",
+    title: "Reviews/Sept 22 · Round 1/Changes/4 Behind pace is clickable",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

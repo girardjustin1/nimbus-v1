@@ -6,7 +6,7 @@ import { Toggle } from "@/components/base/toggle/toggle";
  * Staging's look (27 Oct): on is a pink track with a white check and a pink-ringed knob; off is a light grey track with a white ✕ and a grey-ringed knob.
  */
 const meta = {
-    title: "Base Components/Toggle",
+    title: "Design System/Base Components/Toggle",
     component: Toggle,
     parameters: { layout: "centered" },
     tags: ["autodocs"],

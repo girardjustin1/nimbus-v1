@@ -3,7 +3,7 @@ import { ViewAllAssets } from "../../../../../prototypes/das/v5/screens/asset-li
 import { PrototypeTableContext } from "./context";
 
 const meta = {
-    title: "Application UI/Table/V5 Prototype/Asset Library",
+    title: "Design System/Application UI/Table/V5 Prototype/Asset Library",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

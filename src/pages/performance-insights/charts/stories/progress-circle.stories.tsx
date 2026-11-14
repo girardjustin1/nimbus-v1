@@ -3,7 +3,7 @@ import { nimbus } from "../chart-theme";
 import { ProgressCircle } from "../radial-charts";
 
 /** Progress circle — one value against a goal, as a full or half ring. */
-const meta = { title: "Performance Insights/Charts/Progress Circle", component: ProgressCircle, args: { value: 72, label: "Fill rate goal" } } satisfies Meta<typeof ProgressCircle>;
+const meta = { title: "Design System/Chart library/Progress Circle", component: ProgressCircle, args: { value: 72, label: "Fill rate goal" } } satisfies Meta<typeof ProgressCircle>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CampaignCreativeTable, ReviewCreativeTable } from "@/pages/app-screens/campaign-setup";
 
 const meta = {
-    title: "Application UI/Table/102326/Campaign Setup",
+    title: "Research/Table audit/Campaign Setup",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

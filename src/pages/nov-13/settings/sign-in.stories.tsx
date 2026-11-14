@@ -3,7 +3,7 @@ import { SignInSettings } from "../../../../prototypes/app/v1/screens/account/se
 
 /** Settings · Sign In — name, email and Account Security, rebuilt on the Nov 13 style guide. */
 const meta = {
-    title: "November 13th, 2026/Settings/Sign In",
+    title: "Prototypes/Full application/Settings/Sign In",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

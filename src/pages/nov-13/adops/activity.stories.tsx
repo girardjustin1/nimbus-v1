@@ -3,7 +3,7 @@ import { Activity } from "../../../../prototypes/app/v1/screens/adops/activity";
 
 /** AdOps › activity — Nov 13 style guide (prototype screens "activity", "activity-empty"). */
 const meta = {
-    title: "November 13th, 2026/AdOps/Activity",
+    title: "Prototypes/Full application/AdOps/Activity",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

@@ -3,7 +3,7 @@ import { ActiveFloors, ConfigureFloors } from "../../../../prototypes/app/v1/scr
 
 /** AdOps › floors — Nov 13 style guide (prototype screens "floors", "floors-empty", "floors-configure"). */
 const meta = {
-    title: "November 13th, 2026/AdOps/Floors",
+    title: "Prototypes/Full application/AdOps/Floors",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

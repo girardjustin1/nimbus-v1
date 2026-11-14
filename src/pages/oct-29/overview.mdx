@@ -1,7 +1,9 @@
 import { Meta } from "@storybook/addon-docs/blocks";
+import { ReviewHeader } from "../intro/review-header";
+import { More } from "../intro/ui";
 import { framing, items, links, outside } from "./feedback";
 
-<Meta title="Oct 29 Edits/Overview" />
+<Meta title="Reviews/Oct 29 · Reporting/Summary" />
 
 export const protoUrl = (route) =>
   (typeof window !== "undefined" && /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname) ? "http://localhost:5190/das/v6/" : "./das/v6/") + `#/${route}`;
@@ -49,13 +51,7 @@ export const td = { fontSize: 15, color: "#344054", padding: "10px 12px", border
 
 <div style={{ maxWidth: 920 }}>
 
-# Oct 29 Edits · Round 6
-
-DAS reporting was reviewed with engineering on 28 October. The decision: **one spend
-number everywhere**. Spend in DAS becomes the trued-up figure Performance Insights shows,
-labelled “Subject to true-up”, and **pacing** is what stays live. Full performance stays in
-DAS and gets more metrics and breakdowns. Everything below is built into prototype **v6**;
-Round 5 stays frozen at v5 as it was reviewed.
+<ReviewHeader id="oct-29" />
 
 > “{framing.quote}”
 >
@@ -63,7 +59,21 @@ Round 5 stays frozen at v5 as it was reviewed.
 
 {framing.decision}
 
-## The changes
+## Decisions
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
+  <thead><tr><th style={th}>Decision</th><th style={{ ...th, width: 130 }}>Status</th></tr></thead>
+  <tbody>
+    {items.map((item) => (
+      <tr key={item.slug}>
+        <td style={{ ...td, fontWeight: 700, color: "#101828", padding: "7px 12px" }}>{item.title}</td>
+        <td style={{ ...td, padding: "7px 12px" }}><Chip tone={item.status} /></td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+<More title="Each decision in full, and where to see it">
 
 <table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
   <thead><tr><th style={th}>Change</th><th style={th}>Status</th><th style={th}>What we did, and where to see it</th></tr></thead>
@@ -81,7 +91,9 @@ Round 5 stays frozen at v5 as it was reviewed.
   </tbody>
 </table>
 
-## Pacing, in numbers
+</More>
+
+<More title="Pacing, in numbers">
 
 Pacing is the share of the budget delivered divided by the share of the flight gone,
 shown to the nearest 0.5%. The colour cut-offs are **placeholders** until Product sets
@@ -96,7 +108,9 @@ the real ones.
   </tbody>
 </table>
 
-## Outside the prototype
+</More>
+
+## Left open
 
 <table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
   <thead><tr><th style={th}>Item</th><th style={th}>Status</th><th style={th}>Notes</th></tr></thead>
@@ -107,9 +121,6 @@ the real ones.
   </tbody>
 </table>
 
-## Next
-
-Revisions any time by the end of next week, then a walk-through of the Campaign
-Delivery column together.
+The pacing colour cut-offs are placeholders until Product sets the real ones.
 
 </div>

@@ -19,7 +19,7 @@ import { AvatarNotification, IconNotification, ImageNotification } from "@/compo
  */
 
 const meta = {
-    title: "Application UI/Notifications",
+    title: "Design System/Application UI/Notifications",
     component: IconNotification,
     parameters: { layout: "padded" },
     tags: ["autodocs"],

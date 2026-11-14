@@ -6,7 +6,7 @@ import { Setup, Surface } from "./harness";
  * Auction Rules — four rule cards, two across. The whole card is the target.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Sections/Auction Rules",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Sections/Auction Rules",
 } satisfies Meta;
 
 export default meta;

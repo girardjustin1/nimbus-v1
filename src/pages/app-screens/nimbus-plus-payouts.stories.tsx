@@ -22,7 +22,7 @@ import {
  *   - PublisherPaymentsIssue        — Moloco drill-down, 1 issue + resubmit
  */
 const meta = {
-    title: "App Screens/Nimbus+ Payouts",
+    title: "Archive/App Screens/Nimbus+ Payouts",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

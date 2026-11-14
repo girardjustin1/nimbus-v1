@@ -11,7 +11,7 @@ import { Dialog, DialogTrigger, Modal, ModalOverlay } from "./modal";
  * that receives a `close` callback to dismiss the modal from any action.
  */
 const meta = {
-    title: "Application UI/Modal",
+    title: "Design System/Application UI/Modal",
     component: Modal,
     tags: ["autodocs"],
     parameters: {

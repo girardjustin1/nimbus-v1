@@ -6,7 +6,7 @@ import { Surface, Value } from "./harness";
  * Enable choice — Do not enable / Enable, the pair Priority and Frequency Cap share. The control sits on the Enable row.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Controls/Enable Choice",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Controls/Enable Choice",
 } satisfies Meta;
 
 export default meta;

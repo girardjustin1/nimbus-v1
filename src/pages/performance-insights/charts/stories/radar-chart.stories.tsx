@@ -5,7 +5,7 @@ import { colorAt } from "../chart-theme";
 import { NimbusRadarChart } from "../radial-charts";
 
 /** Radar chart — compare a few partners across several scored dimensions (0–100). */
-const meta = { title: "Performance Insights/Charts/Radar Chart", parameters: { layout: "padded" } } satisfies Meta;
+const meta = { title: "Design System/Chart library/Radar Chart", parameters: { layout: "padded" } } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

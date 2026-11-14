@@ -4,7 +4,7 @@ import { ChartCard } from "../chart-kit";
 import { NimbusPieChart } from "../radial-charts";
 
 /** Pie chart — share of a whole, with values and percentages beside it. */
-const meta = { title: "Performance Insights/Charts/Pie Chart", parameters: { layout: "padded" } } satisfies Meta;
+const meta = { title: "Design System/Chart library/Pie Chart", parameters: { layout: "padded" } } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

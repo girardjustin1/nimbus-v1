@@ -9,13 +9,13 @@ import { bySlug } from "./feedback";
 import { Compare } from "./note";
 
 /**
- * Oct 29 Edits · the changes from the 28 Oct reporting review, in prototype v6.
+ * Oct 29 · Reporting · the changes from the 28 Oct reporting review, in prototype v6.
  *
  * Each change is a pair: Round 5 as it was reviewed (frozen, untouched) and Round 6 as
  * built. The Campaign Delivery column is a concept, shown on its own.
  */
 const meta = {
-    title: "Oct 29 Edits/Applied Changes",
+    title: "Reviews/Oct 29 · Reporting/Changes",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

@@ -34,7 +34,7 @@ const SelectedExample = ({ kind = "apps", empty = false }: { kind?: keyof typeof
 };
 
 const meta = {
-    title: "Application UI/Table/V5 Prototype/Selected Items",
+    title: "Design System/Application UI/Table/V5 Prototype/Selected Items",
     component: SelectedExample,
     tags: ["autodocs"],
     parameters: {

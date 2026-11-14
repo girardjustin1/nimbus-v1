@@ -1,132 +1,41 @@
 import { Meta } from "@storybook/addon-docs/blocks";
-import { Callout, Pill, protoUrl, td, th } from "../nov-13/doc-ui";
+import { ChartRule, Colours, ControlRules, CopyRule, ReportingRule, SampleDataRule, StyleHero, TableRules, TypeRule } from "../intro/style-guide-sections";
+import { Page } from "../intro/ui";
 
-<Meta title="Full Application/Style guide" />
+<Meta title="Start Here/Style guide" />
 
-export const Swatch = ({ hex, name, use }) => (
-  <div style={{ display: "flex", alignItems: "center", gap: 12, border: "1px solid #EAECF0", borderRadius: 12, padding: "10px 14px", background: "#fff" }}>
-    <span style={{ width: 36, height: 36, borderRadius: 8, background: hex, flex: "0 0 auto", boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.06)" }} />
-    <span style={{ fontSize: 15, color: "#344054" }}><b style={{ color: "#101828" }}>{name}</b> · {hex}<br />{use}</span>
-  </div>
-);
+<Page>
 
-<div style={{ maxWidth: 1040 }}>
+<StyleHero />
 
-# The Nov 13 style guide
-
-The rules every page of the full application follows. They were settled one review at a
-time on the Deal Activation System (rounds 1 to 6), then applied to the whole dashboard on
-13 November. Each rule links to where it lives in this Storybook.
-
-## 1 · Type
-
-<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
-  <thead><tr><th style={th}>Rule</th><th style={th}>Detail</th></tr></thead>
-  <tbody>
-    <tr><td style={{ ...td, fontWeight: 700 }}>One typeface</td><td style={td}>Proxima Nova everywhere — including buttons, which render in Arial on staging today.</td></tr>
-    <tr><td style={{ ...td, fontWeight: 700 }}>Headlines 800, labels 700</td><td style={td}>Page and section titles extra-bold; field labels, table headers and band labels bold and black.</td></tr>
-    <tr><td style={{ ...td, fontWeight: 700 }}>Nothing under 15px</td><td style={td}>Body text is 15px. A test fails any product screen that uses a smaller size. The only exception is the prototype toolbar, which isn't product UI.</td></tr>
-  </tbody>
-</table>
-
-<div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-  <Pill kind="story" href="./?path=/docs/audits-typography-rules--docs">Typography Rules</Pill>
-  <Pill kind="story" href="./?path=/docs/styles-typography--docs">Typography</Pill>
-</div>
+<TypeRule />
 
 ## 2 · Colour
 
-<div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 10, margin: "12px 0" }}>
-  <Swatch hex="#DA6EA3" name="Pink" use="Primary actions, links, active nav" />
-  <Swatch hex="#37B6B7" name="Teal" use="Active tabs, checkboxes, focus, chart series" />
-  <Swatch hex="#1F7F80" name="Dark teal" use="Teal text that has to be read" />
-  <Swatch hex="#101828" name="Charcoal" use="Report table headers, the sidebar" />
-  <Swatch hex="#FCFAF9" name="Warm stripe" use="Every other table row" />
-  <Swatch hex="#2E5AAC" name="Navy" use="Chart series (requests)" />
-</div>
+Pink and teal carry the brand; charcoal and a warm off-white do the structural work. Green, yellow and red are reserved for pacing status, and always come with a word, never colour alone.
 
-Green, yellow and red are reserved for pacing status, and always come with a word ("On target", "Behind", "At risk"), never colour alone.
-
-<Pill kind="story" href="./?path=/docs/styles-color--docs">Colour</Pill>
+<Colours />
 
 ## 3 · Tables
 
-<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
-  <thead><tr><th style={th}>Kind</th><th style={th}>Looks like</th><th style={th}>Used for</th></tr></thead>
-  <tbody>
-    <tr><td style={{ ...td, fontWeight: 700 }}>Report</td><td style={td}>Charcoal header, white labels, warm alternating rows, a total row.</td><td style={td}>Anything that reports numbers: realtime, Performance Insights, buyer breakdown, discrepancy reports, Full performance.</td></tr>
-    <tr><td style={{ ...td, fontWeight: 700 }}>List</td><td style={td}>Light header, bold black labels.</td><td style={td}>Organised lists of things: campaigns, assets, keywords, demand partners, floors, overrides.</td></tr>
-  </tbody>
-</table>
-
-Both run full bleed, rule every column, and **every column sorts**: click once for ascending, again for descending, a third time to go back. Empty values sort last.
-
-<div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-  <Pill kind="story" href="./?path=/docs/application-ui-table-list-vs-report--docs">List vs Report</Pill>
-  <Pill kind="story" href="./?path=/docs/application-ui-nimbus-tokens-tables--docs">Tables</Pill>
-</div>
+<TableRules />
 
 ## 4 · The reporting page
 
-Every reporting page — realtime, Performance Insights, buyer breakdown, benchmarks, discrepancy reports, Full performance — shares one shape, top to bottom:
-
-1. **Date row** — START DATE / END DATE cells, the quick range ("Last 7 days"), the interval ("By Day"), "All reports are in UTC." and the page's actions (SAVE QUERY, DOWNLOAD .CSV).
-2. **Bands** — full-width labelled rows: Metrics, Breakdown, Filters (+ ADD), Compare, Chart Type.
-3. **Summary tiles** — the headline figures for what's ticked.
-4. **Chart** — the chosen chart type.
-5. **Report table** — the same data, sortable.
-
-<div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-  <Pill kind="story" href="./?path=/docs/application-ui-nimbus-tokens-00-overview--docs">Nimbus tokens</Pill>
-  <Pill kind="story" href="./?path=/docs/application-ui-nimbus-tokens-bands--docs">Bands</Pill>
-  <Pill kind="story" href="./?path=/docs/application-ui-nimbus-tokens-dates-and-dropdowns--docs">Dates and dropdowns</Pill>
-  <Pill kind="story" href="./?path=/docs/application-ui-nimbus-tokens-filter-control--docs">Filter control</Pill>
-  <Pill kind="story" href="./?path=/docs/application-ui-nimbus-tokens-chart-type-bar--docs">Chart type bar</Pill>
-  <Pill href={protoUrl("pi-query")}>Performance Insights</Pill>
-</div>
+<ReportingRule />
 
 ## 5 · Controls
 
-<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
-  <thead><tr><th style={th}>Control</th><th style={th}>Rule</th></tr></thead>
-  <tbody>
-    <tr><td style={{ ...td, fontWeight: 700 }}>Fields and dropdowns</td><td style={td}>Staging's look: grey fill, faint rule, 46px tall, warm list highlight, teal focus ring.</td></tr>
-    <tr><td style={{ ...td, fontWeight: 700 }}>Checkboxes and radios</td><td style={td}>Staging's look: pale teal box with a teal check; teal ring around a solid dot.</td></tr>
-    <tr><td style={{ ...td, fontWeight: 700 }}>Page tabs</td><td style={td}>Bold, teal; the active tab filled pale teal with a rule underneath.</td></tr>
-    <tr><td style={{ ...td, fontWeight: 700 }}>Buttons</td><td style={td}>Pink pill for the thing you came to do; grey outline for what only changes the view (COLLAPSE); pink pill for actions on the current result (SAVE QUERY, DOWNLOAD .CSV). Uppercase where staging's are.</td></tr>
-    <tr><td style={{ ...td, fontWeight: 700 }}>Search</td><td style={td}>Runs the full width, or fills the row beside its buttons.</td></tr>
-  </tbody>
-</table>
+<ControlRules />
 
-<div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-  <Pill kind="story" href="./?path=/docs/application-ui-nimbus-tokens-page-tabs--docs">Page tabs</Pill>
-  <Pill kind="story" href="./?path=/docs/application-ui-nimbus-tokens-buttons--docs">Buttons</Pill>
-  <Pill kind="story" href="./?path=/docs/application-ui-nimbus-tokens-teal-controls--docs">Teal controls</Pill>
-</div>
+## 6 · Charts and 7 · Copy
 
-## 6 · Charts
+<ChartRule />
 
-- Charts show **actual numbers**. Nothing is indexed against "normal" (Product, 6 Nov).
-- Series colours come from one checked palette (teal, pink, navy, brown, purple, orange, grey for "Other"); at most eight slices, the rest folded into "Other".
-- Axis ticks, legends and tooltips at 15px; the tooltip names the day in full.
-- Two axes only where staging already uses them and the series are real figures.
+<CopyRule />
 
-<Pill kind="story" href="./?path=/docs/application-ui-charts--docs">Charts</Pill>
+## 8 · Sample data, and what the guide doesn't touch
 
-## 7 · Copy
+<SampleDataRule />
 
-- **Staging's wording** for labels, tabs, buttons and columns. Restyle, don't rename.
-- **No coaching.** A page states what the data is and never tells the publisher what to do (Product, 6 Nov): no warning strips with targets, no "you should", no "contact your rep".
-- **No added explanations** where staging has none. Deliberate one-offs (the DAS ad unit selector with descriptions) stay one-offs.
-
-## 8 · Sample data
-
-Everything in the prototypes and Storybook is **fictional** — publisher, apps, demand partners, people, URLs — because this Storybook is public. The reporting week is Nov 7 to Nov 13, 2026 on every page.
-
-<Callout tone="pink">
-  What the style guide doesn't touch: parts of the dashboard that sit on third-party libraries in production — payment
-  embeds, chart internals, the select and calendar libraries, popups, the table's virtual scrolling — change only as far
-  as those libraries allow. See Engineering constraints in November 13th, 2026.
-</Callout>
-
-</div>
+</Page>

@@ -5,7 +5,7 @@ import { Band, Bands, ChartTypeBar, DEFAULT_CHART_ICONS } from "../../../../prot
 import { Rule, TokenPage } from "./token-page";
 
 const meta = {
-    title: "Application UI/Nimbus Tokens/Bands",
+    title: "Design System/Nimbus Tokens/Bands",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

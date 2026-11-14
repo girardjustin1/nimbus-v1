@@ -5,7 +5,7 @@ import { TealControls } from "../../../../prototypes/das/v5/screens/nimbus-ui";
 import { Rule, TokenPage } from "./token-page";
 
 const meta = {
-    title: "Application UI/Nimbus Tokens/Teal Controls",
+    title: "Design System/Nimbus Tokens/Teal Controls",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

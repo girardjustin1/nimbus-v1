@@ -4,7 +4,7 @@ import { DataTable, SavedQueriesView } from "@/pages/app-screens/performance-ins
 import { prototypeHref, storyHref } from "./catalog";
 
 const meta = {
-    title: "Application UI/Table/V5 Prototype/Charcoal References",
+    title: "Design System/Application UI/Table/V5 Prototype/Charcoal References",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",
@@ -34,7 +34,7 @@ export const ReportingMetrics: Story = {
                     Full performance in v5 ↗
                 </a>
                 . Charcoal header, light labels, metric rows, teal revenue and totals.{" "}
-                <a href={storyHref("application-ui-table-102326-performance-insights--metrics")} target="_top" className="font-semibold text-brand-secondary">
+                <a href={storyHref("research-table-audit-performance-insights--metrics")} target="_top" className="font-semibold text-brand-secondary">
                     Original design-system example
                 </a>
                 .
@@ -56,11 +56,7 @@ export const SavedQueries: Story = {
                     keywords ↗
                 </a>
                 : charcoal header, linked names and circular row actions.{" "}
-                <a
-                    href={storyHref("application-ui-table-102326-performance-insights--saved-queries")}
-                    target="_top"
-                    className="font-semibold text-brand-secondary"
-                >
+                <a href={storyHref("research-table-audit-performance-insights--saved-queries")} target="_top" className="font-semibold text-brand-secondary">
                     Original design-system example
                 </a>
                 .
@@ -78,7 +74,7 @@ export const Benchmarks: Story = {
                     Keyword Health in v5 ↗
                 </a>
                 . Charcoal header, white labels, teal chevrons and striped metric rows.{" "}
-                <a href={storyHref("application-ui-table-102326-benchmarks--metrics")} target="_top" className="font-semibold text-brand-secondary">
+                <a href={storyHref("research-table-audit-benchmarks--metrics")} target="_top" className="font-semibold text-brand-secondary">
                     Original design-system example
                 </a>
                 .

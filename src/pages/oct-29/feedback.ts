@@ -1,5 +1,5 @@
 /**
- * Oct 29 Edits — the 28 Oct DAS reporting review, as data, behind Round 6.
+ * Oct 29 · Reporting — the 28 Oct DAS reporting review, as data, behind Round 6.
  *
  * One entry per change Product listed after the call. Quotes are trimmed to the design
  * point, and speakers are named by role, because this Storybook publishes to a public URL.
@@ -232,13 +232,13 @@ export const links: Record<string, { prototype: [string, string][]; stories: [st
             ["Sorted by pacing", "campaigns-pacing-sorted"],
         ],
         stories: [
-            ["Round 5 → 6 · Campaigns", "oct-29-edits-applied-changes--campaigns-after"],
-            ["Sorted by pacing", "oct-29-edits-applied-changes--campaigns-sorted"],
+            ["Round 5 → 6 · Campaigns", "reviews-oct-29-·-reporting-changes--campaigns-after"],
+            ["Sorted by pacing", "reviews-oct-29-·-reporting-changes--campaigns-sorted"],
         ],
     },
     lifecycle: {
         prototype: [["Campaign Delivery concept", "campaigns-lifecycle"]],
-        stories: [["Campaign Delivery concept", "oct-29-edits-applied-changes--campaign-delivery"]],
+        stories: [["Campaign Delivery concept", "reviews-oct-29-·-reporting-changes--campaign-delivery"]],
     },
     "true-up": {
         prototype: [
@@ -246,18 +246,18 @@ export const links: Record<string, { prototype: [string, string][]; stories: [st
             ["Campaign overview", "view-a"],
             ["Full performance", "view-d"],
         ],
-        stories: [["Round 5 → 6 · Campaigns", "oct-29-edits-applied-changes--campaigns-after"]],
+        stories: [["Round 5 → 6 · Campaigns", "reviews-oct-29-·-reporting-changes--campaigns-after"]],
     },
     "pacing-pct": {
         prototype: [
             ["Overview · at risk", "view-a-at-risk"],
             ["Overview · on target", "view-a"],
         ],
-        stories: [["Round 5 → 6 · Overview", "oct-29-edits-applied-changes--overview-after"]],
+        stories: [["Round 5 → 6 · Overview", "reviews-oct-29-·-reporting-changes--overview-after"]],
     },
     "pacing-chart": {
         prototype: [["Overview · behind", "view-a-behind"]],
-        stories: [["Round 5 → 6 · Overview", "oct-29-edits-applied-changes--overview-after"]],
+        stories: [["Round 5 → 6 · Overview", "reviews-oct-29-·-reporting-changes--overview-after"]],
     },
     "fp-stays": {
         prototype: [["Full performance", "view-d"]],
@@ -265,18 +265,18 @@ export const links: Record<string, { prototype: [string, string][]; stories: [st
     },
     "fp-metrics": {
         prototype: [["New metrics", "view-d-new-metrics"]],
-        stories: [["Round 5 → 6 · Full performance", "oct-29-edits-applied-changes--performance-after"]],
+        stories: [["Round 5 → 6 · Full performance", "reviews-oct-29-·-reporting-changes--performance-after"]],
     },
     "fp-breakdowns": {
         prototype: [
             ["Region and country", "view-d-region-country"],
             ["Full performance", "view-d"],
         ],
-        stories: [["Region and country", "oct-29-edits-applied-changes--region-country"]],
+        stories: [["Region and country", "reviews-oct-29-·-reporting-changes--region-country"]],
     },
     "geo-split": {
         prototype: [["Region and country", "view-d-region-country"]],
-        stories: [["Region and country", "oct-29-edits-applied-changes--region-country"]],
+        stories: [["Region and country", "reviews-oct-29-·-reporting-changes--region-country"]],
     },
     "pace-colors": {
         prototype: [

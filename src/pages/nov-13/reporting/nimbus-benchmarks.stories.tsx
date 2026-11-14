@@ -7,7 +7,7 @@ import { NimbusLeaderboard, NimbusPerformance } from "../../../../prototypes/app
  * #/benchmarks, #/benchmarks-empty and #/benchmarks-leaderboard screens.
  */
 const meta = {
-    title: "November 13th, 2026/Reporting/Nimbus benchmarks",
+    title: "Prototypes/Full application/Reporting/Nimbus benchmarks",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

@@ -4,7 +4,7 @@ import { ChartCard } from "../chart-kit";
 import { NimbusTreemap } from "../reporting-charts";
 
 /** Treemap (Nimbus extra) — share of a whole as areas; reads well with many parts. */
-const meta = { title: "Performance Insights/Charts/Treemap", parameters: { layout: "padded" } } satisfies Meta;
+const meta = { title: "Design System/Chart library/Treemap", parameters: { layout: "padded" } } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

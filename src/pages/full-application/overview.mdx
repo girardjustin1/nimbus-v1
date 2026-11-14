@@ -1,149 +1,33 @@
 import { Meta } from "@storybook/addon-docs/blocks";
-import { Callout, Pill, protoUrl, td, th } from "../nov-13/doc-ui";
-import { AreaCounts } from "../nov-13/screen-index";
+import { AreaCards, Folders, NextPages, OverviewHero } from "../intro/overview-sections";
+import { Lead, Page } from "../intro/ui";
 
-<Meta title="Full Application/Overview" />
+<Meta title="Start Here/Overview" />
 
-export const sbProto = (name) =>
-  typeof window !== "undefined" && window.location.hostname === "localhost" ? `http://localhost:5190/${name}/` : `./${name}/`;
-
-<div style={{ maxWidth: 1040 }}>
+<Page>
 
 # Nimbus · Full application
 
-**One design system for the whole Nimbus dashboard.** Today the dashboard has no design
-source of truth: each area grew its own styles, so the same table, field or tab looks
-different from page to page. This Storybook is becoming that source of truth, and the
-**full application** is where it's proven — every screen of the publisher dashboard,
-rebuilt on one style guide.
+<OverviewHero />
 
-<div style={{ display: "flex", gap: 12, flexWrap: "wrap", margin: "20px 0 8px" }}>
-  <span style={{ background: "#DA6EA3", color: "#fff", padding: "6px 14px", borderRadius: 999, fontSize: 15, fontWeight: 600 }}>Pink primary · #DA6EA3</span>
-  <span style={{ background: "#37B6B7", color: "#fff", padding: "6px 14px", borderRadius: 999, fontSize: 15, fontWeight: 600 }}>Teal secondary · #37B6B7</span>
-  <span style={{ background: "#101828", color: "#fff", padding: "6px 14px", borderRadius: 999, fontSize: 15, fontWeight: 600 }}>Proxima Nova</span>
-</div>
+<Lead>
+  Today the dashboard has <b>no design source of truth</b>: each area grew its own styles, so the same table, field
+  or tab looks different from page to page. This Storybook is becoming that source of truth, and the full
+  application is where it's proven, on every page at once.
+</Lead>
 
-<div style={{ display: "flex", flexWrap: "wrap", gap: 10, margin: "18px 0 6px" }}>
-  <Pill href={protoUrl()}>Open the full application</Pill>
-  <Pill kind="story" href="./?path=/docs/november-13th-2026-screen-index--docs">Every screen, itemised</Pill>
-  <Pill kind="story" href="./?path=/docs/full-application-style-guide--docs">Style guide</Pill>
-  <Pill kind="story" href="./?path=/docs/full-application-process-roadmap--docs">Process &amp; roadmap</Pill>
-  <Pill kind="story" href="./?path=/docs/full-application-how-to-review--docs">How to review</Pill>
-</div>
+<NextPages />
 
-## Where it stands
+## Open the prototype, area by area
 
-<AreaCounts />
+Five areas, in the dashboard's own sidebar order. Every page keeps staging's structure and wording, so what differs is styling. Click any screen to open it.
 
-<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
-  <thead><tr><th style={th}>Piece</th><th style={th}>What it is</th><th style={th}>Where</th></tr></thead>
-  <tbody>
-    <tr>
-      <td style={{ ...td, fontWeight: 700, color: "#101828" }}>Full application · Nov 13 style guide</td>
-      <td style={td}>A clickable prototype of the whole publisher dashboard: Reporting, Demand, the Deal Activation System, AdOps, SDKs, Finance and Settings. Every page keeps staging's structure and wording and takes the Nimbus tokens. Forked from DAS Round 6 on 13 November.</td>
-      <td style={td}><Pill href={protoUrl()}>Prototype</Pill></td>
-    </tr>
-    <tr>
-      <td style={{ ...td, fontWeight: 700, color: "#101828" }}>November 13th, 2026</td>
-      <td style={td}>Every screen of the full application in Storybook: one folder per page, one story per state (empty, error, no permission, each chart type), plus the 13 Nov call, engineering's constraints and the screen index.</td>
-      <td style={td}><Pill kind="story" href="./?path=/docs/november-13th-2026-introduction--docs">Category</Pill></td>
-    </tr>
-    <tr>
-      <td style={{ ...td, fontWeight: 700, color: "#101828" }}>The style guide</td>
-      <td style={td}>The rules every page follows — type, colour, tables, the reporting-page pattern, fields, tabs, charts, copy — settled through the DAS review rounds.</td>
-      <td style={td}><Pill kind="story" href="./?path=/docs/full-application-style-guide--docs">Style guide</Pill></td>
-    </tr>
-    <tr>
-      <td style={{ ...td, fontWeight: 700, color: "#101828" }}>DAS prototypes</td>
-      <td style={td}>Where the style guide was worked out: six review rounds of the Deal Activation System, each frozen as reviewed.</td>
-      <td style={td}><Pill kind="story" href="./?path=/docs/das-prototypes-overview--docs">DAS Prototypes</Pill></td>
-    </tr>
-  </tbody>
-</table>
+<AreaCards />
 
-<Callout>
-  <b>Agreed on 13 November</b> with product and engineering: the dashboard moves toward these styles, pulled slightly back
-  toward staging; Storybook is finished first, then engineering ports from it, then staging and rollout section by
-  section. Performance Insights is the priority page. See Process &amp; roadmap.
-</Callout>
+## Where things are
 
-## Research on the live product
+Six folders in the sidebar, in this order.
 
-<div style={{ display: "flex", flexDirection: "column", background: "#FFFFFF", border: "1px solid #EAECF0", borderTop: "4px solid #3538CD", borderRadius: 14, padding: "18px 20px", margin: "8px 0 16px" }}>
-  <span style={{ alignSelf: "flex-start", background: "#EEF4FF", color: "#3538CD", fontSize: 15, fontWeight: 700, padding: "3px 10px", borderRadius: 999 }}>Typography audit · October 2026</span>
-  <div style={{ fontSize: 20, fontWeight: 700, color: "#101828", margin: "10px 0 6px" }}>93 text styles where a system needs 10</div>
-  <div style={{ fontSize: 15, lineHeight: 1.6, color: "#475467" }}>
-    Every visible text element across the 22 pages of the publisher dashboard, read from the browser's computed style. It is
-    the starting point for the style guide's type rules.
-  </div>
-  <div style={{ display: "flex", flexWrap: "wrap", gap: 10, margin: "14px 0" }}>
-    {[["93 → 10", "text styles"], ["14 → 7", "font sizes"], ["7 → 3", "weights"], ["25 → 7", "line-heights"], ["19 → 9", "text colours"], ["4 → 1", "typefaces"]].map(([n, l]) => (
-      <span key={l} style={{ background: "#F9FAFB", border: "1px solid #EAECF0", borderRadius: 10, padding: "6px 12px", fontSize: 15, color: "#344054" }}>
-        <strong style={{ color: "#101828" }}>{n}</strong> {l}
-      </span>
-    ))}
-  </div>
-  <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-    <Pill kind="story" href="./?path=/docs/audits-typography-audit--docs">Typography Audit</Pill>
-    <Pill kind="story" href="./?path=/docs/audits-typography-rules--docs">Typography Rules</Pill>
-  </div>
-</div>
+<Folders />
 
-## Earlier prototype
-
-<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
-  <thead><tr><th style={th}>Prototype</th><th style={th}>What it explored</th><th style={th}>Open</th></tr></thead>
-  <tbody>
-    <tr>
-      <td style={{ ...td, fontWeight: 700, color: "#101828" }}>Performance Insights · 22 Sep 2026</td>
-      <td style={td}>A reporting redesign: start from a template or saved query, ask for data as one readable sentence, compare every number to the previous period, build any breakdown by dragging fields into a pivot. Kept as reviewed; the full application's Performance Insights follows staging instead.</td>
-      <td style={td}><a href={sbProto("performance-insights")} target="_top" style={{ color: "#A94579", fontWeight: 600 }}>Prototype ↗</a></td>
-    </tr>
-  </tbody>
-</table>
-
-## How this Storybook is organised
-
-Top to bottom, the way you'd build with it:
-
-<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
-  <thead><tr><th style={th}>Section</th><th style={th}>What's in it</th></tr></thead>
-  <tbody>
-    <tr><td style={{ ...td, fontWeight: 700 }}>Full Application</td><td style={td}>This introduction: overview, style guide, process and roadmap, how to review.</td></tr>
-    <tr><td style={{ ...td, fontWeight: 700 }}>DAS Prototypes</td><td style={td}>The Deal Activation System's review rounds, v1 to v6.</td></tr>
-    <tr><td style={{ ...td, fontWeight: 700 }}>Audits</td><td style={td}>Research on the live dashboard (typography audit and rules).</td></tr>
-    <tr><td style={{ ...td, fontWeight: 700 }}>Styles</td><td style={td}>Colour, typography, icons, elevation, shape, logos — rendered from the Nimbus tokens.</td></tr>
-    <tr><td style={{ ...td, fontWeight: 700 }}>Base Components</td><td style={td}>Buttons, inputs, checkboxes, radios, toggles, selects, tags, tooltips and the rest, on React Aria.</td></tr>
-    <tr><td style={{ ...td, fontWeight: 700 }}>Application UI</td><td style={td}>Composed patterns: navigation, tables, tabs, charts, modals, date pickers, filters, metrics — and the Nimbus tokens.</td></tr>
-    <tr><td style={{ ...td, fontWeight: 700 }}>Account Login · App Screens</td><td style={td}>Sign-in templates and the earlier screen library.</td></tr>
-    <tr><td style={{ ...td, fontWeight: 700 }}>Deal Activation System · Performance Insights</td><td style={td}>The specs and concepts behind those two products.</td></tr>
-    <tr><td style={{ ...td, fontWeight: 700 }}>November 13th, 2026 and the dated review batches</td><td style={td}>Each review's changes, newest first: the full application, then Nov 6, Oct 29, Oct 26, Oct 17 and Sept 22.</td></tr>
-  </tbody>
-</table>
-
-## Brand and tokens
-
-The theme comes from the Nimbus design tokens and lives in `src/styles/theme.css`:
-
-- **Brand** — pink primary (`#DA6EA3`) with teal (`#37B6B7`) as the secondary accent.
-- **Neutrals** — a warm grey scale for surfaces, text and borders.
-- **Typography** — Proxima Nova; body text at 15px (`text-md`), nothing smaller in product UI.
-- **Radius and spacing** — Nimbus token values (e.g. `radius-md` 8px).
-
-Reuse the theme classes (`bg-brand-solid`, `text-primary`, `border-secondary`, `text-md`) and new work inherits
-the brand.
-
-## Getting started
-
-```bash
-npm install              # install dependencies
-npm run storybook        # this library at http://localhost:6006
-npm run proto:dev        # the prototypes at http://localhost:5190 (/app/ is the full application)
-npm run build-storybook  # static build → ./storybook-static
-```
-
-Built with React 19 · TypeScript · Tailwind CSS v4 · React Aria · Recharts · Storybook 10 · Vite. Hosted on
-[GitHub Pages](https://girardjustin1.github.io/nimbus-v1/) (primary) and [Netlify](https://nimbus-ds-v1.netlify.app/)
-(backup); both deploy from `main`.
-
-</div>
+</Page>

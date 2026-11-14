@@ -13,7 +13,7 @@ import { ContentDivider } from "@/components/application/content-divider/content
  */
 
 const meta = {
-    title: "Application UI/Dividers",
+    title: "Design System/Application UI/Dividers",
     component: ContentDivider,
     parameters: { layout: "padded" },
     tags: ["autodocs"],

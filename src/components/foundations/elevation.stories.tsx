@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
  * The shadow scale from the theme (--shadow-*), used for cards, popovers, modals.
  */
 const meta = {
-    title: "Styles/Elevation",
+    title: "Design System/Styles/Elevation",
     parameters: { layout: "fullscreen" },
     tags: ["autodocs"],
 } satisfies Meta;

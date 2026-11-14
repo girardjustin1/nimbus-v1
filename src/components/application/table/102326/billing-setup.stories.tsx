@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BillingSetupTableExamples } from "@/pages/app-screens/billing-setup";
 
 const meta = {
-    title: "Application UI/Table/102326/Billing Setup",
+    title: "Research/Table audit/Billing Setup",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

@@ -16,8 +16,7 @@ import { bySlug } from "./feedback";
  * was removed. Round 2 is the before in every pair and is untouched.
  */
 const meta = {
-    title: "Prototype 3/Applied Changes",
-    tags: ["!dev"],
+    title: "Reviews/Oct 5 · Type rules/Changes",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

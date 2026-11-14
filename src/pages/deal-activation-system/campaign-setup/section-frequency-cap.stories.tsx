@@ -6,7 +6,7 @@ import { Setup, Surface } from "./harness";
  * Frequency Cap — off by default (no cap); on, impressions per user per 24 hours.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Sections/Frequency Cap",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Sections/Frequency Cap",
 } satisfies Meta;
 
 export default meta;

@@ -6,7 +6,7 @@ import { Surface, Value } from "./harness";
  * Number picker — 1 to 100. Type to jump to a number, or ↑ ↓ to step; the list opens under it.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Controls/Number Picker",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Controls/Number Picker",
 } satisfies Meta;
 
 export default meta;

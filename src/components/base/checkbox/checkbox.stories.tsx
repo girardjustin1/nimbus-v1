@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/base/checkbox/checkbox";
  * Staging's look (26 Oct): white with a grey border when unticked; pale teal fill, teal-grey border and a teal check when ticked or indeterminate; warm grey when disabled.
  */
 const meta = {
-    title: "Base Components/Checkbox",
+    title: "Design System/Base Components/Checkbox",
     component: Checkbox,
     parameters: { layout: "centered" },
     tags: ["autodocs"],

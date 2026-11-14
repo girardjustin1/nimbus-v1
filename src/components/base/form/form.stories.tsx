@@ -4,7 +4,7 @@ import { Form } from "@/components/base/form/form";
 import { Input } from "@/components/base/input/input";
 
 const meta = {
-    title: "Base Components/Form",
+    title: "Design System/Base Components/Form",
     component: Form,
     parameters: { layout: "padded" },
     tags: ["autodocs"],

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { NimbusBenchmarksScreen } from "./nimbus-benchmarks";
 
 const meta = {
-    title: "App Screens/Nimbus Benchmarks",
+    title: "Archive/App Screens/Nimbus Benchmarks",
     component: NimbusBenchmarksScreen,
     parameters: {
         layout: "fullscreen",

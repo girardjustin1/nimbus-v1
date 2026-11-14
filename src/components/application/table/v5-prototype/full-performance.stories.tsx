@@ -3,7 +3,7 @@ import { FullPerformance } from "../../../../../prototypes/das/v5/screens/full-p
 import { PrototypeTableContext } from "./context";
 
 const meta = {
-    title: "Application UI/Table/V5 Prototype/Full Performance",
+    title: "Design System/Application UI/Table/V5 Prototype/Full Performance",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

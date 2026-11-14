@@ -6,7 +6,7 @@ import { Setup, Surface } from "./harness";
  * Creative — search the asset library on the page; chosen creatives land in a table.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Sections/Creative",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Sections/Creative",
 } satisfies Meta;
 
 export default meta;

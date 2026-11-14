@@ -3,7 +3,7 @@ import { CollapseButton, PageTabs } from "../../../../prototypes/das/v5/screens/
 import { Rule, TokenPage } from "./token-page";
 
 const meta = {
-    title: "Application UI/Nimbus Tokens/Page Tabs",
+    title: "Design System/Nimbus Tokens/Page Tabs",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

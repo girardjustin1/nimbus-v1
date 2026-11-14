@@ -13,7 +13,7 @@ import { SlideoutMenu } from "./slideout-menu";
  * `SlideoutMenu.Header`, `SlideoutMenu.Content`, and `SlideoutMenu.Footer`.
  */
 const meta = {
-    title: "Application UI/Slideout Menu",
+    title: "Design System/Application UI/Slideout Menu",
     component: SlideoutMenu,
     tags: ["autodocs"],
     parameters: {

@@ -6,7 +6,7 @@ import { Surface } from "./harness";
  * Target card — the frame every targeting module sits in. When the content opens with an instruction (data-intro), the title closes up onto it.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Controls/Target Card",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Controls/Target Card",
 } satisfies Meta;
 
 export default meta;

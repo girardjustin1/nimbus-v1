@@ -1,4 +1,6 @@
 import { Meta } from "@storybook/addon-docs/blocks";
+import { Archived } from "../intro/ui";
+import { story } from "../intro/tokens";
 
 export const th = { textAlign: "left", fontSize: 12, fontWeight: 700, color: "#475467", padding: "10px 14px", borderBottom: "1px solid #EAECF0", background: "#F9FAFB" };
 export const td = { fontSize: 14, color: "#344054", padding: "12px 14px", borderBottom: "1px solid #EAECF0", verticalAlign: "top" };
@@ -12,9 +14,11 @@ export const Table = ({ head, rows }) => (
 );
 export const Story = ({ id, children }) => <a href={`./?path=/story/${id}`} target="_top" style={{ color: "#1F7F80", fontWeight: 600 }}>{children}</a>;
 
-<Meta title="Performance Insights/Overview" />
+<Meta title="Archive/Performance Insights concepts/Overview" />
 
 <div style={{ maxWidth: 920 }}>
+
+<Archived href={story("prototypes-full-application-reporting-performance-insights--default")} cta="Open Performance Insights">The September redesign concepts. Performance Insights is now rebuilt in the full application, and the charts live in Design System › Chart library.</Archived>
 
 <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#A94579" }}>September 22, 2026 · Round 1 review</div>
 
@@ -37,15 +41,15 @@ Nimbus design system and fictional sample data.
 <Table
   head={["Concept", "What it explores"]}
   rows={[
-    [<Story id="performance-insights-concepts--concept-a-start-page">A · Start page</Story>, "Templates with trend previews and saved queries (with schedules) as the landing view"],
-    [<Story id="performance-insights-concepts--concept-b-question-bar">B · Question bar</Story>, "The query as one editable sentence: metrics, breakdown, dates, filters, comparison. Results show deltas vs the previous period."],
-    [<Story id="performance-insights-concepts--concept-b-question-bar-draft">B · Edited, not yet run</Story>, "Edits mark results stale; nothing re-queries until Run (answers the slow up-front loading)"],
-    [<Story id="performance-insights-concepts--concept-c-explorer">C · Explorer</Story>, "Pivot-table model: drag fields into Rows / Columns / Values, nested drill-down, heatmap cells"],
+    [<Story id="archive-performance-insights-concepts-concepts--concept-a-start-page">A · Start page</Story>, "Templates with trend previews and saved queries (with schedules) as the landing view"],
+    [<Story id="archive-performance-insights-concepts-concepts--concept-b-question-bar">B · Question bar</Story>, "The query as one editable sentence: metrics, breakdown, dates, filters, comparison. Results show deltas vs the previous period."],
+    [<Story id="archive-performance-insights-concepts-concepts--concept-b-question-bar-draft">B · Edited, not yet run</Story>, "Edits mark results stale; nothing re-queries until Run (answers the slow up-front loading)"],
+    [<Story id="archive-performance-insights-concepts-concepts--concept-c-explorer">C · Explorer</Story>, "Pivot-table model: drag fields into Rows / Columns / Values, nested drill-down, heatmap cells"],
   ]}
 />
 
 Related: the DAS-specific reporting concepts live in
-<a href="./?path=/story/deal-activation-system-round-1-concepts-reporting--concept-a-overview" target="_top" style={{ color: "#1F7F80", fontWeight: 600 }}>Deal Activation System → Round 1 Concepts → Reporting</a>.
+<a href="./?path=/story/archive-das-early-concepts-round-1-reporting--concept-a-overview" target="_top" style={{ color: "#1F7F80", fontWeight: 600 }}>Deal Activation System → Round 1 Concepts → Reporting</a>.
 
 ## Open questions
 

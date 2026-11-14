@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BillingRateModal, BillingSetupScreen } from "./billing-setup";
 
 const meta = {
-    title: "App Screens/Billing Setup",
+    title: "Archive/App Screens/Billing Setup",
     parameters: {
         layout: "fullscreen",
     },

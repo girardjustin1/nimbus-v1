@@ -6,7 +6,7 @@ import { Setup, Surface } from "./harness";
  * Budget — Budget and Bid Amount (eCPM), each with its instruction under the label.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Sections/Budget",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Sections/Budget",
 } satisfies Meta;
 
 export default meta;

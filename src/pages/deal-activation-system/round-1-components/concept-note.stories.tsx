@@ -3,8 +3,7 @@ import { ConceptNote } from "../das-shell";
 
 /** Review annotation shown at the top of every concept screen. Not product UI. */
 const meta = {
-    title: "Deal Activation System/Round 1 Concepts/Components/Concept Note",
-    tags: ["!dev"],
+    title: "Archive/DAS early concepts/Round 1/Components/Concept Note",
     component: ConceptNote,
     args: {
         label: "Concept A",

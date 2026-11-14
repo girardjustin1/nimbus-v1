@@ -9,7 +9,7 @@ import { FileUpload, FileUploadDropZone } from "@/components/application/file-up
  * `FileUpload.ListItemProgressFill` inside a `FileUpload.List`.
  */
 const meta = {
-    title: "Application UI/File Upload",
+    title: "Design System/Application UI/File Upload",
     component: FileUploadDropZone,
     parameters: { layout: "padded" },
     tags: ["autodocs"],

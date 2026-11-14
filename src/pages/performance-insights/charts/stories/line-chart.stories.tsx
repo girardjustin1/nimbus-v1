@@ -5,7 +5,7 @@ import { ChartCard, Legend } from "../chart-kit";
 import { colorAt, nimbus } from "../chart-theme";
 
 /** Line chart — trends over time; a dashed series marks the comparison period. */
-const meta = { title: "Performance Insights/Charts/Line Chart", parameters: { layout: "padded" } } satisfies Meta;
+const meta = { title: "Design System/Chart library/Line Chart", parameters: { layout: "padded" } } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

@@ -10,7 +10,7 @@ import { DasOverviewRevised } from "./revised/reporting";
  * instead of a change to the whole reporting dashboard.
  */
 const meta = {
-    title: "Sept 22/1 Reporting placement",
+    title: "Reviews/Sept 22 · Round 1/Changes/1 Reporting placement",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

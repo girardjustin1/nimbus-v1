@@ -9,14 +9,14 @@ import { bySlug } from "./feedback";
 import { ReviewNote, Variant } from "./note";
 
 /**
- * Nov 6 Edits · Chart Concepts — five ways to put requests and daily active users beside pacing.
+ * Nov 6 · Delivery chart › Concepts › A to E — five ways to put requests and daily active users beside pacing.
  *
  * Every concept uses the same campaign and the same numbers: Sports fans (Spanish), the
  * at-risk sample, which lost about half its users from day 6. A good concept makes that
  * the first thing you see. Hover any chart for the day's figures.
  */
 const meta = {
-    title: "Nov 6 Edits/Chart Concepts",
+    title: "Reviews/Nov 6 · Delivery chart/Concepts/A to E",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

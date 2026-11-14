@@ -1,59 +1,43 @@
 import { Meta } from "@storybook/addon-docs/blocks";
-import { Callout, Pill, protoUrl, td, th } from "../nov-13/doc-ui";
-import { ReviewPages } from "./review-pages";
+import { AlsoWorthALook, Feedback, OnPurpose, ReviewHero, ReviewPages, SetUp, WhatToLookAt } from "../intro/review-sections";
+import { Callout, Page } from "../intro/ui";
 
-<Meta title="Full Application/How to review" />
+<Meta title="Start Here/How to review" />
 
-<div style={{ maxWidth: 1040 }}>
+<Page>
 
-# How to review
-
-The next step agreed on 13 November: compare staging and the full application side by
-side on the pages that matter most, and say what to keep from each. This page sets that
-up.
+<ReviewHero />
 
 ## Set up
 
-1. Open **staging** in one window and the **full application** in another, both at about 1440px wide.
-2. In the full application, use the sidebar exactly as on staging — every item leads to its page. The screen menu at the
-   top (and **All screens**) also lists every state: empty, error, no permission, each chart type.
-3. Go through the pages below in order. Each one keeps staging's structure and wording, so what differs is styling.
-
-<div style={{ display: "flex", gap: 10, flexWrap: "wrap", margin: "8px 0 4px" }}>
-  <Pill href={protoUrl()}>Open the full application</Pill>
-  <Pill kind="story" href="./?path=/docs/november-13th-2026-screen-index--docs">Every screen</Pill>
-</div>
+<SetUp />
 
 ## The pages, most important first
 
+Nine pages cover nearly every pattern in the dashboard. Click a screen to open it in the prototype.
+
 <ReviewPages />
+
+**Also worth a look:**
+
+<AlsoWorthALook />
 
 ## What to look at on each page
 
-<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
-  <thead><tr><th style={th}>Look at</th><th style={th}>Ask</th></tr></thead>
-  <tbody>
-    <tr><td style={{ ...td, fontWeight: 700 }}>Type</td><td style={td}>Is the hierarchy clear? Is anything too big now that nothing is under 15px?</td></tr>
-    <tr><td style={{ ...td, fontWeight: 700 }}>Tables</td><td style={td}>Report or list header — right for this table? Do the columns sort the way you'd expect?</td></tr>
-    <tr><td style={{ ...td, fontWeight: 700 }}>Fields, dropdowns, tabs</td><td style={td}>Do they feel like staging's, cleaner? Anything that should stay exactly as staging has it?</td></tr>
-    <tr><td style={{ ...td, fontWeight: 700 }}>Charts</td><td style={td}>Readable at a glance? Colours telling series apart?</td></tr>
-    <tr><td style={{ ...td, fontWeight: 700 }}>Copy</td><td style={td}>Anything trimmed under the no-coaching rule that should come back?</td></tr>
-  </tbody>
-</table>
+<WhatToLookAt />
 
 ## Different on purpose
 
-- **Sample data is fictional.** Names, figures and URLs won't match staging; this Storybook is public.
-- **Some things are placeholders:** the announcement banner's "Read more", "Manage Placements", "View Documentation",
-  and the Finance pages' third-party frame.
-- **Admin pages** (the pink links across the top) aren't part of the rebuild.
+<OnPurpose />
 
 ## Leaving feedback
 
+For each page, name it as the Screen index does, then say one of three things.
+
+<Feedback />
+
 <Callout>
-  For each page: name it as the Screen index does, say <b>keep staging</b>, <b>keep the prototype</b> or <b>mix</b>, and
-  point at the piece (a screenshot or a short screen recording works best). Design folds it back into Storybook before
-  anything is ported.
+  Design folds the feedback back into Storybook before anything is ported.
 </Callout>
 
-</div>
+</Page>

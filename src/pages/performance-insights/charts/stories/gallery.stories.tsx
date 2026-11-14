@@ -10,7 +10,7 @@ import { Funnel, Heatmap, MetricCard, NimbusScatterChart, NimbusTreemap } from "
  * Every Nimbus chart on one page, laid out like a Performance Insights dashboard,
  * so the family can be judged together.
  */
-const meta = { title: "Performance Insights/Charts/Gallery", parameters: { layout: "fullscreen" } } satisfies Meta;
+const meta = { title: "Design System/Chart library/Gallery", parameters: { layout: "fullscreen" } } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

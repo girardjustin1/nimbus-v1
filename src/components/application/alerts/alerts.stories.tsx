@@ -15,7 +15,7 @@ import { AlertFloating, AlertFullWidth } from "@/components/application/alerts/a
  */
 
 const meta = {
-    title: "Application UI/Alerts",
+    title: "Design System/Application UI/Alerts",
     component: AlertFloating,
     parameters: { layout: "padded" },
     tags: ["autodocs"],

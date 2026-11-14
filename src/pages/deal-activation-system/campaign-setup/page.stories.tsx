@@ -6,7 +6,7 @@ import { NoFill } from "./harness";
  * The whole setup page — prototype v5, #/setup-empty and its states. Everything below this entry is a piece of it.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Page",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Page",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

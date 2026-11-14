@@ -10,7 +10,7 @@ import { RevenueByDayAfter, RevenueByDayBefore } from "./revised/revenue-by-day"
  * inside it, so the two could not be read against each other.
  */
 const meta = {
-    title: "Sept 22/3 Stacked revenue chart",
+    title: "Reviews/Sept 22 · Round 1/Changes/3 Stacked revenue chart",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

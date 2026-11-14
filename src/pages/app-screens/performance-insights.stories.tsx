@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { PerformanceInsightsScreen } from "./performance-insights";
 
 const meta = {
-    title: "App Screens/Performance Insights",
+    title: "Archive/App Screens/Performance Insights",
     component: PerformanceInsightsScreen,
     tags: ["autodocs"],
     parameters: {

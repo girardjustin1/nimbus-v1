@@ -4,7 +4,7 @@ import { NPLUS_DEMAND_ONE } from "../../../../prototypes/app/v1/screens/demand/d
 
 /** Demand → manage active n+ demand: integrated Nimbus+ partners and Third-Party Viewability. */
 const meta = {
-    title: "November 13th, 2026/Demand/Manage Active n+ Demand",
+    title: "Prototypes/Full application/Demand/Manage Active n+ Demand",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

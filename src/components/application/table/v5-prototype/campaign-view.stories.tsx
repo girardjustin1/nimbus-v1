@@ -3,7 +3,7 @@ import { ViewOnePage } from "../../../../../prototypes/das/v5/screens/campaign-v
 import { PrototypeTableContext } from "./context";
 
 const meta = {
-    title: "Application UI/Table/V5 Prototype/Campaign Creatives",
+    title: "Design System/Application UI/Table/V5 Prototype/Campaign Creatives",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

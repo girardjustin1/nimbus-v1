@@ -26,7 +26,7 @@ import { Compare } from "./note";
  * show staging's grey fields too; its own text areas, pickers and layout are untouched.
  */
 const meta = {
-    title: "Oct 26/Applied Changes",
+    title: "Reviews/Oct 26 · Nimbus tokens/Changes",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

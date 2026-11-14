@@ -8,7 +8,7 @@ import { CommandMenu, type CommandMenuGroupType } from "@/components/application
  * (`isOpen`) with realistic demand-side commands, grouped sections, icons, shortcuts and a footer.
  */
 const meta = {
-    title: "Application UI/Command Menu",
+    title: "Design System/Application UI/Command Menu",
     component: CommandMenu,
     parameters: { layout: "centered" },
     tags: ["autodocs"],

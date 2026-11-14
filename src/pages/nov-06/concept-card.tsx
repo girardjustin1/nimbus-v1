@@ -3,7 +3,7 @@ import type { DeliveryVariant } from "../../../prototypes/das/v6/screens/campaig
 import { DeliveryChart } from "../../../prototypes/das/v6/screens/delivery-chart";
 import { Variant } from "./note";
 
-/** One Delivery chart concept, shown with what it is, why it works and what to watch for (Nov 6 Edits). */
+/** One Delivery chart concept, shown with what it is, why it works and what to watch for (Nov 6 · Delivery chart). */
 
 export interface Concept {
     variant: DeliveryVariant;

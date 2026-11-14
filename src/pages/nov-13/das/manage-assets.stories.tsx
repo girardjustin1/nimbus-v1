@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { AssetDetail } from "../../../../prototypes/app/v1/screens/asset-detail";
 import { AssetSetup, ViewAllAssets } from "../../../../prototypes/app/v1/screens/asset-library";
 
-/** November 13th, 2026 · Deal Activation System · Manage assets — from DAS Round 6, unchanged. */
+/** Full application · Deal Activation System · Manage assets — from DAS Round 6, unchanged. */
 const meta = {
-    title: "November 13th, 2026/Deal Activation System/Manage assets",
+    title: "Prototypes/Full application/Deal Activation System/Manage assets",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

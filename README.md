@@ -20,7 +20,7 @@ Storybook 10 · Vite.**
 | **Prototype: Performance Insights** | […/nimbus-v1/performance-insights/](https://girardjustin1.github.io/nimbus-v1/performance-insights/) | […netlify.app/performance-insights/](https://nimbus-ds-v1.netlify.app/performance-insights/) | `npm run proto:dev` → http://localhost:5190/performance-insights/ |
 | **Prototype: DAS Studio** | […/nimbus-v1/das-studio/](https://girardjustin1.github.io/nimbus-v1/das-studio/) | […netlify.app/das-studio/](https://nimbus-ds-v1.netlify.app/das-studio/) | `npm run proto:dev` → http://localhost:5190/das-studio/ |
 
-Start with the **[Full Application overview](https://girardjustin1.github.io/nimbus-v1/?path=/docs/full-application-overview--docs)**
+Start with the **[Start Here overview](https://girardjustin1.github.io/nimbus-v1/?path=/docs/start-here-overview--docs)**
 page in Storybook. It gives a guided overview and links to every prototype.
 
 Everything on `main` deploys automatically to both hosts. Merge to `main`, and a couple
@@ -43,7 +43,7 @@ older versions stay live (`…/das/v1/`, `…/das/v2/`, …).
 Rounds 1 (22 Sep) and 2 (1 Oct) stay live, unchanged, at `…/das/v1/` and `…/das/v2/`.
 
 [Open prototype →](https://girardjustin1.github.io/nimbus-v1/das/) ([backup](https://nimbus-ds-v1.netlify.app/das/)) ·
-[Campaign Setup spec](https://girardjustin1.github.io/nimbus-v1/?path=/docs/deal-activation-system-campaign-setup-spec--docs) ([backup](https://nimbus-ds-v1.netlify.app/?path=/docs/deal-activation-system-campaign-setup-spec--docs))
+[Campaign Setup spec](https://girardjustin1.github.io/nimbus-v1/?path=/docs/prototypes-deal-activation-system-campaign-setup-spec--docs) ([backup](https://nimbus-ds-v1.netlify.app/?path=/docs/prototypes-deal-activation-system-campaign-setup-spec--docs))
 
 > **The experience.** A publisher sets up a direct-sold campaign on one page. Everything
 > they choose from a library they already built (deal, priority, frequency cap, geos,
@@ -74,7 +74,7 @@ Rounds 1 (22 Sep) and 2 (1 Oct) stay live, unchanged, at `…/das/v1/` and `…/
 ### Performance Insights: Reporting redesign
 
 [Open prototype →](https://girardjustin1.github.io/nimbus-v1/performance-insights/) ([backup](https://nimbus-ds-v1.netlify.app/performance-insights/)) ·
-[Storybook concepts](https://girardjustin1.github.io/nimbus-v1/?path=/docs/performance-insights-overview--docs)
+[Storybook concepts](https://girardjustin1.github.io/nimbus-v1/?path=/docs/archive-performance-insights-concepts-overview--docs)
 
 > **The experience.** A publisher opens Performance Insights and starts from a template
 > or saved query instead of a blank wall of checkboxes. They build a question as one
@@ -97,7 +97,7 @@ Rounds 1 (22 Sep) and 2 (1 Oct) stay live, unchanged, at `…/das/v1/` and `…/
 ### DAS Studio: build with the result in view
 
 [Open prototype →](https://girardjustin1.github.io/nimbus-v1/das-studio/) ([backup](https://nimbus-ds-v1.netlify.app/das-studio/)) ·
-[Storybook concept](https://girardjustin1.github.io/nimbus-v1/?path=/docs/deal-activation-system-studio-concept-overview--docs)
+[Storybook concept](https://girardjustin1.github.io/nimbus-v1/?path=/docs/archive-das-studio-concept-overview--docs)
 
 > **The experience.** A publisher builds a deal campaign in a focused, full-screen
 > studio: pick a goal from four visual tiles, name the deal, choose who sees it, then set
@@ -127,29 +127,26 @@ starts from that screen's sample state.
 
 ## 📚 What's in Storybook
 
-The sidebar runs top to bottom the way you'd build with it: brand primitives,
-then components, then full screens, then active prototype work.
+Six folders, in the order you'd read them.
 
-| Section | What's inside |
+| Folder | What's inside |
 | --- | --- |
-| **Introduction** | Guided overview, active-prototype links, changelog |
-| **Styles** (6) | Color · Typography · Icons · Elevation · Shape · Logos, rendered live from the tokens |
-| **Base Components** (19) | Avatars · Badges · Badge Groups · Buttons · Button Group · Checkbox · Dropdown · File Upload · Form · Input · Multi Select · Progress Indicators · Radio Buttons · Select · Slider · Tags · Textarea · Toggle · Tooltip |
-| **Application UI** (23) | App Navigation – Sidebar · Alerts · Breadcrumbs · Carousel · Charts · Code Snippet · Command Menu · Date Picker · Dividers · Empty State · File Upload · Filter Bars · Loading Indicator · Metrics · Modal · Notifications · Pagination · Pie Charts · Progress Steps · Radar Charts · Slideout Menu · Table · Tabs |
-| **Account Login** (4) | Sign up · Log in · Forgot Password · Verify Email |
-| **App Screens** (17) | Full Nimbus product screens built from the system (see below) |
-| **Deal Activation System** | **Campaign Setup Spec** (the setup page's rules and open questions), then **Campaign Setup**: every component on Round 3's setup page, rendered from the prototype's own code. It runs Page → Sections (9) → Targeting (5) → Controls (13) → Rail (2), 82 stories. Round 1, Round 2, the Studio concept and the Prototype 3 review pages are hidden from the sidebar (tag `!dev`) but still open by direct link |
-| **Performance Insights** | Overview, Round 1 concepts (reference copy), and **Charts**: 14 Nimbus-styled chart types (every Untitled UI chart plus combo, heatmap, funnel, scatter and treemap) with a Gallery and an Overview |
+| **Start Here** | Overview · Style guide · Process & roadmap · How to review |
+| **Prototypes** | **Full application**: a screen index, then one folder per page with a story per state (Reporting, Demand, Deal Activation System, AdOps, SDK & Docs, Finance, Settings). **Deal Activation System**: the six rounds, the Campaign Setup spec, and every component on the setup page |
+| **Design System** | Styles · Nimbus Tokens · Base Components · Application UI · Chart library · Imagery · Account Login |
+| **Reviews** | One folder per review with product, newest first, named `<date> · <topic>`. Each has the same pages: **Summary** (what was reviewed, decisions, what was left open), **Walkthrough** where there is one, **Changes** (before and after) and **Concepts** where options were compared |
+| **Research** | Typography Audit · Typography Rules · Table audit · Engineering constraints |
+| **Archive** | Earlier work that has been replaced, kept viewable: App Screens, DAS early concepts, the DAS Studio concept, Performance Insights concepts. *About the archive* says what replaced each |
 
-**App Screens**, grouped by area:
+Three rules keep it tidy:
 
-- **Reporting & metrics:** Key Metrics Dashboard, Performance Insights, Saved Queries,
-  Nimbus+ Reporting, Nimbus Benchmarks
-- **Payments & finance:** Nimbus+ Payments, Nimbus+ Payouts, Billing Setup, Add
-  DocuSign Contracts
-- **Demand & campaigns:** Manage Active Demand, Manage Assets, View All Campaigns,
-  Campaign Setup, DAS – Billing Rates
-- **AdOps & SDK:** Ad Blocking, Ad Blocking – Blocklists, SDK & Documentation
+- **One home per fact.** Process lives in *Process & roadmap*, rules in the *Style guide*,
+  what a review decided in that review's *Summary*. Other pages link there.
+- **Archive, don't delete.** Move a replaced page under `Archive/` and open it with the
+  `Archived` note (`src/pages/intro/ui.tsx`) pointing at what replaced it.
+- **Old links keep working.** Every story id that was public before the 14 Nov 2026
+  regroup is listed in `.storybook/static/legacy-redirects.js`. If you rename a page,
+  add its old id there.
 
 ## 🎨 Brand & tokens
 
@@ -213,22 +210,28 @@ Storybook tests need Playwright's Chromium once per machine:
 │   │   ├── foundations/          # Styles stories (color, type, icons, logos)
 │   │   └── shared-assets/
 │   ├── pages/
-│   │   ├── auth/                 # Account Login templates
-│   │   ├── app-screens/          # App Screens
-│   │   ├── deal-activation-system/   # campaign-setup-spec.mdx + campaign-setup/ (Round 3
-│   │   │                             # setup inventory); Round 1, round-1-components/ and
-│   │   │                             # studio/ are kept but hidden from the sidebar
-│   │   ├── prototype-3/              # Round 3 review pages (hidden from the sidebar)
-│   │   └── performance-insights/     # PI concepts (Storybook category)
-│   ├── styles/                   # theme.css (Nimbus tokens), globals, typography
-│   └── Introduction.mdx          # Storybook landing page
+│   │   ├── intro/                # the shared kit for front pages (ui.tsx: Hero, PageHeader,
+│   │   │                         # Cta, cards, More, Archived) and each page's sections
+│   │   ├── full-application/     # Start Here: overview, style guide, process, how to review
+│   │   ├── das-prototypes/       # Prototypes › Deal Activation System › Rounds
+│   │   ├── nov-13/               # Prototypes › Full application (stories per page) and
+│   │   │                         # the Nov 13 review summary
+│   │   ├── nov-06/ oct-29/ oct-26/ oct-17/ prototype-3/ sept-22/   # Reviews
+│   │   ├── deal-activation-system/   # Campaign Setup spec and inventory; Round 1, Round 2
+│   │   │                             # and studio/ are under Archive
+│   │   ├── performance-insights/     # Chart library; the concepts are under Archive
+│   │   ├── app-screens/          # Archive › App Screens
+│   │   ├── archive/              # About the archive
+│   │   └── auth/                 # Design System › Account Login
+│   └── styles/                   # theme.css (Nimbus tokens), globals, typography
 ├── prototypes/                   # standalone, versioned prototype apps
 │   ├── vite.config.ts            # one multi-page build; finds every version
 │   ├── shared/                   # prototype toolbar/index frame + styles
 │   ├── das/                      # index.html (→ latest) · versions.ts · v1/ v2/ v3/
 │   ├── performance-insights/     # same shape
 │   └── das-studio/               # same shape; screens come from src/…/studio
-├── .storybook/                   # Storybook config + sidebar order (preview.tsx)
+├── .storybook/                   # Storybook config, sidebar order (preview.tsx) and
+│                                 # static/legacy-redirects.js (old links)
 ├── .github/workflows/            # CI, Pages deploy
 ├── reference/                    # design sources: token export, screen exports
 └── logos/
@@ -239,7 +242,8 @@ Storybook tests need Playwright's Chromium once per machine:
 **Workflow:** branch off `main` → open a PR → CI must pass → merge → Pages redeploys.
 
 - **Add a component or screen.** Put it under `src/`, next to a `*.stories.tsx` with
-  `title: "<Section>/<Name>"`. It shows up in that Storybook section automatically.
+  `title: "<Folder>/<Section>/<Name>"`, where the folder is one of the six above. It shows
+  up there automatically.
   Sidebar order lives in `.storybook/preview.tsx`.
 - **Start a new prototype round.** Copy the latest version folder
   (`cp -R prototypes/das/v1 prototypes/das/v2`), change `meta("v1")` to `meta("v2")`
@@ -247,15 +251,16 @@ Storybook tests need Playwright's Chromium once per machine:
   now opens v2, and v1 stays untouched. Details: [`prototypes/README.md`](prototypes/README.md).
 - **Add a new prototype.** Copy `prototypes/performance-insights/` to
   `prototypes/<name>/`, edit its `versions.ts` and `v1/screens.tsx`, and add a card to
-  `src/Introduction.mdx`. The build finds it automatically and deploys it to
+  the Start Here overview (`src/pages/intro/overview-sections.tsx`). The build finds it automatically and deploys it to
   `/nimbus-v1/<name>/`.
 - **Promote a pattern.** When a prototype introduces something reusable (e.g. the
   keyword chip input or delivery bar), move it into `src/components/` with a story so
   every screen can use it.
-- **Keep the Introduction current.** When a prototype round ships, update the date and
-  changelog on the Introduction tile and the prototype's `versions.ts`.
-- **Hide, don't delete.** To take a Storybook page out of the sidebar but keep it
-  linkable, add `tags: ["!dev"]` to its meta (or `tags={["!dev"]}` on an MDX `<Meta>`).
+- **Add a review.** A new folder under `Reviews/` named `<date> · <topic>`, with a
+  Summary that opens with `ReviewHeader` (`src/pages/intro/review-header.tsx`), then
+  Changes, and a Walkthrough or Concepts if the review needs them.
+- **Archive, don't hide.** A replaced page moves under `Archive/` with a note saying
+  what replaced it. Nothing in the sidebar is hidden.
 - **Prototype 3's setup inventory** (`src/pages/deal-activation-system/campaign-setup/`)
   imports the prototype's own components through `harness.tsx`. Change the component in
   `prototypes/das/v3/screens/` and the story follows.
@@ -317,7 +322,7 @@ Every link inside the site is relative, so it works the same on either host.
   `UNTITLEDUI_PRO_TOKEN` in a local `.env` (read by `.npmrc`) and as a repository
   secret for CI.
 - **Ports.** Storybook runs on 6006 and the prototypes on 5190. Locally, the
-  Introduction's prototype buttons expect 5190, and the prototypes' "Design system"
+  The front pages' prototype buttons expect 5190, and the prototypes' "Design system"
   link expects 6006. The prototype server won't silently switch ports if 5190 is taken.
   Storybook will, so if it lands elsewhere (e.g. `npm run storybook -- -p 6007`), that
   one link won't match.

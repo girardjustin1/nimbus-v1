@@ -5,7 +5,7 @@ import { colorAt } from "../chart-theme";
 import { NimbusScatterChart } from "../reporting-charts";
 
 /** Scatter / bubble (Nimbus extra) — eCPM against fill rate; bubble size is revenue. */
-const meta = { title: "Performance Insights/Charts/Scatter Chart", parameters: { layout: "padded" } } satisfies Meta;
+const meta = { title: "Design System/Chart library/Scatter Chart", parameters: { layout: "padded" } } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

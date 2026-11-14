@@ -30,7 +30,7 @@ import { LABEL } from "./type-rules";
  *   FilterControl     Performance Insights' filter menu: + ADD → category / values →
  *                     SAVE; chosen values become checkboxes to toggle; ✕ clears all
  *
- * Type stays at the 15px floor (Storybook › Audits › Typography Rules), so labels can't
+ * Type stays at the 15px floor (Storybook › Research › Typography Rules), so labels can't
  * drop to staging's 10–12px; sizes and weights otherwise follow staging.
  */
 

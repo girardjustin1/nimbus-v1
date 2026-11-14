@@ -6,7 +6,7 @@ import { Setup, Surface } from "./harness";
  * Priority — off by default (even distribution); on, a number from 1 to 100.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Sections/Priority",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Sections/Priority",
 } satisfies Meta;
 
 export default meta;

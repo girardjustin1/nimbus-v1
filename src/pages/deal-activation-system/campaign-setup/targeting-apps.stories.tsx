@@ -7,7 +7,7 @@ import { Surface, Value } from "./harness";
  * Apps — search the app library on the page; chosen apps land in a table with platform and bundle ID.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Targeting/Apps",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Targeting/Apps",
 } satisfies Meta;
 
 export default meta;

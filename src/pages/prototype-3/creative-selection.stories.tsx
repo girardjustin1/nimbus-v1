@@ -16,8 +16,7 @@ import { bySlug } from "./feedback";
 const item = bySlug("creative-selection");
 
 const meta = {
-    title: "Prototype 3/Creative Selection",
-    tags: ["!dev"],
+    title: "Reviews/Oct 5 · Type rules/Concepts/Creative Selection",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

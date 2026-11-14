@@ -7,7 +7,7 @@
  *
  * Applied means it was decided on the call and is in prototype v4. Decided means it was
  * a concept until Product picked one on 19 Oct; the pick is in v4 and the others stay in
- * Oct 17 › Concepts as the record. Concepts means the choice is still open. To confirm
+ * Oct 17 · After publishing › Concepts as the record. Concepts means the choice is still open. To confirm
  * means it is built on a reading that still needs an answer.
  */
 
@@ -231,12 +231,12 @@ export const items: FeedbackItem[] = [
 
 /** A screen in prototype v4: label and its hash route. */
 export type ScreenLink = [label: string, route: string];
-/** A story in this category: label and its Storybook id. */
+/** A story in this review: label and its Storybook id. */
 export type StoryLink = [label: string, id: string];
 
 /**
  * Where to see each change: the prototype v4 screens it shows on, and the stories in
- * this category that compare or present it. Rendered as links on Oct 17 › Overview.
+ * this review that compare or present it. Rendered as links on Oct 17 · After publishing › Summary.
  */
 export const links: Record<string, { prototype: ScreenLink[]; stories: StoryLink[] }> = {
     "creative-previews": {
@@ -246,8 +246,8 @@ export const links: Record<string, { prototype: ScreenLink[]; stories: StoryLink
             ["Asset detail", "asset-detail"],
         ],
         stories: [
-            ["Creative · R3 → R4", "oct-17-applied-changes--creative-after"],
-            ["Asset Setup · R3 → R4", "oct-17-applied-changes--asset-setup-after"],
+            ["Creative · R3 → R4", "reviews-oct-17-·-after-publishing-changes--creative-after"],
+            ["Asset Setup · R3 → R4", "reviews-oct-17-·-after-publishing-changes--asset-setup-after"],
         ],
     },
     "campaigns-table": {
@@ -256,8 +256,8 @@ export const links: Record<string, { prototype: ScreenLink[]; stories: StoryLink
             ["Searching", "campaigns-search"],
         ],
         stories: [
-            ["Manage campaigns · R3 → R4", "oct-17-applied-changes--campaigns-after"],
-            ["Table concepts", "oct-17-concepts-campaigns-table--as-staging"],
+            ["Manage campaigns · R3 → R4", "reviews-oct-17-·-after-publishing-changes--campaigns-after"],
+            ["Table concepts", "reviews-oct-17-·-after-publishing-concepts-campaigns-table--as-staging"],
         ],
     },
     "highlight-chips": {
@@ -265,7 +265,7 @@ export const links: Record<string, { prototype: ScreenLink[]; stories: StoryLink
             ["Campaigns table", "campaigns"],
             ["Filtered by health", "campaigns-attention"],
         ],
-        stories: [["Manage campaigns · R4", "oct-17-applied-changes--campaigns-after"]],
+        stories: [["Manage campaigns · R4", "reviews-oct-17-·-after-publishing-changes--campaigns-after"]],
     },
     "campaign-health": {
         prototype: [
@@ -273,9 +273,9 @@ export const links: Record<string, { prototype: ScreenLink[]; stories: StoryLink
             ["Clicked", "campaigns-attention"],
         ],
         stories: [
-            ["A · Counts (chosen)", "oct-17-concepts-campaign-health--counts"],
-            ["B · Bar", "oct-17-concepts-campaign-health--bar"],
-            ["C · Needs attention", "oct-17-concepts-campaign-health--to-do"],
+            ["A · Counts (chosen)", "reviews-oct-17-·-after-publishing-concepts-campaign-health--counts"],
+            ["B · Bar", "reviews-oct-17-·-after-publishing-concepts-campaign-health--bar"],
+            ["C · Needs attention", "reviews-oct-17-·-after-publishing-concepts-campaign-health--to-do"],
         ],
     },
     breadcrumb: {
@@ -283,7 +283,7 @@ export const links: Record<string, { prototype: ScreenLink[]; stories: StoryLink
             ["Overview", "view-a"],
             ["Full performance", "view-d"],
         ],
-        stories: [["Overview · R3 → R4", "oct-17-applied-changes--overview-after"]],
+        stories: [["Overview · R3 → R4", "reviews-oct-17-·-after-publishing-changes--overview-after"]],
     },
     "overview-header": {
         prototype: [
@@ -292,21 +292,21 @@ export const links: Record<string, { prototype: ScreenLink[]; stories: StoryLink
             ["Queued", "view-a-queued"],
         ],
         stories: [
-            ["Overview · R3", "oct-17-applied-changes--overview-before"],
-            ["Overview · R4", "oct-17-applied-changes--overview-after"],
+            ["Overview · R3", "reviews-oct-17-·-after-publishing-changes--overview-before"],
+            ["Overview · R4", "reviews-oct-17-·-after-publishing-changes--overview-after"],
         ],
     },
     "overview-summary": {
         prototype: [["Cards (chosen)", "view-a"]],
         stories: [
-            ["A · Sidebar", "oct-17-concepts-overview-summary--sidebar"],
-            ["B · Cards (chosen)", "oct-17-concepts-overview-summary--cards"],
-            ["Cards, at risk", "oct-17-concepts-overview-summary--cards-at-risk"],
+            ["A · Sidebar", "reviews-oct-17-·-after-publishing-concepts-overview-summary--sidebar"],
+            ["B · Cards (chosen)", "reviews-oct-17-·-after-publishing-concepts-overview-summary--cards"],
+            ["Cards, at risk", "reviews-oct-17-·-after-publishing-concepts-overview-summary--cards-at-risk"],
         ],
     },
     "chart-tooltip": {
         prototype: [["Overview (hover the chart)", "view-a"]],
-        stories: [["Overview · R4", "oct-17-applied-changes--overview-after"]],
+        stories: [["Overview · R4", "reviews-oct-17-·-after-publishing-changes--overview-after"]],
     },
     "full-performance": {
         prototype: [
@@ -314,16 +314,16 @@ export const links: Record<string, { prototype: ScreenLink[]; stories: StoryLink
             ["Pivot", "view-d-pivot"],
         ],
         stories: [
-            ["Performance · R3 → R4", "oct-17-applied-changes--performance-after"],
-            ["Across the top (chosen)", "oct-17-concepts-full-performance-layout--decided"],
-            ["Stacked bar", "oct-17-concepts-full-performance-layout--stacked-bar"],
+            ["Performance · R3 → R4", "reviews-oct-17-·-after-publishing-changes--performance-after"],
+            ["Across the top (chosen)", "reviews-oct-17-·-after-publishing-concepts-full-performance-layout--decided"],
+            ["Stacked bar", "reviews-oct-17-·-after-publishing-concepts-full-performance-layout--stacked-bar"],
         ],
     },
     "keyword-reporting": {
         prototype: [["By keyword (chosen)", "view-d-keywords"]],
         stories: [
-            ["A · On screen (chosen)", "oct-17-concepts-keyword-reporting--on-screen"],
-            ["B · CSV only", "oct-17-concepts-keyword-reporting--csv-only"],
+            ["A · On screen (chosen)", "reviews-oct-17-·-after-publishing-concepts-keyword-reporting--on-screen"],
+            ["B · CSV only", "reviews-oct-17-·-after-publishing-concepts-keyword-reporting--csv-only"],
         ],
     },
     "unity-platform": {
@@ -332,18 +332,18 @@ export const links: Record<string, { prototype: ScreenLink[]; stories: StoryLink
             ["Overview", "view-a"],
             ["Pivot by platform", "view-d-pivot"],
         ],
-        stories: [["Overview · R4", "oct-17-applied-changes--overview-after"]],
+        stories: [["Overview · R4", "reviews-oct-17-·-after-publishing-changes--overview-after"]],
     },
     "device-language": {
         prototype: [
             ["Setup · Device Language", "step-targeting"],
             ["Overview · Targeting", "view-a"],
         ],
-        stories: [["Setup · Targeting", "deal-activation-system-campaign-setup-sections-targeting--filled"]],
+        stories: [["Setup · Targeting", "prototypes-deal-activation-system-campaign-setup-sections-targeting--filled"]],
     },
     "targeting-block": {
         prototype: [["Overview · Targeting", "view-a"]],
-        stories: [["Overview · R4", "oct-17-applied-changes--overview-after"]],
+        stories: [["Overview · R4", "reviews-oct-17-·-after-publishing-changes--overview-after"]],
     },
 };
 

@@ -3,7 +3,7 @@ import { FinanceScreen } from "../../../../prototypes/app/v1/screens/account/fin
 
 /** Finance · Invoice history — the payments provider's frame inside our chrome, and staging's no-permission state. */
 const meta = {
-    title: "November 13th, 2026/Finance/Invoice history",
+    title: "Prototypes/Full application/Finance/Invoice history",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

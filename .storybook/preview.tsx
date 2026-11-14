@@ -8,63 +8,61 @@ const preview: Preview = {
         options: {
             storySort: {
                 method: "alphabetical",
+                // Six folders, top to bottom (14 Nov cleanup):
+                //   Start Here     what this is, the rules, the plan, how to review
+                //   Prototypes     the screens: the full application, then DAS
+                //   Design System  what gets ported: styles, tokens, components
+                //   Reviews        one folder per review, newest first, same pages in each
+                //   Research       audits of the live product, engineering's constraints
+                //   Archive        superseded work, kept for reference
+                // Old addresses redirect to the new ones (public/legacy-redirects.js).
                 order: [
-                    // 0) The introduction to the whole effort (always first), then the DAS
-                    //    prototypes' own introduction.
-                    "Full Application",
+                    "Start Here",
                     ["Overview", "Style guide", "Process & roadmap", "How to review"],
-                    "DAS Prototypes",
-                    ["Overview"],
-                    // 0b) Research on the live product, directly under the introduction.
-                    //     These document another application and change nothing here.
-                    "Audits",
-                    // 1) Styles / foundations
-                    "Styles",
-                    ["Color", "Typography", "Icons", "Elevation", "Shape", "Logos"],
-                    // Shared SVG illustrations and animated consumer ad previews.
-                    "Imagery",
-                    ["Assets", ["Goal Illustrations", "Ad Formats"]],
-                    // 2) Base components (flat — no sub-folders)
-                    "Base Components",
-                    // 3) Application UI (complex components) — nav first
-                    "Application UI",
-                    ["App Navigation - Sidebar", "*"],
-                    // 4) Auth page templates
-                    "Account Login",
-                    ["Sign up", "Log in", "Forgot Password", "Verify Email"],
-                    // 5) App Screens
-                    "App Screens",
-                    // 6) Active project — DAS screen concepts
-                    "Deal Activation System",
+                    "Prototypes",
                     [
-                        // Prototype 3's setup page, itemised top to bottom. The rounds and
-                        // the Studio concept below are hidden from the sidebar (tag !dev)
-                        // but still open by direct link.
-                        "Campaign Setup Spec",
-                        "Campaign Setup",
+                        "Full application",
                         [
-                            "Page",
-                            "Sections",
-                            ["Deal", "Campaign Name", "Auction Rules", "Priority", "Budget", "Flight Dates", "Frequency Cap", "Targeting", "Creative"],
-                            "Targeting",
-                            ["Geos", "Platform", "Apps", "Ad Unit", "Keywords"],
-                            "Controls",
-                            "Rail",
-                            ["Campaign Summary", "Review Modal"],
+                            "Screen index",
+                            "Reporting",
+                            ["Key metrics", "Realtime dashboard", "Performance Insights", "Buyer breakdown", "Nimbus benchmarks"],
+                            "Demand",
+                            ["Configure demand", "Manage active demand", "Manage active n+ demand", "n+ payments"],
+                            "Deal Activation System",
+                            ["Campaign setup", "Manage assets", "Manage keywords", "Manage campaigns"],
+                            "AdOps",
+                            ["Ad blocking", "Floors", "Manage test mode", "Discrepancy reports", "Activity"],
+                            "SDK & Docs",
+                            "Finance",
+                            "Settings",
                         ],
-                        "Overview",
-                        "Round 2 · Oct 1",
-                        "Round 1 Concepts",
-                        ["Campaign Setup (One Page)", "Targeting", "Keyword Library", "Manage Campaigns", "Reporting", "Components"],
-                        "Studio Concept",
-                        ["Overview", "Screens", "Components"],
+                        "Deal Activation System",
+                        [
+                            "Rounds",
+                            "Campaign Setup Spec",
+                            "Campaign Setup",
+                            [
+                                "Page",
+                                "Sections",
+                                ["Deal", "Campaign Name", "Auction Rules", "Priority", "Budget", "Flight Dates", "Frequency Cap", "Targeting", "Creative"],
+                                "Targeting",
+                                ["Geos", "Platform", "Apps", "Ad Unit", "Keywords"],
+                                "Controls",
+                                "Rail",
+                                ["Campaign Summary", "Review Modal"],
+                            ],
+                        ],
                     ],
-                    // 7) Active project — Performance Insights redesign concepts
-                    "Performance Insights",
+                    "Design System",
                     [
-                        "Overview",
-                        "Concepts",
-                        "Charts",
+                        "Styles",
+                        ["Color", "Typography", "Icons", "Elevation", "Shape", "Logos"],
+                        "Nimbus Tokens",
+                        ["Overview", "*"],
+                        "Base Components",
+                        "Application UI",
+                        ["App Navigation - Sidebar", "*"],
+                        "Chart library",
                         [
                             "Overview",
                             "Gallery",
@@ -84,61 +82,54 @@ const preview: Preview = {
                             "Treemap",
                             "Chart Card & Legend",
                         ],
+                        "Imagery",
+                        ["Assets", ["Goal Illustrations", "Ad Formats"]],
+                        "Account Login",
+                        ["Sign up", "Log in", "Forgot Password", "Verify Email"],
                     ],
-                    // 7a) November 13th, 2026 — the full application on the Nov 13 style guide
-                    //     (prototypes/app). Newest first, right under Performance Insights.
-                    "November 13th, 2026",
+                    // Every review has the same pages, in this order: Summary, Walkthrough
+                    // (where one was written), Changes, Concepts (where there were options).
+                    "Reviews",
                     [
-                        "Introduction",
-                        "Direction",
-                        "Engineering constraints",
-                        "Screen index",
-                        "Reporting",
-                        ["Key metrics", "Realtime dashboard", "Performance Insights", "Buyer breakdown", "Nimbus benchmarks"],
-                        "Demand",
-                        ["Configure demand", "Manage active demand", "Manage active n+ demand", "n+ payments"],
-                        "Deal Activation System",
-                        ["Campaign setup", "Manage assets", "Manage keywords", "Manage campaigns"],
-                        "AdOps",
-                        ["Ad blocking", "Floors", "Manage test mode", "Discrepancy reports", "Activity"],
-                        "SDK & Docs",
-                        "Finance",
-                        "Settings",
+                        "Nov 13 · Full application",
+                        ["Summary"],
+                        "Nov 6 · Delivery chart",
+                        ["Summary", "Walkthrough", "Changes", "Concepts", ["A to E", "F to I on one chart"]],
+                        "Oct 29 · Reporting",
+                        ["Summary", "Walkthrough", "Changes"],
+                        "Oct 26 · Nimbus tokens",
+                        ["Summary", "Walkthrough", "Changes"],
+                        "Oct 17 · After publishing",
+                        [
+                            "Summary",
+                            "Changes",
+                            "Concepts",
+                            ["Campaign Health", "Campaigns Table", "Overview Summary", "Full Performance Layout", "Keyword Reporting"],
+                        ],
+                        "Oct 5 · Type rules",
+                        ["Summary", "Changes", "Concepts"],
+                        "Sept 22 · Round 1",
+                        ["Summary", "Changes"],
                     ],
-                    // 7b) Nov 6 Edits — Round 6 tweaks from the 6 Nov pacing-chart review. Sits right
-                    //     under Performance Insights, ahead of the older review batches.
-                    "Nov 6 Edits",
-                    ["Introduction", "Overview", "Chart Concepts", "On One Chart", "Applied Changes"],
+                    "Research",
+                    ["Typography Audit", "Typography Rules", "Table audit", ["Audit", "*"], "Engineering constraints"],
+                    "Archive",
+                    [
+                        "About the archive",
+                        "App Screens",
+                        "DAS early concepts",
+                        [
+                            "Overview",
+                            "Round 1",
+                            ["Campaign Setup (One Page)", "Targeting", "Keyword Library", "Manage Campaigns", "Reporting", "Components"],
+                            "Round 2 · Oct 1",
+                        ],
+                        "DAS Studio concept",
+                        ["Overview", "Screens", "Components"],
+                        "Performance Insights concepts",
+                        ["Overview", "Concepts"],
+                    ],
                     "*",
-                    // 8b) Oct 29 Edits — Round 6, from the 28 Oct reporting review. Newest first.
-                    "Oct 29 Edits",
-                    ["Introduction", "Overview", "Applied Changes"],
-                    // 8a) Oct 26 review batch — Round 5, from the 26 Oct review. Newest first.
-                    "Oct 26",
-                    ["Introduction", "Overview", "Applied Changes"],
-                    // 8) Oct 17 review batch — Round 4, from the 16 Oct review. Sits with the
-                    //    other review batches, newest first.
-                    "Oct 17",
-                    [
-                        "Overview",
-                        "Applied Changes",
-                        "Concepts",
-                        ["Campaign Health", "Campaigns Table", "Overview Summary", "Full Performance Layout", "Keyword Reporting"],
-                    ],
-                    // 9) Sept 22 review — staged revisions, last so it reads as a batch
-                    //    of pending changes rather than part of the concepts themselves.
-                    "Sept 22",
-                    [
-                        "Overview",
-                        "1 Reporting placement",
-                        "2 Date only, no time",
-                        "3 Stacked revenue chart",
-                        "4 Behind pace is clickable",
-                        "5 Sample advertisers stay fictional",
-                        "6 The stepper is recorded, not recommended",
-                        "7 Preview is an approximation",
-                        "8 Concept letters get a scope",
-                    ],
                 ],
             },
         },

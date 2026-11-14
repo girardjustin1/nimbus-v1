@@ -53,7 +53,7 @@ export const items: FeedbackItem[] = [
         decision: [
             "Report → charcoal #101828 header, white labels, warm alternating rows: Full performance and its per-keyword view.",
             "List → light header with bold black labels: Manage campaigns (confirmed on the call), View All Assets, View All Keywords, the overview's creatives, selected items.",
-            "Written down in Application UI › Table › List vs Report, with staging's known exceptions to settle in the Performance Insights redesign.",
+            "Written down in Design System › Application UI › Table › List vs Report, with staging's known exceptions to settle in the Performance Insights redesign.",
         ],
         touches: ["src/components/application/chart-type-bar/chart-type-bar.tsx", "prototypes/das/v5/screens/nimbus-ui.tsx", "prototypes/das/v5/screens/full-performance.tsx"],
     },
@@ -179,7 +179,7 @@ export const items: FeedbackItem[] = [
         status: "Applied",
         quotes: ["Once we have those and once they match, if they're consistent with Performance Insights, then we're going to change the rule one time, and it's going to fix everything."],
         decision: [
-            "Tabs, bands, the date cell, quick picker and group-by, UI controller and state action buttons, teal checkboxes and radios, the chart type bar, the filter menu and the two table kinds live once, in nimbus-ui.tsx, and each has a story under Application UI › Nimbus Tokens.",
+            "Tabs, bands, the date cell, quick picker and group-by, UI controller and state action buttons, teal checkboxes and radios, the chart type bar, the filter menu and the two table kinds live once, in nimbus-ui.tsx, and each has a story under Design System › Nimbus Tokens.",
             "“UI controller” and “state action” are working names — to confirm with engineering.",
         ],
         touches: ["prototypes/das/v5/screens/nimbus-ui.tsx"],
@@ -276,7 +276,7 @@ export const review27: FeedbackItem[] = [
         quotes: ["If they are contained, let's do them closer to this. If they are not, then let's do them like this. You can decide what you think looks better."],
         decision: [
             "No third style. The cards on Manage campaigns and the campaign overview take the key metrics card, scaled down: square corners, a light rule and soft shadow, a bold black title and a black value.",
-            "Contained, because the Campaigns cards are filters you click — a card reads as something to press. The flat option, the realtime dashboard's blocks, is in Oct 26 › Applied Changes to compare.",
+            "Contained, because the Campaigns cards are filters you click — a card reads as something to press. The flat option, the realtime dashboard's blocks, is in Changes to compare.",
         ],
         touches: ["prototypes/das/v5/screens/campaign-ui.tsx", "prototypes/das/v5/screens/stat-look.ts"],
     },
@@ -288,51 +288,51 @@ export const bySlug = (slug: string) => [...items, ...review27].find((i) => i.sl
 export const links: Record<string, { prototype: [string, string][]; stories: [string, string][] }> = {
     "full-bleed": {
         prototype: [["Manage campaigns", "campaigns"], ["View All Assets", "asset-view"], ["Full performance", "view-d"]],
-        stories: [["Round 4 → 5 · Campaigns", "oct-26-applied-changes--campaigns-after"], ["Tables token", "application-ui-nimbus-tokens-tables--list"]],
+        stories: [["Round 4 → 5 · Campaigns", "reviews-oct-26-·-nimbus-tokens-changes--campaigns-after"], ["Tables token", "design-system-nimbus-tokens-tables--list"]],
     },
     "table-rule": {
         prototype: [["Full performance", "view-d"], ["By keyword", "view-d-keywords"]],
-        stories: [["List vs Report", "application-ui-table-list-vs-report--docs"], ["Report token", "application-ui-nimbus-tokens-tables--report"]],
+        stories: [["List vs Report", "design-system-application-ui-table-list-vs-report--docs"], ["Report token", "design-system-nimbus-tokens-tables--report"]],
     },
     "list-headers": {
         prototype: [["View All Assets", "asset-view"], ["View All Keywords", "keyword-view"]],
-        stories: [["Round 4 → 5 · Assets", "oct-26-applied-changes--assets-after"]],
+        stories: [["Round 4 → 5 · Assets", "reviews-oct-26-·-nimbus-tokens-changes--assets-after"]],
     },
     search: {
         prototype: [["View All Assets", "asset-view"], ["View All Keywords", "keyword-view"]],
-        stories: [["Round 4 → 5 · Assets", "oct-26-applied-changes--assets-after"]],
+        stories: [["Round 4 → 5 · Assets", "reviews-oct-26-·-nimbus-tokens-changes--assets-after"]],
     },
     bands: {
         prototype: [["Full performance", "view-d"]],
-        stories: [["Round 4 → 5 · Full performance", "oct-26-applied-changes--performance-after"], ["Bands token", "application-ui-nimbus-tokens-bands--builder"]],
+        stories: [["Round 4 → 5 · Full performance", "reviews-oct-26-·-nimbus-tokens-changes--performance-after"], ["Bands token", "design-system-nimbus-tokens-bands--builder"]],
     },
     teal: {
         prototype: [["Full performance", "view-d"]],
-        stories: [["Teal Controls token", "application-ui-nimbus-tokens-teal-controls--teal"]],
+        stories: [["Teal Controls token", "design-system-nimbus-tokens-teal-controls--teal"]],
     },
     filters: {
         prototype: [["Full performance", "view-d"]],
-        stories: [["Filter Control token", "application-ui-nimbus-tokens-filter-control--comparing-platforms"]],
+        stories: [["Filter Control token", "design-system-nimbus-tokens-filter-control--comparing-platforms"]],
     },
     "chart-type": {
         prototype: [["Full performance", "view-d"]],
-        stories: [["Chart Type Bar token", "application-ui-nimbus-tokens-chart-type-bar--in-a-band"]],
+        stories: [["Chart Type Bar token", "design-system-nimbus-tokens-chart-type-bar--in-a-band"]],
     },
     dates: {
         prototype: [["Full performance", "view-d"]],
-        stories: [["Dates token", "application-ui-nimbus-tokens-dates-and-dropdowns--date-row-complete"]],
+        stories: [["Dates token", "design-system-nimbus-tokens-dates-and-dropdowns--date-row-complete"]],
     },
     "pi-link": {
         prototype: [["Manage campaigns", "campaigns"]],
-        stories: [["Round 4 → 5 · Campaigns", "oct-26-applied-changes--campaigns-after"]],
+        stories: [["Round 4 → 5 · Campaigns", "reviews-oct-26-·-nimbus-tokens-changes--campaigns-after"]],
     },
     tabs: {
         prototype: [["Manage assets", "asset-view"], ["Manage keywords", "keyword-view"]],
-        stories: [["Page Tabs token", "application-ui-nimbus-tokens-page-tabs--assets"]],
+        stories: [["Page Tabs token", "design-system-nimbus-tokens-page-tabs--assets"]],
     },
     "stat-type": {
         prototype: [["Campaign overview", "view-a"], ["Manage campaigns", "campaigns"]],
-        stories: [["Round 4 → 5 · Overview", "oct-26-applied-changes--overview-after"]],
+        stories: [["Round 4 → 5 · Overview", "reviews-oct-26-·-nimbus-tokens-changes--overview-after"]],
     },
     kept: {
         prototype: [["Manage campaigns", "campaigns"], ["Paused campaign", "view-a?c=c4"]],
@@ -340,7 +340,7 @@ export const links: Record<string, { prototype: [string, string][]; stories: [st
     },
     tokens: {
         prototype: [],
-        stories: [["Nimbus Tokens", "application-ui-nimbus-tokens-00-overview--docs"]],
+        stories: [["Nimbus Tokens", "design-system-nimbus-tokens-overview--docs"]],
     },
     "kill-health": {
         prototype: [["View All Keywords", "keyword-view"], ["Keyword Setup", "keyword-setup"]],
@@ -352,19 +352,19 @@ export const links: Record<string, { prototype: [string, string][]; stories: [st
     },
     "keyword-detail": {
         prototype: [["Keyword detail", "keyword-detail"], ["Delete blocked", "keyword-delete-guard"]],
-        stories: [["Round 4 → 5 · Keyword detail", "oct-26-applied-changes--keyword-detail-after"]],
+        stories: [["Round 4 → 5 · Keyword detail", "reviews-oct-26-·-nimbus-tokens-changes--keyword-detail-after"]],
     },
     "asset-bar": {
         prototype: [["Asset detail", "asset-detail?a=a1"]],
-        stories: [["Round 4 → 5 · Asset detail", "oct-26-applied-changes--asset-detail-after"]],
+        stories: [["Round 4 → 5 · Asset detail", "reviews-oct-26-·-nimbus-tokens-changes--asset-detail-after"]],
     },
     breadcrumbs: {
         prototype: [["Keyword detail", "keyword-detail?k=k1"], ["Asset detail", "asset-detail?a=a1"], ["Campaign overview", "view-a?c=c1"]],
-        stories: [["Round 4 → 5 · Keyword detail", "oct-26-applied-changes--keyword-detail-after"]],
+        stories: [["Round 4 → 5 · Keyword detail", "reviews-oct-26-·-nimbus-tokens-changes--keyword-detail-after"]],
     },
     fields: {
         prototype: [["Asset Setup", "asset-setup"], ["Setup · General", "step-general"]],
-        stories: [["Fields", "oct-26-applied-changes--fields"], ["Input", "base-components-input--docs"]],
+        stories: [["Fields", "reviews-oct-26-·-nimbus-tokens-changes--fields"], ["Input", "design-system-base-components-input--docs"]],
     },
     "search-full": {
         prototype: [["Manage campaigns", "campaigns"], ["View All Assets", "asset-view"]],
@@ -372,6 +372,6 @@ export const links: Record<string, { prototype: [string, string][]; stories: [st
     },
     "stat-cards": {
         prototype: [["Manage campaigns", "campaigns"], ["Campaign overview", "view-a"]],
-        stories: [["Contained vs flat", "oct-26-applied-changes--summary-cards"]],
+        stories: [["Contained vs flat", "reviews-oct-26-·-nimbus-tokens-changes--summary-cards"]],
     },
 };

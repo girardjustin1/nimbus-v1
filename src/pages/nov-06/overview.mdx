@@ -1,7 +1,9 @@
 import { Meta } from "@storybook/addon-docs/blocks";
+import { ReviewHeader } from "../intro/review-header";
+import { More } from "../intro/ui";
 import { framing, items, links, outside } from "./feedback";
 
-<Meta title="Nov 6 Edits/Overview" />
+<Meta title="Reviews/Nov 6 · Delivery chart/Summary" />
 
 export const protoUrl = (route) =>
   (typeof window !== "undefined" && /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname) ? "http://localhost:5190/das/v6/" : "./das/v6/") + `#/${route}`;
@@ -49,13 +51,7 @@ export const td = { fontSize: 15, color: "#344054", padding: "10px 12px", border
 
 <div style={{ maxWidth: 920 }}>
 
-# Nov 6 Edits · Round 6
-
-A short review of the campaign overview's **Delivery chart** with Product, after Product
-showed DAS to sales. The pacing chart stays, but with context: the **ad requests** and
-**daily active users** behind each day, so a slow stretch reads as less opportunity
-rather than Nimbus falling short. Plus one rule for the whole of DAS: **every table
-sorts**. Everything below is in prototype **v6**.
+<ReviewHeader id="nov-6" />
 
 > “{framing.quote}”
 >
@@ -63,7 +59,21 @@ sorts**. Everything below is in prototype **v6**.
 
 {framing.decision}
 
-## The changes
+## Decisions
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
+  <thead><tr><th style={th}>Decision</th><th style={{ ...th, width: 130 }}>Status</th></tr></thead>
+  <tbody>
+    {items.map((item) => (
+      <tr key={item.slug}>
+        <td style={{ ...td, fontWeight: 700, color: "#101828", padding: "7px 12px" }}>{item.title}</td>
+        <td style={{ ...td, padding: "7px 12px" }}><Chip tone={item.status} /></td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+<More title="Each decision in full, and where to see it">
 
 <table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
   <thead><tr><th style={th}>Change</th><th style={th}>Status</th><th style={th}>What we did, and where to see it</th></tr></thead>
@@ -81,12 +91,16 @@ sorts**. Everything below is in prototype **v6**.
   </tbody>
 </table>
 
-## The chart concepts
+</More>
 
-All of them show the same campaign, Sports fans (Spanish), which lost about half its users
-from 6 September. **A to E** are the first batch (**Chart Concepts**). **F to I** are the
-second, after Product asked for everything **on one chart** (**On One Chart**). Every one is
-in Storybook for reference; the prototype shows **A**.
+## The chart, decided: A
+
+Product: “We can't do anything vs normal. It has to just be actual numbers.” **A** puts
+actual and expected pacing and the day's requests and active users on one chart, in real
+figures. D and H, which measure against a normal day, are ruled out. The prototype shows A
+on every campaign overview; all nine concepts stay in Storybook under **Concepts**.
+
+<More title="All nine concepts, A to I">
 
 <table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
   <thead><tr><th style={th}>Concept</th><th style={th}>How it shows requests and users</th><th style={th}>Scales</th><th style={th}>See it</th></tr></thead>
@@ -106,18 +120,15 @@ in Storybook for reference; the prototype shows **A**.
         <td style={{ ...td, fontWeight: 700, color: "#101828" }}>{name}</td>
         <td style={td}>{how}</td>
         <td style={td}>{scales}</td>
-        <td style={td}><div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}><Pill kind="story" href={storyUrl(story.includes("--") ? `nov-6-edits-${story}` : `nov-6-edits-chart-concepts--${story}`)}>Story →</Pill></div></td>
+        <td style={td}><div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}><Pill kind="story" href={storyUrl(story.includes("--") ? `reviews-nov-6-·-delivery-chart-concepts-f-to-i-${story}` : `reviews-nov-6-·-delivery-chart-concepts-a-to-e--${story}`)}>Story →</Pill></div></td>
       </tr>
     ))}
   </tbody>
 </table>
 
-**Decided (6 Nov): A.** Product: “We can't do anything vs normal. It has to just be actual
-numbers.” A puts actual and expected pacing and the day's requests and active users on one
-chart, in real figures. D and H, which measure against a normal day, are ruled out. The
-prototype shows A on every campaign overview; the Chart menu is gone.
+</More>
 
-## Outside the prototype
+## Left open
 
 <table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
   <thead><tr><th style={th}>Item</th><th style={th}>Status</th><th style={th}>Notes</th></tr></thead>
@@ -128,9 +139,7 @@ prototype shows A on every campaign overview; the Chart menu is gone.
   </tbody>
 </table>
 
-## Next
-
-Product picks a chart concept. DAUs replace the sample data when the backend feed lands.
-Red and yellow pacing stay as they are until Product and sales decide whether to show them.
+DAUs replace the sample data when the backend feed lands. Red and yellow pacing stay as
+they are until Product and sales decide whether to show them.
 
 </div>

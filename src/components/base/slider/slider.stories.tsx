@@ -7,7 +7,7 @@ import { Slider } from "@/components/base/slider/slider";
  * the Nimbus brand-solid (teal) token applied globally.
  */
 const meta = {
-    title: "Base Components/Slider",
+    title: "Design System/Base Components/Slider",
     component: Slider,
     parameters: { layout: "padded" },
     tags: ["autodocs"],

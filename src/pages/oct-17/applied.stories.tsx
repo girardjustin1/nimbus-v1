@@ -20,7 +20,7 @@ import { Compare } from "./note";
  * built, so what was removed stays visible and is easy to put back.
  */
 const meta = {
-    title: "Oct 17/Applied Changes",
+    title: "Reviews/Oct 17 · After publishing/Changes",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

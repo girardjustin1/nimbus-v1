@@ -7,8 +7,7 @@ import { DeliveryBar } from "../das-shell";
  * share of the flight that has passed, and a pace label.
  */
 const meta = {
-    title: "Deal Activation System/Round 1 Concepts/Components/Delivery Bar",
-    tags: ["!dev"],
+    title: "Archive/DAS early concepts/Round 1/Components/Delivery Bar",
     component: DeliveryBar,
     args: { campaign: campaigns[0] },
     decorators: [(Story) => <div className="w-72">{Story()}</div>],

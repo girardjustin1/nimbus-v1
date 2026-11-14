@@ -9,7 +9,7 @@ import { Compare } from "../note";
  * column version stays here as the record.
  */
 const meta = {
-    title: "Oct 17/Concepts/Campaigns Table",
+    title: "Reviews/Oct 17 · After publishing/Concepts/Campaigns Table",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

@@ -1,4 +1,6 @@
 import { Meta } from "@storybook/addon-docs/blocks";
+import { Archived } from "../../intro/ui";
+import { story } from "../../intro/tokens";
 
 export const th = { textAlign: "left", fontSize: 12, fontWeight: 700, color: "#475467", padding: "10px 14px", borderBottom: "1px solid #EAECF0", background: "#F9FAFB" };
 export const td = { fontSize: 14, color: "#344054", padding: "12px 14px", borderBottom: "1px solid #EAECF0", verticalAlign: "top" };
@@ -13,9 +15,11 @@ export const Table = ({ head, rows }) => (
 export const S = ({ id, children }) => <a href={`./?path=/story/${id}`} target="_top" style={{ color: "#3538CD", fontWeight: 600 }}>{children}</a>;
 export const proto = () => (typeof window !== "undefined" && window.location.hostname === "localhost" ? "http://localhost:5190/das-studio/" : "./das-studio/");
 
-<Meta title="Deal Activation System/Studio Concept/Overview" tags={["!dev"]} />
+<Meta title="Archive/DAS Studio concept/Overview" />
 
 <div style={{ maxWidth: 920 }}>
+
+<Archived href={story("prototypes-deal-activation-system-rounds--docs")} cta="See the rounds">A September concept that was not taken forward. The single-page setup in the DAS rounds is what was built.</Archived>
 
 <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#3538CD" }}>September 22, 2026 · Studio concept</div>
 
@@ -49,13 +53,13 @@ export const proto = () => (typeof window !== "undefined" && window.location.hos
 <Table
   head={["Step", "States"]}
   rows={[
-    [<S id="deal-activation-system-studio-concept-screens--step-1-goal">1 · Goal</S>, "Empty · Chosen · Next without a goal"],
-    [<S id="deal-activation-system-studio-concept-screens--step-2-deal">2 · Deal & campaign</S>, "Existing deal, campaign name, live estimates"],
-    [<S id="deal-activation-system-studio-concept-screens--step-3-audience">3 · Audience</S>, "Default · Too narrow (likelihood drops)"],
-    [<S id="deal-activation-system-studio-concept-screens--step-4-budget">4 · Budget, bid & schedule</S>, "Default · Bid below range · Fallback (no budget)"],
-    [<S id="deal-activation-system-studio-concept-screens--step-5-interstitial">5 · Creative & preview</S>, "Nothing added · Interstitial · Banner · Rewarded video · Native"],
-    [<S id="deal-activation-system-studio-concept-screens--step-6-review">6 · Review</S>, "Ready · With problems · Published"],
-    [<S id="deal-activation-system-studio-concept-screens--full-preview">Full-screen preview</S>, "Phone/tablet, every moment of the format, processing status"],
+    [<S id="archive-das-studio-concept-screens--step-1-goal">1 · Goal</S>, "Empty · Chosen · Next without a goal"],
+    [<S id="archive-das-studio-concept-screens--step-2-deal">2 · Deal & campaign</S>, "Existing deal, campaign name, live estimates"],
+    [<S id="archive-das-studio-concept-screens--step-3-audience">3 · Audience</S>, "Default · Too narrow (likelihood drops)"],
+    [<S id="archive-das-studio-concept-screens--step-4-budget">4 · Budget, bid & schedule</S>, "Default · Bid below range · Fallback (no budget)"],
+    [<S id="archive-das-studio-concept-screens--step-5-interstitial">5 · Creative & preview</S>, "Nothing added · Interstitial · Banner · Rewarded video · Native"],
+    [<S id="archive-das-studio-concept-screens--step-6-review">6 · Review</S>, "Ready · With problems · Published"],
+    [<S id="archive-das-studio-concept-screens--full-preview">Full-screen preview</S>, "Phone/tablet, every moment of the format, processing status"],
   ]}
 />
 
@@ -66,17 +70,17 @@ Each one has its own page under **Studio Concept › Components**, with states y
 <Table
   head={["Component", "What it does"]}
   rows={[
-    [<S id="deal-activation-system-studio-concept-components-ad-preview--interstitial">Ad Preview</S>, "Renders the creative in a device running a sample app: banner 320×50 and 300×250, interstitial, rewarded video (playing and end card), native."],
-    [<S id="deal-activation-system-studio-concept-components-preview-stage--interstitial">Preview Stage</S>, "Full-screen final render: device switch, moment carousel, status, share note."],
-    [<S id="deal-activation-system-studio-concept-components-goal-tiles--selected">Goal Tiles</S>, "Four visual tiles for the campaign goal."],
-    [<S id="deal-activation-system-studio-concept-components-step-rail--in-progress">Step Rail</S>, "Deal › Campaign › Creative outline with done, current, to-do and error states."],
-    [<S id="deal-activation-system-studio-concept-components-estimate-panel--high-likelihood">Estimate Panel</S>, "Delivery likelihood and estimated results by day, week or month."],
-    [<S id="deal-activation-system-studio-concept-components-format-picker--interstitial">Format Picker</S>, "Formats as chips with size notes."],
-    [<S id="deal-activation-system-studio-concept-components-bid-range-field--within-range">Bid Range Field</S>, "The bid drawn on its recommended range."],
-    [<S id="deal-activation-system-studio-concept-components-budget-schedule--lifetime">Budget & Schedule</S>, "Daily or lifetime budget, calendar pickers, optional end date."],
-    [<S id="deal-activation-system-studio-concept-components-creative-fields--filled">Creative Fields</S>, "Uploads and message fields that drive the preview."],
-    [<S id="deal-activation-system-studio-concept-components-review-summary--hero">Review Summary</S>, "Hero card with a small render, and one section per step."],
-    [<S id="deal-activation-system-studio-concept-components-studio-shell--with-panel">Studio Shell</S>, "Top bar, step rail, form, right panel and sticky footer."],
+    [<S id="archive-das-studio-concept-components-ad-preview--interstitial">Ad Preview</S>, "Renders the creative in a device running a sample app: banner 320×50 and 300×250, interstitial, rewarded video (playing and end card), native."],
+    [<S id="archive-das-studio-concept-components-preview-stage--interstitial">Preview Stage</S>, "Full-screen final render: device switch, moment carousel, status, share note."],
+    [<S id="archive-das-studio-concept-components-goal-tiles--selected">Goal Tiles</S>, "Four visual tiles for the campaign goal."],
+    [<S id="archive-das-studio-concept-components-step-rail--in-progress">Step Rail</S>, "Deal › Campaign › Creative outline with done, current, to-do and error states."],
+    [<S id="archive-das-studio-concept-components-estimate-panel--high-likelihood">Estimate Panel</S>, "Delivery likelihood and estimated results by day, week or month."],
+    [<S id="archive-das-studio-concept-components-format-picker--interstitial">Format Picker</S>, "Formats as chips with size notes."],
+    [<S id="archive-das-studio-concept-components-bid-range-field--within-range">Bid Range Field</S>, "The bid drawn on its recommended range."],
+    [<S id="archive-das-studio-concept-components-budget-schedule--lifetime">Budget & Schedule</S>, "Daily or lifetime budget, calendar pickers, optional end date."],
+    [<S id="archive-das-studio-concept-components-creative-fields--filled">Creative Fields</S>, "Uploads and message fields that drive the preview."],
+    [<S id="archive-das-studio-concept-components-review-summary--hero">Review Summary</S>, "Hero card with a small render, and one section per step."],
+    [<S id="archive-das-studio-concept-components-studio-shell--with-panel">Studio Shell</S>, "Top bar, step rail, form, right panel and sticky footer."],
   ]}
 />
 

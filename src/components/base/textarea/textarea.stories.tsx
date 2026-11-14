@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { TextArea } from "@/components/base/textarea/textarea";
 
 const meta = {
-    title: "Base Components/Textarea",
+    title: "Design System/Base Components/Textarea",
     component: TextArea,
     parameters: { layout: "padded" },
     tags: ["autodocs"],

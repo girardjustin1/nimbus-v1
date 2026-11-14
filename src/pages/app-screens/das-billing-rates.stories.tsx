@@ -3,7 +3,7 @@ import type { Meta } from "@storybook/react-vite";
 import { BillingRatesScreen, BillingRatesScreenWithModal } from "./das-billing-rates";
 
 const meta = {
-    title: "App Screens/DAS – Billing Rates",
+    title: "Archive/App Screens/DAS – Billing Rates",
     component: BillingRatesScreen,
     parameters: {
         layout: "fullscreen",

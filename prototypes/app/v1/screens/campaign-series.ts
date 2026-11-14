@@ -133,7 +133,7 @@ export const axis = { tickLine: false, axisLine: false, tick: { fontSize: 15, fi
 /**
  * The campaign overview's Delivery chart: Round 6 and the 6 Nov concepts (delivery-chart.tsx).
  * 6 Nov (Product): A, actual numbers on one chart, is the one the overview shows; the
- * others stay in Storybook › Nov 6 Edits for reference.
+ * others stay in Storybook › Reviews › Nov 6 · Delivery chart for reference.
  */
 export type DeliveryVariant = "pacing" | "overlay" | "bars" | "stacked" | "indexed" | "strip" | "labelled" | "backdrop" | "scaled" | "bands";
 

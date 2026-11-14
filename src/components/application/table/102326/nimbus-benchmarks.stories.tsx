@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BenchmarkRankExamples, BenchmarksTable } from "@/pages/app-screens/nimbus-benchmarks";
 
 const meta = {
-    title: "Application UI/Table/102326/Benchmarks",
+    title: "Research/Table audit/Benchmarks",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

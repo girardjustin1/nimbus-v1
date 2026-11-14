@@ -6,7 +6,7 @@ import { Setup, Surface } from "./harness";
  * Flight Dates — dates only (5 Oct review). Start and End side by side, length underneath.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Sections/Flight Dates",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Sections/Flight Dates",
 } satisfies Meta;
 
 export default meta;

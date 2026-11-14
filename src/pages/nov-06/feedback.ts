@@ -1,7 +1,7 @@
 /**
- * Nov 6 Edits — the 6 Nov pacing-chart review, as data, behind the Round 6 tweaks.
+ * Nov 6 · Delivery chart — the 6 Nov pacing-chart review, as data, behind the Round 6 tweaks.
  *
- * Same shape as Oct 29 Edits. Quotes are trimmed to the design point, and speakers are
+ * Same shape as Oct 29 · Reporting. Quotes are trimmed to the design point, and speakers are
  * named by role, because this Storybook publishes to a public URL.
  *
  * Applied means it is in prototype v6. Concept means it's one of the options to choose
@@ -48,7 +48,7 @@ export const items: FeedbackItem[] = [
         ],
         decision: [
             "The campaign overview shows A on every campaign: actual and expected pacing as a share of the goal on the left axis, the day's requests and active users in real figures on the right.",
-            "The Chart menu and the A–I screens are gone from the prototype. Every concept stays here in Storybook (Chart Concepts, On One Chart) for reference.",
+            "The Chart menu and the A–I screens are gone from the prototype. Every concept stays here in Storybook, under Concepts, for reference.",
             "Ruled out: D and H, which measure against a normal day.",
         ],
         touches: [v6("delivery-chart.tsx"), v6("campaign-view.tsx"), v6("campaign-series.ts"), "prototypes/das/v6/main.tsx", "prototypes/das/v6/screens.tsx"],
@@ -85,7 +85,7 @@ export const items: FeedbackItem[] = [
         ],
         decision: [
             "The campaign overview's Delivery chart now carries the day's ad requests across the campaign's apps.",
-            "Decided 6 Nov: the overview shows A (see Chart A). The other concepts are side by side in Chart Concepts and On One Chart.",
+            "Decided 6 Nov: the overview shows A (see Chart A). The other concepts are side by side under Concepts.",
             "Sample requests swing with the week, busiest on Saturdays, as Performance Insights showed on the call.",
         ],
         touches: [v6("delivery-chart.tsx"), v6("campaign-series.ts"), v6("campaign-view.tsx")],
@@ -208,7 +208,7 @@ export const links: Record<string, { prototype: [string, string][]; stories: [st
             ["Overview · at risk", "view-a-at-risk"],
             ["Overview · behind", "view-a-behind"],
         ],
-        stories: [["Concept A", "nov-6-edits-chart-concepts--overlay"]],
+        stories: [["Concept A", "reviews-nov-6-·-delivery-chart-concepts-a-to-e--overlay"]],
     },
     "no-coaching": {
         prototype: [
@@ -222,19 +222,19 @@ export const links: Record<string, { prototype: [string, string][]; stories: [st
             ["Overview · at risk", "view-a-at-risk"],
             ["Overview · on target", "view-a"],
         ],
-        stories: [["Overview · Round 6 → 6 Nov", "nov-6-edits-applied-changes--overview-after"]],
+        stories: [["Overview · Round 6 → 6 Nov", "reviews-nov-6-·-delivery-chart-changes--overview-after"]],
     },
     daus: {
         prototype: [["Overview · behind", "view-a-behind"]],
-        stories: [["Fewer slots, same users", "nov-6-edits-applied-changes--overview-behind"]],
+        stories: [["Fewer slots, same users", "reviews-nov-6-·-delivery-chart-changes--overview-behind"]],
     },
     "chart-concepts": {
         prototype: [],
-        stories: [["Chart Concepts", "nov-6-edits-chart-concepts--all-five"]],
+        stories: [["Concepts A to E", "reviews-nov-6-·-delivery-chart-concepts-a-to-e--all-five"]],
     },
     "one-chart": {
         prototype: [],
-        stories: [["On One Chart", "nov-6-edits-on-one-chart--all-four"]],
+        stories: [["Concepts F to I", "reviews-nov-6-·-delivery-chart-concepts-f-to-i-on-one-chart--all-four"]],
     },
     sortable: {
         prototype: [
@@ -243,8 +243,8 @@ export const links: Record<string, { prototype: [string, string][]; stories: [st
             ["Full performance", "view-d"],
         ],
         stories: [
-            ["Assets", "nov-6-edits-applied-changes--assets-sortable"],
-            ["Full performance", "nov-6-edits-applied-changes--performance-sortable"],
+            ["Assets", "reviews-nov-6-·-delivery-chart-changes--assets-sortable"],
+            ["Full performance", "reviews-nov-6-·-delivery-chart-changes--performance-sortable"],
         ],
     },
     "pace-colors": {

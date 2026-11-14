@@ -10,7 +10,7 @@ const DIMS: FilterDim[] = [
 ];
 
 const meta = {
-    title: "Application UI/Nimbus Tokens/Filter Control",
+    title: "Design System/Nimbus Tokens/Filter Control",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

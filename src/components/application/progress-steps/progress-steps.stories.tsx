@@ -27,7 +27,7 @@ const featuredItems: ProgressFeaturedIconType[] = [
 ];
 
 const meta = {
-    title: "Application UI/Progress Steps",
+    title: "Design System/Application UI/Progress Steps",
     component: Progress.IconsWithText,
     parameters: { layout: "padded" },
     tags: ["autodocs"],

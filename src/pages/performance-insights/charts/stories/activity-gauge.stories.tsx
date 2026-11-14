@@ -5,7 +5,7 @@ import { colorAt } from "../chart-theme";
 import { ActivityGauge } from "../radial-charts";
 
 /** Activity gauge — concentric rings for progress against several goals. */
-const meta = { title: "Performance Insights/Charts/Activity Gauge", parameters: { layout: "padded" } } satisfies Meta;
+const meta = { title: "Design System/Chart library/Activity Gauge", parameters: { layout: "padded" } } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

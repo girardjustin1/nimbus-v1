@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { GlobalNav } from "./global-nav";
 
 const meta = {
-    title: "Application UI/App Navigation - Sidebar",
+    title: "Design System/Application UI/App Navigation - Sidebar",
     component: GlobalNav,
     tags: ["autodocs"],
     parameters: {

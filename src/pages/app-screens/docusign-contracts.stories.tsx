@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { DocusignAccountScreen, DocusignAddContractScreen } from "./docusign-contracts";
 
 const meta = {
-    title: "App Screens/Add DocuSign Contracts",
+    title: "Archive/App Screens/Add DocuSign Contracts",
     component: DocusignAccountScreen,
     parameters: {
         layout: "fullscreen",

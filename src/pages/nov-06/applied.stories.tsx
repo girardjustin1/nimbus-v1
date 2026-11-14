@@ -7,13 +7,13 @@ import { bySlug } from "./feedback";
 import { Compare } from "./note";
 
 /**
- * Nov 6 Edits · Applied Changes — what the 6 Nov review changed in prototype v6.
+ * Nov 6 · Delivery chart › Changes — what the 6 Nov review changed in prototype v6.
  *
  * Round 6 as reviewed on 29 Oct beside the same screen today. Tables: click any header
  * to sort, again to reverse, a third time to go back.
  */
 const meta = {
-    title: "Nov 6 Edits/Applied Changes",
+    title: "Reviews/Nov 6 · Delivery chart/Changes",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

@@ -7,7 +7,7 @@ import { Surface } from "./harness";
  * Review modal — what the check came back with, then Publish or Publish & Duplicate.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Rail/Review Modal",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Rail/Review Modal",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 
