@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Cta } from "../intro/ui";
 
 /**
  * November 13th, 2026 — building blocks for this category's docs pages. Inline styles,
@@ -20,27 +21,8 @@ export const th = {
 };
 export const td = { fontSize: 15, color: "#344054", padding: "10px 12px", borderBottom: "1px solid #EAECF0", verticalAlign: "top" as const };
 
-export const Pill = ({ href, children, kind = "proto" }: { href: string; children: ReactNode; kind?: "proto" | "story" }) => (
-    <a
-        href={href}
-        target={kind === "proto" ? "_blank" : "_top"}
-        rel="noreferrer"
-        style={{
-            display: "inline-block",
-            whiteSpace: "nowrap",
-            textDecoration: "none",
-            fontSize: 15,
-            fontWeight: 600,
-            padding: "2px 10px",
-            borderRadius: 999,
-            color: kind === "proto" ? "#A94579" : "#1F7F80",
-            background: kind === "proto" ? "#FCE7F1" : "#E6F6F6",
-        }}
-    >
-        {children}
-        {kind === "proto" ? " ↗" : " →"}
-    </a>
-);
+/** Links on these pages use the one shared call to action (../intro/ui): bold pink text, ↗ for a prototype, → within Storybook. */
+export const Pill = ({ href, children }: { href: string; children: ReactNode; kind?: "proto" | "story" }) => <Cta href={href}>{children}</Cta>;
 
 export const Callout = ({ children, tone = "teal" }: { children: ReactNode; tone?: "teal" | "pink" }) => (
     <div

@@ -1,0 +1,66 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DasHero, EarlierRounds, Reviews, RoundSix, Specs } from "../intro/das-sections";
+import { Callout, Lead, Page } from "../intro/ui";
+
+<Meta title="DAS Prototypes/Overview" />
+
+<Page>
+
+# DAS prototypes
+
+<DasHero />
+
+<Lead>
+  The <b>Deal Activation System</b> (DAS) is where the Nimbus style guide was worked out. Each review with product
+  became a round; each round is frozen at the version that was reviewed. The tokens, tables, fields and type rules
+  settled here now apply to the whole dashboard in the full application.
+</Lead>
+
+## Where it stands
+
+<RoundSix />
+
+<Callout tone="pink">
+  <b>Waiting on:</b> the backend's daily active users (sample until then); whether to show red and yellow pacing at
+  all, and the thresholds if so; sales sign-off on dropping real-time spend; whether DAS records view-through; a
+  walk-through of the Campaign Delivery concept.
+</Callout>
+
+## Earlier rounds
+
+Kept as reviewed. Click any screen to open that round's prototype.
+
+<EarlierRounds />
+
+## The reviews, in Storybook
+
+Each review's changes, before and after, with what was said and what's still open.
+
+<Reviews />
+
+## Specs and rules that came out of it
+
+<Specs />
+
+## Changelog
+
+<details>
+  <summary style={{ cursor: "pointer", fontSize: 15, fontWeight: 700, color: "#A94579" }}>Every change, newest first</summary>
+  <ul style={{ fontSize: 15, lineHeight: 1.6, color: "#475467", marginTop: 12 }}>
+    <li style={{ marginBottom: 8 }}>Nov 6, 2026 (evening): Product chose chart A — actual numbers on one chart, nothing against normal; the Chart menu and concept screens left the prototype (A–I stay in Storybook); no coaching on the overview: the yellow pacing strip is gone and a paused campaign's strip only states the facts</li>
+    <li style={{ marginBottom: 8 }}>Nov 6, 2026 (later): Product asked for everything on one chart — a second batch of Delivery chart concepts, F to I (labelled axes, opportunity behind pacing, one scale for all four, shaded dips), in the Chart menu and <em>Nov 6 Edits › On One Chart</em></li>
+    <li style={{ marginBottom: 8 }}>Nov 6, 2026: the 6 Nov review built into DAS v6 — the campaign overview's Delivery chart gains the day's ad requests and daily active users (sample until the backend feed lands) beneath pacing, five chart concepts (A–E), switched from a <em>Chart</em> menu in the prototype toolbar and compared in <em>Nov 6 Edits › Chart Concepts</em>, and one sortable header for every table (assets, keywords, Full performance, creatives, selected items); <em>Nov 6 Edits</em> sits under Performance Insights</li>
+    <li style={{ marginBottom: 8 }}>Oct 29, 2026: DAS v6 (Round 6) from the 28 Oct reporting review — one trued-up spend number everywhere with “Subject to true-up”, Campaign Health renamed Pacing as a sortable column, live pacing to the nearest 0.5% with an expected-against-actual chart, a Campaign Delivery concept, and Full performance with Revenue, render rate, clicks, CTR and new breakdowns; new <em>Oct 29 Edits</em> category. Round 5 is frozen as reviewed</li>
+    <li style={{ marginBottom: 8 }}>Oct 27, 2026: the 27 Oct review folded into v5 — Keyword Health and every traffic readout removed, staging's fields and dropdowns with a teal focus, full-width search, one summary card style, and a second pass of the Nimbus brand icons</li>
+    <li style={{ marginBottom: 8 }}>Oct 26, 2026: DAS v5 (Round 5) from the 26 Oct review — shared Nimbus tokens (tables, tabs, bands, dates, buttons, filters) so DAS reads as Nimbus and Performance Insights can reuse them; new <em>Oct 26</em> category with a review guide. Round 4 is frozen as reviewed</li>
+    <li style={{ marginBottom: 8 }}>Oct 19, 2026: Product's answers built into DAS v4 — keywords match on ANY, Campaign Health as counts, overview cards, Full performance restyled like Performance Insights, Unity as a platform, Device Language restored; the Introduction card links straight to every screen and the Oct 17 page links each change to its screens and stories</li>
+    <li style={{ marginBottom: 8 }}>Oct 17, 2026: DAS v4 (Round 4) built from the 16 Oct review — Manage campaigns back to the staging table under Live, Queued, Total spend and Campaign Health chips; the campaign overview tightened (breadcrumb strip, flight dates, platform and apps up top, one summary, dollars in the tooltip); a new Full performance screen with breakdowns, pivots and CSV export; creative previews removed; a new <em>Oct 17</em> category holds the applied changes and the open choices as concepts. Round 3 is frozen as reviewed</li>
+    <li style={{ marginBottom: 8 }}>Oct 5, 2026: DAS v3 updated from the 5 Oct review — Proxima Nova loaded, extra-bold headlines and a 15px minimum, instructions above controls, dates only, Done on every picker, Duplicate once published, no setup tabs, and a Copy switch comparing staging's wording with ours; <em>Deal Activation System</em> in Storybook now holds the Campaign Setup spec and every component on the setup page (earlier rounds, the Studio concept and Prototype 3's pages are hidden but still open by link)</li>
+    <li style={{ marginBottom: 8 }}>Oct 3, 2026: DAS v3 (Round 3) built from the 2 Oct review — one search-and-select behaviour across all seven pickers, Apps and Keywords as tables, the Deal section rebuilt around its three options, Campaign Name and Flight Dates promoted to sections, a five-step rail, Publish &amp; Duplicate in the Review modal, and a Fill / Type toggle in the toolbar; typography audit of the production dashboard added under Audits</li>
+    <li style={{ marginBottom: 8 }}>Oct 1, 2026: DAS v2 (Round 2) — one rail instead of two ending in a single Review button and a publish modal, targeting promoted to peer modules, working geo and app pickers, a new asset library (with macro and wrapped-VAST validation) and keyword library (with Keyword Health), click-to-fill on every field, and terminology aligned to the product with ADDED chips on anything invented</li>
+    <li style={{ marginBottom: 8 }}>Sep 22, 2026: DAS Studio concept and prototype added; DAS gets View campaign pages and Publish error states; Performance Insights gets Saved Queries concepts and a drag-to-build explorer; both earlier prototypes now run as standalone, versioned apps (v1)</li>
+    <li style={{ marginBottom: 8 }}>Sep 18, 2026: DAS kickoff, <em>Deal Activation System</em> category added.</li>
+  </ul>
+</details>
+
+</Page>
