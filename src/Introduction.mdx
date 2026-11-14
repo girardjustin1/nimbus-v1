@@ -1,6 +1,6 @@
 import { Meta } from "@storybook/addon-docs/blocks";
 
-<Meta title="Introduction" />
+<Meta title="DAS Prototypes/Overview" />
 
 export const protoUrl = (name) =>
   typeof window !== "undefined" && window.location.hostname === "localhost" ? `http://localhost:5190/${name}/` : `./${name}/`;
@@ -38,29 +38,17 @@ export const ProtoCard = ({ tone, soft, badge, date, title, body, meta, href, li
 
 <div style={{ maxWidth: 900 }}>
 
-# Nimbus Design System
+# DAS prototypes
 
-The single source of truth for the **Nimbus** brand — design tokens, foundations,
-reusable UI components, application patterns, and ready-to-use product screens, all
-themed from the Nimbus Figma token export.
+The **Deal Activation System** (DAS) — how a publisher sets up, manages and reports on
+direct-sold campaigns — worked through six review rounds with product, from 22 September
+to 6 November 2026. Each round is a clickable prototype, frozen at the version that was
+reviewed, so any two can be compared side by side. The Nimbus tokens, tables, fields and
+type rules settled here became the style guide for the whole dashboard.
 
-Built with **React 19 · TypeScript · Tailwind CSS v4 · React Aria · Recharts ·
-Storybook 10 · Vite**.
-
-<div style={{ display: "flex", gap: 12, flexWrap: "wrap", margin: "20px 0 28px" }}>
-  <span style={{ background: "#DA6EA3", color: "#fff", padding: "6px 14px", borderRadius: 999, fontSize: 13, fontWeight: 600 }}>Pink primary · #DA6EA3</span>
-  <span style={{ background: "#37B6B7", color: "#fff", padding: "6px 14px", borderRadius: 999, fontSize: 13, fontWeight: 600 }}>Teal secondary · #37B6B7</span>
-  <span style={{ background: "#101828", color: "#fff", padding: "6px 14px", borderRadius: 999, fontSize: 13, fontWeight: 600 }}>Proxima Nova</span>
-</div>
-
-Everything here is generated from one theme, so the brand stays consistent from a
-single button to a full application screen — in both light and dark modes.
-
-<div style={{ fontSize: 14, color: "#475467", margin: "-8px 0 24px" }}>
-  <strong style={{ color: "#344054" }}>Hosted at</strong>{" "}
-  <a href="https://girardjustin1.github.io/nimbus-v1/" target="_top" style={{ color: "#1F7F80", fontWeight: 600 }}>GitHub Pages</a> (primary) and{" "}
-  <a href="https://nimbus-ds-v1.netlify.app/" target="_top" style={{ color: "#1F7F80", fontWeight: 600 }}>Netlify</a> (backup).
-  Both deploy from <code>main</code> and serve the same build, prototypes included at <code>/das/</code>, <code>/performance-insights/</code> and <code>/das-studio/</code>. If one is behind, use the other.
+<div style={{ fontSize: 15, color: "#475467", margin: "0 0 24px" }}>
+  The whole-dashboard effort that grew out of these rounds — the full application on the Nov 13 style guide — has its
+  own introduction: <a href="./?path=/docs/full-application-overview--docs" target="_top" style={{ color: "#A94579", fontWeight: 600 }}>Full Application → Overview</a>.
 </div>
 
 <div style={{ display: "flex", flexWrap: "wrap", gap: 28, background: "#FFFFFF", border: "1px solid #EAECF0", borderLeft: "4px solid #A94579", borderRadius: 16, padding: "24px 26px", margin: "8px 0 28px" }}>
@@ -102,7 +90,7 @@ single button to a full application screen — in both light and dark modes.
 
 <div style={{ background: "#F9FAFB", border: "1px solid #EAECF0", borderRadius: 18, padding: "20px 22px", margin: "0 0 28px" }}>
   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 8 }}>
-    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#475467" }}>Earlier rounds &amp; other prototypes</div>
+    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#475467" }}>Earlier rounds &amp; DAS Studio</div>
     <div style={{ fontSize: 13, fontWeight: 600, color: "#101828" }}>Kept as reviewed</div>
   </div>
   <div style={{ fontSize: 13, color: "#667085", marginTop: 6 }}>Each round is frozen at the version that was reviewed, so they can be compared side by side.</div>
@@ -148,14 +136,6 @@ single button to a full application screen — in both light and dark modes.
       links={[["./?path=/docs/deal-activation-system-overview--docs", "Storybook concepts"]]}
     />
     <ProtoCard
-      tone="#A94579" soft="#FCE7F1" badge="Performance Insights" date="Sep 22, 2026 review"
-      title="Reporting redesign"
-      body="Start from a template or saved query, ask for data as one readable sentence, compare every number to the previous period, and build any breakdown by dragging fields into a pivot."
-      meta="44 screens"
-      href={protoUrl("performance-insights")}
-      links={[["./?path=/docs/performance-insights-overview--docs", "Storybook concepts"]]}
-    />
-    <ProtoCard
       tone="#3538CD" soft="#EEF4FF" badge="DAS Studio" date="Sep 22, 2026"
       title="Build with the result in view"
       body="A guided, full-screen builder: goal tiles, live delivery estimates while you set audience, budget and bid, and the ad rendered in a real app screen as you build it."
@@ -166,118 +146,10 @@ single button to a full application screen — in both light and dark modes.
   </div>
 </div>
 
-<div style={{ background: "#F5F8FF", border: "1px solid #D6E0FF", borderRadius: 18, padding: "20px 22px", margin: "0 0 20px" }}>
-  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 8 }}>
-    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#3538CD" }}>Audits · research on the live product</div>
-    <div style={{ fontSize: 13, fontWeight: 600, color: "#101828" }}>October 2026</div>
-  </div>
-  <div style={{ fontSize: 13, color: "#667085", marginTop: 6 }}>Findings from the production dashboard. These document another application and change nothing in this design system.</div>
-  <div style={{ display: "flex", flexDirection: "column", background: "#FFFFFF", border: "1px solid #EAECF0", borderTop: "4px solid #3538CD", borderRadius: 14, padding: "18px 20px", marginTop: 14 }}>
-    <span style={{ alignSelf: "flex-start", background: "#EEF4FF", color: "#3538CD", fontSize: 12, fontWeight: 700, padding: "3px 10px", borderRadius: 999 }}>Typography</span>
-    <div style={{ fontSize: 20, fontWeight: 700, color: "#101828", margin: "10px 0 6px" }}>93 text styles where a system needs 10</div>
-    <div style={{ fontSize: 14, lineHeight: 1.6, color: "#475467" }}>
-      Every visible text element across all 22 pages of the publisher dashboard, read from the browser's computed style — 2,885 of them. Three things stand out: every native <code>&lt;button&gt;</code> renders in <strong>Arial</strong> because the global rule never sets a font-family; the <strong>200 and 300 weights</strong> the CSS asks for aren't in the font kit, so roughly 1,600 elements silently fall back to 400 and nothing designed in Light ships as drawn; and the pink, teal and blue link colours <strong>fail WCAG AA</strong> at the sizes they're used.
-    </div>
-    <div style={{ display: "flex", flexWrap: "wrap", gap: 10, margin: "14px 0" }}>
-      {[["93 → 10", "text styles"], ["14 → 7", "font sizes"], ["7 → 3", "weights"], ["25 → 7", "line-heights"], ["19 → 9", "text colours"], ["4 → 1", "typefaces"]].map(([n, l]) => (
-        <span key={l} style={{ background: "#F9FAFB", border: "1px solid #EAECF0", borderRadius: 10, padding: "6px 12px", fontSize: 13, color: "#344054" }}>
-          <strong style={{ color: "#101828" }}>{n}</strong> {l}
-        </span>
-      ))}
-    </div>
-    <div style={{ fontSize: 13, color: "#667085", margin: "0 0 16px" }}>
-      13 findings with the rendered HTML and CSS · patterns by element · a page-by-page index · the proposed 10-token system as live specimens · text-colour roles with contrast ratios · a rollout plan · the full 93-row inventory
-    </div>
-    <div style={{ marginTop: "auto", display: "flex", alignItems: "center", flexWrap: "wrap", gap: 14 }}>
-      <a href="./?path=/docs/audits-typography-audit--docs" target="_top" style={{ background: "#3538CD", color: "#FFFFFF", padding: "9px 16px", borderRadius: 999, fontSize: 14, fontWeight: 700, textDecoration: "none" }}>Read the audit →</a>
-      <a href="./?path=/docs/audits-typography-audit--docs" target="_top" style={{ color: "#3538CD", fontSize: 13, fontWeight: 600 }}>The 10 tokens</a>
-    </div>
-  </div>
-
-  <div style={{ fontSize: 13, color: "#667085", marginTop: 14 }}>
+<div style={{ background: "#F9FAFB", border: "1px solid #EAECF0", borderRadius: 18, padding: "16px 22px", margin: "0 0 28px" }}>
+  <div style={{ fontSize: 13, color: "#667085", margin: 0 }}>
     <strong style={{ color: "#344054" }}>Changelog</strong> · Nov 6, 2026 (evening): Product chose chart A — actual numbers on one chart, nothing against normal; the Chart menu and concept screens left the prototype (A–I stay in Storybook); no coaching on the overview: the yellow pacing strip is gone and a paused campaign's strip only states the facts · Nov 6, 2026 (later): Product asked for everything on one chart — a second batch of Delivery chart concepts, F to I (labelled axes, opportunity behind pacing, one scale for all four, shaded dips), in the Chart menu and <em>Nov 6 Edits › On One Chart</em> · Nov 6, 2026: the 6 Nov review built into DAS v6 — the campaign overview's Delivery chart gains the day's ad requests and daily active users (sample until the backend feed lands) beneath pacing, five chart concepts (A–E), switched from a <em>Chart</em> menu in the prototype toolbar and compared in <em>Nov 6 Edits › Chart Concepts</em>, and one sortable header for every table (assets, keywords, Full performance, creatives, selected items); <em>Nov 6 Edits</em> sits under Performance Insights · Oct 29, 2026: DAS v6 (Round 6) from the 28 Oct reporting review — one trued-up spend number everywhere with “Subject to true-up”, Campaign Health renamed Pacing as a sortable column, live pacing to the nearest 0.5% with an expected-against-actual chart, a Campaign Delivery concept, and Full performance with Revenue, render rate, clicks, CTR and new breakdowns; new <em>Oct 29 Edits</em> category. Round 5 is frozen as reviewed · Oct 27, 2026: the 27 Oct review folded into v5 — Keyword Health and every traffic readout removed, staging's fields and dropdowns with a teal focus, full-width search, one summary card style, and a second pass of the Nimbus brand icons · Oct 26, 2026: DAS v5 (Round 5) from the 26 Oct review — shared Nimbus tokens (tables, tabs, bands, dates, buttons, filters) so DAS reads as Nimbus and Performance Insights can reuse them; new <em>Oct 26</em> category with a review guide. Round 4 is frozen as reviewed · Oct 19, 2026: Product's answers built into DAS v4 — keywords match on ANY, Campaign Health as counts, overview cards, Full performance restyled like Performance Insights, Unity as a platform, Device Language restored; the Introduction card links straight to every screen and the Oct 17 page links each change to its screens and stories · Oct 17, 2026: DAS v4 (Round 4) built from the 16 Oct review — Manage campaigns back to the staging table under Live, Queued, Total spend and Campaign Health chips; the campaign overview tightened (breadcrumb strip, flight dates, platform and apps up top, one summary, dollars in the tooltip); a new Full performance screen with breakdowns, pivots and CSV export; creative previews removed; a new <em>Oct 17</em> category holds the applied changes and the open choices as concepts. Round 3 is frozen as reviewed · Oct 5, 2026: DAS v3 updated from the 5 Oct review — Proxima Nova loaded, extra-bold headlines and a 15px minimum, instructions above controls, dates only, Done on every picker, Duplicate once published, no setup tabs, and a Copy switch comparing staging's wording with ours; <em>Deal Activation System</em> in Storybook now holds the Campaign Setup spec and every component on the setup page (earlier rounds, the Studio concept and Prototype 3's pages are hidden but still open by link) · Oct 3, 2026: DAS v3 (Round 3) built from the 2 Oct review — one search-and-select behaviour across all seven pickers, Apps and Keywords as tables, the Deal section rebuilt around its three options, Campaign Name and Flight Dates promoted to sections, a five-step rail, Publish &amp; Duplicate in the Review modal, and a Fill / Type toggle in the toolbar; typography audit of the production dashboard added under Audits · Oct 1, 2026: DAS v2 (Round 2) — one rail instead of two ending in a single Review button and a publish modal, targeting promoted to peer modules, working geo and app pickers, a new asset library (with macro and wrapped-VAST validation) and keyword library (with Keyword Health), click-to-fill on every field, and terminology aligned to the product with ADDED chips on anything invented · Sep 22, 2026: DAS Studio concept and prototype added; DAS gets View campaign pages and Publish error states; Performance Insights gets Saved Queries concepts and a drag-to-build explorer; both earlier prototypes now run as standalone, versioned apps (v1) · Sep 18, 2026: DAS kickoff, <em>Deal Activation System</em> category added.
   </div>
 </div>
-
----
-
-## How the library is organized
-
-The sidebar is ordered top-to-bottom the way you'd build with it: start from the
-brand primitives, move through components, then see them assembled into full screens.
-
-### 🎨 Styles
-The design foundations, rendered live from the Nimbus tokens.
-
-**Color · Typography · Icons · Elevation · Shape · Logos**
-
-### 🧱 Base Components
-The core building blocks (19), each on React Aria for accessibility.
-
-**Avatars · Badges · Badge Groups · Buttons · Button Group · Checkbox · Dropdown ·
-File Upload · Form · Input · Multi Select · Progress Indicators · Radio Buttons ·
-Select · Slider · Tags · Textarea · Toggle · Tooltip**
-
-### 🧩 Application UI
-Richer, composed patterns (23) for building product interfaces.
-
-**App Navigation – Sidebar · Alerts · Breadcrumbs · Carousel · Charts · Code Snippet ·
-Command Menu · Date Picker · Dividers · Empty State · File Upload · Filter Bars ·
-Loading Indicator · Metrics · Modal · Notifications · Pagination · Pie Charts ·
-Progress Steps · Radar Charts · Slideout Menu · Table · Tabs**
-
-### 🔐 Account Login
-Auth page templates (4): **Sign up · Log in · Forgot Password · Verify Email**.
-
-### 🖥️ App Screens
-Full Nimbus product screens (17) assembled entirely from the system — each with
-multiple states/stories where relevant.
-
-| Screen | What it covers |
-| --- | --- |
-| Key Metrics Dashboard | Nimbus Exchange metric cards + sparkline charts |
-| Performance Insights | Reporting query builder (table / line / bar / pie states) |
-| Saved Queries | Saved reports, query builder & save-query modal |
-| Nimbus+ Reporting | Nimbus+ demand upsell filter panel + modal |
-| Nimbus Benchmarks | Nimbus-vs-your-app comparison, config & leaderboard |
-| Nimbus+ Payments | Publisher statements, payouts & completed payments |
-| Nimbus+ Payouts | Internal payouts admin (submit / resubmit states) |
-| Manage Active Demand | App-Ads.txt flow + integrated demand partners |
-| Manage Assets | Add asset · create campaign · view campaigns |
-| View All Campaigns | Wide campaigns table + add-asset form |
-| Campaign Setup | 8-step campaign creation wizard |
-| Deal Activation / DAS – Billing Rates | Deal activation setup & billing rates |
-| Billing Setup | Billing configuration + modals |
-| Add DocuSign Contracts | Contract signing flow |
-| SDK & Documentation | iOS / Android SDK cards |
-| Ad Blocking · Ad Blocking – Blocklists | Blocked categories / advertisers / apps |
-
----
-
-## Brand & tokens
-
-The theme comes from the Nimbus design tokens in `reference/styles/` and is applied in
-`src/styles/theme.css`:
-
-- **Brand** — pink primary (`#DA6EA3` / `--color-brand-500`) with teal (`#37B6B7`) as the secondary / `_alt` accent.
-- **Neutrals** — a warm gray scale for surfaces, text, and borders.
-- **Typography** — Proxima Nova on the Nimbus type scale (`text-md` 15px, display sizes up to 72px).
-- **Radius & spacing** — Nimbus token values (e.g. `radius-md` 8px).
-
-Reuse the theme classes (`bg-brand-solid`, `text-primary`, `border-secondary`,
-`text-md`, `radius-md`, …) and new work inherits the Nimbus brand for free.
-
-## Getting started
-
-```bash
-npm install              # install dependencies
-npm run storybook        # launch this library at http://localhost:6006
-npm run build-storybook  # static build → ./storybook-static
-```
-
-Add a component or screen with a matching `*.stories.tsx` and it appears in the correct
-category automatically. Every push to `main` redeploys the live Storybook to GitHub Pages:
-
-**→ https://girardjustin1.github.io/nimbus-v1/**
 
 </div>

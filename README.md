@@ -20,7 +20,7 @@ Storybook 10 · Vite.**
 | **Prototype: Performance Insights** | […/nimbus-v1/performance-insights/](https://girardjustin1.github.io/nimbus-v1/performance-insights/) | […netlify.app/performance-insights/](https://nimbus-ds-v1.netlify.app/performance-insights/) | `npm run proto:dev` → http://localhost:5190/performance-insights/ |
 | **Prototype: DAS Studio** | […/nimbus-v1/das-studio/](https://girardjustin1.github.io/nimbus-v1/das-studio/) | […netlify.app/das-studio/](https://nimbus-ds-v1.netlify.app/das-studio/) | `npm run proto:dev` → http://localhost:5190/das-studio/ |
 
-Start with the **[Introduction](https://girardjustin1.github.io/nimbus-v1/?path=/docs/introduction--docs)**
+Start with the **[Full Application overview](https://girardjustin1.github.io/nimbus-v1/?path=/docs/full-application-overview--docs)**
 page in Storybook. It gives a guided overview and links to every prototype.
 
 Everything on `main` deploys automatically to both hosts. Merge to `main`, and a couple

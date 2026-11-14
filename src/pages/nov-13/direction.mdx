@@ -1,0 +1,73 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Callout, Said, td, th } from "./doc-ui";
+
+<Meta title="November 13th, 2026/Direction" />
+
+<div style={{ maxWidth: 1040 }}>
+
+# Direction · 13 Nov call
+
+Product, engineering and design met on 13 November to agree how the dashboard's styles
+come together. This page records what was decided and how this category answers it.
+Speakers are named by role, because this Storybook is public.
+
+## What was decided
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
+  <thead><tr><th style={th}>Topic</th><th style={th}>Decision</th><th style={th}>In this category</th></tr></thead>
+  <tbody>
+    <tr>
+      <td style={{ ...td, fontWeight: 700, color: "#101828" }}>Direction</td>
+      <td style={td}>The dashboard moves toward the prototype's styles, which read as more cohesive than staging's — with the dial pulled slightly back toward what staging already has, rather than a full replacement.</td>
+      <td style={td}>Every page keeps staging's structure and wording and takes the Nimbus tokens.</td>
+    </tr>
+    <tr>
+      <td style={{ ...td, fontWeight: 700, color: "#101828" }}>Deliberate one-offs</td>
+      <td style={td}>Some type and UI decisions were workarounds for complex form UI and stay one-offs. The card-style ad unit selector, with descriptions, stays a DAS-only one-off: it earns the richer UI there, and the plain selectors elsewhere (platform and the like) don't change to match it.</td>
+      <td style={td}>No new one-off components outside DAS; no descriptions added where staging has none.</td>
+    </tr>
+    <tr>
+      <td style={{ ...td, fontWeight: 700, color: "#101828" }}>Priority</td>
+      <td style={td}>Performance Insights is the page to tackle first. It is one of the oldest parts of the dashboard and holds most of its base styles. Its reusable chunks: the top filters and date bar, the stacked-section pattern (also in buyer breakdown, benchmarks, activity, floors and manage campaigns), charts, tables and the summary metric tiles.</td>
+      <td style={td}>Reporting › Performance Insights is built first-class; the same chunks are reused across the other pages.</td>
+    </tr>
+    <tr>
+      <td style={{ ...td, fontWeight: 700, color: "#101828" }}>Source of truth</td>
+      <td style={td}>The dashboard has no design source of truth today, and that is the core problem. Storybook becomes it: finish it first, then engineering ports from it, then staging, QA and rollout section by section.</td>
+      <td style={td}>This category is the full set of pages, in Storybook, ready to be reviewed before anything is ported.</td>
+    </tr>
+    <tr>
+      <td style={{ ...td, fontWeight: 700, color: "#101828" }}>Storybook structure</td>
+      <td style={td}>Category, then component, then stories for the edge cases, with documentation per component.</td>
+      <td style={td}>One folder per page, one story per state, docs pages alongside.</td>
+    </tr>
+  </tbody>
+</table>
+
+<Said who="Engineering">The thing where I look at the Storybook and port it in, and then I tweak it from there — we might just be causing a lot more inconsistencies that way, because then we have to go back and forth.</Said>
+
+## The process agreed
+
+1. **Finish Storybook** so it shows the styles we want, before any porting.
+2. **Engineering ports** everything from Storybook into the codebase.
+3. **Staging:** push, QA and fine-tune, then roll out section by section.
+
+Changing styles after the port creates drift, so review happens here first.
+
+## Next steps from the call
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
+  <thead><tr><th style={th}>Step</th><th style={th}>Owner</th><th style={th}>Status</th></tr></thead>
+  <tbody>
+    <tr><td style={td}>Send the component list ordered by usage, the library constraints and the current Storybook structure</td><td style={td}>Engineering</td><td style={td}>Received — summarised in Engineering constraints</td></tr>
+    <tr><td style={td}>Update the prototypes based on engineering's list</td><td style={td}>Design</td><td style={td}>This category: the full application, built within those constraints</td></tr>
+    <tr><td style={td}>Compare staging and prototype side by side on a few high-impact pages, and record what to keep from each</td><td style={td}>Product</td><td style={td}>Open — the Screen index lists every page to compare</td></tr>
+  </tbody>
+</table>
+
+<Callout tone="pink">
+  For the side-by-side: each page here keeps staging's layout and wording, so differences
+  are styling — type, tables, fields, tabs, charts — not content.
+</Callout>
+
+</div>

@@ -1,0 +1,71 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Callout, Pill, td, th } from "../nov-13/doc-ui";
+
+<Meta title="Full Application/Process & roadmap" />
+
+<div style={{ maxWidth: 1040 }}>
+
+# Process &amp; roadmap
+
+How the style guide gets from this Storybook into the dashboard, what comes first, and
+what's still open. Agreed on the 13 November call with product and engineering.
+
+## The process
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
+  <thead><tr><th style={th}>#</th><th style={th}>Step</th><th style={th}>Who</th><th style={th}>Status</th></tr></thead>
+  <tbody>
+    <tr><td style={td}>1</td><td style={{ ...td, fontWeight: 700 }}>Finish Storybook so it shows the styles we want — before anything is ported</td><td style={td}>Design, with product review</td><td style={td}>In progress: the full application and November 13th, 2026</td></tr>
+    <tr><td style={td}>2</td><td style={{ ...td, fontWeight: 700 }}>Port everything from Storybook into the codebase</td><td style={td}>Engineering</td><td style={td}>After step 1 is signed off</td></tr>
+    <tr><td style={td}>3</td><td style={{ ...td, fontWeight: 700 }}>Push to staging, QA and fine-tune</td><td style={td}>Engineering, design</td><td style={td}>—</td></tr>
+    <tr><td style={td}>4</td><td style={{ ...td, fontWeight: 700 }}>Roll out section by section</td><td style={td}>Engineering</td><td style={td}>—</td></tr>
+  </tbody>
+</table>
+
+<Callout>
+  Why Storybook comes first: changing styles after the port creates drift, because every tweak then has to go back
+  and forth between Storybook and the code. Review happens here, once.
+</Callout>
+
+## Priorities
+
+1. **Performance Insights.** One of the oldest parts of the dashboard, and it holds most of the base styles the
+   rest use: the top filters and date bar, the stacked sections, charts, tables and the summary tiles.
+2. **The Deal Activation System,** already worked through six review rounds.
+3. **Everything that shares Performance Insights' chunks** — buyer breakdown, benchmarks, activity, floors, manage
+   campaigns — followed by the rest of the dashboard.
+
+Within DAS, engineering's order of difficulty is dropdowns, then modals, then tables.
+
+<div style={{ display: "flex", gap: 10, flexWrap: "wrap", margin: "8px 0" }}>
+  <Pill kind="story" href="./?path=/docs/november-13th-2026-direction--docs">Direction · 13 Nov call</Pill>
+  <Pill kind="story" href="./?path=/docs/november-13th-2026-engineering-constraints--docs">Engineering constraints</Pill>
+</div>
+
+## Milestones
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
+  <thead><tr><th style={th}>Date</th><th style={th}>What happened</th></tr></thead>
+  <tbody>
+    <tr><td style={td}>Sep 22 – Nov 6, 2026</td><td style={td}>Six DAS review rounds settle the tokens, tables, fields, type rules and reporting pattern (see DAS Prototypes).</td></tr>
+    <tr><td style={td}>Nov 12, 2026</td><td style={td}>Engineering walks through DAS ported to staging: existing styles kept where defined, the prototype's where there were none.</td></tr>
+    <tr><td style={td}>Nov 13, 2026</td><td style={td}>Product, engineering and design agree the direction and process. Engineering shares its component list and constraints. The full application is built on the Nov 13 style guide.</td></tr>
+    <tr><td style={td}>Next</td><td style={td}>Product compares staging and the full application side by side on high-impact pages (see How to review).</td></tr>
+  </tbody>
+</table>
+
+## Open decisions
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
+  <thead><tr><th style={th}>Decision</th><th style={th}>Built as</th><th style={th}>Alternative</th></tr></thead>
+  <tbody>
+    <tr><td style={{ ...td, fontWeight: 700 }}>Nimbus benchmarks chart</td><td style={td}>One small chart per metric, one axis each</td><td style={td}>Staging's single chart with a $ and a % axis</td></tr>
+    <tr><td style={{ ...td, fontWeight: 700 }}>Demand list table headers</td><td style={td}>Light list header, per the table rule</td><td style={td}>Staging's black header</td></tr>
+    <tr><td style={{ ...td, fontWeight: 700 }}>Toggle colour</td><td style={td}>Pink (the base component)</td><td style={td}>Staging's teal</td></tr>
+    <tr><td style={{ ...td, fontWeight: 700 }}>Coaching lines</td><td style={td}>Trimmed: "contact your Nimbus rep" (Nimbus+ payments), "be sure to confirm with the publisher" (test mode)</td><td style={td}>Keep staging's text</td></tr>
+    <tr><td style={{ ...td, fontWeight: 700 }}>Pages with no staging screenshot</td><td style={td}>Configure Floors, the discrepancy report results, Finance's third-party frame — built from the call notes</td><td style={td}>Product supplies the staging screens</td></tr>
+    <tr><td style={{ ...td, fontWeight: 700 }}>Daily active users</td><td style={td}>Sample data on the DAS Delivery chart</td><td style={td}>Backend feed, expected before launch</td></tr>
+  </tbody>
+</table>
+
+</div>
