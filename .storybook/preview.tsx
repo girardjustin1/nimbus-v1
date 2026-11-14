@@ -9,8 +9,12 @@ const preview: Preview = {
             storySort: {
                 method: "alphabetical",
                 order: [
-                    // 0) Welcome / overview page (always first)
-                    "Introduction",
+                    // 0) The introduction to the whole effort (always first), then the DAS
+                    //    prototypes' own introduction.
+                    "Full Application",
+                    ["Overview", "Style guide", "Process & roadmap", "How to review"],
+                    "DAS Prototypes",
+                    ["Overview"],
                     // 0b) Research on the live product, directly under the introduction.
                     //     These document another application and change nothing here.
                     "Audits",
@@ -80,6 +84,26 @@ const preview: Preview = {
                             "Treemap",
                             "Chart Card & Legend",
                         ],
+                    ],
+                    // 7a) November 13th, 2026 — the full application on the Nov 13 style guide
+                    //     (prototypes/app). Newest first, right under Performance Insights.
+                    "November 13th, 2026",
+                    [
+                        "Introduction",
+                        "Direction",
+                        "Engineering constraints",
+                        "Screen index",
+                        "Reporting",
+                        ["Key metrics", "Realtime dashboard", "Performance Insights", "Buyer breakdown", "Nimbus benchmarks"],
+                        "Demand",
+                        ["Configure demand", "Manage active demand", "Manage active n+ demand", "n+ payments"],
+                        "Deal Activation System",
+                        ["Campaign setup", "Manage assets", "Manage keywords", "Manage campaigns"],
+                        "AdOps",
+                        ["Ad blocking", "Floors", "Manage test mode", "Discrepancy reports", "Activity"],
+                        "SDK & Docs",
+                        "Finance",
+                        "Settings",
                     ],
                     // 7b) Nov 6 Edits — Round 6 tweaks from the 6 Nov pacing-chart review. Sits right
                     //     under Performance Insights, ahead of the older review batches.

@@ -1,0 +1,84 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Callout, td, th } from "./doc-ui";
+
+<Meta title="November 13th, 2026/Engineering constraints" />
+
+<div style={{ maxWidth: 1040 }}>
+
+# Engineering constraints
+
+What engineering shared for this rebuild: which parts of the dashboard are hard to restyle,
+which components the dashboard uses most, and which styles carry the most weight. These
+decide how far each page in this category moves from staging.
+
+## Hard to restyle, hardest first
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
+  <thead><tr><th style={th}>#</th><th style={th}>What</th><th style={th}>Why it's hard</th><th style={th}>How this category treats it</th></tr></thead>
+  <tbody>
+    <tr><td style={td}>1</td><td style={{ ...td, fontWeight: 700 }}>Payee and payment embeds (Finance)</td><td style={td}>A third-party frame; almost nothing inside can be restyled.</td><td style={td}>Our chrome around a clearly labelled embed area; nothing inside is redesigned.</td></tr>
+    <tr><td style={td}>2</td><td style={{ ...td, fontWeight: 700 }}>Charts</td><td style={td}>A chart library; the look comes from configuration, not CSS.</td><td style={td}>The chart patterns already in Storybook (colours, ticks, tooltips) — configuration-level changes only.</td></tr>
+    <tr><td style={td}>3</td><td style={{ ...td, fontWeight: 700 }}>Dropdowns and multi-selects</td><td style={td}>A select library with its own styling system.</td><td style={td}>The staging look settled in Round 5: grey fill, warm list highlight, teal focus.</td></tr>
+    <tr><td style={td}>4</td><td style={{ ...td, fontWeight: 700 }}>Date calendars</td><td style={td}>A calendar library with many one-off overrides.</td><td style={td}>The START DATE / END DATE cells and quick-range picker; the calendar itself isn't redesigned.</td></tr>
+    <tr><td style={td}>5</td><td style={{ ...td, fontWeight: 700 }}>Popups and modals</td><td style={td}>A shared popup library; overlay and chrome are awkward.</td><td style={td}>Existing modal patterns only.</td></tr>
+    <tr><td style={td}>6</td><td style={{ ...td, fontWeight: 700 }}>Data tables</td><td style={td}>Built in-house, but virtual scrolling makes big visual changes fiddly.</td><td style={td}>Header, rules, stripes and sorting — the changes the list/report rule needs, no structural rework.</td></tr>
+  </tbody>
+</table>
+
+<Callout>
+  Treat these as constrained: prefer subtle changes that match what's already possible.
+  Within the Deal Activation System the order that matters is dropdowns, then modals, then
+  tables; charts and payments are outside it.
+</Callout>
+
+## Components the dashboard uses most
+
+<table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
+  <thead><tr><th style={th}>Across the dashboard</th><th style={th}>Also heavy inside DAS</th></tr></thead>
+  <tbody>
+    <tr>
+      <td style={td}>
+        <ol style={{ margin: 0, paddingLeft: 20 }}>
+          <li>Loading states</li>
+          <li>Popups and modals</li>
+          <li>Tables</li>
+          <li>Shared dropdown styling (wraps almost every select)</li>
+          <li>Dropdowns and multi-selects</li>
+          <li>Sticky filter and date bars</li>
+          <li>Tabs</li>
+          <li>Standard forms (sign-in, profile, settings)</li>
+        </ol>
+        <p style={{ fontSize: 15, color: "#667085" }}>The header and the sidebar are on every screen.</p>
+      </td>
+      <td style={td}>
+        <ol style={{ margin: 0, paddingLeft: 20 }}>
+          <li>Shared option lists behind many dropdowns</li>
+          <li>Permission ("not allowed") messaging</li>
+          <li>DAS form fields and radio groups</li>
+          <li>Leave and return modals</li>
+          <li>The setup progress rail</li>
+          <li>Status and keyword chips</li>
+        </ol>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## Styles that carry the most weight
+
+1. **Global styles** — font, greys, containers, buttons, type and layout utilities, tabs, links: every page.
+2. **Form fields** — create and edit forms across the app.
+3. **Tables** — the manage lists.
+4. **Modals** — confirms, errors, prompts.
+5. **Sticky bars** — the report and dashboard filter headers.
+6. **Dropdown presets** — most selects.
+7. **Brand accents** — pink, teal and the border greys.
+8. **DAS styles** — the Deal Activation System only.
+9. **Area styles** — reports, dashboard, demand, floors, profile: each owns its section.
+10. **Charts, date picker, payments, promos** — narrow or third-party; lowest priority.
+
+There is no real token system in production today: colours and type are hard-coded
+across stylesheets and script style objects. The Nimbus tokens in this Storybook are what
+replaces them.
+
+</div>

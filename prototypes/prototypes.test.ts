@@ -16,7 +16,7 @@ const prototypeNames = readdirSync(root).filter((name) => existsSync(path.join(r
 
 describe("prototype registry", () => {
     it("finds every prototype", () => {
-        expect(prototypeNames.sort()).toEqual(["das", "das-studio", "performance-insights"]);
+        expect(prototypeNames.sort()).toEqual(["app", "das", "das-studio", "performance-insights"]);
     });
 
     describe.each(prototypeNames)("%s", (name) => {

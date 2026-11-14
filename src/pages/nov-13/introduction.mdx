@@ -1,0 +1,55 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Callout, Pill, protoUrl } from "./doc-ui";
+import { AreaCounts } from "./screen-index";
+
+<Meta title="November 13th, 2026/Introduction" />
+
+<div style={{ maxWidth: 1040 }}>
+
+# Full application · Nov 13 style guide
+
+Every screen of the Nimbus publisher dashboard, rebuilt on one style guide: the Nimbus
+tokens, base components and rules settled through the Deal Activation System's six review
+rounds. It is a new prototype, forked from DAS Round 6 — not Round 7 — so the DAS screens
+come across as Round 6 left them, and every other page is rebuilt from today's staging
+screens around them.
+
+<div style={{ display: "flex", flexWrap: "wrap", gap: 10, margin: "18px 0 6px" }}>
+  <Pill href={protoUrl()}>Open the full application</Pill>
+  <Pill kind="story" href="./?path=/docs/november-13th-2026-screen-index--docs">Screen index</Pill>
+  <Pill kind="story" href="./?path=/docs/november-13th-2026-direction--docs">Direction · 13 Nov call</Pill>
+  <Pill kind="story" href="./?path=/docs/november-13th-2026-engineering-constraints--docs">Engineering constraints</Pill>
+</div>
+
+<AreaCounts />
+
+## How this category is organised
+
+The order follows the call: a category, then each component or page, then a story for
+every state it has (empty, error, no permission, each chart type), and documentation
+alongside.
+
+- **Introduction, Direction, Engineering constraints, Screen index** — what this is, what
+  was agreed on 13 November, what can't be restyled, and every screen in one list.
+- **Reporting · Demand · Deal Activation System · AdOps · SDK & Docs · Finance ·
+  Settings** — the dashboard's own sidebar, one folder per page, one story per state.
+
+## The style guide, in short
+
+- **Type:** headlines 800, labels 700, nothing under 15px.
+- **Tables:** reports get the charcoal header, lists a light one; both run full bleed with
+  rules between columns, and every column sorts.
+- **Reporting pages** share one shape: the date row, bands of metric and breakdown
+  checkboxes, filters, the chart type bar, then the chart and its report table.
+- **Fields, dropdowns, checkboxes and toggles** take staging's look with a teal focus.
+- **Copy** keeps staging's wording; pages state the data and never coach.
+- **Sample data** is fictional throughout: this Storybook is public.
+
+<Callout>
+  Built 13 November from the staging screens and the call the same day. Charts, dropdowns,
+  date pickers, modals and tables follow the patterns already in this Storybook rather than
+  new ones, because in production they sit on third-party libraries (see Engineering
+  constraints).
+</Callout>
+
+</div>
