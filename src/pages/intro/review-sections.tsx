@@ -1,4 +1,3 @@
-import heroArt from "./art/hero-app.jpg";
 import shotBlocking from "./screens/app-blocking.jpg";
 import shotBuyers from "./screens/app-buyers.jpg";
 import shotCampaigns from "./screens/app-campaigns.jpg";
@@ -9,28 +8,27 @@ import shotPayments from "./screens/app-payments.jpg";
 import shotPiTable from "./screens/app-pi-table.jpg";
 import shotRealtime from "./screens/app-realtime.jpg";
 import { proto, story } from "./tokens";
-import { CardGrid, Cta, CtaRow, Hero, MiniCard, ShotCard, Steps } from "./ui";
+import { CardGrid, Cta, CtaRow, MiniCard, PageHeader, ShotCard, Steps } from "./ui";
 
 /**
- * Full Application › How to review — the side-by-side comparison of staging and the
+ * Start Here › How to review — the side-by-side comparison of staging and the
  * full application, set up as a short walk: three steps, then nine pages in order.
  */
 
 const APP = "app/v1";
 
 export const ReviewHero = () => (
-    <Hero
+    <PageHeader
         eyebrow="How to review"
         title="Compare staging and the prototype, page by page."
         lead="The next step agreed on 13 November. Each page keeps staging's structure and wording, so what you're judging is styling: type, tables, fields, tabs and charts."
         chips={["9 pages first", "About 30 minutes", "Keep staging · keep the prototype · mix"]}
-        art={heroArt}
         actions={
             <CtaRow>
                 <Cta kind="primary" href={proto(APP)}>
                     Open the full application
                 </Cta>
-                <Cta kind="secondary" href={story("november-13th-2026-screen-index--docs")}>
+                <Cta kind="secondary" href={story("prototypes-full-application-screen-index--docs")}>
                     Every screen
                 </Cta>
             </CtaRow>

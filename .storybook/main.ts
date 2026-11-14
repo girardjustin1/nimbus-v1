@@ -12,6 +12,8 @@ const config: StorybookConfig = {
   "addons": [
     "@storybook/addon-docs"
   ],
+  // legacy-redirects.js: where every pre-regroup story id lives now.
+  "staticDirs": ["./static"],
   "framework": "@storybook/react-vite"
 };
 export default config;

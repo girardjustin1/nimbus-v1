@@ -8,7 +8,7 @@ import { SavedQueries } from "../../../../prototypes/app/v1/screens/reporting/in
  * prototype's pi-* screens render.
  */
 const meta = {
-    title: "November 13th, 2026/Reporting/Performance Insights",
+    title: "Prototypes/Full application/Reporting/Performance Insights",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

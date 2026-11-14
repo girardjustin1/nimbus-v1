@@ -6,7 +6,7 @@ import { Surface } from "./harness";
  * Section header — the extra-bold headline with its one line of instruction underneath. Every section on the page opens with one.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Controls/Section Header",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Controls/Section Header",
 } satisfies Meta;
 
 export default meta;

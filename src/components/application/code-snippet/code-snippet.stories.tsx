@@ -35,7 +35,7 @@ const jsonCode = `{
 }`;
 
 const meta = {
-    title: "Application UI/Code Snippet",
+    title: "Design System/Application UI/Code Snippet",
     component: CodeSnippet,
     parameters: { layout: "padded" },
     tags: ["autodocs"],

@@ -8,7 +8,7 @@ import { Tag, TagGroup, TagList } from "@/components/base/tags/tags";
  * already brand-styled.
  */
 const meta = {
-    title: "Base Components/Tags",
+    title: "Design System/Base Components/Tags",
     component: TagGroup,
     parameters: { layout: "centered" },
     tags: ["autodocs"],

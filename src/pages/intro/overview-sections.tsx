@@ -1,26 +1,21 @@
 import heroArt from "./art/hero-app.jpg";
-import dasArt from "./art/hero-das.jpg";
 import shotBlocking from "./screens/app-blocking.jpg";
 import shotCampaigns from "./screens/app-campaigns.jpg";
 import shotDemand from "./screens/app-demand.jpg";
-import shotFloors from "./screens/app-floors.jpg";
 import shotOverview from "./screens/app-overview.jpg";
-import shotPiTable from "./screens/app-pi-table.jpg";
 import shotPi from "./screens/app-pi.jpg";
 import shotRealtime from "./screens/app-realtime.jpg";
 import shotSettings from "./screens/app-settings.jpg";
-import shotSetup from "./screens/app-setup.jpg";
-import shotV6 from "./screens/das-v6.jpg";
 import { proto, story } from "./tokens";
-import { CardGrid, Cta, CtaRow, Feature, Hero, MiniCard, ShotCard, Stats, Steps } from "./ui";
+import { CardGrid, Cta, CtaRow, Hero, MiniCard, ShotCard } from "./ui";
 
 /**
- * Full Application › Overview — the page Storybook opens on. Sections are components so
+ * Start Here › Overview — the page Storybook opens on. Sections are components so
  * the MDX stays a short outline; screenshots come from scripts/capture-intro-screens.mjs.
  */
 
 const APP = "app/v1";
-const nov13 = (page: string) => story(`november-13th-2026-${page}--default`);
+const nov13 = (page: string) => story(`prototypes-full-application-${page}--default`);
 
 export const OverviewHero = () => (
     <Hero
@@ -34,7 +29,7 @@ export const OverviewHero = () => (
                 <Cta kind="primary" href={proto(APP)}>
                     Open the full application
                 </Cta>
-                <Cta kind="secondary" href={story("full-application-how-to-review--docs")}>
+                <Cta kind="secondary" href={story("start-here-how-to-review--docs")}>
                     How to review
                 </Cta>
             </CtaRow>
@@ -91,7 +86,7 @@ export const AreaCards = () => (
             }
             href={proto(APP, "view-a-at-risk")}
             cta="Open the prototype"
-            links={[["The six rounds", story("das-prototypes-overview--docs")]]}
+            links={[["The six rounds", story("prototypes-deal-activation-system-rounds--docs")]]}
         />
         <ShotCard
             shot={shotBlocking}
@@ -124,117 +119,41 @@ export const AreaCards = () => (
     </CardGrid>
 );
 
-export const ProcessStrip = () => (
-    <Steps
-        items={[
-            {
-                label: "Step 1",
-                state: "now",
-                title: "Finish Storybook",
-                body: "Get every page here to the styles we want, with product's review, before anything is ported.",
-            },
-            { label: "Step 2", state: "next", title: "Port to code", body: "Engineering ports everything from Storybook into the dashboard's codebase." },
-            { label: "Step 3", state: "next", title: "Staging and QA", body: "Push to staging, check it against Storybook, fine-tune." },
-            { label: "Step 4", state: "next", title: "Roll out", body: "Section by section, starting with Performance Insights." },
-        ]}
-    />
-);
-
-export const WhatWeMade = () => (
-    <>
-        <Feature
-            art={heroArt}
-            eyebrow="Performance Insights"
-            title="The page everything else borrows from"
-            what="The reporting page, rebuilt first. One of the oldest parts of the dashboard, it holds most of the base styles the rest reuse: the filters and date bar, the stacked sections, charts, tables and summary tiles."
-            point="Get this page right and buyer breakdown, benchmarks, activity, floors and manage campaigns follow, because they are made of the same pieces."
-            actions={
-                <CtaRow>
-                    <Cta kind="primary" href={proto(APP, "pi-query")}>
-                        Open New Query
-                    </Cta>
-                    <Cta href={proto(APP, "pi-saved")}>Saved Queries</Cta>
-                    <Cta href={nov13("reporting-performance-insights")}>Stories</Cta>
-                </CtaRow>
-            }
-            shots={[
-                { src: shotPiTable, alt: "Performance Insights, New Query as a table" },
-                { src: shotPi, alt: "Performance Insights, the same query as a line chart" },
-            ]}
-        />
-        <Feature
-            art={dasArt}
-            eyebrow="Deal Activation System"
-            title="Six review rounds that settled the rules"
-            what="How a publisher sets up, manages and reports on direct-sold campaigns, reviewed with product six times between 22 September and 6 November. Each round is frozen as it was reviewed."
-            point="The tables, fields, tabs, type rules and the no-coaching rule were all decided here, one review at a time. The full application applies them to every other page."
-            actions={
-                <CtaRow>
-                    <Cta kind="primary" href={story("das-prototypes-overview--docs")}>
-                        See the six rounds
-                    </Cta>
-                    <Cta href={proto("das/v6", "view-a-at-risk")}>Round 6</Cta>
-                    <Cta href={story("nov-6-edits-introduction--docs")}>Nov 6 review</Cta>
-                </CtaRow>
-            }
-            shots={[
-                { src: shotV6, alt: "DAS Round 6, a campaign's Delivery chart" },
-                { src: shotSetup, alt: "DAS campaign setup, ready to publish" },
-            ]}
-        />
-        <Feature
-            art={heroArt}
-            eyebrow="Storybook · November 13th, 2026"
-            title="Every page, and every state it can be in"
-            what="Each page of the full application has a folder in Storybook, with one story per state: default, empty, error, no permission, each chart type. Alongside sit the 13 Nov call, engineering's constraints and an index of all 92 screens."
-            point="It is the thing engineering ports from. If a state isn't here, it hasn't been designed."
-            actions={
-                <CtaRow>
-                    <Cta kind="primary" href={story("november-13th-2026-screen-index--docs")}>
-                        Open the screen index
-                    </Cta>
-                    <Cta href={story("november-13th-2026-direction--docs")}>The 13 Nov call</Cta>
-                    <Cta href={story("november-13th-2026-engineering-constraints--docs")}>Engineering constraints</Cta>
-                </CtaRow>
-            }
-            shots={[
-                { src: shotFloors, alt: "Floors, with custom floors listed" },
-                { src: shotBlocking, alt: "Ad blocking, the stacked sections" },
-            ]}
-        />
-    </>
-);
-
-export const Research = () => (
-    <>
-        <Stats
-            items={[
-                ["93 → 10", "text styles"],
-                ["14 → 7", "font sizes"],
-                ["7 → 3", "weights"],
-                ["19 → 9", "text colours"],
-                ["4 → 1", "typefaces"],
-            ]}
-        />
-        <CtaRow>
-            <Cta href={story("audits-typography-audit--docs")}>Typography Audit</Cta>
-            <Cta href={story("audits-typography-rules--docs")}>Typography Rules</Cta>
-        </CtaRow>
-    </>
+export const Folders = () => (
+    <CardGrid min={230}>
+        <MiniCard eyebrow="1 · You are here" title="Start Here" tone="warm">
+            This page, the style guide, the process and roadmap, and how to review.
+        </MiniCard>
+        <MiniCard eyebrow="2" title="Prototypes" href={story("prototypes-full-application-screen-index--docs")} cta="Open the screen index" tone="warm">
+            The full application, one story per state, and the Deal Activation System's six rounds.
+        </MiniCard>
+        <MiniCard eyebrow="3" title="Design System" href={story("design-system-nimbus-tokens-overview--docs")} cta="See the tokens" tone="warm">
+            Styles, Nimbus tokens, base components, application UI and the chart library.
+        </MiniCard>
+        <MiniCard eyebrow="4" title="Reviews" href={story("reviews-nov-13-·-full-application-summary--docs")} cta="Open the latest" tone="warm">
+            Every review with product, newest first. Each opens on a summary: decisions and what was left open.
+        </MiniCard>
+        <MiniCard eyebrow="5" title="Research" href={story("research-typography-audit--docs")} cta="Open the type audit" tone="warm">
+            The audits of the live dashboard behind the rules, and engineering's constraints.
+        </MiniCard>
+        <MiniCard eyebrow="6" title="Archive" href={story("archive-about-the-archive--docs")} cta="What's in the archive" tone="warm">
+            Earlier concepts and screens, kept viewable, each with a note on what replaced it.
+        </MiniCard>
+    </CardGrid>
 );
 
 export const NextPages = () => (
     <CardGrid min={230}>
-        <MiniCard eyebrow="The rules" title="Style guide" href={story("full-application-style-guide--docs")} cta="Read the style guide">
+        <MiniCard eyebrow="The rules" title="Style guide" href={story("start-here-style-guide--docs")} cta="Read the style guide">
             Type, colour, tables, the reporting page, controls, charts and copy, each with a real screen.
         </MiniCard>
-        <MiniCard eyebrow="The plan" title="Process & roadmap" href={story("full-application-process-roadmap--docs")} cta="See the roadmap">
+        <MiniCard eyebrow="The plan" title="Process & roadmap" href={story("start-here-process-roadmap--docs")} cta="See the roadmap">
             The four steps from Storybook to the dashboard, the priorities, milestones and open decisions.
         </MiniCard>
-        <MiniCard eyebrow="Your turn" title="How to review" href={story("full-application-how-to-review--docs")} cta="Start reviewing">
+        <MiniCard eyebrow="Your turn" title="How to review" href={story("start-here-how-to-review--docs")} cta="Start reviewing">
             Compare staging and the prototype page by page, most important first.
         </MiniCard>
-        <MiniCard eyebrow="Where it began" title="DAS prototypes" href={story("das-prototypes-overview--docs")} cta="See the rounds">
+        <MiniCard eyebrow="Where it began" title="DAS rounds" href={story("prototypes-deal-activation-system-rounds--docs")} cta="See the rounds">
             The six review rounds of the Deal Activation System.
         </MiniCard>
     </CardGrid>

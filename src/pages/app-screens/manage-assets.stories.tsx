@@ -11,7 +11,7 @@ import { ManageAssetsAddExisting, ManageAssetsCreateCampaign, ManageAssetsViewCa
  *   - ViewCampaigns     — sortable live-campaigns table
  */
 const meta = {
-    title: "App Screens/Manage Assets",
+    title: "Archive/App Screens/Manage Assets",
     parameters: {
         layout: "fullscreen",
     },

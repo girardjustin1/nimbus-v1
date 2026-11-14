@@ -19,7 +19,7 @@ const slides = [
 ];
 
 const meta = {
-    title: "Application UI/Carousel",
+    title: "Design System/Application UI/Carousel",
     component: Carousel.Root,
     parameters: { layout: "padded" },
     tags: ["autodocs"],

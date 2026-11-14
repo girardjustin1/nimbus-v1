@@ -3,7 +3,7 @@ import { DiscrepancyReports } from "../../../../prototypes/app/v1/screens/adops/
 
 /** AdOps › discrepancy reports — Nov 13 style guide (prototype screens "discrepancy-reports", "discrepancy-reports-report"). */
 const meta = {
-    title: "November 13th, 2026/AdOps/Discrepancy reports",
+    title: "Prototypes/Full application/AdOps/Discrepancy reports",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

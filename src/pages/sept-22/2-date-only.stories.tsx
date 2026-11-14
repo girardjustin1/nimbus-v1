@@ -14,7 +14,7 @@ import { FlightDatesAfter, FlightDatesBefore } from "./revised/flight-dates";
  * The date and time picker is kept as the target state for when that changes.
  */
 const meta = {
-    title: "Sept 22/2 Date only, no time",
+    title: "Reviews/Sept 22 · Round 1/Changes/2 Date only, no time",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

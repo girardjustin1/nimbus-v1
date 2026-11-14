@@ -3,7 +3,7 @@ import { SdksPage } from "../../../../prototypes/app/v1/screens/account/sdks";
 
 /** SDK & Docs · SDKs — the Nimbus SDKs page, rebuilt on the Nov 13 style guide. */
 const meta = {
-    title: "November 13th, 2026/SDK & Docs/SDKs",
+    title: "Prototypes/Full application/SDK & Docs/SDKs",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

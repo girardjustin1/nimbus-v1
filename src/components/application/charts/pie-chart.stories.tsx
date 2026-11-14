@@ -36,7 +36,7 @@ const ChartFrame = ({ children }: { children: React.ReactNode }) => (
 );
 
 const meta = {
-    title: "Application UI/Pie Charts",
+    title: "Design System/Application UI/Pie Charts",
     parameters: { layout: "padded" },
     tags: ["autodocs"],
 } satisfies Meta;

@@ -3,7 +3,7 @@ import { AdBlocking } from "../../../../prototypes/app/v1/screens/adops/ad-block
 
 /** AdOps › ad blocking — Nov 13 style guide (prototype screens "ad-blocking", "ad-blocking-empty"). */
 const meta = {
-    title: "November 13th, 2026/AdOps/Ad blocking",
+    title: "Prototypes/Full application/AdOps/Ad blocking",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

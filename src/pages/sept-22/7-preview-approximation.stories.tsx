@@ -10,7 +10,7 @@ import { PreviewCaptionAfter, PreviewCaptionBefore } from "./revised/preview-cap
  * difference on a real handset as a bug.
  */
 const meta = {
-    title: "Sept 22/7 Preview is an approximation",
+    title: "Reviews/Sept 22 · Round 1/Changes/7 Preview is an approximation",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

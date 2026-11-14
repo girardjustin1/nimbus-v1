@@ -10,10 +10,10 @@ import shotV6Performance from "./screens/das-v6-performance.jpg";
 import shotV6Setup from "./screens/das-v6-setup.jpg";
 import shotV6 from "./screens/das-v6.jpg";
 import { proto, story } from "./tokens";
-import { CardGrid, Cta, CtaRow, Feature, Hero, MiniCard, ShotCard } from "./ui";
+import { CardGrid, Cta, CtaRow, Feature, Hero, ShotCard } from "./ui";
 
 /**
- * DAS Prototypes › Overview — the Deal Activation System's six review rounds. Sections
+ * Prototypes › Deal Activation System › Rounds — the six review rounds. Sections
  * are components so the MDX stays a short outline.
  */
 
@@ -31,8 +31,8 @@ export const DasHero = () => (
                 <Cta kind="primary" href={proto(V6, "campaigns")}>
                     Open Round 6
                 </Cta>
-                <Cta kind="secondary" href={story("full-application-overview--docs")}>
-                    Full Application
+                <Cta kind="secondary" href={story("reviews-nov-6-·-delivery-chart-summary--docs")}>
+                    Latest review
                 </Cta>
             </CtaRow>
         }
@@ -59,7 +59,8 @@ export const RoundSix = () => (
                 </Cta>
                 <Cta href={proto(V6, "campaigns")}>Manage campaigns</Cta>
                 <Cta href={proto(V6, "view-d")}>Full performance</Cta>
-                <Cta href={story("nov-6-edits-introduction--docs")}>Nov 6 review</Cta>
+                <Cta href={story("reviews-nov-6-·-delivery-chart-summary--docs")}>Nov 6 review</Cta>
+                <Cta href={story("reviews-oct-29-·-reporting-summary--docs")}>Oct 29 review</Cta>
             </CtaRow>
         }
         shots={[
@@ -78,7 +79,7 @@ export const EarlierRounds = () => (
             body="Shared Nimbus tokens: full-bleed tables (charcoal reports, light lists), bold tabs, staging's fields and checkboxes, Performance Insights' bands in Full performance. Keyword Health removed."
             href={proto("das/v5", "view-d")}
             cta="Open Round 5"
-            links={[["Oct 26 review", story("oct-26-introduction--docs")]]}
+            links={[["Oct 26 review", story("reviews-oct-26-·-nimbus-tokens-summary--docs")]]}
         />
         <ShotCard
             shot={shotV4}
@@ -87,7 +88,7 @@ export const EarlierRounds = () => (
             body="Setup approved for build. The three screens that follow it: Manage campaigns as staging's table, the campaign overview, and Full performance to break down, pivot and export."
             href={proto("das/v4", "campaigns")}
             cta="Open Round 4"
-            links={[["Oct 17 review", story("oct-17-overview--docs")]]}
+            links={[["Oct 17 review", story("reviews-oct-17-·-after-publishing-summary--docs")]]}
         />
         <ShotCard
             shot={shotV3}
@@ -96,7 +97,7 @@ export const EarlierRounds = () => (
             body="Every library field works the same way: type to narrow, arrows and Enter to pick. The 5 Oct type rules arrive: extra-bold headlines, a 15px floor, dates only."
             href={proto("das/v3", "setup-ready")}
             cta="Open Round 3"
-            links={[["Typography Rules", story("audits-typography-rules--docs")]]}
+            links={[["Oct 5 review", story("reviews-oct-5-·-type-rules-summary--docs")]]}
         />
         <ShotCard
             shot={shotV2}
@@ -105,6 +106,7 @@ export const EarlierRounds = () => (
             body="One rail that summarises and jumps to problems, targeting as peer modules, an asset library and a keyword library."
             href={proto("das/v2", "setup-reviewed")}
             cta="Open Round 2"
+            links={[["Round 2 notes", story("archive-das-early-concepts-round-2-·-oct-1--docs")]]}
         />
         <ShotCard
             shot={shotV1}
@@ -113,7 +115,7 @@ export const EarlierRounds = () => (
             body="One-page setup, the publisher's own keywords plus geo, platform, app and ad unit targets, and at-a-glance pacing for every campaign."
             href={proto("das/v1")}
             cta="Open Round 1"
-            links={[["Sept 22 review", story("sept-22-overview--docs")]]}
+            links={[["Sept 22 review", story("reviews-sept-22-·-round-1-summary--docs")]]}
         />
         <ShotCard
             shot={shotStudio}
@@ -122,41 +124,16 @@ export const EarlierRounds = () => (
             body="A guided, full-screen builder: goal tiles, live delivery estimates while you set audience, budget and bid. A concept, not a round."
             href={proto("das-studio")}
             cta="Open DAS Studio"
-            links={[["The concept", story("deal-activation-system-studio-concept-overview--docs")]]}
+            links={[["The concept", story("archive-das-studio-concept-overview--docs")]]}
         />
     </CardGrid>
 );
 
-export const Reviews = () => (
-    <CardGrid min={230}>
-        <MiniCard eyebrow="6 Nov" title="Nov 6 Edits" href={story("nov-6-edits-introduction--docs")} cta="Open the review">
-            Requests and active users on the Delivery chart, nine chart concepts (A chosen), every table sortable.
-        </MiniCard>
-        <MiniCard eyebrow="28 Oct" title="Oct 29 Edits" href={story("oct-29-edits-introduction--docs")} cta="Open the review">
-            One trued-up spend number, Pacing as a column, new Full performance metrics and breakdowns.
-        </MiniCard>
-        <MiniCard eyebrow="26 & 27 Oct" title="Oct 26" href={story("oct-26-introduction--docs")} cta="Open the review">
-            The Nimbus tokens: tables, tabs, bands, dates, buttons, filters.
-        </MiniCard>
-        <MiniCard eyebrow="16 & 19 Oct" title="Oct 17" href={story("oct-17-overview--docs")} cta="Open the review">
-            Manage campaigns, the campaign overview and Full performance, with the open choices as concepts.
-        </MiniCard>
-    </CardGrid>
-);
-
 export const Specs = () => (
-    <CardGrid min={230}>
-        <MiniCard eyebrow="Spec" title="Campaign Setup" href={story("deal-activation-system-campaign-setup-spec--docs")} cta="Read the spec" tone="warm">
-            Every section and control on the setup page.
-        </MiniCard>
-        <MiniCard eyebrow="Tokens" title="Nimbus tokens" href={story("application-ui-nimbus-tokens-00-overview--docs")} cta="See the tokens" tone="warm">
-            Tabs, bands, dates, dropdowns, buttons, filters and tables.
-        </MiniCard>
-        <MiniCard eyebrow="Rule" title="List vs Report" href={story("application-ui-table-list-vs-report--docs")} cta="See the rule" tone="warm">
-            Reports get the charcoal header; lists keep a light one.
-        </MiniCard>
-        <MiniCard eyebrow="Next" title="Full application" href={story("full-application-overview--docs")} cta="Open the overview" tone="warm">
-            The same rules, applied to every page of the dashboard.
-        </MiniCard>
-    </CardGrid>
+    <CtaRow>
+        <Cta href={story("prototypes-deal-activation-system-campaign-setup-spec--docs")}>Campaign Setup spec</Cta>
+        <Cta href={story("design-system-nimbus-tokens-overview--docs")}>Nimbus tokens</Cta>
+        <Cta href={story("design-system-application-ui-table-list-vs-report--docs")}>List vs Report</Cta>
+        <Cta href={story("start-here-style-guide--docs")}>Style guide</Cta>
+    </CtaRow>
 );

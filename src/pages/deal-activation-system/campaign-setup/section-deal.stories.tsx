@@ -6,7 +6,7 @@ import { Setup, Surface } from "./harness";
  * Deal — generate an ID, create one, or add to an existing deal. Each row asks only for what that choice needs.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Sections/Deal",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Sections/Deal",
 } satisfies Meta;
 
 export default meta;

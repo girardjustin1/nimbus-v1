@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { AdFormatDemo } from "./ad-format-demo";
 
 const meta = {
-    title: "Imagery/Assets/Ad Formats",
+    title: "Design System/Imagery/Assets/Ad Formats",
     component: AdFormatDemo,
     tags: ["autodocs"],
     parameters: {

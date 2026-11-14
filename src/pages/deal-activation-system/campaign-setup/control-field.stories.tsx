@@ -7,7 +7,7 @@ import { Surface } from "./harness";
  * Field — label, then the instruction, then the control (staging's order). Errors go under the control.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Controls/Field",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Controls/Field",
 } satisfies Meta;
 
 export default meta;

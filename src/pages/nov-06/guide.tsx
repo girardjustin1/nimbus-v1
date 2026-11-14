@@ -1,10 +1,10 @@
 import type { ReactNode } from "react";
 
 /**
- * Building blocks for Nov 6 Edits › Introduction, the review guide for the 6 Nov tweaks to Round 6: numbered
+ * Building blocks for Nov 6 · Delivery chart › Walkthrough, the review guide for the 6 Nov tweaks to Round 6: numbered
  * steps in the order Product should walk v6, each with a screenshot, what changed, why,
  * how to check it, and links to the prototype and the before/after story. Forked from
- * Oct 29 Edits' guide so each review keeps its own wording.
+ * Oct 29 · Reporting' guide so each review keeps its own wording.
  *
  * Inline styles, not Tailwind: docs pages render inside Storybook's own stylesheet, and
  * these must look the same in both docs and canvas. Type holds the 15px floor.

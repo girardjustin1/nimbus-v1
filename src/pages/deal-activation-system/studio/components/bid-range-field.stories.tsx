@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BidRangeField } from "./bid-range-field";
 
 /** Studio · Bid range field — the bid drawn on its recommended range. */
-const meta = { title: "Deal Activation System/Studio Concept/Components/Bid Range Field", tags: ["!dev"] } satisfies Meta;
+const meta = { title: "Archive/DAS Studio concept/Components/Bid Range Field" } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

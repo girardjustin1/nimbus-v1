@@ -9,7 +9,7 @@ import { colorScales, type ColorStep } from "./color-scales.data";
  * Brand = pink (primary) with teal as the secondary / _alt accent.
  */
 const meta = {
-    title: "Styles/Color",
+    title: "Design System/Styles/Color",
     parameters: { layout: "fullscreen" },
     tags: ["autodocs"],
 } satisfies Meta;

@@ -4,7 +4,7 @@ import { PINK } from "../deal-activation-system/das-shell";
 import type { FeedbackItem } from "./feedback";
 
 /**
- * Nov 6 Edits — annotation chrome for the 6 Nov stories.
+ * Nov 6 · Delivery chart — annotation chrome for the 6 Nov stories.
  *
  * Same convention as Oct 17 and Oct 26: review artefacts in pink, so they're never
  * mistaken for a concept's own teal notes, held to the 15px floor like the screens.

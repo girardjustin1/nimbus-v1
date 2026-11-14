@@ -4,7 +4,7 @@ import { MiniPill, RemoveButton, StatusCell } from "@/pages/app-screens/manage-a
 import { RowAction } from "@/pages/app-screens/saved-queries";
 
 const meta = {
-    title: "Application UI/Table/102326/Cells and Controls",
+    title: "Research/Table audit/Cells and Controls",
     tags: ["autodocs"],
     parameters: {
         docs: {

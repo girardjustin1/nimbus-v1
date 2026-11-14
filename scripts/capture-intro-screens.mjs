@@ -1,6 +1,6 @@
 // Captures the prototype screens shown on Storybook's introduction pages
-// (Full Application › Overview / Style guide / Process & roadmap / How to review, and
-// DAS Prototypes › Overview).
+// (Start Here › Overview / Style guide / Process & roadmap / How to review, and
+// Prototypes › Deal Activation System › Rounds).
 //
 //   npm run proto:dev            (in another terminal; serves :5190)
 //   node scripts/capture-intro-screens.mjs

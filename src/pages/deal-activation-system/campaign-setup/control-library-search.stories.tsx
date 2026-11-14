@@ -9,7 +9,7 @@ const rows = APP_LIST.map((a) => ({ id: a.id, label: a.name, meta: a.platform })
  * Library search — the search-on-the-page shape Apps, Keywords and Creative share. The library line sits above; results open under the field with a Done button.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Controls/Library Search",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Controls/Library Search",
 } satisfies Meta;
 
 export default meta;

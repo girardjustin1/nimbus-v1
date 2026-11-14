@@ -10,7 +10,7 @@ const labels: Record<GoalId, string> = {
 };
 
 const meta = {
-    title: "Imagery/Assets/Goal Illustrations",
+    title: "Design System/Imagery/Assets/Goal Illustrations",
     component: GoalIllustration,
     tags: ["autodocs"],
     args: { goal: "guaranteed", active: true },

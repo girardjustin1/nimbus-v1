@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 /**
- * Building blocks for Oct 29 Edits › Introduction, the review guide for Round 6: numbered
+ * Building blocks for Oct 29 · Reporting › Walkthrough, the review guide for Round 6: numbered
  * steps in the order Product should walk v6, each with a screenshot, what changed, why,
  * how to check it, and links to the prototype and the before/after story. Forked from
  * Oct 26's guide so that one keeps pointing at v5.

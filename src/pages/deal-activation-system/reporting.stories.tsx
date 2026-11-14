@@ -8,8 +8,7 @@ import { DasOverview, QueryBuilder } from "./reporting";
  * (aggregate keyword metrics on screen; per-keyword via CSV/API).
  */
 const meta = {
-    title: "Deal Activation System/Round 1 Concepts/Reporting",
-    tags: ["!dev"],
+    title: "Archive/DAS early concepts/Round 1/Reporting",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

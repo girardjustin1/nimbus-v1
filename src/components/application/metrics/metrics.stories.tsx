@@ -21,7 +21,7 @@ import {
  */
 
 const meta = {
-    title: "Application UI/Metrics",
+    title: "Design System/Application UI/Metrics",
     component: MetricsSimple,
     parameters: { layout: "padded" },
     tags: ["autodocs"],

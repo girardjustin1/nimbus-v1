@@ -6,7 +6,7 @@ import { Setup, Surface } from "./harness";
  * Campaign Name — its own section, level with Auction Rules.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Sections/Campaign Name",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Sections/Campaign Name",
 } satisfies Meta;
 
 export default meta;

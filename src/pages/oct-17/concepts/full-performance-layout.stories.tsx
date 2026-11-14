@@ -8,7 +8,7 @@ import { Compare } from "../note";
  * Performance Insights' look. The panel-on-the-left option was dropped.
  */
 const meta = {
-    title: "Oct 17/Concepts/Full Performance Layout",
+    title: "Reviews/Oct 17 · After publishing/Concepts/Full Performance Layout",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

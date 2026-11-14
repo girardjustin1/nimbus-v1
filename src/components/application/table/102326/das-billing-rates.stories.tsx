@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { DasRateTableExamples } from "@/pages/app-screens/das-billing-rates";
 
 const meta = {
-    title: "Application UI/Table/102326/DAS Billing Rates",
+    title: "Research/Table audit/DAS Billing Rates",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

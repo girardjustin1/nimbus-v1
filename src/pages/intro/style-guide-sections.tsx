@@ -1,4 +1,3 @@
-import heroArt from "./art/hero-app.jpg";
 import shotV5 from "./screens/das-v5.jpg";
 import shotChart from "./screens/sg-chart.jpg";
 import shotControls from "./screens/sg-controls.jpg";
@@ -9,28 +8,27 @@ import shotReporting from "./screens/sg-reporting.jpg";
 import shotTabs from "./screens/sg-tabs.jpg";
 import shotType from "./screens/sg-type.jpg";
 import { proto, story } from "./tokens";
-import { CardGrid, Cta, CtaRow, Hero, MiniCard, Points, Split, Swatch } from "./ui";
+import { CardGrid, Cta, CtaRow, MiniCard, PageHeader, Points, Split, Swatch } from "./ui";
 
 /**
- * Full Application › Style guide — each rule beside a real screen that follows it, from
+ * Start Here › Style guide — each rule beside a real screen that follows it, from
  * the full application or from DAS, where the rule was settled.
  */
 
 const APP = "app/v1";
 
 export const StyleHero = () => (
-    <Hero
+    <PageHeader
         eyebrow="The Nov 13 style guide"
         title="Eight rules, each with a screen that follows it."
-        lead="Settled one review at a time on the Deal Activation System, then applied to every page of the dashboard on 13 November."
+        lead="Settled one review at a time on the Deal Activation System, then applied to every page of the dashboard on 13 November. Each rule sits beside a real screen that follows it, and every example opens in the prototype."
         chips={["Type", "Colour", "Tables", "Reporting page", "Controls", "Charts", "Copy", "Sample data"]}
-        art={heroArt}
         actions={
             <CtaRow>
                 <Cta kind="primary" href={proto(APP)}>
                     See it in the full application
                 </Cta>
-                <Cta kind="secondary" href={story("application-ui-nimbus-tokens-00-overview--docs")}>
+                <Cta kind="secondary" href={story("design-system-nimbus-tokens-overview--docs")}>
                     Nimbus tokens
                 </Cta>
             </CtaRow>
@@ -47,7 +45,7 @@ export const TypeRule = () => (
         caption="Campaign overview · Deal Activation System"
         actions={
             <CtaRow>
-                <Cta href={story("audits-typography-rules--docs")}>Typography Rules</Cta>
+                <Cta href={story("research-typography-rules--docs")}>Typography Rules</Cta>
                 <Cta href={proto(APP, "view-a-at-risk")}>Open this screen</Cta>
             </CtaRow>
         }
@@ -84,7 +82,7 @@ export const TableRules = () => (
             caption="Realtime dashboard, table view · Reporting"
             actions={
                 <CtaRow>
-                    <Cta href={story("application-ui-table-list-vs-report--docs")}>List vs Report</Cta>
+                    <Cta href={story("design-system-application-ui-table-list-vs-report--docs")}>List vs Report</Cta>
                     <Cta href={proto(APP, "realtime-table")}>Open this screen</Cta>
                 </CtaRow>
             }
@@ -100,7 +98,7 @@ export const TableRules = () => (
             flip
             actions={
                 <CtaRow>
-                    <Cta href={story("application-ui-nimbus-tokens-tables--docs")}>Tables</Cta>
+                    <Cta href={story("design-system-nimbus-tokens-tables--docs")}>Tables</Cta>
                     <Cta href={proto(APP, "campaigns")}>Open this screen</Cta>
                 </CtaRow>
             }
@@ -121,8 +119,8 @@ export const ReportingRule = () => (
             caption="Performance Insights, New Query · Reporting"
             actions={
                 <CtaRow>
-                    <Cta href={story("application-ui-nimbus-tokens-bands--docs")}>Bands</Cta>
-                    <Cta href={story("application-ui-nimbus-tokens-filter-control--docs")}>Filter control</Cta>
+                    <Cta href={story("design-system-nimbus-tokens-bands--docs")}>Bands</Cta>
+                    <Cta href={story("design-system-nimbus-tokens-filter-control--docs")}>Filter control</Cta>
                     <Cta href={proto(APP, "pi-query")}>Open this screen</Cta>
                 </CtaRow>
             }
@@ -144,7 +142,7 @@ export const ReportingRule = () => (
             actions={
                 <CtaRow>
                     <Cta href={proto("das/v5", "view-d")}>Open Round 5</Cta>
-                    <Cta href={story("oct-26-introduction--docs")}>Oct 26 review</Cta>
+                    <Cta href={story("reviews-oct-26-·-nimbus-tokens-walkthrough--docs")}>Oct 26 review</Cta>
                 </CtaRow>
             }
         >
@@ -164,8 +162,8 @@ export const ControlRules = () => (
             caption="Configure demand, a partner's form · Demand"
             actions={
                 <CtaRow>
-                    <Cta href={story("application-ui-nimbus-tokens-buttons--docs")}>Buttons</Cta>
-                    <Cta href={story("application-ui-nimbus-tokens-teal-controls--docs")}>Teal controls</Cta>
+                    <Cta href={story("design-system-nimbus-tokens-buttons--docs")}>Buttons</Cta>
+                    <Cta href={story("design-system-nimbus-tokens-teal-controls--docs")}>Teal controls</Cta>
                     <Cta href={proto(APP, "demand-configure-partner")}>Open this screen</Cta>
                 </CtaRow>
             }
@@ -186,7 +184,7 @@ export const ControlRules = () => (
             flip
             actions={
                 <CtaRow>
-                    <Cta href={story("application-ui-nimbus-tokens-page-tabs--docs")}>Page tabs</Cta>
+                    <Cta href={story("design-system-nimbus-tokens-page-tabs--docs")}>Page tabs</Cta>
                     <Cta href={proto(APP, "floors")}>Open this screen</Cta>
                 </CtaRow>
             }
@@ -205,7 +203,7 @@ export const ChartRule = () => (
         caption="A campaign's Delivery chart · Deal Activation System"
         actions={
             <CtaRow>
-                <Cta href={story("nov-6-edits-chart-concepts--all-five")}>The nine concepts</Cta>
+                <Cta href={story("reviews-nov-6-·-delivery-chart-concepts-a-to-e--all-five")}>The nine concepts</Cta>
                 <Cta href={proto(APP, "view-a-at-risk")}>Open this screen</Cta>
             </CtaRow>
         }
@@ -230,7 +228,7 @@ export const CopyRule = () => (
         flip
         actions={
             <CtaRow>
-                <Cta href={story("nov-6-edits-introduction--docs")}>Nov 6 review</Cta>
+                <Cta href={story("reviews-nov-6-·-delivery-chart-walkthrough--docs")}>Nov 6 review</Cta>
                 <Cta href={proto(APP, "view-a?c=c4")}>Open this screen</Cta>
             </CtaRow>
         }
@@ -257,7 +255,7 @@ export const SampleDataRule = () => (
             eyebrow="Out of scope"
             title="Third-party pieces"
             tone="warm"
-            href={story("november-13th-2026-engineering-constraints--docs")}
+            href={story("research-engineering-constraints--docs")}
             cta="Engineering constraints"
         >
             Payment embeds, chart internals, the select and calendar libraries change only as far as they allow.

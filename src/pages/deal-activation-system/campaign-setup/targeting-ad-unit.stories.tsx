@@ -8,7 +8,7 @@ import { Surface, Value } from "./harness";
  * Ad Unit — the publisher's four ad unit types as checkbox cards, two across. The ? opens a guide to each.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Targeting/Ad Unit",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Targeting/Ad Unit",
 } satisfies Meta;
 
 export default meta;

@@ -9,7 +9,7 @@ const tree: TaxonomyNode[] = GEO_REGIONS.map((g) => ({ id: g.region, label: g.re
  * Geo tree picker — a two-level tree: take a whole region or single countries. Type to narrow, ↑ ↓ to move, double-click a region to open or close it, Done to close.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Controls/Geo Tree Picker",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Controls/Geo Tree Picker",
 } satisfies Meta;
 
 export default meta;

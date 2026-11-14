@@ -8,8 +8,7 @@ import { KeywordChipInput, MatchLogicField } from "../keyword-targeting";
  * Backspace on empty removes the last; ANY / ALL explains its consequence in words.
  */
 const meta = {
-    title: "Deal Activation System/Round 1 Concepts/Components/Keyword Fields",
-    tags: ["!dev"],
+    title: "Archive/DAS early concepts/Round 1/Components/Keyword Fields",
     decorators: [(Story) => <div className="max-w-2xl">{Story()}</div>],
 } satisfies Meta;
 

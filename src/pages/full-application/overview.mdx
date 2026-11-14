@@ -1,8 +1,8 @@
 import { Meta } from "@storybook/addon-docs/blocks";
-import { AreaCards, NextPages, OverviewHero, ProcessStrip, Research, WhatWeMade } from "../intro/overview-sections";
-import { Callout, Lead, Page, StoryMap } from "../intro/ui";
+import { AreaCards, Folders, NextPages, OverviewHero } from "../intro/overview-sections";
+import { Lead, Page } from "../intro/ui";
 
-<Meta title="Full Application/Overview" />
+<Meta title="Start Here/Overview" />
 
 <Page>
 
@@ -24,55 +24,10 @@ Five areas, in the dashboard's own sidebar order. Every page keeps staging's str
 
 <AreaCards />
 
-## From Storybook to the dashboard
+## Where things are
 
-The process agreed with product and engineering on 13 November. Review happens here, once, because changing styles after the port means going back and forth.
+Six folders in the sidebar, in this order.
 
-<ProcessStrip />
-
-## What we made, and why
-
-<WhatWeMade />
-
-## Rules every screen follows
-
-- **One typeface, three weights.** Proxima Nova; headlines 800, labels 700, nothing under 15px.
-- **Two kinds of table.** Reports get the charcoal header, lists a light one. Every column sorts.
-- **One reporting page.** Date row, bands, summary tiles, chart, report table, in that order.
-- **Staging's wording.** Restyle, don't rename.
-- **No coaching.** A page states what the data is and never tells the publisher what to do.
-- **Actual numbers.** Charts show real figures, nothing indexed against "normal".
-- **Fictional data.** Every publisher, partner, person and figure is made up; this Storybook is public.
-
-## How to look around
-
-- **Full Application** is this introduction: overview, style guide, process and roadmap, how to review.
-- **DAS Prototypes** holds the Deal Activation System's six review rounds.
-- **Styles, Base Components, Application UI** are the system itself: tokens, components and composed patterns.
-- **November 13th, 2026** has every page of the full application, one story per state.
-- **Nov 6 Edits, Oct 29 Edits, Oct 26, Oct 17, Sept 22** are the review batches, newest first.
-
-## Research on the live product
-
-In October every visible text element on the dashboard's 22 pages was read from the browser's computed style. It is where the type rules come from.
-
-<Research />
-
-## Map of the stories
-
-<StoryMap sections={["Full Application", "DAS Prototypes", "November 13th, 2026", "Nov 6 Edits", "Oct 29 Edits", "Oct 26", "Oct 17", "Styles", "Base Components", "Application UI", "Deal Activation System", "Performance Insights", "Audits"]} />
-
-## Getting started
-
-```bash
-npm install              # install dependencies
-npm run storybook        # this library at http://localhost:6006
-npm run proto:dev        # the prototypes at http://localhost:5190 (/app/ is the full application)
-```
-
-<Callout>
-  Built with React 19, TypeScript, Tailwind CSS v4, React Aria, Recharts, Storybook 10 and Vite. Hosted on GitHub Pages
-  (primary) and Netlify (backup); both deploy from <code>main</code>.
-</Callout>
+<Folders />
 
 </Page>

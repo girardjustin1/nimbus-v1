@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
  * The corner-radius scale from the theme (--radius-*).
  */
 const meta = {
-    title: "Styles/Shape",
+    title: "Design System/Styles/Shape",
     parameters: { layout: "fullscreen" },
     tags: ["autodocs"],
 } satisfies Meta;

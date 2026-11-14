@@ -1,7 +1,9 @@
 import { Meta } from "@storybook/addon-docs/blocks";
+import { ReviewHeader } from "../intro/review-header";
+import { More } from "../intro/ui";
 import { framing, items, links } from "./feedback";
 
-<Meta title="Oct 17/Overview" />
+<Meta title="Reviews/Oct 17 · After publishing/Summary" />
 
 export const protoUrl = (route) =>
   (typeof window !== "undefined" && window.location.hostname === "localhost" ? "http://localhost:5190/das/v4/" : "./das/v4/") + `#/${route}`;
@@ -9,7 +11,7 @@ export const storyUrl = (id) => `./?path=/story/${id}`;
 
 export const Pill = ({ href, kind, children }) => (
   <a href={href} target="_top" style={{
-    display: "inline-block", whiteSpace: "nowrap", textDecoration: "none", fontSize: 14, fontWeight: 600, padding: "2px 9px", borderRadius: 999,
+    display: "inline-block", whiteSpace: "nowrap", textDecoration: "none", fontSize: 15, fontWeight: 600, padding: "2px 9px", borderRadius: 999,
     color: kind === "proto" ? "#A94579" : "#1F7F80",
     background: kind === "proto" ? "#FCE7F1" : "#E6F6F6",
   }}>{children}</a>
@@ -17,7 +19,7 @@ export const Pill = ({ href, kind, children }) => (
 
 export const LinkRow = ({ label, children }) => (
   <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 6, margin: "2px 0" }}>
-    <span style={{ fontSize: 13, fontWeight: 700, color: "#667085", textTransform: "uppercase", letterSpacing: 0.4, minWidth: 82 }}>{label}</span>
+    <span style={{ fontSize: 15, fontWeight: 700, color: "#667085", textTransform: "uppercase", letterSpacing: 0.4, minWidth: 82 }}>{label}</span>
     {children}
   </div>
 );
@@ -46,12 +48,7 @@ export const td = { fontSize: 15, color: "#344054", padding: "10px 12px", border
 
 <div style={{ maxWidth: 920 }}>
 
-# Oct 17 · Round 4
-
-Round 3 was reviewed on 16 October. This category holds what came out of it: the
-changes that were decided outright, already built into prototype **v4**, and the ones
-where the call left a choice open, built as concepts side by side so the choice is made
-by looking.
+<ReviewHeader id="oct-17" />
 
 > “{framing.quote}”
 >
@@ -63,9 +60,9 @@ by looking.
 and comparing, the overview says how one campaign is pacing, and Full performance says
 where.
 
-## Decided on 19 Oct
+## Decisions
 
-Product answered the open questions, and the answers are built into v4:
+Product answered the open questions on 19 Oct, and the answers are built into Round 4:
 
 - **Keywords match on ANY**, the way geos do. No toggle; each keyword reports on its own.
 - **Campaign Health: A**, the counts by colour.
@@ -80,10 +77,12 @@ Product answered the open questions, and the answers are built into v4:
 - **“Queued”** is the word for a campaign scheduled to start later, in the chip and the
   table alike.
 
-**Still open:** only the Campaign Health maths, which Product is settling with
-engineering.
+## Left open
 
-## What's in here
+Only the Campaign Health maths, which Product is settling with engineering. The charter
+needs an update to match keywords reporting on screen.
+
+<More title="Every change, and where to see it">
 
 <div style={{ overflowX: "auto", border: "1px solid #EAECF0", borderRadius: 12, margin: "12px 0 24px" }}>
   <table style={{ width: "100%", borderCollapse: "collapse", margin: 0 }}>
@@ -102,30 +101,26 @@ engineering.
   </table>
 </div>
 
-Each change links to the **prototype** screens it shows on (pink, opens prototype v4) and
-to its **Storybook** stories (teal, stays here).
+- **Applied**: decided on the call and in Round 4. **Changes** shows each one next to
+  Round 3 as it was reviewed.
+- **Decided**: was a concept until Product picked on 19 Oct. The options not taken stay
+  in **Concepts** as the record.
+- **To confirm**: built on a reading that still needs an answer.
 
-- **Applied** — decided on the call and in prototype v4. *Oct 17 › Applied Changes*
-  shows each one next to Round 3 as it was reviewed, so anything removed is easy to put
-  back.
-- **Decided** — was a concept until Product picked on 19 Oct. The pick is in v4; the
-  options not taken stay in *Oct 17 › Concepts* as the record.
-- **Concepts** — still a choice to make. *Oct 17 › Concepts* has one folder per
-  question, with the options as stories you can click through.
-- **To confirm** — built on a reading that still needs an answer.
+</More>
 
-## Concepts, one question per folder
+<More title="Concepts, one question per folder">
 
 <div style={{ overflowX: "auto", border: "1px solid #EAECF0", borderRadius: 12, margin: "12px 0 24px" }}>
   <table style={{ width: "100%", borderCollapse: "collapse", margin: 0 }}>
     <thead><tr><th style={{ ...th, width: 170 }}>Folder</th><th style={{ ...th, width: 220 }}>The question</th><th style={th}>Options</th></tr></thead>
     <tbody>
       {[
-        ["Campaign Health", "How should the traffic light read in its chip?", "Chose A", [["A · Counts — chosen", "oct-17-concepts-campaign-health--counts", "campaigns"], ["B · Bar", "oct-17-concepts-campaign-health--bar"], ["C · Needs attention", "oct-17-concepts-campaign-health--to-do"]]],
-        ["Campaigns Table", "Should the table say which campaign is which colour?", "Chose A", [["A · Staging's columns — chosen", "oct-17-concepts-campaigns-table--as-staging", "campaigns"], ["B · Health column", "oct-17-concepts-campaigns-table--health-column"]]],
-        ["Overview Summary", "Sidebar or cards — Product asked for one, not both", "Chose cards", [["A · Sidebar", "oct-17-concepts-overview-summary--sidebar"], ["B · Cards — chosen", "oct-17-concepts-overview-summary--cards", "view-a"]]],
-        ["Full Performance Layout", "Where the breakdown controls sit", "Chose the top", [["Across the top, like Performance Insights — chosen", "oct-17-concepts-full-performance-layout--decided", "view-d"]]],
-        ["Keyword Reporting", "Per-keyword figures on screen, or CSV only?", "Chose A", [["A · On screen — chosen", "oct-17-concepts-keyword-reporting--on-screen", "view-d-keywords"], ["B · CSV only (charter)", "oct-17-concepts-keyword-reporting--csv-only"]]],
+        ["Campaign Health", "How should the traffic light read in its chip?", "Chose A", [["A · Counts — chosen", "reviews-oct-17-·-after-publishing-concepts-campaign-health--counts", "campaigns"], ["B · Bar", "reviews-oct-17-·-after-publishing-concepts-campaign-health--bar"], ["C · Needs attention", "reviews-oct-17-·-after-publishing-concepts-campaign-health--to-do"]]],
+        ["Campaigns Table", "Should the table say which campaign is which colour?", "Chose A", [["A · Staging's columns — chosen", "reviews-oct-17-·-after-publishing-concepts-campaigns-table--as-staging", "campaigns"], ["B · Health column", "reviews-oct-17-·-after-publishing-concepts-campaigns-table--health-column"]]],
+        ["Overview Summary", "Sidebar or cards — Product asked for one, not both", "Chose cards", [["A · Sidebar", "reviews-oct-17-·-after-publishing-concepts-overview-summary--sidebar"], ["B · Cards — chosen", "reviews-oct-17-·-after-publishing-concepts-overview-summary--cards", "view-a"]]],
+        ["Full Performance Layout", "Where the breakdown controls sit", "Chose the top", [["Across the top, like Performance Insights — chosen", "reviews-oct-17-·-after-publishing-concepts-full-performance-layout--decided", "view-d"]]],
+        ["Keyword Reporting", "Per-keyword figures on screen, or CSV only?", "Chose A", [["A · On screen — chosen", "reviews-oct-17-·-after-publishing-concepts-keyword-reporting--on-screen", "view-d-keywords"], ["B · CSV only (charter)", "reviews-oct-17-·-after-publishing-concepts-keyword-reporting--csv-only"]]],
       ].map(([folder, question, state, options]) => (
         <tr key={folder}>
           <td style={{ ...td, fontWeight: 700, color: "#101828" }}>{folder}<div style={{ marginTop: 6 }}><Chip tone={state === "Open" ? "Concepts" : "Decided"}>{state}</Chip></div></td>
@@ -147,7 +142,9 @@ to its **Storybook** stories (teal, stays here).
   </table>
 </div>
 
-## Charter check: keywords
+</More>
+
+<More title="Charter check: keywords">
 
 - **Matching.** The charter's setup wireframe had an ANY / ALL toggle defaulting to ANY;
   it was dropped on 1 Oct. Product confirmed on 19 Oct that keywords match on **ANY**,
@@ -158,7 +155,9 @@ to its **Storybook** stories (teal, stays here).
 - **Counting.** With ANY, one impression can match several keywords. It counts under
   the first it matched, so per-keyword rows add up to the campaign's total.
 
-## Campaign Health maths is a placeholder
+</More>
+
+<More title="Campaign Health maths is a placeholder">
 
 Product is settling the rule with engineering, and said it can run in the front end.
 Until then the prototype uses: **green** when spend is within 10% of the share of the
@@ -167,16 +166,14 @@ spend needed to finish is at most 1.5× today's; **red** beyond that. Only live 
 with a budget have a health. It is written down once, in
 `prototypes/das/v4/screens/campaign-data.ts`, so it can be replaced in one place.
 
-## Kept on purpose
+</More>
+
+<More title="Kept on purpose">
 
 - **The Ad Unit guide** in Targeting still animates each unit type. It explains what an
   interstitial is, not what the publisher's creative looks like. It goes if that still
   reads as a hint at previews.
 
-## Settled from before
-
-- **Device Language** is in the charter, so it is back (19 Oct): in setup, the rail, the
-  overview's Targeting and Full performance.
-- **Unity** is a platform (19 Oct), next to iOS and Android.
+</More>
 
 </div>

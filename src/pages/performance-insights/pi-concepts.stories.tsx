@@ -8,7 +8,7 @@ import { Explorer, QuestionBar, StartPage } from "./pi-concepts";
  * page, a sentence-style query bar that only runs on demand, and a pivot explorer.
  */
 const meta = {
-    title: "Performance Insights/Concepts",
+    title: "Archive/Performance Insights concepts/Concepts",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

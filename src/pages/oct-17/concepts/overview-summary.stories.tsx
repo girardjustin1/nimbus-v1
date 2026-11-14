@@ -8,7 +8,7 @@ import { Compare } from "../note";
  * Decided 19 Oct: cards. The sidebar stays here as the record of what was compared.
  */
 const meta = {
-    title: "Oct 17/Concepts/Overview Summary",
+    title: "Reviews/Oct 17 · After publishing/Concepts/Overview Summary",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

@@ -8,7 +8,7 @@ import {
 } from "@/pages/app-screens/nimbus-payments";
 
 const meta = {
-    title: "Application UI/Table/102326/Payments",
+    title: "Research/Table audit/Payments",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

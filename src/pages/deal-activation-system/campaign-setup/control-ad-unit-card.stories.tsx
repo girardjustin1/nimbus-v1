@@ -7,7 +7,7 @@ import { Surface, Value } from "./harness";
  * Ad unit card — one ad unit type as a checkbox card. The whole card toggles it.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Controls/Ad Unit Card",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Controls/Ad Unit Card",
 } satisfies Meta;
 
 export default meta;

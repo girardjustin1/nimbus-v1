@@ -11,7 +11,7 @@ const ROWS = [
  * Chosen table — where picks land, instead of chips. A column can say which of two same-named apps you mean.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Controls/Chosen Table",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Controls/Chosen Table",
 } satisfies Meta;
 
 export default meta;

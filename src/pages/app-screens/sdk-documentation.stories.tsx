@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { SdkDocumentationScreen } from "./sdk-documentation";
 
 const meta = {
-    title: "App Screens/SDK & Documentation",
+    title: "Archive/App Screens/SDK & Documentation",
     component: SdkDocumentationScreen,
     tags: ["autodocs"],
     parameters: {

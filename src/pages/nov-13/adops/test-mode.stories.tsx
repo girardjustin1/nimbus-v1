@@ -3,7 +3,7 @@ import { TestMode } from "../../../../prototypes/app/v1/screens/adops/test-mode"
 
 /** AdOps › manage test mode — Nov 13 style guide (prototype screens "test-mode", "test-mode-empty"). */
 const meta = {
-    title: "November 13th, 2026/AdOps/Manage test mode",
+    title: "Prototypes/Full application/AdOps/Manage test mode",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

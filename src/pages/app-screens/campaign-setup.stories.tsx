@@ -18,7 +18,7 @@ import {
  * progress stepper + sticky Back/Continue footer); only the step body changes.
  */
 const meta = {
-    title: "App Screens/Campaign Setup",
+    title: "Archive/App Screens/Campaign Setup",
     parameters: {
         layout: "fullscreen",
     },

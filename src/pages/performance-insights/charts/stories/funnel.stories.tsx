@@ -4,7 +4,7 @@ import { ChartCard } from "../chart-kit";
 import { Funnel } from "../reporting-charts";
 
 /** Funnel (Nimbus extra) — where requests drop out on the way to an impression. */
-const meta = { title: "Performance Insights/Charts/Funnel", parameters: { layout: "padded" } } satisfies Meta;
+const meta = { title: "Design System/Chart library/Funnel", parameters: { layout: "padded" } } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Cta } from "../intro/ui";
 
 /**
- * November 13th, 2026 — building blocks for this category's docs pages. Inline styles,
+ * Building blocks for the full application's docs pages (screen index, Nov 13 review, constraints). Inline styles,
  * not Tailwind: docs render inside Storybook's own stylesheet. Type holds the 15px floor.
  */
 

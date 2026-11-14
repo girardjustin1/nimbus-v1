@@ -15,8 +15,7 @@ import { bySlug } from "./feedback";
 const item = bySlug("keyword-targeting");
 
 const meta = {
-    title: "Prototype 3/Keyword Targeting",
-    tags: ["!dev"],
+    title: "Reviews/Oct 5 · Type rules/Concepts/Keyword Targeting",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

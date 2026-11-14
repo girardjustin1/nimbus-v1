@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { AssetCampaignsTable, SelectedAssetsTable } from "@/pages/app-screens/manage-assets";
 
 const meta = {
-    title: "Application UI/Table/102326/Manage Assets",
+    title: "Research/Table audit/Manage Assets",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

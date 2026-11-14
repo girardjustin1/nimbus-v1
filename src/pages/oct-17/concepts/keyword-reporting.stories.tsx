@@ -11,7 +11,7 @@ import { Compare } from "../note";
  * here as the record. Shown on Over 21 Midwest, which targets two keywords.
  */
 const meta = {
-    title: "Oct 17/Concepts/Keyword Reporting",
+    title: "Reviews/Oct 17 · After publishing/Concepts/Keyword Reporting",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

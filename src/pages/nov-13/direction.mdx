@@ -1,20 +1,17 @@
 import { Meta } from "@storybook/addon-docs/blocks";
+import { ReviewHeader } from "../intro/review-header";
 import { Callout, Said, td, th } from "./doc-ui";
 
-<Meta title="November 13th, 2026/Direction" />
+<Meta title="Reviews/Nov 13 · Full application/Summary" />
 
 <div style={{ maxWidth: 1040 }}>
 
-# Direction · 13 Nov call
+<ReviewHeader id="nov-13" />
 
-Product, engineering and design met on 13 November to agree how the dashboard's styles
-come together. This page records what was decided and how this category answers it.
-Speakers are named by role, because this Storybook is public.
-
-## What was decided
+## Decisions
 
 <table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
-  <thead><tr><th style={th}>Topic</th><th style={th}>Decision</th><th style={th}>In this category</th></tr></thead>
+  <thead><tr><th style={th}>Topic</th><th style={th}>Decision</th><th style={th}>In the prototype</th></tr></thead>
   <tbody>
     <tr>
       <td style={{ ...td, fontWeight: 700, color: "#101828" }}>Direction</td>
@@ -34,7 +31,7 @@ Speakers are named by role, because this Storybook is public.
     <tr>
       <td style={{ ...td, fontWeight: 700, color: "#101828" }}>Source of truth</td>
       <td style={td}>The dashboard has no design source of truth today, and that is the core problem. Storybook becomes it: finish it first, then engineering ports from it, then staging, QA and rollout section by section.</td>
-      <td style={td}>This category is the full set of pages, in Storybook, ready to be reviewed before anything is ported.</td>
+      <td style={td}>Prototypes › Full application holds the full set of pages, ready to be reviewed before anything is ported.</td>
     </tr>
     <tr>
       <td style={{ ...td, fontWeight: 700, color: "#101828" }}>Storybook structure</td>
@@ -46,21 +43,13 @@ Speakers are named by role, because this Storybook is public.
 
 <Said who="Engineering">The thing where I look at the Storybook and port it in, and then I tweak it from there — we might just be causing a lot more inconsistencies that way, because then we have to go back and forth.</Said>
 
-## The process agreed
-
-1. **Finish Storybook** so it shows the styles we want, before any porting.
-2. **Engineering ports** everything from Storybook into the codebase.
-3. **Staging:** push, QA and fine-tune, then roll out section by section.
-
-Changing styles after the port creates drift, so review happens here first.
-
-## Next steps from the call
+## Left open
 
 <table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
   <thead><tr><th style={th}>Step</th><th style={th}>Owner</th><th style={th}>Status</th></tr></thead>
   <tbody>
     <tr><td style={td}>Send the component list ordered by usage, the library constraints and the current Storybook structure</td><td style={td}>Engineering</td><td style={td}>Received — summarised in Engineering constraints</td></tr>
-    <tr><td style={td}>Update the prototypes based on engineering's list</td><td style={td}>Design</td><td style={td}>This category: the full application, built within those constraints</td></tr>
+    <tr><td style={td}>Update the prototypes based on engineering's list</td><td style={td}>Design</td><td style={td}>Done: the full application, built within those constraints</td></tr>
     <tr><td style={td}>Compare staging and prototype side by side on a few high-impact pages, and record what to keep from each</td><td style={td}>Product</td><td style={td}>Open — the Screen index lists every page to compare</td></tr>
   </tbody>
 </table>

@@ -6,7 +6,7 @@ import { Avatar } from "@/components/base/avatar/avatar";
  * Author avatars used in blog cards and post bylines.
  */
 const meta = {
-    title: "Base Components/Avatars",
+    title: "Design System/Base Components/Avatars",
     component: Avatar,
     parameters: { layout: "centered" },
     tags: ["autodocs"],

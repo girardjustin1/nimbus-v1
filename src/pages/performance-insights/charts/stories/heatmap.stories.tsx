@@ -4,7 +4,7 @@ import { ChartCard } from "../chart-kit";
 import { Heatmap } from "../reporting-charts";
 
 /** Heatmap (Nimbus extra) — two dimensions at once; darker cells earn more. */
-const meta = { title: "Performance Insights/Charts/Heatmap", parameters: { layout: "padded" } } satisfies Meta;
+const meta = { title: "Design System/Chart library/Heatmap", parameters: { layout: "padded" } } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

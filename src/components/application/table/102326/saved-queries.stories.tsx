@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { SavedQueriesTable } from "@/pages/app-screens/saved-queries";
 
 const meta = {
-    title: "Application UI/Table/102326/Saved Queries",
+    title: "Research/Table audit/Saved Queries",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

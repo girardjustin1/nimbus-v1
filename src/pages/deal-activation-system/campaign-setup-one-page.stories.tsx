@@ -8,8 +8,7 @@ import { CampaignSetupOnePage } from "./campaign-setup-one-page";
  * separate Review step; Publish enables only when the campaign is valid.
  */
 const meta = {
-    title: "Deal Activation System/Round 1 Concepts/Campaign Setup (One Page)",
-    tags: ["!dev"],
+    title: "Archive/DAS early concepts/Round 1/Campaign Setup (One Page)",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

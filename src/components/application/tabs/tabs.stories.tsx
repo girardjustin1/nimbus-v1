@@ -37,7 +37,7 @@ const Panels = () => (
 const type = ["button-brand", "button-gray", "button-border", "button-minimal", "underline"] as const;
 
 const meta = {
-    title: "Application UI/Tabs",
+    title: "Design System/Application UI/Tabs",
     component: Tabs,
     parameters: { layout: "padded" },
     tags: ["autodocs"],

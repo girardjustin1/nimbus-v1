@@ -1,4 +1,4 @@
-// Captures the prototype v5 screens shown in Storybook › Oct 26 › Introduction.
+// Captures the prototype v5 screens shown in Storybook › Reviews › Oct 26 · Nimbus tokens › Walkthrough.
 //
 //   npm run proto:dev            (in another terminal; serves :5190)
 //   node scripts/capture-oct-26-screens.mjs

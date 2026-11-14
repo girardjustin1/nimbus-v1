@@ -10,7 +10,7 @@ import { AddAssetScreen, ViewCampaignsScreen } from "./view-all-campaigns";
  *   - AddAsset      — a creative-authoring form.
  */
 const meta = {
-    title: "App Screens/View All Campaigns",
+    title: "Archive/App Screens/View All Campaigns",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

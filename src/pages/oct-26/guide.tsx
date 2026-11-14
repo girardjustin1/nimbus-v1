@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 /**
- * Building blocks for Oct 26 › Introduction, the review guide for Round 5: numbered
+ * Building blocks for Oct 26 · Nimbus tokens › Walkthrough, the review guide for Round 5: numbered
  * steps in the order Product should walk v5, each with a screenshot, what changed, why,
  * how to check it, and links to the prototype, the before/after story and the token.
  *

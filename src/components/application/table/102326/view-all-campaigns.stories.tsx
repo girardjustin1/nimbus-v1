@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ViewCampaignsTable } from "@/pages/app-screens/view-all-campaigns";
 
 const meta = {
-    title: "Application UI/Table/102326/View All Campaigns",
+    title: "Research/Table audit/View All Campaigns",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

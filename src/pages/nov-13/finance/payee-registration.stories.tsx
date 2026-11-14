@@ -3,7 +3,7 @@ import { FinanceScreen } from "../../../../prototypes/app/v1/screens/account/fin
 
 /** Finance · Payee registration — the payments provider's frame inside our chrome, and staging's no-permission state. */
 const meta = {
-    title: "November 13th, 2026/Finance/Payee registration",
+    title: "Prototypes/Full application/Finance/Payee registration",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { PayoutOverviewTableExamples, PublisherPaymentsTable } from "@/pages/app-screens/nimbus-plus-payouts";
 
 const meta = {
-    title: "Application UI/Table/102326/Payout Administration",
+    title: "Research/Table audit/Payout Administration",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

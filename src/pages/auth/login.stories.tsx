@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { LoginPage } from "./login";
 
 const meta = {
-    title: "Account Login/Log in",
+    title: "Design System/Account Login/Log in",
     component: LoginPage,
     tags: ["autodocs"],
     parameters: {

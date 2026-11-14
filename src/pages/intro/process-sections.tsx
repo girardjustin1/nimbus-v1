@@ -1,4 +1,3 @@
-import dasArt from "./art/hero-das.jpg";
 import shotBuyers from "./screens/app-buyers.jpg";
 import shotPiTable from "./screens/app-pi-table.jpg";
 import shotPi from "./screens/app-pi.jpg";
@@ -7,28 +6,27 @@ import shotV3 from "./screens/das-v3.jpg";
 import shotV5 from "./screens/das-v5.jpg";
 import shotV6 from "./screens/das-v6.jpg";
 import { proto, story } from "./tokens";
-import { CardGrid, Chip, Cta, CtaRow, Decision, Hero, MiniCard, ShotCard, Steps, Timeline } from "./ui";
+import { CardGrid, Chip, Cta, CtaRow, Decision, MiniCard, PageHeader, ShotCard, Steps, Timeline } from "./ui";
 
 /**
- * Full Application › Process & roadmap — the four steps, the priorities, the milestones
+ * Start Here › Process & roadmap — the four steps, the priorities, the milestones
  * and the open decisions, as cards and a track rather than tables.
  */
 
 const APP = "app/v1";
 
 export const ProcessHero = () => (
-    <Hero
+    <PageHeader
         eyebrow="Process & roadmap"
         title="From Storybook to the dashboard, in four steps."
         lead="Agreed with product and engineering on 13 November: finish Storybook first, port from it once, then staging and a rollout section by section."
         chips={["Step 1 of 4", "Performance Insights first", "Agreed 13 Nov 2026"]}
-        art={dasArt}
         actions={
             <CtaRow>
-                <Cta kind="primary" href={story("full-application-how-to-review--docs")}>
+                <Cta kind="primary" href={story("start-here-how-to-review--docs")}>
                     Start the review
                 </Cta>
-                <Cta kind="secondary" href={story("november-13th-2026-direction--docs")}>
+                <Cta kind="secondary" href={story("reviews-nov-13-·-full-application-summary--docs")}>
                     The 13 Nov call
                 </Cta>
             </CtaRow>
@@ -86,7 +84,7 @@ export const Priorities = () => (
             note={<Chunks items={["Date bar", "Bands", "Filters", "Charts", "Tables", "Summary tiles"]} />}
             href={proto(APP, "pi-query")}
             cta="Open the prototype"
-            links={[["Stories", story("november-13th-2026-reporting-performance-insights--default")]]}
+            links={[["Stories", story("prototypes-full-application-reporting-performance-insights--default")]]}
         />
         <ShotCard
             badge="Priority 2"
@@ -97,7 +95,7 @@ export const Priorities = () => (
             note={<Chunks items={["Dropdowns", "Modals", "Tables"]} />}
             href={proto(APP, "view-a-at-risk")}
             cta="Open the prototype"
-            links={[["The six rounds", story("das-prototypes-overview--docs")]]}
+            links={[["The six rounds", story("prototypes-deal-activation-system-rounds--docs")]]}
         />
         <ShotCard
             badge="Priority 3"
@@ -108,7 +106,7 @@ export const Priorities = () => (
             note={<Chunks items={["Buyer breakdown", "Benchmarks", "Activity", "Floors", "Manage campaigns"]} />}
             href={proto(APP, "buyer-breakdown")}
             cta="Open the prototype"
-            links={[["Every screen", story("november-13th-2026-screen-index--docs")]]}
+            links={[["Every screen", story("prototypes-full-application-screen-index--docs")]]}
         />
     </CardGrid>
 );
@@ -130,7 +128,7 @@ export const Milestones = () => (
                 state: "done",
                 title: "Rounds 2 and 3: the type rules arrive",
                 body: "One rail, one way to pick from a library, and the rule that nothing goes under 15px.",
-                href: story("audits-typography-rules--docs"),
+                href: story("research-typography-rules--docs"),
                 cta: "Typography Rules",
                 shot: shotV3,
             },
@@ -139,7 +137,7 @@ export const Milestones = () => (
                 state: "done",
                 title: "Rounds 4 and 5: the Nimbus tokens",
                 body: "Manage campaigns, the campaign overview and Full performance; then tables, tabs, bands, fields and buttons become shared tokens.",
-                href: story("oct-26-introduction--docs"),
+                href: story("reviews-oct-26-·-nimbus-tokens-walkthrough--docs"),
                 cta: "Oct 26 review",
                 shot: shotV5,
             },
@@ -148,7 +146,7 @@ export const Milestones = () => (
                 state: "done",
                 title: "Round 6: one spend number, actual numbers, no coaching",
                 body: "Pacing replaces Campaign Health, the Delivery chart gains requests and active users, every table sorts.",
-                href: story("nov-6-edits-introduction--docs"),
+                href: story("reviews-nov-6-·-delivery-chart-walkthrough--docs"),
                 cta: "Nov 6 review",
                 shot: shotV6,
             },
@@ -172,7 +170,7 @@ export const Milestones = () => (
                 state: "next",
                 title: "Product's side-by-side review",
                 body: "Staging against the full application on the high-impact pages: what to keep from each.",
-                href: story("full-application-how-to-review--docs"),
+                href: story("start-here-how-to-review--docs"),
                 cta: "How to review",
             },
             {
@@ -234,13 +232,13 @@ export const OpenDecisions = () => (
 
 export const Reading = () => (
     <CardGrid min={230}>
-        <MiniCard eyebrow="13 Nov" title="Direction" href={story("november-13th-2026-direction--docs")} cta="Read the decisions" tone="warm">
+        <MiniCard eyebrow="13 Nov" title="Direction" href={story("reviews-nov-13-·-full-application-summary--docs")} cta="Read the decisions" tone="warm">
             What was decided on the call, by topic, and how the build answers it.
         </MiniCard>
-        <MiniCard eyebrow="Engineering" title="Constraints" href={story("november-13th-2026-engineering-constraints--docs")} cta="See the list" tone="warm">
+        <MiniCard eyebrow="Engineering" title="Constraints" href={story("research-engineering-constraints--docs")} cta="See the list" tone="warm">
             What is hard to restyle, and the components the dashboard uses most.
         </MiniCard>
-        <MiniCard eyebrow="The rules" title="Style guide" href={story("full-application-style-guide--docs")} cta="Read the style guide" tone="warm">
+        <MiniCard eyebrow="The rules" title="Style guide" href={story("start-here-style-guide--docs")} cta="Read the style guide" tone="warm">
             What gets ported: eight rules, each with a screen.
         </MiniCard>
     </CardGrid>

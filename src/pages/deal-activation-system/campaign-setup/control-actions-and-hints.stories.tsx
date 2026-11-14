@@ -7,7 +7,7 @@ import { Surface } from "./harness";
  * The small pieces: Done closes a picker panel, the pink text action (Clear all, Add keyword, Browse), and the keyboard hint in panel footers. (The traffic badge in the Keywords table was removed on 27 Oct.)
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Controls/Actions & Hints",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Controls/Actions & Hints",
 } satisfies Meta;
 
 export default meta;

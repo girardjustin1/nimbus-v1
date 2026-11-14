@@ -8,7 +8,7 @@ import { Surface } from "./harness";
  * Rule card — one auction rule. The whole card is the target, with the text fields' edge.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Controls/Rule Card",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Controls/Rule Card",
 } satisfies Meta;
 
 export default meta;

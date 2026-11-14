@@ -6,7 +6,7 @@ import { DatePicker } from "./date-picker";
 import { DateRangePicker } from "./date-range-picker";
 
 const meta = {
-    title: "Application UI/Date Picker",
+    title: "Design System/Application UI/Date Picker",
     component: DatePicker,
     parameters: { layout: "padded" },
     tags: ["autodocs"],

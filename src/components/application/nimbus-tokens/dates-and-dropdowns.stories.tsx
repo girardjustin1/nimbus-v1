@@ -4,7 +4,7 @@ import { BareSelect, Bands, CollapseButton, DateCell, DateRow, StateAction } fro
 import { Rule, TokenPage } from "./token-page";
 
 const meta = {
-    title: "Application UI/Nimbus Tokens/Dates and Dropdowns",
+    title: "Design System/Nimbus Tokens/Dates and Dropdowns",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

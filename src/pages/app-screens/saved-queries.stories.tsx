@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { SavedQueriesScreen } from "./saved-queries";
 
 const meta = {
-    title: "App Screens/Saved Queries",
+    title: "Archive/App Screens/Saved Queries",
     component: SavedQueriesScreen,
     parameters: {
         layout: "fullscreen",

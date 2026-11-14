@@ -7,7 +7,7 @@ import { BuyerBreakdown } from "../../../../prototypes/app/v1/screens/reporting/
  * #/buyer-breakdown and #/buyer-breakdown-table screens.
  */
 const meta = {
-    title: "November 13th, 2026/Reporting/Buyer breakdown",
+    title: "Prototypes/Full application/Reporting/Buyer breakdown",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

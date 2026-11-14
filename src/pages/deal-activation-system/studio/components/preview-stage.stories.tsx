@@ -4,8 +4,7 @@ import { PreviewStage } from "./preview-stage";
 
 /** Studio · Preview stage — full-screen final render with device switch and moments. */
 const meta = {
-    title: "Deal Activation System/Studio Concept/Components/Preview Stage",
-    tags: ["!dev"],
+    title: "Archive/DAS Studio concept/Components/Preview Stage",
     component: PreviewStage,
     parameters: { layout: "fullscreen" },
     args: { format: "interstitial", creative: sampleCreative, title: "Fall Launch · Sports fans" },

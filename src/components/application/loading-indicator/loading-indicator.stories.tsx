@@ -9,7 +9,7 @@ import { LoadingIndicator } from "@/components/application/loading-indicator/loa
  * `sm` to `xl`. The active arc uses the Nimbus teal brand color.
  */
 const meta = {
-    title: "Application UI/Loading Indicator",
+    title: "Design System/Application UI/Loading Indicator",
     component: LoadingIndicator,
     parameters: { layout: "centered" },
     tags: ["autodocs"],

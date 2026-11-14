@@ -11,8 +11,7 @@ import { type DateTimeValue, DateTimePicker } from "./datetime-picker";
  * the DAS prototype and DAS Studio.
  */
 const meta = {
-    title: "Deal Activation System/Round 1 Concepts/Components/Date & Time Picker",
-    tags: ["!dev"],
+    title: "Archive/DAS early concepts/Round 1/Components/Date & Time Picker",
     parameters: { layout: "padded" },
     decorators: [(Story) => <div className="min-h-[520px]">{Story()}</div>],
 } satisfies Meta;

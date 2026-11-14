@@ -54,7 +54,7 @@ import { PINK, TEAL } from "./das-shell";
  *
  * Decision (6 Nov, Product): A. "It has to just be actual numbers" — nothing against
  * normal — so A, everything on one chart in real figures, is what the overview shows. The
- * rest stay in Storybook › Nov 6 Edits for reference.
+ * rest stay in Storybook › Reviews › Nov 6 · Delivery chart for reference.
  *
  * Colours: teal and pink stay Actual and Expected (Expected is dashed, so the pair still
  * reads for colour-blind users); Requests navy, DAUs brown — both pass the colour-blind

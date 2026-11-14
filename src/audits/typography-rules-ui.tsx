@@ -6,7 +6,7 @@ import { Button, FIELD_TYPE } from "../../prototypes/das/v3/screens/type-rules";
 import { EDGE_CASES, TEXT_STYLES, type TextStyle } from "./typography-rules-data";
 
 /**
- * Specimens and the developer matrix for Audits › Typography Rules.
+ * Specimens and the developer matrix for Research › Typography Rules.
  *
  * Every specimen renders the real Prototype 3 classes in Proxima Nova and reads its
  * computed style back from the browser, so the size, line height, weight and colour shown

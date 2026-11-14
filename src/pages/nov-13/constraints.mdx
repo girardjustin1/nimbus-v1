@@ -1,7 +1,7 @@
 import { Meta } from "@storybook/addon-docs/blocks";
 import { Callout, td, th } from "./doc-ui";
 
-<Meta title="November 13th, 2026/Engineering constraints" />
+<Meta title="Research/Engineering constraints" />
 
 <div style={{ maxWidth: 1040 }}>
 
@@ -9,12 +9,12 @@ import { Callout, td, th } from "./doc-ui";
 
 What engineering shared for this rebuild: which parts of the dashboard are hard to restyle,
 which components the dashboard uses most, and which styles carry the most weight. These
-decide how far each page in this category moves from staging.
+decide how far each page of the full application moves from staging.
 
 ## Hard to restyle, hardest first
 
 <table style={{ width: "100%", borderCollapse: "collapse", margin: "8px 0" }}>
-  <thead><tr><th style={th}>#</th><th style={th}>What</th><th style={th}>Why it's hard</th><th style={th}>How this category treats it</th></tr></thead>
+  <thead><tr><th style={th}>#</th><th style={th}>What</th><th style={th}>Why it's hard</th><th style={th}>How the full application treats it</th></tr></thead>
   <tbody>
     <tr><td style={td}>1</td><td style={{ ...td, fontWeight: 700 }}>Payee and payment embeds (Finance)</td><td style={td}>A third-party frame; almost nothing inside can be restyled.</td><td style={td}>Our chrome around a clearly labelled embed area; nothing inside is redesigned.</td></tr>
     <tr><td style={td}>2</td><td style={{ ...td, fontWeight: 700 }}>Charts</td><td style={td}>A chart library; the look comes from configuration, not CSS.</td><td style={td}>The chart patterns already in Storybook (colours, ticks, tooltips) — configuration-level changes only.</td></tr>

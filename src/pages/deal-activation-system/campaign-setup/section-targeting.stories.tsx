@@ -6,7 +6,7 @@ import { Setup, Surface } from "./harness";
  * Targeting — Geos, Platform, Apps, Ad Unit and Keywords as five cards at the same level. Each card is itemised under Targeting.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Sections/Targeting",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Sections/Targeting",
 } satisfies Meta;
 
 export default meta;

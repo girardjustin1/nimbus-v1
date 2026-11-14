@@ -3,7 +3,7 @@ import { Change, ChartCard, Legend, NimbusTooltip } from "../chart-kit";
 import { nimbus } from "../chart-theme";
 
 /** Chart card, legend, change badge and tooltip — the chrome every chart shares. */
-const meta = { title: "Performance Insights/Charts/Chart Card & Legend", parameters: { layout: "padded" } } satisfies Meta;
+const meta = { title: "Design System/Chart library/Chart Card & Legend", parameters: { layout: "padded" } } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

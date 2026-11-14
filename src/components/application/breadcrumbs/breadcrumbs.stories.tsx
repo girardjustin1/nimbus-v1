@@ -16,7 +16,7 @@ const Trail = () => (
  * Nimbus breadcrumbs, Nimbus-themed (current item uses the teal brand color).
  */
 const meta = {
-    title: "Application UI/Breadcrumbs",
+    title: "Design System/Application UI/Breadcrumbs",
     component: Breadcrumbs,
     parameters: { layout: "centered" },
     tags: ["autodocs"],

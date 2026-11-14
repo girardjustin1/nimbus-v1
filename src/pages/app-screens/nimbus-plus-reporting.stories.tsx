@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { NimbusPlusReportingFilterUpsellPanel, NimbusPlusReportingUpsellModal } from "./nimbus-plus-reporting";
 
 const meta = {
-    title: "App Screens/Nimbus+ Reporting",
+    title: "Archive/App Screens/Nimbus+ Reporting",
     component: NimbusPlusReportingFilterUpsellPanel,
     parameters: {
         layout: "fullscreen",

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { IntegratedDemandPartnersTable } from "@/pages/app-screens/manage-active-demand";
 
 const meta = {
-    title: "Application UI/Table/102326/Demand Partners",
+    title: "Research/Table audit/Demand Partners",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

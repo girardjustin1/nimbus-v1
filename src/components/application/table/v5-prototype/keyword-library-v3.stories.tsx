@@ -3,7 +3,7 @@ import { ViewAllKeywords } from "../../../../../prototypes/das/v5/screens/keywor
 import { PrototypeTableContext } from "./context";
 
 const meta = {
-    title: "Application UI/Table/V5 Prototype/Keyword Library",
+    title: "Design System/Application UI/Table/V5 Prototype/Keyword Library",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

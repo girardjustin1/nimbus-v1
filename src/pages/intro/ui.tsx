@@ -1,8 +1,8 @@
-import { type CSSProperties, type ReactNode, useEffect, useState } from "react";
+import { type CSSProperties, type ReactNode } from "react";
 import { BODY, INK, LINE, MUTED, PINK, PINK_DARK, PINK_SOFT, TEAL, TEAL_DARK, TEAL_SOFT, WARM } from "./tokens";
 
 /**
- * Building blocks for Storybook's introduction pages (Full Application, DAS Prototypes).
+ * Building blocks for Storybook's front pages (Start Here, DAS rounds, review summaries, the archive).
  *
  * One layout language for all of them: a hero card with real screens, shot cards that
  * open a prototype, a step strip, feature cards, a milestone track — and ONE set of
@@ -189,6 +189,62 @@ export const Hero = ({
         )}
         {caption && <div style={{ borderTop: `1px solid ${LINE}`, background: "#FFFFFF", padding: "12px 36px", fontSize: 15, color: MUTED }}>{caption}</div>}
     </div>
+);
+
+/* ------------------------------------------------------------- Page header --- */
+
+/**
+ * The compact opening for every page that isn't a section's front door: what the page is
+ * in one line, a few facts, and where to go. (Only Start Here › Overview and the DAS
+ * rounds page get the full Hero; one hero per section is enough.)
+ */
+export const PageHeader = ({
+    eyebrow,
+    title,
+    lead,
+    chips = [],
+    actions,
+}: {
+    eyebrow: string;
+    title: string;
+    lead: ReactNode;
+    chips?: string[];
+    actions?: ReactNode;
+}) => (
+    <div
+        style={{
+            border: `1px solid ${LINE}`,
+            borderLeft: `5px solid ${PINK_DARK}`,
+            borderRadius: 16,
+            padding: "22px 26px",
+            margin: "8px 0 24px",
+            background: WARM,
+            fontFamily: FONT,
+        }}
+    >
+        <Eyebrow>{eyebrow}</Eyebrow>
+        <div style={{ fontSize: 30, fontWeight: 800, lineHeight: 1.15, color: INK, margin: "8px 0 10px" }}>{title}</div>
+        <div style={{ fontSize: 17, lineHeight: 1.55, color: BODY, maxWidth: 820 }}>{lead}</div>
+        {chips.length > 0 && (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 14 }}>
+                {chips.map((c) => (
+                    <Chip key={c}>{c}</Chip>
+                ))}
+            </div>
+        )}
+        {actions && <div style={{ marginTop: 18 }}>{actions}</div>}
+    </div>
+);
+
+/**
+ * Detail that is part of the record but not part of the summary: closed until asked for,
+ * so a page reads short and nothing is lost.
+ */
+export const More = ({ title, children }: { title: string; children: ReactNode }) => (
+    <details style={{ border: `1px solid ${LINE}`, borderRadius: 12, padding: "12px 18px", margin: "12px 0", fontFamily: FONT }}>
+        <summary style={{ cursor: "pointer", fontSize: 16, fontWeight: 700, color: INK }}>{title}</summary>
+        <div style={{ marginTop: 10 }}>{children}</div>
+    </details>
 );
 
 /* -------------------------------------------------------------- Shot cards --- */
@@ -589,19 +645,6 @@ export const Decision = ({
     </div>
 );
 
-/* ------------------------------------------------------------------- Stats --- */
-
-export const Stats = ({ items }: { items: [string, string][] }) => (
-    <div style={{ display: "grid", gridTemplateColumns: `repeat(auto-fit, minmax(150px, 1fr))`, gap: 12, margin: "16px 0 24px", fontFamily: FONT }}>
-        {items.map(([value, label]) => (
-            <div key={label} style={{ border: `1px solid ${LINE}`, borderRadius: 16, padding: "16px 18px", background: WARM }}>
-                <div style={{ fontSize: 32, fontWeight: 800, color: TEAL_DARK, lineHeight: 1 }}>{value}</div>
-                <div style={{ fontSize: 15, color: BODY, marginTop: 6 }}>{label}</div>
-            </div>
-        ))}
-    </div>
-);
-
 export const Callout = ({ children, tone = "teal" }: { children: ReactNode; tone?: "teal" | "pink" }) => (
     <div
         style={{
@@ -683,72 +726,30 @@ export const Swatch = ({ hex, name, use }: { hex: string; name: string; use: str
     </div>
 );
 
-/* --------------------------------------------------------------- Story map --- */
+/* ---------------------------------------------------------------- Archived --- */
 
-interface IndexEntry {
-    title: string;
-    type: string;
-}
-
-/**
- * A map of this Storybook, read from its own index at view time, so it can't drift:
- * one card per top-level section, each page or component with its number of states.
- */
-export const StoryMap = ({ sections }: { sections: string[] }) => {
-    const [entries, setEntries] = useState<IndexEntry[] | null>(null);
-    useEffect(() => {
-        fetch("./index.json")
-            .then((r) => r.json())
-            .then((d: { entries: Record<string, IndexEntry> }) => setEntries(Object.values(d.entries)))
-            .catch(() => setEntries([]));
-    }, []);
-    if (!entries) return <p style={{ fontFamily: FONT, fontSize: 15, color: MUTED }}>Loading the map…</p>;
-    if (entries.length === 0) return null;
-    return (
-        <>
-            <div style={{ columnWidth: 300, columnGap: 16, margin: "16px 0 8px", fontFamily: FONT }}>
-                {sections.map((section) => {
-                    const inSection = entries.filter((e) => e.title === section || e.title.startsWith(`${section}/`));
-                    if (inSection.length === 0) return null;
-                    const groups = new Map<string, number>();
-                    for (const e of inSection) {
-                        const name =
-                            e.title === section
-                                ? section
-                                : e.title
-                                      .slice(section.length + 1)
-                                      .split("/")
-                                      .slice(0, 2)
-                                      .join(" / ");
-                        groups.set(name, (groups.get(name) ?? 0) + (e.type === "story" ? 1 : 0));
-                    }
-                    return (
-                        <div
-                            key={section}
-                            style={{
-                                breakInside: "avoid",
-                                border: `1px solid ${LINE}`,
-                                borderRadius: 14,
-                                padding: "14px 16px",
-                                marginBottom: 16,
-                                background: "#FFFFFF",
-                            }}
-                        >
-                            <div style={{ fontSize: 17, fontWeight: 800, color: INK, marginBottom: 6 }}>{section}</div>
-                            {[...groups].slice(0, 14).map(([name, states]) => (
-                                <div key={name} style={{ fontSize: 15, lineHeight: 1.6, color: INK }}>
-                                    <b>{name}</b>
-                                    {states > 1 && <span style={{ color: MUTED }}> · {states} states</span>}
-                                </div>
-                            ))}
-                            {groups.size > 14 && <div style={{ fontSize: 15, color: MUTED }}>+ {groups.size - 14} more</div>}
-                        </div>
-                    );
-                })}
-            </div>
-            <p style={{ fontFamily: FONT, fontSize: 15, color: MUTED, textAlign: "right", margin: 0 }}>
-                {entries.filter((e) => e.type === "story").length} stories in total.
-            </p>
-        </>
-    );
-};
+/** The one-line note every archived page opens with: that it is archived, and what replaced it. */
+export const Archived = ({ children, href, cta }: { children: ReactNode; href: string; cta: string }) => (
+    <div
+        style={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: "8px 16px",
+            background: WARM,
+            border: `1px solid ${LINE}`,
+            borderLeft: `4px solid ${MUTED}`,
+            borderRadius: 12,
+            padding: "12px 18px",
+            margin: "8px 0 20px",
+            fontFamily: FONT,
+            fontSize: 15,
+            lineHeight: 1.5,
+            color: BODY,
+        }}
+    >
+        <Chip tone="ink">Archived</Chip>
+        <span style={{ flex: "1 1 320px" }}>{children}</span>
+        <Cta href={href}>{cta}</Cta>
+    </div>
+);

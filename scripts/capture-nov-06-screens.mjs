@@ -1,4 +1,4 @@
-// Captures the prototype v6 screens shown in Storybook › Nov 6 Edits › Introduction.
+// Captures the prototype v6 screens shown in Storybook › Reviews › Nov 6 · Delivery chart › Walkthrough.
 //
 //   npm run proto:dev            (in another terminal; serves :5190)
 //   node scripts/capture-nov-06-screens.mjs

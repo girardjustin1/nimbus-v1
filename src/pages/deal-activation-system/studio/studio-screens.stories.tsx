@@ -7,8 +7,7 @@ import { AudienceScreen, BudgetScreen, CreativeScreen, DealScreen, GoalScreen, P
  * clickable prototype at /das-studio/, where Back / Next carry your choices through.
  */
 const meta = {
-    title: "Deal Activation System/Studio Concept/Screens",
-    tags: ["!dev"],
+    title: "Archive/DAS Studio concept/Screens",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

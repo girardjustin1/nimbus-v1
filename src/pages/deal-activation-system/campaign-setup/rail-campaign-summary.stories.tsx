@@ -6,7 +6,7 @@ import { Setup, Surface } from "./harness";
  * Campaign summary — the right rail: the product's five steps, what has been chosen so far, and Review.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Rail/Campaign Summary",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Rail/Campaign Summary",
 } satisfies Meta;
 
 export default meta;

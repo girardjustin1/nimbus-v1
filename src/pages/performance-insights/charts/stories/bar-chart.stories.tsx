@@ -5,7 +5,7 @@ import { ChartCard, Legend } from "../chart-kit";
 import { colorAt, nimbus } from "../chart-theme";
 
 /** Bar chart — grouped to compare, stacked to show the mix, horizontal for long labels. */
-const meta = { title: "Performance Insights/Charts/Bar Chart", parameters: { layout: "padded" } } satisfies Meta;
+const meta = { title: "Design System/Chart library/Bar Chart", parameters: { layout: "padded" } } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

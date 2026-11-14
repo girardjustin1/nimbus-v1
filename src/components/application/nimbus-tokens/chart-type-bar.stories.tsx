@@ -8,7 +8,7 @@ const LABEL: Record<Kind, string> = { table: "Table", line: "Line", area: "Area"
 const OPTIONS = (Object.keys(DEFAULT_CHART_ICONS) as Kind[]).map((id) => ({ id, label: LABEL[id], icon: DEFAULT_CHART_ICONS[id] }));
 
 const meta = {
-    title: "Application UI/Nimbus Tokens/Chart Type Bar",
+    title: "Design System/Nimbus Tokens/Chart Type Bar",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

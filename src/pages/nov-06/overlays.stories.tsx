@@ -8,7 +8,7 @@ import { bySlug } from "./feedback";
 import { ReviewNote } from "./note";
 
 /**
- * Nov 6 Edits · On One Chart — the second batch, after Product asked: "Can we overlay
+ * Nov 6 · Delivery chart › Concepts › F to I on one chart — the second batch, after Product asked: "Can we overlay
  * them on the same chart rather than 2 separate? Or am I missing an alternate version?"
  *
  * A and B in the first batch already overlay, on a second axis. F to I keep everything
@@ -16,7 +16,7 @@ import { ReviewNote } from "./note";
  * numbers as the first batch; hover any chart for the day's figures.
  */
 const meta = {
-    title: "Nov 6 Edits/On One Chart",
+    title: "Reviews/Nov 6 · Delivery chart/Concepts/F to I on one chart",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

@@ -1,3 +1,14 @@
 <!-- Proxima Nova (Adobe Fonts kit, 300–900). theme.css names "proxima-nova" first. -->
 <link rel="preconnect" href="https://use.typekit.net" crossorigin />
 <link rel="stylesheet" href="https://use.typekit.net/ggt3buy.css" />
+<!-- Links shared before the 14 Nov 2026 regroup use old ids: send them to the page that replaced them. -->
+<script>
+    (function () {
+        var q = new URLSearchParams(window.location.search);
+        var path = q.get("path");
+        var id = path ? path.split("/")[2] : q.get("id");
+        if (id && id.indexOf("--") > 0 && !/^(start-here|prototypes|design-system|reviews|research|archive)-/.test(id)) {
+            document.write('<script src="./legacy-redirects.js"><\/script>');
+        }
+    })();
+</script>

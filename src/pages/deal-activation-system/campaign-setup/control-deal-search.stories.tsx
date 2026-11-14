@@ -9,7 +9,7 @@ const rows = deals.map((d) => ({ id: d.id, label: d.label, meta: d.supportingTex
  * Deal search — pick exactly one from a library (Add to existing deal). Shows what you chose rather than what you typed.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Controls/Deal Search",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Controls/Deal Search",
 } satisfies Meta;
 
 export default meta;

@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { KeywordDetail } from "../../../../prototypes/app/v1/screens/keyword-detail";
 import { KeywordSetup, ViewAllKeywords } from "../../../../prototypes/app/v1/screens/keyword-library-v3";
 
-/** November 13th, 2026 · Deal Activation System · Manage keywords — from DAS Round 6, unchanged. */
+/** Full application · Deal Activation System · Manage keywords — from DAS Round 6, unchanged. */
 const meta = {
-    title: "November 13th, 2026/Deal Activation System/Manage keywords",
+    title: "Prototypes/Full application/Deal Activation System/Manage keywords",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

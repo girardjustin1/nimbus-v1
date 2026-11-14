@@ -5,7 +5,7 @@ import { nimbus } from "../chart-theme";
 import { NimbusPieChart } from "../radial-charts";
 
 /** Donut chart — like the pie, with the total in the middle. */
-const meta = { title: "Performance Insights/Charts/Donut Chart", parameters: { layout: "padded" } } satisfies Meta;
+const meta = { title: "Design System/Chart library/Donut Chart", parameters: { layout: "padded" } } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

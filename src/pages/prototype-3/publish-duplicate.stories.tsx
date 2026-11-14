@@ -15,8 +15,7 @@ import { bySlug } from "./feedback";
 const item = bySlug("publish-duplicate");
 
 const meta = {
-    title: "Prototype 3/Publish & Duplicate",
-    tags: ["!dev"],
+    title: "Reviews/Oct 5 · Type rules/Concepts/Publish & Duplicate",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

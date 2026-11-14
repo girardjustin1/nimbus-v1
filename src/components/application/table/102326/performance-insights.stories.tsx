@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { DataTable, SavedQueriesView } from "@/pages/app-screens/performance-insights";
 
 const meta = {
-    title: "Application UI/Table/102326/Performance Insights",
+    title: "Research/Table audit/Performance Insights",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

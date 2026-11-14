@@ -1,4 +1,6 @@
 import { Meta } from "@storybook/addon-docs/blocks";
+import { Archived } from "../intro/ui";
+import { story } from "../intro/tokens";
 import { glossary, openCaptures } from "./terminology";
 
 export const proto = (hash = "") =>
@@ -20,9 +22,11 @@ export const Chip = ({ children, tone }) => (
 export const th = { textAlign: "left", fontSize: 12, fontWeight: 700, color: "#475467", padding: "9px 12px", borderBottom: "1px solid #EAECF0", background: "#F9FAFB" };
 export const td = { fontSize: 14, color: "#344054", padding: "10px 12px", borderBottom: "1px solid #EAECF0", verticalAlign: "top" };
 
-<Meta title="Deal Activation System/Round 2 · Oct 1/Overview" tags={["!dev"]} />
+<Meta title="Archive/DAS early concepts/Round 2 · Oct 1" />
 
 <div style={{ maxWidth: 920 }}>
+
+<Archived href={story("prototypes-deal-activation-system-rounds--docs")} cta="See the rounds">Round 2 as reviewed on 1 October. The current Deal Activation System is Round 6.</Archived>
 
 # Round 2 · October 1
 

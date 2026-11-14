@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { RealtimeDashboard } from "../../../../prototypes/app/v1/screens/reporting/dashboard/realtime";
 
-/** November 13th, 2026 · Reporting · Realtime dashboard — one publisher (prototypes/app/v1, #/realtime). */
+/** Full application · Reporting · Realtime dashboard — one publisher (prototypes/app/v1, #/realtime). */
 const meta = {
-    title: "November 13th, 2026/Reporting/Realtime dashboard",
+    title: "Prototypes/Full application/Reporting/Realtime dashboard",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

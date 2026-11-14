@@ -34,7 +34,7 @@ const ChartFrame = ({ children }: { children: React.ReactNode }) => (
 );
 
 const meta = {
-    title: "Application UI/Radar Charts",
+    title: "Design System/Application UI/Radar Charts",
     parameters: { layout: "padded" },
     tags: ["autodocs"],
 } satisfies Meta;

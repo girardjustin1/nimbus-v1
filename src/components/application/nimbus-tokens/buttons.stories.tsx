@@ -5,7 +5,7 @@ import { CollapseButton, StateAction, UiControlButton } from "../../../../protot
 import { Rule, TokenPage } from "./token-page";
 
 const meta = {
-    title: "Application UI/Nimbus Tokens/Buttons",
+    title: "Design System/Nimbus Tokens/Buttons",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

@@ -3,7 +3,7 @@ import { ReportingApiSettings } from "../../../../prototypes/app/v1/screens/acco
 
 /** Settings · Reporting API — API key and the accounts' reporting endpoints (fictional, api.example.com). */
 const meta = {
-    title: "November 13th, 2026/Settings/Reporting API",
+    title: "Prototypes/Full application/Settings/Reporting API",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

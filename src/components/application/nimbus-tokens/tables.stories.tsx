@@ -3,7 +3,7 @@ import { ListTableExample, ReportTableExample } from "./table-examples";
 import { Rule, TokenPage } from "./token-page";
 
 const meta = {
-    title: "Application UI/Nimbus Tokens/Tables",
+    title: "Design System/Nimbus Tokens/Tables",
     tags: ["autodocs"],
     parameters: {
         layout: "fullscreen",

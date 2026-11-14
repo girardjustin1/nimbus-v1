@@ -14,7 +14,7 @@ import { Select } from "@/components/base/select/select";
  * a channel select, and the advanced `FilterDropdown` popover.
  */
 const meta = {
-    title: "Application UI/Filter Bars",
+    title: "Design System/Application UI/Filter Bars",
     component: FilterBar.Root,
     parameters: { layout: "padded" },
     tags: ["autodocs"],

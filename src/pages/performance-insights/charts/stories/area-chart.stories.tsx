@@ -5,7 +5,7 @@ import { ChartCard, Legend } from "../chart-kit";
 import { colorAt } from "../chart-theme";
 
 /** Area chart — volume over time with a soft gradient; stacked shows the mix. */
-const meta = { title: "Performance Insights/Charts/Area Chart", parameters: { layout: "padded" } } satisfies Meta;
+const meta = { title: "Design System/Chart library/Area Chart", parameters: { layout: "padded" } } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

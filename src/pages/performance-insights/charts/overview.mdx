@@ -10,10 +10,10 @@ export const Table = ({ head, rows }) => (
     </table>
   </div>
 );
-export const S = ({ id, children }) => <a href={`./?path=/story/performance-insights-charts-${id}`} target="_top" style={{ color: "#A94579", fontWeight: 600 }}>{children}</a>;
+export const S = ({ id, children }) => <a href={`./?path=/story/design-system-chart-library-${id}`} target="_top" style={{ color: "#A94579", fontWeight: 600 }}>{children}</a>;
 export const Swatch = ({ c, n }) => <span style={{ display: "inline-flex", alignItems: "center", gap: 6, marginRight: 14, fontSize: 13 }}><span style={{ width: 14, height: 14, borderRadius: 999, background: c, display: "inline-block" }} />{n}</span>;
 
-<Meta title="Performance Insights/Charts/Overview" />
+<Meta title="Design System/Chart library/Overview" />
 
 <div style={{ maxWidth: 920 }}>
 
@@ -24,7 +24,7 @@ family. They're built on **Recharts** (the library Untitled UI uses) with shared
 chrome: the card, legend, change badge and dark tooltip. See them all together in the
 <S id="gallery--dashboard">Gallery</S>.
 
-The vendored versions under **Application UI › Charts** are left as-is, so syncing Untitled
+The vendored versions under **Design System › Application UI › Charts** are left as-is, so syncing Untitled
 UI never overwrites these.
 
 ## Style

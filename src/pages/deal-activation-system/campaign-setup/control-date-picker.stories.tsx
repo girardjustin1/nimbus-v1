@@ -8,7 +8,7 @@ import { Surface, Value } from "./harness";
  * Date picker — dates only. A full-width field opening the design system's calendar layout: typed date and Today above the grid, Cancel and Apply below.
  */
 const meta = {
-    title: "Deal Activation System/Campaign Setup/Controls/Date Picker",
+    title: "Prototypes/Deal Activation System/Campaign Setup/Controls/Date Picker",
 } satisfies Meta;
 
 export default meta;

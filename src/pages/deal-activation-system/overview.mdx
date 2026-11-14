@@ -1,4 +1,6 @@
 import { Meta } from "@storybook/addon-docs/blocks";
+import { Archived } from "../intro/ui";
+import { story } from "../intro/tokens";
 
 export const th = { textAlign: "left", fontSize: 12, fontWeight: 700, color: "#475467", padding: "10px 14px", borderBottom: "1px solid #EAECF0", background: "#F9FAFB" };
 export const td = { fontSize: 14, color: "#344054", padding: "12px 14px", borderBottom: "1px solid #EAECF0", verticalAlign: "top" };
@@ -12,9 +14,11 @@ export const Table = ({ head, rows }) => (
 );
 export const Story = ({ id, children }) => <a href={`./?path=/story/${id}`} target="_top" style={{ color: "#37B6B7", fontWeight: 600 }}>{children}</a>;
 
-<Meta title="Deal Activation System/Overview" tags={["!dev"]} />
+<Meta title="Archive/DAS early concepts/Overview" />
 
 <div style={{ maxWidth: 920 }}>
+
+<Archived href={story("prototypes-deal-activation-system-rounds--docs")} cta="See the rounds">The Round 1 concepts from September. Six review rounds followed; the current Deal Activation System is Round 6.</Archived>
 
 <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: "#1F7F80" }}>September 22, 2026 · Round 1 review</div>
 
@@ -44,18 +48,18 @@ the concept is testing. That note is a review annotation, not product UI.
 Each concept lives in its own folder, with its screens and the components it introduces kept together:
 
 - **Round 1 Concepts:** Campaign Setup (One Page), Targeting, Keyword Library, Manage Campaigns and Reporting, plus a **Components** folder (Keyword Chip, Delivery Bar, Status & Pace, Keyword Fields, Concept Note, Date & Time Picker).
-- **Studio Concept:** a guided, full-screen builder with live estimates and a live ad preview. It has its own <a href="./?path=/docs/deal-activation-system-studio-concept-overview--docs" target="_top" style={{ color: "#3538CD", fontWeight: 600 }}>Overview</a>, **Screens** and **Components** (Ad Preview, Preview Stage, Goal Tiles, Step Rail, Estimate Panel and more).
+- **Studio Concept:** a guided, full-screen builder with live estimates and a live ad preview. It has its own <a href="./?path=/docs/archive-das-studio-concept-overview--docs" target="_top" style={{ color: "#3538CD", fontWeight: 600 }}>Overview</a>, **Screens** and **Components** (Ad Preview, Preview Stage, Goal Tiles, Step Rail, Estimate Panel and more).
 
 ## Round 1 concepts
 
 <Table
   head={["Area", "Concepts", "What it explores"]}
   rows={[
-    [<Story id="deal-activation-system-round-1-concepts-campaign-setup-one-page--ready-to-publish">Campaign Setup (One Page)</Story>, "Ready · With errors · Fallback rule", "The 5-step wizard as one page. A live summary rail replaces the Review step."],
-    [<Story id="deal-activation-system-round-1-concepts-targeting--concept-a-inline-chips">Targeting</Story>, "A · Inline chips — B · Pick from library — C · Audience sentence", "Keyword targeting with ANY/ALL, ad unit type, device language"],
-    [<Story id="deal-activation-system-round-1-concepts-keyword-library--default">Keyword Library</Story>, "Default · Add · Delete in use · Empty", "A new page to create, edit and delete keywords"],
-    [<Story id="deal-activation-system-round-1-concepts-manage-campaigns--concept-a-delivery">Manage Campaigns</Story>, "A · Delivery view — B · Compare", "“How done is my campaign?” Pacing vs flight, deals → campaigns, compare"],
-    [<Story id="deal-activation-system-round-1-concepts-reporting--concept-a-overview">Reporting</Story>, "A · DAS overview — B · Query builder", "DAS vs Open Marketplace clarity, on-the-fly breakdowns, the keyword guardrail"],
+    [<Story id="archive-das-early-concepts-round-1-campaign-setup-one-page--ready-to-publish">Campaign Setup (One Page)</Story>, "Ready · With errors · Fallback rule", "The 5-step wizard as one page. A live summary rail replaces the Review step."],
+    [<Story id="archive-das-early-concepts-round-1-targeting--concept-a-inline-chips">Targeting</Story>, "A · Inline chips — B · Pick from library — C · Audience sentence", "Keyword targeting with ANY/ALL, ad unit type, device language"],
+    [<Story id="archive-das-early-concepts-round-1-keyword-library--default">Keyword Library</Story>, "Default · Add · Delete in use · Empty", "A new page to create, edit and delete keywords"],
+    [<Story id="archive-das-early-concepts-round-1-manage-campaigns--concept-a-delivery">Manage Campaigns</Story>, "A · Delivery view — B · Compare", "“How done is my campaign?” Pacing vs flight, deals → campaigns, compare"],
+    [<Story id="archive-das-early-concepts-round-1-reporting--concept-a-overview">Reporting</Story>, "A · DAS overview — B · Query builder", "DAS vs Open Marketplace clarity, on-the-fly breakdowns, the keyword guardrail"],
   ]}
 />
 

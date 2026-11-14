@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 /**
- * Prototype 3's type rules (./type-rules, documented in Storybook › Audits › Typography
+ * Prototype 3's type rules (./type-rules, documented in Storybook › Research › Typography
  * Rules): nothing under 15px. This keeps the classes that would break it out of v3.
  */
 const dir = __dirname;

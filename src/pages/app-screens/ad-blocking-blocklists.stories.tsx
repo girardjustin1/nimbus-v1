@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { AdBlockingBlocklistsScreen } from "./ad-blocking-blocklists";
 
 const meta = {
-    title: "App Screens/Ad Blocking – Blocklists",
+    title: "Archive/App Screens/Ad Blocking – Blocklists",
     component: AdBlockingBlocklistsScreen,
     tags: ["autodocs"],
     parameters: {

@@ -4,7 +4,7 @@ import { ACTIVE_DEMAND_ONE } from "../../../../prototypes/app/v1/screens/demand/
 
 /** Demand → manage active demand: integrated partners and Third-Party Viewability. */
 const meta = {
-    title: "November 13th, 2026/Demand/Manage Active Demand",
+    title: "Prototypes/Full application/Demand/Manage Active Demand",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

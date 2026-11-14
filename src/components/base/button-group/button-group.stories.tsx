@@ -8,7 +8,7 @@ import { ButtonGroup, ButtonGroupItem } from "@/components/base/button-group/but
  * The Nimbus theme styles the selected/hover states globally.
  */
 const meta = {
-    title: "Base Components/Button Group",
+    title: "Design System/Base Components/Button Group",
     component: ButtonGroup,
     parameters: { layout: "centered" },
     tags: ["autodocs"],
