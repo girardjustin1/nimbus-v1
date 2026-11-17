@@ -16,6 +16,7 @@
         "test": "vitest run",
         "test:unit": "vitest run --project=unit",
         "test:storybook": "vitest run --project=storybook",
+        "monday:export": "node scripts/monday-export.mjs",
         "validate": "npm run typecheck && npm run lint && npm run test && npm run build-storybook && npm run proto:build"
     },
     "dependencies": {

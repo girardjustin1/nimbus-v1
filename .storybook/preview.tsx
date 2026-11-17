@@ -8,8 +8,9 @@ const preview: Preview = {
         options: {
             storySort: {
                 method: "alphabetical",
-                // Six folders, top to bottom (14 Nov cleanup):
+                // Seven folders, top to bottom (14 Nov cleanup; Transition added 17 Nov):
                 //   Start Here     what this is, the rules, the plan, how to review
+                //   Transition     product's lists, round by round, until Storybook is final
                 //   Prototypes     the screens: the full application, then DAS
                 //   Design System  what gets ported: styles, tokens, components
                 //   Reviews        one folder per review, newest first, same pages in each
@@ -19,6 +20,8 @@ const preview: Preview = {
                 order: [
                     "Start Here",
                     ["Overview", "Style guide", "Process & roadmap", "How to review"],
+                    "Transition",
+                    ["Overview", "*"],
                     "Prototypes",
                     [
                         "Full application",

@@ -124,19 +124,22 @@ export const Folders = () => (
         <MiniCard eyebrow="1 · You are here" title="Start Here" tone="warm">
             This page, the style guide, the process and roadmap, and how to review.
         </MiniCard>
-        <MiniCard eyebrow="2" title="Prototypes" href={story("prototypes-full-application-screen-index--docs")} cta="Open the screen index" tone="warm">
+        <MiniCard eyebrow="2" title="Transition" href={story("transition-overview--docs")} cta="See the current round" tone="warm">
+            Product's lists of changes, round by round, and who owes what until Storybook is final.
+        </MiniCard>
+        <MiniCard eyebrow="3" title="Prototypes" href={story("prototypes-full-application-screen-index--docs")} cta="Open the screen index" tone="warm">
             The full application, one story per state, and the Deal Activation System's six rounds.
         </MiniCard>
-        <MiniCard eyebrow="3" title="Design System" href={story("design-system-nimbus-tokens-overview--docs")} cta="See the tokens" tone="warm">
+        <MiniCard eyebrow="4" title="Design System" href={story("design-system-nimbus-tokens-overview--docs")} cta="See the tokens" tone="warm">
             Styles, Nimbus tokens, base components, application UI and the chart library.
         </MiniCard>
-        <MiniCard eyebrow="4" title="Reviews" href={story("reviews-nov-13-·-full-application-summary--docs")} cta="Open the latest" tone="warm">
+        <MiniCard eyebrow="5" title="Reviews" href={story("reviews-nov-13-·-full-application-summary--docs")} cta="Open the latest" tone="warm">
             Every review with product, newest first. Each opens on a summary: decisions and what was left open.
         </MiniCard>
-        <MiniCard eyebrow="5" title="Research" href={story("research-typography-audit--docs")} cta="Open the type audit" tone="warm">
+        <MiniCard eyebrow="6" title="Research" href={story("research-typography-audit--docs")} cta="Open the type audit" tone="warm">
             The audits of the live dashboard behind the rules, and engineering's constraints.
         </MiniCard>
-        <MiniCard eyebrow="6" title="Archive" href={story("archive-about-the-archive--docs")} cta="What's in the archive" tone="warm">
+        <MiniCard eyebrow="7" title="Archive" href={story("archive-about-the-archive--docs")} cta="What's in the archive" tone="warm">
             Earlier concepts and screens, kept viewable, each with a note on what replaced it.
         </MiniCard>
     </CardGrid>

@@ -127,11 +127,12 @@ starts from that screen's sample state.
 
 ## 📚 What's in Storybook
 
-Six folders, in the order you'd read them.
+Seven folders, in the order you'd read them.
 
 | Folder | What's inside |
 | --- | --- |
 | **Start Here** | Overview · Style guide · Process & roadmap · How to review |
+| **Transition** | How the reviewed styles reach the dashboard: *Overview* (the loop, who owes what, the rules) and one page per round of product's changes. The list lives in `src/pages/transition/data.ts`; `npm run monday:export` writes the file that is imported into the monday.com board |
 | **Prototypes** | **Full application**: a screen index, then one folder per page with a story per state (Reporting, Demand, Deal Activation System, AdOps, SDK & Docs, Finance, Settings). **Deal Activation System**: the six rounds, the Campaign Setup spec, and every component on the setup page |
 | **Design System** | Styles · Nimbus Tokens · Base Components · Application UI · Chart library · Imagery · Account Login |
 | **Reviews** | One folder per review with product, newest first, named `<date> · <topic>`. Each has the same pages: **Summary** (what was reviewed, decisions, what was left open), **Walkthrough** where there is one, **Changes** (before and after) and **Concepts** where options were compared |
