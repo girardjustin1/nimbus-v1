@@ -2,6 +2,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { BODY, INK, LINE, MUTED, WARM, proto, story } from "../intro/tokens";
 import { Callout, Chip, Cta, CtaRow, PageHeader } from "../intro/ui";
 import { ITEMS, type Kind } from "./data";
+import { NAV_OFFSET } from "./round-1/round-pages";
 import { type RoundOneStyle, STAGING, STYLES, TOKENS } from "./round-1-styles";
 
 /**
@@ -494,7 +495,7 @@ const StyleSection = ({ s }: { s: RoundOneStyle }) => {
                 margin: "16px 0",
                 background: "#FFFFFF",
                 fontFamily: FONT,
-                scrollMarginTop: 16,
+                scrollMarginTop: NAV_OFFSET,
             }}
         >
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", gap: "4px 12px" }}>
@@ -548,16 +549,6 @@ export const StyleList = ({ kind }: { kind: Exclude<Kind, "Step"> }) => {
 };
 
 /** Jump links to every item. */
-export const ItemIndex = () => (
-    <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 16px", margin: "4px 0 16px", fontFamily: FONT }}>
-        {STYLES.map((s) => (
-            <a key={s.id} href={`#${s.id}`} style={{ fontSize: 15, fontWeight: 700, color: INK, textDecoration: "none" }}>
-                {s.id}
-            </a>
-        ))}
-    </div>
-);
-
 /* ------------------------------------------------------------------ Tokens --- */
 
 export const TokenList = () => (

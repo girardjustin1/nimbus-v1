@@ -50,8 +50,9 @@ for (const version of ["v1", "v2"]) {
     for (const shot of SHOTS) {
         await page.goto(`${BASE}/${version}/#/${shot.screen}`, { waitUntil: "networkidle" });
         await page.waitForTimeout(1200);
-        // The prototype's own toolbar is chrome, not product: hide it so it never sits over a frame.
-        await page.addStyleTag({ content: "div.sticky.top-0.z-50 { display: none !important; }" });
+        // The prototype's own toolbar is chrome, not product, and the sidebar's collapse button hangs over
+        // the edge of the page: hide both so neither sits over a frame.
+        await page.addStyleTag({ content: "div.sticky.top-0.z-50, button[aria-label=\"Collapse navigation\"] { display: none !important; }" });
         const handle = await page.evaluateHandle(shot.find);
         const el = handle.asElement();
         if (!el) throw new Error(`${version} ${shot.id}-${shot.n}: element not found on #/${shot.screen}`);

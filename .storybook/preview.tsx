@@ -2,6 +2,10 @@ import type { Preview } from "@storybook/react-vite";
 // Import the Untitled UI + Nimbus design system styles (Tailwind + theme tokens)
 // so components render with the correct teal brand theme inside Storybook.
 import "../src/styles/globals.css";
+import { installHashLinks } from "./hash-links";
+
+// Anchor links on a docs page scroll to their target (see ./hash-links.ts).
+installHashLinks();
 
 const preview: Preview = {
     parameters: {
