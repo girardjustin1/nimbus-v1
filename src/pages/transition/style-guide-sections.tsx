@@ -63,8 +63,9 @@ export const FloorNote = () => (
 export const SourceNote = () => (
     <Text>
         Staging values are the browser's computed style of each element and the stylesheet rule that sets it. Engineering confirmed staging carries the current
-        production version, except for DAS. v1 values were measured in the v1 prototype the same day. In the v2 column, bold marks a value that differs from
-        staging.
+        production version. The first read, on Nov 18, had engineering's DAS port in place of production DAS. After that day's release put production DAS
+        back, staging was read again and every value held. v1 values were measured in the v1 prototype the same day. In the v2 column, bold marks a value that
+        differs from staging.
     </Text>
 );
 

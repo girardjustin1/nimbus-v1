@@ -23,6 +23,8 @@ import {
     SortTh,
     TABLE,
     TEAL_DARK,
+    TOTAL_CELL,
+    TOTAL_ROW,
     tableHead,
 } from "../../nimbus-ui";
 import { dayLabel } from "../../sample-data";
@@ -285,6 +287,22 @@ export const NimbusPerformance = ({ empty = false }: { empty?: boolean }) => {
                                         </tr>
                                     ))}
                                 </tbody>
+                                {/* R1-08: staging added this totals row in the Nov 18 release, in the shared total style. */}
+                                <tfoot style={TOTAL_ROW}>
+                                    <tr>
+                                        <td className={cx(TABLE.report.td, "uppercase")} style={TOTAL_CELL}>
+                                            Total
+                                        </td>
+                                        {ordered.flatMap((m) => [
+                                            <td key={`n:${m}`} className={cx(TABLE.report.td, "text-right tabular-nums")} style={TOTAL_CELL}>
+                                                {formatBench(m, benchAverage(points, "nimbus", m))}
+                                            </td>,
+                                            <td key={`m:${m}`} className={cx(TABLE.report.td, "text-right tabular-nums")} style={TOTAL_CELL}>
+                                                {formatBench(m, benchAverage(points, "mine", m))}
+                                            </td>,
+                                        ])}
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </>

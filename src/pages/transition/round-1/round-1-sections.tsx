@@ -2,13 +2,13 @@ import type { CSSProperties, ReactNode } from "react";
 import { BODY, INK, LINE, MUTED, PINK_DARK, PINK_SOFT, TEAL_DARK, TEAL_SOFT, WARM, proto, story } from "../../intro/tokens";
 import { CardGrid, Chip, Cta, CtaRow, MiniCard, PageHeader } from "../../intro/ui";
 import { BOARD, ITEMS, type TransitionItem } from "../data";
-import { FINDINGS, type Finding, STYLES } from "../round-1-styles";
+import { FINDINGS, type Finding, RECHECK, STYLES } from "../round-1-styles";
 
 /**
  * Storybook › Transition › Round 1 › Summary and › Before and after.
  *
  * Summary: every finding from the Nov 18 staging capture, one card per R1 item, with what
- * v2 does and what is still open. Before and after: the same element of the full
+ * v2 does and what is still open, and what the second read after that day's release found. Before and after: the same element of the full
  * application in v1 (before Round 1) and v2 (staging's styles), side by side.
  *
  * Everything is read from ../data.ts and ../round-1-styles.ts. The pictures come from
@@ -97,8 +97,8 @@ export const SummaryHeader = () => (
     <PageHeader
         eyebrow="Transition · Round 1 · Summary"
         title="What staging showed, item by item, and what v2 does."
-        lead="Product's Round 1 list of Nov 17 has 16 items. On Nov 18 every dashboard page on staging was read: the browser's computed styles and the stylesheet behind them. The full application was forked to v2 and given those styles. v1 stays as it was reviewed."
-        chips={[`${CHANGES.length} items`, `${OPEN.length} open questions`, `${below} under 15px in v2`, "Read Nov 18, 2026"]}
+        lead="Product's Round 1 list of Nov 17 has 16 items. On Nov 18 every dashboard page on staging was read: the browser's computed styles and the stylesheet behind them. The full application was forked to v2 and given those styles. v1 stays as it was reviewed. After that day's release, staging was read again and every value held."
+        chips={[`${CHANGES.length} items`, `${OPEN.length} open questions`, `${below} under 15px in v2`, "Read Nov 18, 2026", "Re-checked after the Nov 18 release"]}
         actions={
             <CtaRow>
                 <Cta kind="primary" href={story(PAGES.beforeAfter)}>
@@ -183,6 +183,31 @@ export const OpenQuestions = () => (
             </div>
         ))}
     </div>
+);
+
+/** What the second read, after the Nov 18 release, found. */
+export const Recheck = () => (
+    <>
+        <Text>
+            Staging was read a second time after the Nov 18 release: every page, its computed styles and its stylesheet, compared element by element with the
+            first read.
+        </Text>
+        <div style={{ display: "grid", gap: 10 }}>
+            {RECHECK.map((r) => (
+                <Card key={r.change}>
+                    {r.id && (
+                        <a href={`#${r.id}`} target="_self" style={{ fontSize: 15, fontWeight: 700, color: MUTED, textDecoration: "none" }}>
+                            {r.id}
+                        </a>
+                    )}
+                    <Line label="Release">{r.change}</Line>
+                    <Line label="For Round 1" color={TEAL_DARK}>
+                        {r.effect}
+                    </Line>
+                </Card>
+            ))}
+        </div>
+    </>
 );
 
 /** A jump list of the 16 items. */

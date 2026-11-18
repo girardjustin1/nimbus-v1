@@ -157,7 +157,7 @@ export const STEPS: TransitionItem[] = [
         "1",
         "Engineering",
         "Re-stage the current production version",
-        "What is live in production today, before any changes, goes back on staging so the current styles can be read from it. Engineering confirmed on Nov 18 that staging already carries it, except DAS.",
+        "What is live in production today, before any changes, goes back on staging so the current styles can be read from it. Engineering confirmed on Nov 18 that staging already carries it. That day's release put production DAS back too, so staging now matches production everywhere.",
         "Re-stage current production",
         "Done",
     ),
