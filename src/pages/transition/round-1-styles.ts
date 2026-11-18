@@ -12,6 +12,9 @@
  * confirmed staging carries the current production version except for DAS. "v1" values
  * were measured in prototypes/app/v1 the same day.
  *
+ * Read again after the release later on Nov 18, which put production's DAS back on staging:
+ * every value below held. What the release did change is in RECHECK.
+ *
  * Values only: no figures, account names or screenshots from staging (this repo is public).
  */
 import type { CSSProperties } from "react";
@@ -203,10 +206,10 @@ export const STYLES: RoundOneStyle[] = [
     {
         id: "R1-07",
         element: "Section labels (\"Campaign Name\")",
-        page: "Deal activation setup (DAS as ported to staging on Nov 12)",
+        page: "Deal activation setup",
         css: "h6.bold { font-size: 20px; font-weight: 700; letter-spacing: -0.13px; line-height: 36px; }",
         measures: [m("Label", "20px, weight 700, −0.13px", "26px, weight 800", "20px, weight 700, −0.13px")],
-        note: "Read from the DAS build on staging, which is engineering's port, not production.",
+        note: "First read from engineering's DAS port, then again from production DAS after the Nov 18 release: the same value.",
     },
     {
         id: "R1-08",
@@ -339,14 +342,13 @@ export const FINDINGS: Finding[] = [
     },
     {
         id: "R1-07",
-        found: "Form section labels (\"Campaign Name\") are 20px, weight 700, -0.13px. This was read from the DAS build on staging, which is engineering's port, not production.",
+        found: "Form section labels (\"Campaign Name\") are 20px, weight 700, -0.13px. First read from engineering's DAS port, then confirmed on production DAS after the Nov 18 release.",
         v2: "20px, weight 700, -0.13px on every form section title. v1 used 26px at weight 800.",
-        open: "Production DAS can't be read yet, so this value is the port's.",
     },
     {
         id: "R1-08",
         found: "The totals row is lighter teal #039C9E at 14px, weight 600, under a 3px #DDDDDD rule. Read on Realtime and Buyer breakdown.",
-        v2: "Staging's totals row on every report table (Realtime, Buyer breakdown, Full performance, Discrepancy reports, n+ payments).",
+        v2: "Staging's totals row on every report table (Realtime, Buyer breakdown, Full performance, Discrepancy reports, n+ payments, and Nimbus benchmarks since the Nov 18 release).",
         open: "Performance Insights shows a totals row only after a saved query runs, so it was not read there.",
     },
     {
@@ -390,5 +392,47 @@ export const FINDINGS: Finding[] = [
         found: "Staging has no hover on either the Deal options or the Auction Rules options. v1 had no hover on Deal and a grey #FAFAFA on the rule cards.",
         v2: "One hover for both, the warm #FCFAF9 staging uses for a hovered dropdown option.",
         open: "Staging had no hover to copy, so the tint is a choice for product to confirm.",
+    },
+];
+
+/* ----------------------------------------------------------------- Re-check --- */
+
+export interface RecheckNote {
+    /** What the release changed on staging. */
+    change: string;
+    /** What that means for Round 1. */
+    effect: string;
+    /** The Round 1 item it touches, if any. */
+    id?: string;
+}
+
+/**
+ * Staging read a second time on Nov 18, after that day's release: every page, its computed
+ * styles and its stylesheet, compared element by element with the first read.
+ * Rendered on Round 1 › Summary.
+ */
+export const RECHECK: RecheckNote[] = [
+    {
+        change: "Engineering's DAS port is off staging. Production's DAS is back: the one-page setup form and the campaigns table.",
+        effect: "Staging now matches production everywhere. Section labels and form labels read the same on production DAS, so R1-07's open question is closed.",
+        id: "R1-07",
+    },
+    {
+        change: "Production DAS still has no hover on the Deal options or the Auction Rules options.",
+        effect: "R1-16 stays as it is, and its question for product stays open.",
+        id: "R1-16",
+    },
+    {
+        change: "Nimbus benchmarks now has a totals row, in the same style as every other report table.",
+        effect: "v2's Nimbus benchmarks table gets the same totals row.",
+        id: "R1-08",
+    },
+    {
+        change: "Passkeys were added to the login page and to Profile. The sidebar lost its manage keywords link.",
+        effect: "Not part of Round 1. Nothing to change.",
+    },
+    {
+        change: "Every other Round 1 element: the staff bar, account badge, key metrics, realtime blocks, small labels, tables, buttons, date bar, checkboxes and filters.",
+        effect: "No change. Every value read the same as the first time.",
     },
 ];
