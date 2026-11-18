@@ -1,0 +1,43 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { CardGrid, MiniCard, Page, PageHeader } from "../../../intro/ui";
+import { story } from "../../../intro/tokens";
+
+<Meta title="Transition/Round 1/Components/About" />
+
+<Page>
+
+<PageHeader
+    eyebrow="Transition · Round 1"
+    title="Components"
+    lead="Each Round 1 change on the piece it belongs to. Every group has a Before story (v1, the Nov 13 style guide), an After story (v2, staging's styles) and a Side by side story with both."
+    chips={["8 groups", "R1-01 to R1-16", "Sample data"]}
+/>
+
+<CardGrid min={280}>
+    <MiniCard eyebrow="R1-01 · R1-02" title="Staff bar and page header" href={story("transition-round-1-components-staff-bar-and-page-header--side-by-side")} cta="Side by side">
+        The staff bar, the banner and the page header with the account name and badge.
+    </MiniCard>
+    <MiniCard eyebrow="R1-03 · R1-04" title="Key metrics card" href={story("transition-round-1-components-key-metrics-card--side-by-side")} cta="Side by side">
+        Main numbers, card titles, Today and High lines, and the tab labels.
+    </MiniCard>
+    <MiniCard eyebrow="R1-04" title="Small upper case labels" href={story("transition-round-1-components-small-upper-case-labels--side-by-side")} cta="Side by side">
+        The start and end date labels, and a form label.
+    </MiniCard>
+    <MiniCard eyebrow="R1-05 · R1-06" title="Realtime metric block" href={story("transition-round-1-components-realtime-metric-block--side-by-side")} cta="Side by side">
+        The label, the main number and the platform lines over the realtime chart.
+    </MiniCard>
+    <MiniCard eyebrow="R1-09 · R1-10" title="Buttons" href={story("transition-round-1-components-buttons--side-by-side")} cta="Side by side">
+        The pink action button, the UI control button and the design-system button.
+    </MiniCard>
+    <MiniCard eyebrow="R1-11 · R1-12 · R1-13" title="Report controls" href={story("transition-round-1-components-report-controls--side-by-side")} cta="Side by side">
+        The date row, the check box row and the totals, platform and filters row.
+    </MiniCard>
+    <MiniCard eyebrow="R1-08 · R1-14 · R1-15" title="Report table" href={story("transition-round-1-components-report-table--side-by-side")} cta="Side by side">
+        Text and number columns, their alignment, tabular figures and the totals row.
+    </MiniCard>
+    <MiniCard eyebrow="R1-07 · R1-16" title="Section labels and form options" href={story("transition-round-1-components-section-labels-and-form-options--side-by-side")} cta="Side by side">
+        A section label with a field, and the auction rule cards with their hover.
+    </MiniCard>
+</CardGrid>
+
+</Page>

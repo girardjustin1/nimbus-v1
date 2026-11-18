@@ -8,6 +8,8 @@
 // and preview-head.html). When a page here is renamed again, point its entry at the new id.
 (function () {
     var MOVED = {
+    // 18 Nov 2026: Round 1 became a folder; its list of changes moved to Round 1 › Changes.
+    "transition-round-1--docs": "transition-round-1-changes--docs",
     "account-login-forgot-password--default": "design-system-account-login-forgot-password--default",
     "account-login-forgot-password--docs": "design-system-account-login-forgot-password--docs",
     "account-login-log-in--default": "design-system-account-login-log-in--default",

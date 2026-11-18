@@ -37,7 +37,7 @@ export interface TransitionItem {
     area: string;
     owner: Owner;
     status: Status;
-    /** Prototype screens where the item shows: [label, screen id in app/v1]. */
+    /** Prototype screens where the item shows: [label, screen id in the full application (v2 for Round 1)]. */
     where: [string, string][];
     /** A step that gets its own subitem on the board, under this short name. (Changes reach the board as their area's subitem.) */
     board?: string;
@@ -57,7 +57,7 @@ export const ROUNDS: Round[] = [
         id: "R1",
         name: "Round 1",
         date: "Nov 17, 2026",
-        page: "transition-round-1--docs",
+        page: "transition-round-1-changes--docs",
         summary: "Thirteen styles go back to the current dashboard's, and three adjustments apply everywhere.",
     },
 ];
@@ -73,7 +73,8 @@ const change =
         request,
         area,
         owner: "Design",
-        status: "To do",
+        // Built in the full application v2 on Nov 18, 2026, from staging's styles (./round-1-styles.ts).
+        status: "Ready for review",
         where,
     });
 const back = change("Back to current style");
@@ -137,7 +138,7 @@ export const ITEMS: TransitionItem[] = [
     ),
 ];
 
-const step = (n: string, owner: Owner, title: string, request: string, board?: string): TransitionItem => ({
+const step = (n: string, owner: Owner, title: string, request: string, board?: string, status: Status = "To do"): TransitionItem => ({
     id: `R1-S${n}`,
     round: R1,
     kind: "Step",
@@ -145,7 +146,7 @@ const step = (n: string, owner: Owner, title: string, request: string, board?: s
     request,
     area: "Team to-do",
     owner,
-    status: "To do",
+    status,
     where: [],
     board,
 });
@@ -156,16 +157,26 @@ export const STEPS: TransitionItem[] = [
         "1",
         "Engineering",
         "Re-stage the current production version",
-        "What is live in production today, before any changes, goes back on staging so the current styles can be read from it.",
+        "What is live in production today, before any changes, goes back on staging so the current styles can be read from it. Engineering confirmed on Nov 18 that staging already carries it, except DAS.",
         "Re-stage current production",
+        "Done",
     ),
     step(
         "2",
         "Design",
         "Import the current styles from staging",
-        "For each item going back, record the current style from the re-staged version on the Round 1 page, next to the prototype's.",
+        "For each item going back, record the current style from staging next to the prototype's. Read on Nov 18: Round 1 › Style guide.",
+        undefined,
+        "Done",
     ),
-    step("3", "Design", "Make the Round 1 changes in the prototype", "Every item on the list, in the full application and in the tokens behind it."),
+    step(
+        "3",
+        "Design",
+        "Make the Round 1 changes in the prototype",
+        "Every item on the list, in the full application v2 and in the tokens behind it. v1 stays as it was reviewed.",
+        undefined,
+        "Done",
+    ),
     step("4", "Design", "Tell product Round 1 is ready", "Set Round 1 to ready for review on the board and send the Round 1 link."),
     step("5", "Product", "Review Round 1", "Look at each item in the prototype and say which are approved and which need another pass.", "Review"),
     step("6", "Engineering", "Stage the Round 1 changes", "Once design's changes are in, the same changes go to staging."),
@@ -177,5 +188,6 @@ export const ALL = [...ITEMS, ...STEPS];
 /** The areas of a round, in list order: the subitems of the round's item on the board. */
 export const areasOf = (round: string) => [...new Set(ITEMS.filter((i) => i.round === round).map((i) => i.area))];
 
-export const protoUrl = (screen: string) => `${SITE}app/v1/#/${screen}`;
+/** Round 1 is built in v2 of the full application. */
+export const protoUrl = (screen: string) => `${SITE}app/v2/#/${screen}`;
 export const pageUrl = (docsId: string) => `${SITE}?path=/docs/${docsId}`;

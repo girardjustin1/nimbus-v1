@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="15px" viewBox="0 0 16 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>AR</title>
+    <g id="Design-Update" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Active-State---Line-Chart" transform="translate(-25.000000, -160.000000)">
+            <g id="AR" transform="translate(25.000000, 160.000000)">
+                <circle id="Oval" fill="#AAAAAA" cx="1.5" cy="8.5" r="1.5"></circle>
+                <circle id="Oval-Copy" fill="#AAAAAA" cx="5.5" cy="1.5" r="1.5"></circle>
+                <circle id="Oval-Copy-2" fill="#AAAAAA" cx="9.5" cy="13.5" r="1.5"></circle>
+                <circle id="Oval-Copy-3" fill="#AAAAAA" cx="14.5" cy="5.5" r="1.5"></circle>
+                <polyline id="Path-2" stroke="#AAAAAA" points="1.5 8.5 5.5 1.5 9.64794409 13.5 14.5 5.5"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>
