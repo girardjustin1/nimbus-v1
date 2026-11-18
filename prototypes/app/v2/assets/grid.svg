@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="16px" viewBox="0 0 18 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Shape</title>
+    <g id="Design-Update" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Use-this-one" transform="translate(-24, -123)" fill="#AAAAAA" fill-rule="nonzero" stroke="#979797">
+            <g id="key-metrics-icon" transform="translate(24.6484, 122.9993)">
+                <path d="M15.7240714,7.5 L16,15.1988636 L9.77464286,15.5 L9.5,7.83181818 L15.7240714,7.5 Z M6.72407143,11.5 L7,15.1988636 L0.774642857,15.5 L0.5,11.8318182 L6.72407143,11.5 Z M6.72407143,0.5 L7,8.19886364 L0.774642857,8.5 L0.5,0.831818182 L6.72407143,0.5 Z M15.7240714,0.5 L16,4.19886364 L9.77464286,4.5 L9.5,0.831818182 L15.7240714,0.5 Z" id="Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>

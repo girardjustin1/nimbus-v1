@@ -7,7 +7,7 @@
         var q = new URLSearchParams(window.location.search);
         var path = q.get("path");
         var id = path ? path.split("/")[2] : q.get("id");
-        if (id && id.indexOf("--") > 0 && !/^(start-here|transition|prototypes|design-system|reviews|research|archive)-/.test(id)) {
+        if (id && id.indexOf("--") > 0 && (!/^(start-here|transition|prototypes|design-system|reviews|research|archive)-/.test(id) || id === "transition-round-1--docs")) {
             document.write('<script src="./legacy-redirects.js"><\/script>');
         }
     })();

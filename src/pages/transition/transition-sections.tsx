@@ -11,6 +11,9 @@ import { BOARD, ITEMS, type Kind, type Owner, ROUNDS, STEPS, type Status, type T
 
 const FONT = '"proxima-nova", "Proxima Nova", system-ui, sans-serif';
 const APP = "app/v1";
+const APP_V2 = "app/v2";
+/** Storybook › Transition › Round 1 › Style guide: the current style of each item, with v1 and v2. */
+const STYLE_GUIDE = "transition-round-1-style-guide--docs";
 
 /* -------------------------------------------------------------------- Text --- */
 
@@ -250,13 +253,14 @@ export const RoundHeader = ({ round }: { round: string }) => {
             chips={[`${count("Back to current style")} back to current style`, `${count("Adjustment")} adjustments`, ...tally(items)]}
             actions={
                 <CtaRow>
-                    <Cta kind="primary" href={proto(APP, "key-metrics")}>
-                        Open the full application
+                    <Cta kind="primary" href={proto(APP_V2, "realtime")}>
+                        Open v2, with Round 1
                     </Cta>
-                    <Cta kind="secondary" href={BOARD}>
-                        The monday.com board
+                    <Cta kind="secondary" href={story(STYLE_GUIDE)}>
+                        Current styles, item by item
                     </Cta>
-                    <Cta href={story("transition-overview--docs")}>How the transition works</Cta>
+                    <Cta href={proto(APP, "realtime")}>v1, for comparison</Cta>
+                    <Cta href={BOARD}>The monday.com board</Cta>
                 </CtaRow>
             }
         />
@@ -327,10 +331,11 @@ export const ItemTable = ({ round, kind }: { round: string; kind: Exclude<Kind, 
                                 <td style={{ ...TD, minWidth: 190 }}>
                                     <div style={{ display: "grid", gap: 2 }}>
                                         {i.where.map(([label, screen]) => (
-                                            <Cta key={screen} href={proto(APP, screen)}>
+                                            <Cta key={screen} href={proto(APP_V2, screen)}>
                                                 {label}
                                             </Cta>
                                         ))}
+                                        <Cta href={`${story(STYLE_GUIDE)}#${i.id}`}>Current style</Cta>
                                     </div>
                                 </td>
                                 <td style={{ ...TD, whiteSpace: "nowrap" }}>{i.area}</td>
