@@ -1,6 +1,9 @@
 import type { CSSProperties, ReactNode } from "react";
 import { BODY, INK, LINE, MUTED, PINK_DARK, PINK_SOFT, TEAL_DARK, TEAL_SOFT, WARM, proto, story } from "../intro/tokens";
-import { Callout, CardGrid, Chip, Cta, CtaRow, Eyebrow, MiniCard, More, PageHeader, Points, Steps } from "../intro/ui";
+import { Callout, CardGrid, Chip, Cta, CtaRow, Eyebrow, Hero, MiniCard, More, PageHeader, Points, type StepItem, Steps } from "../intro/ui";
+import stepsArt from "./art/hero-steps.jpg";
+import screenV1 from "./art/screen-v1.jpg";
+import screenV2 from "./art/screen-v2.jpg";
 import { BOARD, ITEMS, type Kind, type Owner, ROUNDS, STEPS, type Status, type TransitionItem } from "./data";
 
 /**
@@ -61,63 +64,107 @@ const tally = (items: TransitionItem[]) => {
 
 /* ---------------------------------------------------------------- Overview --- */
 
+/** A section heading at weight 800 (an MDX `##` renders at 400). */
+export const Heading = ({ children, id }: { children: ReactNode; id?: string }) => (
+    <h2
+        id={id}
+        className="sb-unstyled"
+        style={{
+            fontFamily: FONT,
+            fontSize: 26,
+            fontWeight: 800,
+            lineHeight: 1.25,
+            color: INK,
+            margin: "40px 0 10px",
+            paddingBottom: 8,
+            borderBottom: `1px solid ${LINE}`,
+        }}
+    >
+        {children}
+    </h2>
+);
+
+const CURRENT = ROUNDS[ROUNDS.length - 1];
+
 export const TransitionHeader = () => (
-    <PageHeader
+    <Hero
+        art={stepsArt}
         eyebrow="Transition"
-        title="From the reviewed prototype to the dashboard, one list at a time."
+        title="One list at a time, from prototype to dashboard."
         lead="Product reviews the prototype against the current dashboard and sends a short list. Design makes those changes here. Product looks again. When a list comes back with nothing on it, engineering ports."
         chips={[`${ROUNDS.length} round so far`, `${ITEMS.length} changes`, ...tally(ITEMS)]}
         actions={
             <CtaRow>
-                <Cta kind="primary" href={story(ROUNDS[ROUNDS.length - 1].page)}>
+                <Cta kind="primary" href={story(CURRENT.page)}>
                     Open the current round
                 </Cta>
                 <Cta kind="secondary" href={BOARD}>
                     The monday.com board
                 </Cta>
-                <Cta href={story("start-here-process-roadmap--docs")}>The four-step process</Cta>
             </CtaRow>
         }
+        shots={[
+            { src: screenV1, label: "Before Round 1 · v1", href: proto(APP, "realtime") },
+            { src: screenV2, label: "With Round 1 · v2", href: proto(APP_V2, "realtime") },
+        ]}
+        caption="The realtime dashboard in the full application, before and after the first list. Sample data."
     />
 );
 
-export const Loop = () => (
-    <>
-        <Text>This is step 1 of the four-step process, “Finish Storybook”, broken into rounds.</Text>
-        <Steps
-            items={[
-                {
-                    label: "1",
-                    state: "done",
-                    title: "Product sends a list",
-                    body: "A short list from comparing the prototype with the current dashboard. Small rounds, not one sweep.",
-                    meta: "Product",
-                },
-                {
-                    label: "2",
-                    state: "now",
-                    title: "Design changes the prototype",
-                    body: "Each item is changed in the full application and in the tokens behind it, then marked Ready for review.",
-                    meta: "Design",
-                },
-                {
-                    label: "3",
-                    state: "next",
-                    title: "Product reviews",
-                    body: "Each item is looked at in the prototype and marked Approved or Changes requested.",
-                    meta: "Product",
-                },
-                {
-                    label: "4",
-                    state: "next",
-                    title: "Next list, or port",
-                    body: "Another list starts the next round. An empty one means Storybook is final and the port begins.",
-                    meta: "Product, then engineering",
-                },
-            ]}
-        />
-    </>
-);
+/**
+ * Where the current round is in the loop, read from its items: still being changed (2),
+ * waiting for product (3), or all approved (4).
+ */
+const loopStep = () => {
+    const items = ITEMS.filter((i) => i.round === CURRENT.name);
+    if (items.some((i) => ["To do", "In design", "Changes requested"].includes(i.status))) return 2;
+    if (items.some((i) => i.status === "Ready for review")) return 3;
+    return 4;
+};
+
+export const Loop = () => {
+    const now = loopStep();
+    const state = (n: number): StepItem["state"] => (n < now ? "done" : n === now ? "now" : "next");
+    return (
+        <>
+            <Text>
+                This is step 1 of the <a href={story("start-here-process-roadmap--docs")} target="_top" style={{ color: PINK_DARK, fontWeight: 700, textDecoration: "none" }}>four-step process</a>, “Finish Storybook”, broken into rounds. {CURRENT.name} is at step {now}.
+            </Text>
+            <Steps
+                items={[
+                    {
+                        label: "1",
+                        state: state(1),
+                        title: "Product sends a list",
+                        body: "A short list from comparing the prototype with the current dashboard. Small rounds, not one sweep.",
+                        meta: "Product",
+                    },
+                    {
+                        label: "2",
+                        state: state(2),
+                        title: "Design changes the prototype",
+                        body: "Each item is changed in the full application and in the tokens behind it, then marked Ready for review.",
+                        meta: "Design",
+                    },
+                    {
+                        label: "3",
+                        state: state(3),
+                        title: "Product reviews",
+                        body: "Each item is looked at in the prototype and marked Approved or Changes requested.",
+                        meta: "Product",
+                    },
+                    {
+                        label: "4",
+                        state: state(4),
+                        title: "Next list, or port",
+                        body: "Another list starts the next round. An empty one means Storybook is final and the port begins.",
+                        meta: "Product, then engineering",
+                    },
+                ]}
+            />
+        </>
+    );
+};
 
 export const TwoTools = () => (
     <CardGrid min={300}>

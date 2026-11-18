@@ -204,35 +204,43 @@ export const PageHeader = ({
     lead,
     chips = [],
     actions,
+    art,
 }: {
     eyebrow: string;
     title: string;
     lead: ReactNode;
     chips?: string[];
     actions?: ReactNode;
+    /** A picture for the right-hand side, in the heroes' paper-cut style. The text keeps to the left of it. */
+    art?: string;
 }) => (
     <div
         style={{
             border: `1px solid ${LINE}`,
             borderLeft: `5px solid ${PINK_DARK}`,
             borderRadius: 16,
-            padding: "22px 26px",
+            padding: art ? "28px 26px" : "22px 26px",
             margin: "8px 0 24px",
             background: WARM,
+            backgroundImage: art
+                ? `linear-gradient(90deg, rgba(251,247,247,1) 0%, rgba(251,247,247,0.97) 50%, rgba(251,247,247,0) 74%), url(${art})`
+                : undefined,
+            backgroundSize: "cover",
+            backgroundPosition: "right center",
             fontFamily: FONT,
         }}
     >
         <Eyebrow>{eyebrow}</Eyebrow>
-        <div style={{ fontSize: 30, fontWeight: 800, lineHeight: 1.15, color: INK, margin: "8px 0 10px" }}>{title}</div>
-        <div style={{ fontSize: 17, lineHeight: 1.55, color: BODY, maxWidth: 820 }}>{lead}</div>
+        <div style={{ fontSize: 30, fontWeight: 800, lineHeight: 1.15, color: INK, margin: "8px 0 10px", maxWidth: art ? 540 : undefined }}>{title}</div>
+        <div style={{ fontSize: 17, lineHeight: 1.55, color: BODY, maxWidth: art ? 540 : 820 }}>{lead}</div>
         {chips.length > 0 && (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 14 }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 14, maxWidth: art ? 560 : undefined }}>
                 {chips.map((c) => (
                     <Chip key={c}>{c}</Chip>
                 ))}
             </div>
         )}
-        {actions && <div style={{ marginTop: 18 }}>{actions}</div>}
+        {actions && <div style={{ marginTop: 18, maxWidth: art ? 580 : undefined }}>{actions}</div>}
     </div>
 );
 

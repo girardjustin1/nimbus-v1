@@ -1,22 +1,25 @@
 import { Meta } from "@storybook/addon-docs/blocks";
 import { Page } from "../intro/ui";
-import { ItemTable, LockupNote, ProductQuote, RoundHeader } from "./transition-sections";
+import { RoundNav } from "./round-1/round-nav";
+import { Heading, ItemTable, LockupNote, ProductQuote, RoundHeader } from "./transition-sections";
 
 <Meta title="Transition/Round 1/Changes" />
 
 <Page>
 
+<RoundNav page="changes" />
+
 <RoundHeader round="R1" />
 
 <ProductQuote />
 
-## Back to the current styles
+<Heading>Back to the current styles</Heading>
 
 <ItemTable round="R1" kind="Back to current style" />
 
 <LockupNote />
 
-## More adjustments
+<Heading>More adjustments</Heading>
 
 <ItemTable round="R1" kind="Adjustment" />
 
