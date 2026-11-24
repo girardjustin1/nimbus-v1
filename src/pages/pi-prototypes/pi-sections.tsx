@@ -4,7 +4,7 @@ import { CardGrid, Chip, Cta, CtaRow, Feature, Hero, PageHeader, ShotCard } from
 import heroArt from "../transition/art/hero-panels.jpg";
 import stackArt from "../transition/art/hero-stack.jpg";
 import { CONSTRAINTS, HEARD, MOBBIN_COLLECTION, PATTERNS, TIERS } from "./research";
-import { CONCEPTS, type Concept, REACH_NOTE, type Reach } from "./round-2";
+import { CONCEPTS, type Concept, GROUPS, REACH_NOTE, type Reach } from "./round-2";
 import shotV1 from "./screens/pi-v1.jpg";
 import shotKeyMetrics from "./screens/pi-v2-key-metrics.jpg";
 import shotQuery from "./screens/pi-v2-query.jpg";
@@ -30,7 +30,16 @@ export const Heading = ({ children, id }: { children: ReactNode; id?: string }) 
     <h2
         id={id}
         className="sb-unstyled"
-        style={{ fontFamily: FONT, fontSize: 26, fontWeight: 800, lineHeight: 1.25, color: INK, margin: "40px 0 10px", paddingBottom: 8, borderBottom: `1px solid ${LINE}` }}
+        style={{
+            fontFamily: FONT,
+            fontSize: 26,
+            fontWeight: 800,
+            lineHeight: 1.25,
+            color: INK,
+            margin: "40px 0 10px",
+            paddingBottom: 8,
+            borderBottom: `1px solid ${LINE}`,
+        }}
     >
         {children}
     </h2>
@@ -73,12 +82,12 @@ export const RoundTwo = () => (
         art={stackArt}
         eyebrow="Round 2 · current · Nov 24, 2026"
         title="Organise the filters, then open on something"
-        what="From the 24 Nov sync: make the filter band intentional, give a chip one behaviour, finish the flow from adding a filter to removing it, and open the page on realtime's view now that Performance Insights replaces it."
-        point="A gradient of concepts, from a restyle engineering can take as CSS to a few that change the model. Each one is its own screen in the prototype, next to today's page as the control. The prototype's toolbar has a Data menu that fills every concept with the same query, minimal, busy, worst case, empty or random, to see each one under stress."
+        what="The 24 Nov sync asked for organisation, not a redesign: make the filter band intentional, give a chip one behaviour, finish the flow from adding a filter to removing it, and open the page on realtime's view now that Performance Insights replaces it."
+        point="Three groups, each judged against today's page (C0): fixes that keep today's layout and answer one problem from the sync, the same parts reorganised around realtime and the field tiers, and three new concepts with a different layout (C14 to C16). The prototype's toolbar has a Data menu that fills every concept with the same query, minimal, busy, worst case, empty or random, to see each one under stress."
         actions={
             <CtaRow>
-                <Cta kind="primary" href={proto(V2, "c2-chips")}>
-                    Open the concepts
+                <Cta kind="primary" href={proto(V2, "c16-workspace")}>
+                    Open the newest concept, C16
                 </Cta>
                 <Cta href="#concepts">The concepts</Cta>
                 <Cta href={story(RESEARCH)}>Research</Cta>
@@ -114,7 +123,9 @@ const REACH_TONE: Record<Reach, CSSProperties> = {
 };
 
 const Pill = ({ children, style }: { children: ReactNode; style: CSSProperties }) => (
-    <span style={{ display: "inline-block", fontSize: 15, fontWeight: 700, padding: "3px 11px", borderRadius: 999, whiteSpace: "nowrap", ...style }}>{children}</span>
+    <span style={{ display: "inline-block", fontSize: 15, fontWeight: 700, padding: "3px 11px", borderRadius: 999, whiteSpace: "nowrap", ...style }}>
+        {children}
+    </span>
 );
 
 const patternTitle = (id: string) => PATTERNS.find((p) => p.id === id)?.title ?? id;
@@ -126,11 +137,38 @@ const shotOf = (id: string) => CONCEPT_SHOTS[`./screens/concepts/${id.toLowerCas
 const ConceptCard = ({ c }: { c: Concept }) => (
     <section
         id={c.id}
-        style={{ display: "flex", flexDirection: "column", gap: 8, border: `1px solid ${LINE}`, borderRadius: 16, padding: "16px 18px", background: "#FFFFFF", fontFamily: FONT, scrollMarginTop: 16 }}
+        style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+            border: `1px solid ${LINE}`,
+            borderRadius: 16,
+            padding: "16px 18px",
+            background: "#FFFFFF",
+            fontFamily: FONT,
+            scrollMarginTop: 16,
+        }}
     >
         {shotOf(c.id) && c.screen && (
-            <a href={proto(V2, c.screen)} target="_blank" rel="noreferrer" style={{ display: "block", margin: "-16px -18px 6px", borderBottom: `1px solid ${LINE}`, borderRadius: "16px 16px 0 0", overflow: "hidden", background: WARM }}>
-                <img src={shotOf(c.id)} alt={`${c.id}, ${c.title}`} loading="lazy" style={{ display: "block", width: "100%", height: 150, objectFit: "cover", objectPosition: "left top" }} />
+            <a
+                href={proto(V2, c.screen)}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                    display: "block",
+                    margin: "-16px -18px 6px",
+                    borderBottom: `1px solid ${LINE}`,
+                    borderRadius: "16px 16px 0 0",
+                    overflow: "hidden",
+                    background: WARM,
+                }}
+            >
+                <img
+                    src={shotOf(c.id)}
+                    alt={`${c.id}, ${c.title}`}
+                    loading="lazy"
+                    style={{ display: "block", width: "100%", height: 150, objectFit: "cover", objectPosition: "left top" }}
+                />
             </a>
         )}
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
@@ -171,11 +209,27 @@ const ConceptCard = ({ c }: { c: Concept }) => (
     </section>
 );
 
+const GroupHeading = ({ title, count, note }: { title: string; count: number; note: string }) => (
+    <div style={{ margin: "26px 0 12px", fontFamily: FONT }}>
+        <h3 className="sb-unstyled" style={{ fontSize: 20, fontWeight: 800, color: INK, margin: 0 }}>
+            {title} <span style={{ fontWeight: 600, color: MUTED }}>· {count}</span>
+        </h3>
+        <p className="sb-unstyled" style={{ fontSize: 15, lineHeight: 1.55, color: BODY, margin: "6px 0 0", maxWidth: 760 }}>
+            {note}
+        </p>
+    </div>
+);
+
+const Grid = ({ children }: { children: ReactNode }) => (
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 14 }}>{children}</div>
+);
+
 export const ConceptList = () => (
     <>
         <Text>
-            Each concept is one screen in the Round 2 prototype. The colour says how far it reaches, read against engineering's constraints. Nothing is built until
-            it is agreed.
+            Every concept is one screen in the Round 2 prototype, read against today's page, the control. They come in three groups: fixes that keep today's
+            layout, the same parts reorganised, and new concepts with a different layout. The colour on each card says how far it reaches against engineering's
+            constraints. Nothing is built for real until it is agreed.
         </Text>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "8px 18px", margin: "4px 0 14px", fontFamily: FONT }}>
             {(Object.keys(REACH_NOTE) as Reach[]).map((r) => (
@@ -185,11 +239,25 @@ export const ConceptList = () => (
                 </div>
             ))}
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 14 }}>
-            {CONCEPTS.map((c) => (
+        <GroupHeading title="The control" count={1} note="Performance Insights as it is today. Every concept below is judged against it." />
+        <Grid>
+            {CONCEPTS.filter((c) => !c.group).map((c) => (
                 <ConceptCard key={c.id} c={c} />
             ))}
-        </div>
+        </Grid>
+        {GROUPS.map((g) => {
+            const list = CONCEPTS.filter((c) => c.group === g.id).sort((a, b) => Number(a.id.slice(1)) - Number(b.id.slice(1)));
+            return (
+                <div key={g.id} id={`concepts-${g.id.toLowerCase().replace(/\s+/g, "-")}`}>
+                    <GroupHeading title={g.title} count={list.length} note={g.note} />
+                    <Grid>
+                        {list.map((c) => (
+                            <ConceptCard key={c.id} c={c} />
+                        ))}
+                    </Grid>
+                </div>
+            );
+        })}
     </>
 );
 
@@ -216,7 +284,9 @@ export const ResearchHeader = () => (
 );
 
 const Card = ({ children, tone = "plain" }: { children: ReactNode; tone?: "plain" | "warm" }) => (
-    <div style={{ border: `1px solid ${LINE}`, borderRadius: 16, padding: "16px 18px", background: tone === "warm" ? WARM : "#FFFFFF", fontFamily: FONT }}>{children}</div>
+    <div style={{ border: `1px solid ${LINE}`, borderRadius: 16, padding: "16px 18px", background: tone === "warm" ? WARM : "#FFFFFF", fontFamily: FONT }}>
+        {children}
+    </div>
 );
 
 export const Heard = () => (
@@ -233,7 +303,15 @@ export const Heard = () => (
 export const Tiers = () => (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 10, margin: "14px 0", fontFamily: FONT }}>
         {TIERS.map((t, i) => (
-            <div key={t.name} style={{ border: `1px solid ${LINE}`, borderTop: `4px solid ${i < 3 ? TEAL_DARK : i === 3 ? "#B54708" : MUTED}`, borderRadius: 12, padding: "14px 14px 16px" }}>
+            <div
+                key={t.name}
+                style={{
+                    border: `1px solid ${LINE}`,
+                    borderTop: `4px solid ${i < 3 ? TEAL_DARK : i === 3 ? "#B54708" : MUTED}`,
+                    borderRadius: 12,
+                    padding: "14px 14px 16px",
+                }}
+            >
                 <div style={{ fontSize: 15, fontWeight: 700, color: MUTED }}>Tier {i + 1}</div>
                 <div style={{ fontSize: 19, fontWeight: 800, color: INK, marginTop: 2 }}>{t.name}</div>
                 <div style={{ fontSize: 32, fontWeight: 800, color: INK, lineHeight: 1.1, margin: "6px 0", fontVariantNumeric: "tabular-nums" }}>{t.count}</div>
@@ -267,13 +345,31 @@ export const Patterns = () => (
         {PATTERNS.map((p) => {
             const uses = CONCEPTS.filter((c) => c.patterns.includes(p.id));
             return (
-                <section key={p.id} id={p.id} style={{ border: `1px solid ${LINE}`, borderRadius: 16, padding: "18px 20px", margin: "14px 0", fontFamily: FONT, scrollMarginTop: 16 }}>
+                <section
+                    key={p.id}
+                    id={p.id}
+                    style={{ border: `1px solid ${LINE}`, borderRadius: 16, padding: "18px 20px", margin: "14px 0", fontFamily: FONT, scrollMarginTop: 16 }}
+                >
                     <div style={{ fontSize: 19, fontWeight: 800, color: INK }}>{p.title}</div>
                     <div style={{ fontSize: 15, lineHeight: 1.55, color: BODY, margin: "6px 0 10px", maxWidth: 860 }}>{p.takeaway}</div>
                     <div style={{ display: "grid", gap: 8 }}>
                         {p.refs.map((r) => (
-                            <div key={r.url} style={{ display: "grid", gridTemplateColumns: "170px minmax(0, 1fr)", gap: 12, padding: "8px 0", borderTop: `1px solid ${LINE}` }}>
-                                <a href={r.url} target="_blank" rel="noreferrer" style={{ fontSize: 15, fontWeight: 700, color: PINK_DARK, textDecoration: "none" }}>
+                            <div
+                                key={r.url}
+                                style={{
+                                    display: "grid",
+                                    gridTemplateColumns: "170px minmax(0, 1fr)",
+                                    gap: 12,
+                                    padding: "8px 0",
+                                    borderTop: `1px solid ${LINE}`,
+                                }}
+                            >
+                                <a
+                                    href={r.url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    style={{ fontSize: 15, fontWeight: 700, color: PINK_DARK, textDecoration: "none" }}
+                                >
                                     {r.app} ↗
                                 </a>
                                 <span style={{ fontSize: 15, lineHeight: 1.5, color: INK }}>{r.note}</span>

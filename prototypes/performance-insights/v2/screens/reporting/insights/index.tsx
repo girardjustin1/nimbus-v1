@@ -9,7 +9,37 @@ import type { ScenarioQuery } from "./scenarios";
 
 /* -------------------------------------------------- Round 2 · concepts --- */
 
-const CONCEPTS = "Round 2 · Concepts (24 Nov)";
+/**
+ * The screen menu groups the concepts as Storybook does (src/pages/pi-prototypes/round-2.ts,
+ * kept in step by ./concept-groups.test.ts): the control, fixes that keep today's layout,
+ * today's parts reorganised, and the new concepts with a different layout.
+ */
+export const CONCEPT_AREAS = {
+    control: "Round 2 · The control (today's page)",
+    Fix: "Round 2 · Fixes to today's page",
+    Reorganise: "Round 2 · Today's page, reorganised",
+    "New concept": "Round 2 · New concepts",
+} as const;
+export const CONCEPT_GROUP: Record<number, keyof typeof CONCEPT_AREAS> = {
+    0: "control",
+    1: "Fix",
+    2: "Fix",
+    3: "Fix",
+    7: "Fix",
+    8: "Fix",
+    9: "Fix",
+    11: "Fix",
+    13: "Fix",
+    4: "Reorganise",
+    5: "Reorganise",
+    6: "Reorganise",
+    10: "Reorganise",
+    12: "Reorganise",
+    14: "New concept",
+    15: "New concept",
+    16: "New concept",
+};
+const areaOf = (id: string) => CONCEPT_AREAS[CONCEPT_GROUP[Number(id.match(/^c(\d+)-/)![1])]];
 
 /** A filter set like the ones in the PI sync: a long Country list, two ad types, one platform. */
 const SOME: FilterState = {
@@ -29,12 +59,12 @@ function round2Screens(): ProtoScreen[] {
     // Every concept takes the data scenario from the prototype's toolbar (./scenario-ui).
     const c = (id: string, title: string, description: string, render: (sc: ScenarioQuery | null) => ReactNode): ProtoScreen => ({
         id,
-        area: CONCEPTS,
+        area: areaOf(id),
         title,
         description,
         render: () => <WithScenario>{render}</WithScenario>,
     });
-    return [
+    const list: ProtoScreen[] = [
         c("c0-control", "C0 · Control, with filters", "Today's band with the same filters every concept starts from.", (sc) => (
             <NewQuery scenario={sc} filters={SOME} />
         )),
@@ -176,9 +206,12 @@ function round2Screens(): ProtoScreen[] {
         c("c16-menu", "C16 · The ⋯ menu", "Right of Save Query: Delete, Rename, Duplicate, Undo, New query, Export and Refresh data.", (sc) => (
             <QueryWorkspace scenario={sc} menuOpen />
         )),
-        c("c16-panel-hidden", "C16 · Panel hidden", "The panel button beside Save Query hides the Query / Chart / Ask panel; the report takes the full width.", (sc) => (
-            <QueryWorkspace scenario={sc} panel={false} />
-        )),
+        c(
+            "c16-panel-hidden",
+            "C16 · Panel hidden",
+            "The panel button beside Save Query hides the Query / Chart / Ask panel; the report takes the full width.",
+            (sc) => <QueryWorkspace scenario={sc} panel={false} />,
+        ),
         c("c16-table", "C16 · Table only, compared", "Revenue and eCPM by platform against each day, each cell with its change.", (sc) => (
             <QueryWorkspace scenario={sc} compare view="table" metrics={["Revenue", "Impressions", "ECPM"]} />
         )),
@@ -189,6 +222,13 @@ function round2Screens(): ProtoScreen[] {
             (sc) => <NewQuery scenario={sc} defaultView blocksDriveChart insightNotes />,
         ),
     ];
+    // By group (control, fixes, reorganised, new), then by concept number, each concept's states in order.
+    const rank = Object.values(CONCEPT_AREAS) as string[];
+    const num = (id: string) => Number(id.match(/^c(\d+)-/)![1]);
+    return list
+        .map((sc, i) => ({ sc, i }))
+        .sort((a, b) => rank.indexOf(a.sc.area) - rank.indexOf(b.sc.area) || num(a.sc.id) - num(b.sc.id) || a.i - b.i)
+        .map(({ sc }) => sc);
 }
 
 const AREA = "Reporting · Performance Insights";
