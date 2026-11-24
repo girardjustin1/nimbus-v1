@@ -31,6 +31,8 @@ export interface Concept {
     patterns: string[];
     /** Route in prototypes/performance-insights/v2 once built. */
     screen?: string;
+    /** More states of the concept, as [label, route]. */
+    states?: [string, string][];
 }
 
 export const REACH_NOTE: Record<Reach, string> = {
@@ -48,43 +50,55 @@ export const CONCEPTS: Concept[] = [
         reach: "Restyle",
         status: "Ready for review",
         patterns: [],
-        screen: "pi-query",
+        screen: "c0-control",
+        states: [["Without filters", "pi-query"]],
     },
     {
         id: "C1",
         title: "A tight filter band",
         problem: "The filter layout is not tight enough and the + Add button ends up looking broken at the end of the row.",
-        idea: "Same band, same DOM. + Filter is always the first item on the row, chips follow in a fixed grid, Clear all sits at the end. One chip height, one gap, values truncated with a count (“Country: US, CA +3”).",
+        idea: "Same band, same panel, same checkbox behaviour. + Filter is always the first item on the row; each category is one bordered group on a fixed grid, with one height and one gap; Clear all ends the row. A category with more than three values shows three and “+2”, which opens the panel on it.",
         reach: "Restyle",
-        status: "Proposed",
+        status: "Ready for review",
         patterns: ["chip-row"],
+        screen: "c1-tight-band",
+        states: [["+N opens the panel", "c1-tight-band-more"]],
     },
     {
         id: "C2",
         title: "One rule for a chip: check to apply, × to remove",
         problem: "A checkbox toggles a metric on and off, but unchecking a filter chip deletes it. Same element, two behaviours.",
-        idea: "Every chip keeps its checkbox. Unchecked, it stays on the row, greyed, and leaves the query; × removes it. Clear all removes every chip. This is the chip and query split engineering described, made visible.",
+        idea: "Every value is a chip. Its checkbox takes it in or out of the report and it stays on the row, greyed when out; × removes it; the category's name opens the panel to edit it. A category can be paused altogether, and the row says how many chips the report is using. This is the chip and query split engineering described, made visible.",
         reach: "Rework",
-        status: "Proposed",
+        status: "Ready for review",
         patterns: ["chip-row", "value-panel"],
+        screen: "c2-chips",
+        states: [["Paused chips", "c2-chips-paused"]],
     },
     {
         id: "C3",
         title: "The full filter flow, end to end",
         problem: "The prototype shows a filter being added, not edited, paused or removed.",
-        idea: "Every state in one clickable flow: add, pick values, Save, edit a chip's values, uncheck it, remove it, Clear all, Cancel a draft. The control and C1–C2 both get it.",
+        idea: "Every state in one clickable flow: add, pick values (a draft until Save), edit a category from its chip, uncheck, remove, Clear all, and Cancel, which drops the draft. C1 and C2 both have it; the control stays as it is.",
         reach: "Restyle",
-        status: "Proposed",
+        status: "Ready for review",
         patterns: ["value-panel"],
+        screen: "c3-edit",
+        states: [
+            ["Add a filter", "c3-add"],
+            ["On the tight band", "c3-tight-edit"],
+        ],
     },
     {
         id: "C4",
         title: "Opens on realtime's view",
         problem: "Performance Insights replaces the realtime dashboard, and today it opens on “select at least one metric”.",
-        idea: "The page loads the Default tier: Revenue, Requests, Impressions and eCPM by day and platform, scoped to one app, with realtime's metric blocks over the chart. Nobody starts from a blank query.",
+        idea: "The page loads the Default tier: Revenue, Requests, Impressions and eCPM by day and platform, scoped to one app, with realtime's metric blocks over the chart. The builder starts collapsed, one click away (Expand). Nobody starts from a blank query.",
         reach: "Rework",
-        status: "Proposed",
+        status: "Ready for review",
         patterns: ["kpi-tabs"],
+        screen: "c4-default-view",
+        states: [["With C2's chips", "c4-default-view-chips"]],
     },
     {
         id: "C5",

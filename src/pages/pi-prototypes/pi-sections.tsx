@@ -43,7 +43,11 @@ export const PiHero = () => (
         eyebrow="Performance Insights"
         title="One reporting page, organised before it is redesigned."
         lead="Performance Insights is near real time now and will replace the realtime dashboard. Round 2 works out how it opens, how filters behave, and where 90 fields live, on the design system settled through DAS and Round 1."
-        chips={["Round 2 · started Nov 24", `${CONCEPTS.length - 1} concepts planned`, "Sample data only"]}
+        chips={[
+            "Round 2 · started Nov 24",
+            `${CONCEPTS.filter((c) => c.id !== "C0" && c.screen).length} of ${CONCEPTS.length - 1} concepts built`,
+            "Sample data only",
+        ]}
         art={heroArt}
         actions={
             <CtaRow>
@@ -73,8 +77,8 @@ export const RoundTwo = () => (
         point="A gradient of concepts, from a restyle engineering can take as CSS to a few that change the model. Each one is its own screen in the prototype, next to today's page as the control."
         actions={
             <CtaRow>
-                <Cta kind="primary" href={proto(V2, "pi-query")}>
-                    Open the control
+                <Cta kind="primary" href={proto(V2, "c2-chips")}>
+                    Open the concepts
                 </Cta>
                 <Cta href="#concepts">The concepts</Cta>
                 <Cta href={story(RESEARCH)}>Research</Cta>
@@ -115,11 +119,20 @@ const Pill = ({ children, style }: { children: ReactNode; style: CSSProperties }
 
 const patternTitle = (id: string) => PATTERNS.find((p) => p.id === id)?.title ?? id;
 
+/** A picture of each built concept (scripts in reference/, sample data only). */
+const CONCEPT_SHOTS = import.meta.glob<string>("./screens/concepts/*.jpg", { eager: true, import: "default" });
+const shotOf = (id: string) => CONCEPT_SHOTS[`./screens/concepts/${id.toLowerCase()}.jpg`];
+
 const ConceptCard = ({ c }: { c: Concept }) => (
     <section
         id={c.id}
         style={{ display: "flex", flexDirection: "column", gap: 8, border: `1px solid ${LINE}`, borderRadius: 16, padding: "16px 18px", background: "#FFFFFF", fontFamily: FONT, scrollMarginTop: 16 }}
     >
+        {shotOf(c.id) && c.screen && (
+            <a href={proto(V2, c.screen)} target="_blank" rel="noreferrer" style={{ display: "block", margin: "-16px -18px 6px", borderBottom: `1px solid ${LINE}`, borderRadius: "16px 16px 0 0", overflow: "hidden", background: WARM }}>
+                <img src={shotOf(c.id)} alt={`${c.id}, ${c.title}`} loading="lazy" style={{ display: "block", width: "100%", height: 150, objectFit: "cover", objectPosition: "left top" }} />
+            </a>
+        )}
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
             <span style={{ fontSize: 15, fontWeight: 700, color: MUTED }}>{c.id}</span>
             <Pill style={REACH_TONE[c.reach]}>{c.reach}</Pill>
@@ -142,7 +155,18 @@ const ConceptCard = ({ c }: { c: Concept }) => (
             </div>
         )}
         <div style={{ marginTop: "auto", paddingTop: 4 }}>
-            {c.screen ? <Cta href={proto(V2, c.screen)}>Open in Round 2</Cta> : <span style={{ fontSize: 15, color: MUTED }}>Not built yet</span>}
+            {c.screen ? (
+                <CtaRow>
+                    <Cta href={proto(V2, c.screen)}>Open in Round 2</Cta>
+                    {c.states?.map(([label, route]) => (
+                        <Cta key={route} href={proto(V2, route)}>
+                            {label}
+                        </Cta>
+                    ))}
+                </CtaRow>
+            ) : (
+                <span style={{ fontSize: 15, color: MUTED }}>Not built yet</span>
+            )}
         </div>
     </section>
 );

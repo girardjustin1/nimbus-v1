@@ -42,6 +42,7 @@ import {
     PI_TABS,
     RANGES,
     type Range,
+    UNIT,
     addSavedQuery,
     csvMetric,
     findQuery,
@@ -53,6 +54,11 @@ import {
 } from "./insights-data";
 import { QueryChart } from "./query-chart";
 import { R1 } from "../../round-1";
+import { StatChip } from "../../campaign-ui";
+import { compactNum } from "../../sample-data";
+import { StatLookContext } from "../../stat-look";
+import { FilterBand } from "./filter-band";
+import { type BandLook, bandExcluded } from "./filter-state";
 
 /**
  * Performance Insights · New Query — Nov 13 style guide, rebuilt from staging
@@ -76,35 +82,55 @@ const CHART_TYPES: ChartTypeOption<ChartKind>[] = [
 
 const FILTER_DIMS = DIMS.map((d) => ({ id: d, label: d, values: DIM_VALUES[d] }));
 
+/** C4: the Default tier, which realtime opens on today. */
+const DEFAULT_VIEW = { metrics: ["Revenue", "Requests", "Impressions", "ECPM"] as Metric[], breakdown: ["Platform"] as Dim[], chart: "line" as ChartKind };
+
 export const NewQuery = ({
     chart: initialChart = "table",
     metrics: initialMetrics = ["Requests", "CTR"],
     breakdown: initialBreakdown = [],
+    band,
+    filters: initialFilters = {},
+    openFilterOn,
+    defaultView,
 }: {
     chart?: ChartKind;
     metrics?: Metric[];
     breakdown?: Dim[];
+    /** Round 2 · C1–C3: the filter band concept. Left out, the band is today's (the control). */
+    band?: BandLook;
+    /** Filters already saved when the screen opens (C1–C3 states). */
+    filters?: FilterState;
+    /** Opens the filter panel on this category (C3 states). */
+    openFilterOn?: string;
+    /** Round 2 · C4: opens on realtime's view, with its metric blocks over the chart. */
+    defaultView?: boolean;
 }) => {
     // A saved query opened from Saved Queries brings its own settings.
     const [opened] = useState(() => findQuery(readHashParams().get("q")));
     const [range, setRange] = useState<Range>(opened?.range ?? "7");
     const [interval, setInterval] = useState<Interval>(opened?.interval ?? "day");
-    const [metrics, setMetrics] = useState<Metric[]>(opened?.metrics ?? initialMetrics);
-    const [breakdown, setBreakdown] = useState<Dim[]>(opened?.breakdown ?? initialBreakdown);
-    const [filters, setFilters] = useState<FilterState>({});
+    const [metrics, setMetrics] = useState<Metric[]>(opened?.metrics ?? (defaultView ? DEFAULT_VIEW.metrics : initialMetrics));
+    const [breakdown, setBreakdown] = useState<Dim[]>(opened?.breakdown ?? (defaultView ? DEFAULT_VIEW.breakdown : initialBreakdown));
+    const [filters, setFilters] = useState<FilterState>(initialFilters);
     const [compare, setCompare] = useState("");
-    const [chart, setChart] = useState<ChartKind>(opened?.chart ?? initialChart);
+    const [chart, setChart] = useState<ChartKind>(opened?.chart ?? (defaultView ? DEFAULT_VIEW.chart : initialChart));
     const [totalsOnly, setTotalsOnly] = useState(false);
     const [showLegend, setShowLegend] = useState(true);
-    const [collapsed, setCollapsed] = useState(false);
+    // C4 opens like realtime: the report first, the builder one click away (Expand).
+    const [collapsed, setCollapsed] = useState(Boolean(defaultView));
     const [naming, setNaming] = useState(false);
     const [name, setName] = useState(opened?.name ?? "");
     const [savedAs, setSavedAs] = useState<string | null>(null);
 
-    const ordered = METRICS.filter((m) => metrics.includes(m));
+    // C4 leads with Revenue, as realtime does: the first metric is the one charted.
+    const ordered = METRICS.filter((m) => metrics.includes(m)).sort((a, b) => (defaultView ? Number(b === "Revenue") - Number(a === "Revenue") : 0));
     const dims = useMemo(() => DIMS.filter((d) => breakdown.includes(d)), [breakdown]);
     const compareDays = Number(compare) > 0 ? Number(compare) : undefined;
-    const excluded = useMemo(() => filterExcluded(FILTER_DIMS, filters) as Partial<Record<Dim, string[]>>, [filters]);
+    const excluded = useMemo(
+        () => (band ? bandExcluded(FILTER_DIMS, filters) : filterExcluded(FILTER_DIMS, filters)) as Partial<Record<Dim, string[]>>,
+        [filters, band],
+    );
     const tableTotals = chart === "table" && totalsOnly;
     const rows = useMemo(
         () => runQuery({ range, interval, breakdown: dims, excluded, totalsOnly: tableTotals, compare: chart === "table" ? compareDays : undefined }),
@@ -141,7 +167,7 @@ export const NewQuery = ({
     };
 
     return (
-        <DasShell navKey="performance insights" account="exchange">
+        <DasShell navKey="performance insights" account={defaultView ? "publisher" : "exchange"}>
             <PageTabs
                 tabs={PI_TABS}
                 active="query"
@@ -243,7 +269,11 @@ export const NewQuery = ({
                             </Band>
 
                             <Band label="Filters">
-                                <FilterControl dims={FILTER_DIMS} value={filters} onChange={setFilters} />
+                                {band ? (
+                                    <FilterBand look={band} dims={FILTER_DIMS} value={filters} onChange={setFilters} openOn={openFilterOn} />
+                                ) : (
+                                    <FilterControl dims={FILTER_DIMS} value={filters} onChange={setFilters} />
+                                )}
                             </Band>
 
                             <Band label="Compare">
@@ -281,6 +311,8 @@ export const NewQuery = ({
                         </>
                     )}
                 </Bands>
+
+                {defaultView && ordered.length > 0 && <MetricBlocks metrics={ordered} range={range} excluded={excluded} />}
 
                 {ordered.length === 0 ? (
                     <p className="py-8 text-md text-tertiary">Select at least one metric.</p>
@@ -342,5 +374,42 @@ export const NewQuery = ({
                 )}
             </div>
         </DasShell>
+    );
+};
+
+/**
+ * C4: realtime's metric blocks over the report: each metric's total for the range, and a
+ * line per platform under it (R1-05 number, R1-06 platform lines), as realtime shows them.
+ */
+/** Realtime's block numbers: counts compact (26.11B), money and rates in full. */
+const blockValue = (m: Metric, v: number) => (UNIT[m] === "count" ? compactNum(v) : formatMetric(m, v));
+
+const MetricBlocks = ({ metrics, range, excluded }: { metrics: Metric[]; range: Range; excluded: Partial<Record<Dim, string[]>> }) => {
+    const total = runQuery({ range, interval: "day", breakdown: [], excluded, totalsOnly: true })[0]?.t;
+    const byPlatform = runQuery({ range, interval: "day", breakdown: ["Platform"], excluded, totalsOnly: true });
+    if (!total) return null;
+    return (
+        <StatLookContext.Provider value="flat">
+            <div className="flex flex-wrap gap-x-6 gap-y-4 pt-6">
+                {[...metrics].sort((a, b) => (b === "Revenue" ? 1 : 0) - (a === "Revenue" ? 1 : 0)).map((m) => (
+                    <StatChip
+                        key={m}
+                        label={m}
+                        sub={
+                            <span className="flex flex-col">
+                                {byPlatform.map((r) => (
+                                    <span key={r.id} className="inline-flex items-center gap-2">
+                                        <span style={R1.rtPlatformLabel}>{r.combo.values[0]}</span>
+                                        <span style={R1.rtPlatformValue}>{blockValue(m, metricOf(m, r.t))}</span>
+                                    </span>
+                                ))}
+                            </span>
+                        }
+                    >
+                        {blockValue(m, metricOf(m, total))}
+                    </StatChip>
+                ))}
+            </div>
+        </StatLookContext.Provider>
     );
 };
