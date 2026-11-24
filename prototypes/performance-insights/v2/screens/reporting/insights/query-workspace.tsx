@@ -1,5 +1,5 @@
 import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Check, ChevronDown, Minus, Plus, SearchLg, Stars02, XClose } from "@untitledui/icons";
+import { ArrowLeft, Check, ChevronDown, LayoutRight, Minus, Plus, SearchLg, Stars02, XClose } from "@untitledui/icons";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Toggle } from "@/components/base/toggle/toggle";
 import { cx } from "@/utils/cx";
@@ -26,6 +26,7 @@ import {
 } from "./insights-data";
 import { LONG_ADVERTISERS, TOP_ADVERTISERS } from "./long-lists";
 import { type ChartSegment, QueryChart } from "./query-chart";
+import { QueryMenu, Toast } from "./query-menu";
 import { RangePicker } from "./range-picker";
 import { spanOf } from "./report-facts";
 import type { ScenarioQuery } from "./scenarios";
@@ -401,6 +402,8 @@ export const QueryWorkspace = ({
     manual: initialManual,
     datesOpen,
     scenario,
+    panel: initialPanel = true,
+    menuOpen,
 }: {
     metrics?: Metric[];
     breakdown?: Dim[];
@@ -418,6 +421,10 @@ export const QueryWorkspace = ({
     datesOpen?: boolean;
     /** Round 2: the data scenario picked in the prototype's toolbar (null: the screen's own). */
     scenario?: ScenarioQuery | null;
+    /** The Query / Chart / Ask panel shown (false: hidden, the report full width). */
+    panel?: boolean;
+    /** The ⋯ menu beside Save Query open when the screen loads. */
+    menuOpen?: boolean;
 }) => {
     // Round 2: a data scenario (prototype toolbar) replaces the screen's own query when one is picked.
     const sc = scenario ?? undefined;
@@ -433,7 +440,8 @@ export const QueryWorkspace = ({
     const [chart, setChart] = useState<Exclude<ChartKind, "table" | "pie">>(sc?.chart && sc.chart !== "table" ? sc.chart : "line");
     const [legend, setLegend] = useState(true);
     const [tab, setTab] = useState(initialTab);
-    const askPanel = useFitToWindow(tab === "ask");
+    const [panelOpen, setPanelOpen] = useState(initialPanel);
+    const askPanel = useFitToWindow(panelOpen && tab === "ask");
 
     /** C16's chat: a built chart replaces the query, and every card, the chart and the table follow. */
     const applyChange = (c: ReportChange) => {
@@ -455,6 +463,95 @@ export const QueryWorkspace = ({
     // Rows charted: null follows the query (the top rows, dynamic); a list is the rows ticked by hand.
     const [manual, setManual] = useState<string[] | null>(sc ? null : (initialManual ?? null));
     const [segmentMenu, setSegmentMenu] = useState(false);
+
+    /* -------- the ⋯ menu: name, undo, refresh, export -------- */
+
+    const [name, setName] = useState("Untitled query");
+    const [toast, setToast] = useState<{ text: string; undo?: boolean } | null>(null);
+    const [dataAge, setDataAge] = useState(15);
+    const [refreshing, setRefreshing] = useState(false);
+    // Undo steps back through every change to the query (cards, dates, chart, rows, name).
+    type Snap = {
+        name: string;
+        range: Range;
+        interval: Interval;
+        metrics: Metric[];
+        breakdown: Dim[];
+        filters: FilterState;
+        compare: boolean;
+        view: View;
+        chart: typeof chart;
+        manual: string[] | null;
+    };
+    const snap: Snap = { name, range, interval, metrics, breakdown, filters, compare, view, chart, manual };
+    const snapKey = JSON.stringify(snap);
+    const history = useRef<{ last: string | null; stack: string[]; restoring: boolean }>({ last: null, stack: [], restoring: false });
+    const [undoCount, setUndoCount] = useState(0);
+    useEffect(() => {
+        const h = history.current;
+        if (h.last !== null && h.last !== snapKey && !h.restoring) {
+            h.stack.push(h.last);
+            setUndoCount(h.stack.length);
+        }
+        h.restoring = false;
+        h.last = snapKey;
+    }, [snapKey]);
+    const undo = () => {
+        const h = history.current;
+        const prev = h.stack.pop();
+        if (!prev) return;
+        h.restoring = true;
+        setUndoCount(h.stack.length);
+        const q = JSON.parse(prev) as Snap;
+        setName(q.name);
+        setRange(q.range);
+        setInterval(q.interval);
+        setMetrics(q.metrics);
+        setBreakdown(q.breakdown);
+        setFilters(q.filters);
+        setCompare(q.compare);
+        setView(q.view);
+        setChart(q.chart);
+        setManual(q.manual);
+        setToast(null);
+    };
+    const undoRef = useRef(undo);
+    useEffect(() => {
+        undoRef.current = undo;
+    });
+    useEffect(() => {
+        const key = (e: KeyboardEvent) => {
+            const t = e.target as HTMLElement;
+            if (t.closest("input, textarea, select, [contenteditable]")) return;
+            if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key.toLowerCase() === "z") {
+                e.preventDefault();
+                undoRef.current();
+            }
+        };
+        window.addEventListener("keydown", key);
+        return () => window.removeEventListener("keydown", key);
+    }, []);
+    const blank = (nextName: string) => {
+        setName(nextName);
+        setMetrics([]);
+        setBreakdown([]);
+        setFilters({});
+        setRange("7");
+        setInterval("day");
+        setCompare(false);
+        setView("both");
+        setChart("line");
+        setManual(null);
+        setSearch("");
+        setPicker(null);
+    };
+    const refresh = () => {
+        setRefreshing(true);
+        window.setTimeout(() => {
+            setRefreshing(false);
+            setDataAge(0);
+        }, 900);
+    };
     const [pickerAt, setPickerAt] = useState<"metrics" | "filter" | "breakdown">(
         open?.kind === "metric" ? "metrics" : open?.kind === "breakdown" ? "breakdown" : "filter",
     );
@@ -520,6 +617,22 @@ export const QueryWorkspace = ({
         .filter((g) => isOn(g.id))
         .map((g) => ({ label: g.label, metric: g.metric, comboKey: g.comboKey, color: colorOf.get(g.id)! }));
 
+    /** Export: the table as it stands (every row, not just the ones searched), as a CSV file. */
+    const downloadCsv = () => {
+        const cell = (v: string | number) => (typeof v === "number" ? String(Math.round(v * 10_000) / 10_000) : /[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v);
+        const lines = [["Metric", ...breakdown, "Total", ...periods]];
+        for (const m of metrics)
+            for (const c of combos)
+                lines.push([m, ...c.combo.values, metricOf(m, c.t), ...periods.map((d) => (byKey.get(`${d}|${c.combo.key}`) ? metricOf(m, byKey.get(`${d}|${c.combo.key}`)!.t) : ""))].map(cell) as string[]);
+        const url = URL.createObjectURL(new Blob([lines.map((l) => l.join(",")).join("\n")], { type: "text/csv" }));
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${name.replace(/[^\w-]+/g, "-").replace(/^-|-$/g, "").toLowerCase() || "query"}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        setToast({ text: `Downloaded ${a.download}` });
+    };
+
     const filterSummary = (d: Dim) => {
         const v = filters[d]?.values ?? [];
         return v.length <= 2 ? v.join(" or ") : `${v.slice(0, 2).join(", ")} or ${v.length - 2} more`;
@@ -533,15 +646,61 @@ export const QueryWorkspace = ({
                 trailing={
                     <>
                         <span className="text-md font-semibold text-tertiary">All reports are in UTC.</span>
+                        <QueryMenu
+                            name={name}
+                            canUndo={undoCount > 0}
+                            dataAge={dataAge}
+                            refreshing={refreshing}
+                            onRename={(n) => {
+                                setName(n);
+                                setToast({ text: `Renamed to “${n}”`, undo: true });
+                            }}
+                            onDuplicate={() => {
+                                setName(`${name} (copy)`);
+                                setToast({ text: "Duplicated. You're editing the copy.", undo: true });
+                            }}
+                            onUndo={undo}
+                            onNew={() => {
+                                blank("Untitled query");
+                                setToast({ text: "New query", undo: true });
+                            }}
+                            onDelete={() => {
+                                setToast({ text: `Deleted “${name}”`, undo: true });
+                                blank("Untitled query");
+                            }}
+                            onDownloadCsv={downloadCsv}
+                            onCopyLink={() => {
+                                void navigator.clipboard?.writeText(window.location.href).catch(() => {});
+                                setToast({ text: "Link copied" });
+                            }}
+                            onRefresh={refresh}
+                            defaultOpen={menuOpen}
+                        />
                         <StateAction disabled={metrics.length === 0} onPress={() => {}}>
                             Save Query
                         </StateAction>
+                        {/* Hides or shows the Query / Chart / Ask panel; the report takes the room. */}
+                        <button
+                            type="button"
+                            aria-label={panelOpen ? "Hide panel" : "Show panel"}
+                            title={panelOpen ? "Hide panel" : "Show panel"}
+                            aria-pressed={panelOpen}
+                            aria-controls="query-panel"
+                            onClick={() => setPanelOpen((o) => !o)}
+                            className="inline-flex size-9 items-center justify-center rounded-lg ring-1 ring-secondary transition duration-100 ease-linear hover:bg-secondary"
+                            style={panelOpen ? { color: TEAL_DARK, backgroundColor: `${TEAL}1f`, boxShadow: `inset 0 0 0 1px ${TEAL}66` } : undefined}
+                        >
+                            <LayoutRight className={cx("size-5", !panelOpen && "text-fg-quaternary")} aria-hidden="true" />
+                        </button>
                     </>
                 }
             />
-            <div className="grid grid-cols-[minmax(0,1fr)_360px] items-start">
+            <div className={cx("grid items-start", panelOpen ? "grid-cols-[minmax(0,1fr)_360px]" : "grid-cols-1")}>
                 {/* ---------------- report ---------------- */}
                 <div className="flex min-w-0 flex-col gap-4 px-8 py-5">
+                    <h2 className="text-lg font-bold text-primary" aria-live="polite">
+                        {name}
+                    </h2>
                     <div className="flex flex-wrap items-center gap-2">
                         <RangePicker value={range} onChange={setRange} defaultOpen={datesOpen} />
                         <Segmented label="Date range" value={range} options={QUICK} onChange={setRange} />
@@ -855,9 +1014,12 @@ export const QueryWorkspace = ({
                 {/* ---------------- query panel ---------------- */}
                 <aside
                     ref={askPanel}
+                    id="query-panel"
                     aria-label="Query"
+                    hidden={!panelOpen}
                     className={cx(
-                        "sticky top-0 flex flex-col border-l border-secondary",
+                        "sticky top-0 flex-col border-l border-secondary",
+                        panelOpen ? "flex" : "hidden",
                         tab === "ask" ? "bg-primary" : "max-h-screen min-h-[40rem] self-stretch bg-secondary/40",
                     )}
                 >
@@ -1020,6 +1182,13 @@ export const QueryWorkspace = ({
                     </div>
                 </aside>
             </div>
+            {toast && (
+                <Toast
+                    text={toast.text}
+                    onUndo={toast.undo ? undo : undefined}
+                    onClose={() => setToast(null)}
+                />
+            )}
         </DasShell>
     );
 };
