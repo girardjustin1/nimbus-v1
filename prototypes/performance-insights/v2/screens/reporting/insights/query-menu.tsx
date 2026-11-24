@@ -6,7 +6,7 @@ import { StateAction, TEAL_DARK, tealControls } from "../../nimbus-ui";
 import { R1 } from "../../round-1";
 
 /**
- * Performance Insights · Round 2 · C16: the “⋯” menu beside Save Query.
+ * Performance Insights · Round 2 · C16: the “⋯” menu right of Save Query.
  *
  * After Mixpanel's report menu: Delete, Rename, Duplicate, Undo, then New query, Export,
  * then Refresh data with how old the data is. Delete asks first; Rename opens a small

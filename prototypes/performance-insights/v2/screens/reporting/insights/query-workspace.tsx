@@ -619,15 +619,28 @@ export const QueryWorkspace = ({
 
     /** Export: the table as it stands (every row, not just the ones searched), as a CSV file. */
     const downloadCsv = () => {
-        const cell = (v: string | number) => (typeof v === "number" ? String(Math.round(v * 10_000) / 10_000) : /[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v);
+        const cell = (v: string | number) =>
+            typeof v === "number" ? String(Math.round(v * 10_000) / 10_000) : /[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v;
         const lines = [["Metric", ...breakdown, "Total", ...periods]];
         for (const m of metrics)
             for (const c of combos)
-                lines.push([m, ...c.combo.values, metricOf(m, c.t), ...periods.map((d) => (byKey.get(`${d}|${c.combo.key}`) ? metricOf(m, byKey.get(`${d}|${c.combo.key}`)!.t) : ""))].map(cell) as string[]);
+                lines.push(
+                    [
+                        m,
+                        ...c.combo.values,
+                        metricOf(m, c.t),
+                        ...periods.map((d) => (byKey.get(`${d}|${c.combo.key}`) ? metricOf(m, byKey.get(`${d}|${c.combo.key}`)!.t) : "")),
+                    ].map(cell) as string[],
+                );
         const url = URL.createObjectURL(new Blob([lines.map((l) => l.join(",")).join("\n")], { type: "text/csv" }));
         const a = document.createElement("a");
         a.href = url;
-        a.download = `${name.replace(/[^\w-]+/g, "-").replace(/^-|-$/g, "").toLowerCase() || "query"}.csv`;
+        a.download = `${
+            name
+                .replace(/[^\w-]+/g, "-")
+                .replace(/^-|-$/g, "")
+                .toLowerCase() || "query"
+        }.csv`;
         a.click();
         URL.revokeObjectURL(url);
         setToast({ text: `Downloaded ${a.download}` });
@@ -640,12 +653,18 @@ export const QueryWorkspace = ({
 
     return (
         <DasShell navKey="performance insights" account="publisher">
-            <PageTabs
-                tabs={PI_TABS}
-                active="query"
-                trailing={
-                    <>
-                        <span className="text-md font-semibold text-tertiary">All reports are in UTC.</span>
+            <PageTabs tabs={PI_TABS} active="query" trailing={<span className="text-md font-semibold text-tertiary">All reports are in UTC.</span>} />
+            <div className={cx("grid items-start", panelOpen ? "grid-cols-[minmax(0,1fr)_360px]" : "grid-cols-1")}>
+                {/* ---------------- report ---------------- */}
+                <div className="flex min-w-0 flex-col gap-4 px-8 py-5">
+                    {/* The query's name, then its actions pushed to the right: Save Query, ⋯, the panel button. */}
+                    <div className="flex items-center gap-3">
+                        <h2 className="mr-auto min-w-0 truncate text-lg font-bold text-primary" aria-live="polite">
+                            {name}
+                        </h2>
+                        <StateAction disabled={metrics.length === 0} onPress={() => {}}>
+                            Save Query
+                        </StateAction>
                         <QueryMenu
                             name={name}
                             canUndo={undoCount > 0}
@@ -676,9 +695,6 @@ export const QueryWorkspace = ({
                             onRefresh={refresh}
                             defaultOpen={menuOpen}
                         />
-                        <StateAction disabled={metrics.length === 0} onPress={() => {}}>
-                            Save Query
-                        </StateAction>
                         {/* Hides or shows the Query / Chart / Ask panel; the report takes the room. */}
                         <button
                             type="button"
@@ -692,22 +708,10 @@ export const QueryWorkspace = ({
                         >
                             <LayoutRight className={cx("size-5", !panelOpen && "text-fg-quaternary")} aria-hidden="true" />
                         </button>
-                    </>
-                }
-            />
-            <div className={cx("grid items-start", panelOpen ? "grid-cols-[minmax(0,1fr)_360px]" : "grid-cols-1")}>
-                {/* ---------------- report ---------------- */}
-                <div className="flex min-w-0 flex-col gap-4 px-8 py-5">
-                    <h2 className="text-lg font-bold text-primary" aria-live="polite">
-                        {name}
-                    </h2>
+                    </div>
                     <div className="flex flex-wrap items-center gap-2">
                         <RangePicker value={range} onChange={setRange} defaultOpen={datesOpen} />
                         <Segmented label="Date range" value={range} options={QUICK} onChange={setRange} />
-                        <span className="ml-auto flex items-center gap-2">
-                            <PillSelect label="Interval" value={interval} options={INTERVALS} onChange={setInterval} />
-                            <PillSelect label="Chart type" value={chart} options={CHART_KINDS} onChange={setChart} />
-                        </span>
                     </div>
 
                     <div className="flex flex-wrap items-center gap-3">
@@ -742,6 +746,8 @@ export const QueryWorkspace = ({
                                 </div>
                             )}
                         </div>
+                        <PillSelect label="Interval" value={interval} options={INTERVALS} onChange={setInterval} />
+                        <PillSelect label="Chart type" value={chart} options={CHART_KINDS} onChange={setChart} />
                         {compare && (
                             <>
                                 <span
@@ -1182,13 +1188,7 @@ export const QueryWorkspace = ({
                     </div>
                 </aside>
             </div>
-            {toast && (
-                <Toast
-                    text={toast.text}
-                    onUndo={toast.undo ? undo : undefined}
-                    onClose={() => setToast(null)}
-                />
-            )}
+            {toast && <Toast text={toast.text} onUndo={toast.undo ? undo : undefined} onClose={() => setToast(null)} />}
         </DasShell>
     );
 };

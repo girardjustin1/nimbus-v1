@@ -173,7 +173,7 @@ function round2Screens(): ProtoScreen[] {
             "“Revenue and eCPM by country for the last 30 days, compared, as a bar chart”, read back line by line before Build this chart.",
             (sc) => <QueryWorkspace scenario={sc} tab="ask" ask="Revenue and eCPM by country for the last 30 days, compared, as a bar chart" />,
         ),
-        c("c16-menu", "C16 · The ⋯ menu", "Beside Save Query: Delete, Rename, Duplicate, Undo, New query, Export and Refresh data.", (sc) => (
+        c("c16-menu", "C16 · The ⋯ menu", "Right of Save Query: Delete, Rename, Duplicate, Undo, New query, Export and Refresh data.", (sc) => (
             <QueryWorkspace scenario={sc} menuOpen />
         )),
         c("c16-panel-hidden", "C16 · Panel hidden", "The panel button beside Save Query hides the Query / Chart / Ask panel; the report takes the full width.", (sc) => (

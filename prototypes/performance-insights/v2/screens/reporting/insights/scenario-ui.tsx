@@ -16,8 +16,19 @@ export const ScenarioControls = () => {
     return (
         <div className="flex items-center gap-2">
             <span className="text-xs font-semibold text-white/60">Data</span>
-            {/* The native arrow is hidden and drawn instead, as in the copy deck's select. */}
-            <div className="relative flex items-center">
+            {/* Closed, it shows only the scenario's short name; the open list keeps each one's description.
+                The native select sits invisibly over the label, so it still opens the browser's own list. */}
+            <div
+                className="relative inline-flex items-center gap-1.5 rounded-md border py-1 pr-2 pl-2 text-xs font-semibold focus-within:border-white/40"
+                style={
+                    choice.id === "screen"
+                        ? { backgroundColor: "rgb(255 255 255 / 0.05)", color: "white", borderColor: "rgb(255 255 255 / 0.15)" }
+                        : { backgroundColor: PINK, color: "#101828", borderColor: PINK }
+                }
+                title={current.title}
+            >
+                {current.label}
+                <ChevronDown className="pointer-events-none size-3.5" aria-hidden="true" />
                 <select
                     aria-label="Data scenario"
                     title={current.title}
@@ -26,12 +37,7 @@ export const ScenarioControls = () => {
                         const id = e.target.value as ScenarioId;
                         setScenario({ id, seed: id === "random" && choice.id !== "random" ? Math.floor(Math.random() * 9999) + 1 : choice.seed });
                     }}
-                    className="cursor-pointer appearance-none rounded-md border border-white/15 py-1 pr-7 pl-2 text-xs font-semibold outline-none focus:border-white/40"
-                    style={
-                        choice.id === "screen"
-                            ? { backgroundColor: "rgb(255 255 255 / 0.05)", color: "white" }
-                            : { backgroundColor: PINK, color: "#101828", borderColor: PINK }
-                    }
+                    className="absolute inset-0 cursor-pointer appearance-none opacity-0"
                 >
                     {SCENARIOS.map((s) => (
                         <option key={s.id} value={s.id} className="bg-white text-black">
@@ -39,11 +45,6 @@ export const ScenarioControls = () => {
                         </option>
                     ))}
                 </select>
-                <ChevronDown
-                    className="pointer-events-none absolute right-2 size-3.5"
-                    style={{ color: choice.id === "screen" ? "white" : "#101828" }}
-                    aria-hidden="true"
-                />
             </div>
             {choice.id === "random" && (
                 <button
