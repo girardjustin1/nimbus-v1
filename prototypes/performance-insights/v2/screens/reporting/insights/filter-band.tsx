@@ -3,9 +3,10 @@ import { ChevronRight, Plus, XClose } from "@untitledui/icons";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { cx } from "@/utils/cx";
 import { PINK, TEAL } from "../../das-shell";
-import { type FilterDim, type FilterState, StateAction, TEAL_DARK } from "../../nimbus-ui";
-import { type BandLook, bandCounts } from "./filter-state";
+import { type FilterState, StateAction, TEAL_DARK } from "../../nimbus-ui";
 import { R1 } from "../../round-1";
+import { type PanelDim, PolishedPanel } from "./filter-panel";
+import { type BandLook, bandCounts } from "./filter-state";
 
 /**
  * Performance Insights · Round 2 · the filter band concepts (24 Nov PI sync).
@@ -54,13 +55,19 @@ export const FilterBand = ({
     value,
     onChange,
     openOn,
+    panel = "today",
+    panelQuery,
 }: {
     look: BandLook;
-    dims: FilterDim[];
+    dims: PanelDim[];
     value: FilterState;
     onChange: (next: FilterState) => void;
     /** Opens the panel on this category when the screen loads (for the flow's states). */
     openOn?: string;
+    /** Today's two-pane panel, or C7's polished one (which does C8's search first). */
+    panel?: "today" | "polished";
+    /** A search already typed in the polished panel (C8 states). */
+    panelQuery?: string;
 }) => {
     const [open, setOpen] = useState(Boolean(openOn));
     const [draft, setDraft] = useState<FilterState>(value);
@@ -144,7 +151,11 @@ export const FilterBand = ({
                                     type="button"
                                     onClick={() => openPanel(d.id)}
                                     title={`Edit ${d.label}`}
-                                    className={cx(CHIP_H, "rounded-full px-3 text-md font-bold hover:bg-secondary", paused ? "text-quaternary line-through" : "text-primary")}
+                                    className={cx(
+                                        CHIP_H,
+                                        "rounded-full px-3 text-md font-bold hover:bg-secondary",
+                                        paused ? "text-quaternary line-through" : "text-primary",
+                                    )}
                                 >
                                     {d.label}
                                 </button>
@@ -153,7 +164,10 @@ export const FilterBand = ({
                                     return (
                                         <span
                                             key={v}
-                                            className={cx(CHIP_H, "inline-flex items-center gap-1 rounded-full pr-1 pl-3 transition duration-100 ease-linear [&>label]:gap-2")}
+                                            className={cx(
+                                                CHIP_H,
+                                                "inline-flex items-center gap-1 rounded-full pr-1 pl-3 transition duration-100 ease-linear [&>label]:gap-2",
+                                            )}
                                             style={
                                                 on
                                                     ? { backgroundColor: `${TEAL}1f`, boxShadow: `inset 0 0 0 1px ${TEAL}66` }
@@ -197,7 +211,21 @@ export const FilterBand = ({
                 )}
             </div>
 
-            {open && current && (
+            {open && current && panel === "polished" && (
+                <PolishedPanel
+                    dims={dims}
+                    draft={draft}
+                    setDraft={setDraft}
+                    cat={current.id}
+                    setCat={setCat}
+                    changed={changed}
+                    onCancel={() => setOpen(false)}
+                    onSave={save}
+                    initialQuery={panelQuery}
+                />
+            )}
+
+            {open && current && panel === "today" && (
                 <div className="overflow-hidden rounded-lg ring-1 ring-secondary">
                     <div className="grid grid-cols-[240px_minmax(0,1fr)]">
                         <ul className="max-h-80 overflow-y-auto border-r border-secondary py-1" aria-label="Filter categories">
@@ -247,7 +275,10 @@ export const FilterBand = ({
                                                 type="button"
                                                 aria-pressed={chosen}
                                                 onClick={() => pick(current.id, v)}
-                                                className={cx("w-full px-4 py-2 text-left text-md", chosen ? "font-semibold" : "text-secondary hover:bg-secondary")}
+                                                className={cx(
+                                                    "w-full px-4 py-2 text-left text-md",
+                                                    chosen ? "font-semibold" : "text-secondary hover:bg-secondary",
+                                                )}
                                                 style={chosen ? { color: TEAL_DARK, backgroundColor: `${TEAL}1f` } : undefined}
                                             >
                                                 {v}

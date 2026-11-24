@@ -193,10 +193,21 @@ export const PATTERNS: Pattern[] = [
         ],
     },
     {
+        id: "insight-beside",
+        title: "The key insight next to the chart",
+        takeaway:
+            "From a study of 2,108 dashboards: the ones people remember do not only show what happened, they say what changed, right beside the chart, and they know what to leave out. Other ideas from it to keep in mind: a live view of activity, a heat map of busy hours, and a metric of your own that people come to quote.",
+        refs: [{ app: "Mobbin · I studied 2,108 dashboards (video)", note: "Insights next to the chart, a prompt under it, or a full AI layer alongside; AI dashboards get about twice the saves.", url: "https://www.youtube.com/watch?v=kdRkuqu8apE" }],
+    },
+    {
         id: "assistant",
-        title: "An assistant beside the report (future)",
-        takeaway: "The useful ones suggest questions and set up the report the user then controls; the report stays the source of truth.",
+        title: "An AI layer beside the report",
+        takeaway:
+            "The useful ones suggest questions and set up the report the user then controls; the report stays the source of truth. The lightest version is one prompt under the chart; the fullest is a panel you can talk to beside the data.",
         refs: [
+            { app: "Linktree", note: "Insights with an assistant docked on the right: suggested questions, an “ask” prompt under every card, answers that show their analysis steps.", url: m("922aee3e-fd5b-4556-99d6-4e3d1d906be0") },
+            { app: "Linktree (flow)", note: "Chatting with the assistant: from the suggested questions to a summary and next steps.", url: "https://mobbin.com/flows/7da1f0d6-6070-4eba-9ab1-dfee042adf19" },
+            { app: "Linktree (flow)", note: "Renaming a conversation from its title.", url: "https://mobbin.com/flows/fb1b66ac-09cb-49bc-b270-389341542294" },
             { app: "Pipedrive", note: "The question on the left, the generated report and its filters on the right, editable.", url: m("2f13cf32-e76e-4b5a-b52a-036dea6e3bb5") },
             { app: "Seline", note: "Suggested questions over the dashboard before anything is typed.", url: m("33f047c0-7e1c-4f29-a65b-a25189a5e5ff") },
         ],

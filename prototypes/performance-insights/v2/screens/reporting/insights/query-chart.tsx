@@ -48,6 +48,7 @@ export const QueryChart = ({
     chart,
     interval,
     showLegend,
+    dualAxis,
 }: {
     rows: ReportRow[];
     metrics: Metric[];
@@ -55,6 +56,8 @@ export const QueryChart = ({
     chart: Exclude<ChartKind, "table">;
     interval: Interval;
     showLegend: boolean;
+    /** Round 2 · C10: two metrics compared always take an axis each, even in the same unit. */
+    dualAxis?: boolean;
 }) => {
     const periods = [...new Set(rows.map((r) => r.period))].reverse();
     const comboKeys = [...new Set(rows.map((r) => r.combo.key))];
@@ -74,6 +77,7 @@ export const QueryChart = ({
         : metrics.slice(0, MAX_SERIES).map((m, i) => ({ key: m, metric: m, color: COLORS[i], axis: "left" as const }));
     const leftUnit: Unit = UNIT[series[0].metric];
     for (const s of series) s.axis = UNIT[s.metric] === leftUnit ? "left" : "right";
+    if (dualAxis && !hasBreakdown && series.length === 2) series[1].axis = "right";
     const rightUnit = series.find((s) => s.axis === "right") ? UNIT[series.find((s) => s.axis === "right")!.metric] : undefined;
 
     const cell = (period: string, keys: string[]): Totals => sumTotals(rows.filter((r) => r.period === period && keys.includes(r.combo.key)).map((r) => r.t));

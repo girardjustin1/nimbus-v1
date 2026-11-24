@@ -25,3 +25,17 @@ export const bandCounts = (state: FilterState) => {
     return { chips: all.length, applied: all.length - off.length };
 };
 
+/** C8: how many matches a search-first list shows at once. */
+export const SEARCH_CAP = 50;
+
+/**
+ * The values a panel lists for a search. A search-first category (`top` set) opens on its
+ * top values and caps matches at SEARCH_CAP, counting the rest; a short list shows every match.
+ */
+export const searchValues = (dim: { values: string[]; top?: string[] }, query: string): { values: string[]; more: number } => {
+    const q = query.trim().toLowerCase();
+    if (!q) return { values: dim.top ?? dim.values, more: 0 };
+    const matches = dim.values.filter((v) => v.toLowerCase().includes(q));
+    if (!dim.top) return { values: matches, more: 0 };
+    return { values: matches.slice(0, SEARCH_CAP), more: Math.max(0, matches.length - SEARCH_CAP) };
+};

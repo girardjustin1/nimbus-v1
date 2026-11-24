@@ -56,6 +56,65 @@ function round2Screens(): ProtoScreen[] {
             () => <NewQuery defaultView />,
         ),
         c("c4-default-view-chips", "C4 · With C2's chips", "Realtime's view with the C2 band and a filter set.", () => <NewQuery defaultView band="chips" filters={SOME} />),
+        c(
+            "c7-panel",
+            "C7 · The panel, polished",
+            "Counts per category in the rail, search, Select all, checkboxes, and a footer that says what is picked.",
+            () => <NewQuery band="chips" panel="polished" filters={SOME} openFilterOn="Country" />,
+        ),
+        c("c7-panel-empty", "C7 · Adding the first filter", "The polished panel with nothing picked yet, on Ad Size.", () => (
+            <NewQuery band="chips" panel="polished" openFilterOn="Ad Size" />
+        )),
+        c(
+            "c8-search-first",
+            "C8 · Search first for Advertiser",
+            "2,406 advertisers: the panel opens on search and the top six, and says search reaches the rest.",
+            () => <NewQuery band="chips" panel="polished" longLists openFilterOn="Advertiser" />,
+        ),
+        c("c8-search-typed", "C8 · Typing narrows it", "“sport” matches 120; the first 50 show, with a count of the rest.", () => (
+            <NewQuery band="chips" panel="polished" longLists openFilterOn="Advertiser" panelQuery="sport" />
+        )),
+        c(
+            "c8-picked",
+            "C8 · Picks stay in view",
+            "Two advertisers picked: they stay listed above the search, so they can be unpicked without searching again.",
+            () => (
+                <NewQuery
+                    band="chips"
+                    panel="polished"
+                    longLists
+                    openFilterOn="Advertiser"
+                    filters={{ Advertiser: { values: ["shoes.example.com", "(Not sent)"], off: [] } }}
+                />
+            ),
+        ),
+        c("c10-blocks", "C10 · Metric blocks drive the chart", "Each block is a tab: Revenue is charted by platform; every block shows its change from the previous 7 days.", () => (
+            <NewQuery defaultView blocksDriveChart />
+        )),
+        c("c10-compare", "C10 · Two metrics compared", "Revenue and eCPM picked: the chart compares them on two axes.", () => (
+            <NewQuery defaultView blocksDriveChart charted={["Revenue", "ECPM"]} />
+        )),
+        c(
+            "c14-ask",
+            "C14 · Ask about this report",
+            "The AI layer: Ask in the tabs, three questions under the chart, and the panel docked beside the report.",
+            () => <NewQuery defaultView blocksDriveChart assistant="open" />,
+        ),
+        c(
+            "c14-answer",
+            "C14 · An answer, and Show this in the report",
+            "“Why did revenue change?” answered from the report's own figures, ending with a button that sets the chart.",
+            () => <NewQuery defaultView blocksDriveChart assistant assistantAsk="revenue" />,
+        ),
+        c("c14-closed", "C14 · Just the prompts", "The panel closed: only the questions under the chart, the lightest version of the layer.", () => (
+            <NewQuery defaultView blocksDriveChart assistant />
+        )),
+        c(
+            "c15-notes",
+            "C15 · What changed, beside the chart",
+            "Three or four facts worked out from the report, next to the chart: revenue against the previous span, the biggest mover, lowest fill, best day.",
+            () => <NewQuery defaultView blocksDriveChart insightNotes />,
+        ),
     ];
 }
 

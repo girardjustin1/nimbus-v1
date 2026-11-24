@@ -252,7 +252,8 @@ const dayBase = (d: string) => {
     return {
         requests: 3.4e9 * (weekend ? 1.32 : 1) * (0.96 + 0.08 * s("req")),
         win: 0.12 * (0.94 + 0.12 * s("win")),
-        render: 0.9 + 0.06 * s("render"),
+        // v2 · Round 2: kept low enough that no value's render rate reaches 100%, so nothing is clamped.
+        render: 0.84 + 0.05 * s("render"),
         ecpm: 1.8 * (0.92 + 0.16 * s("ecpm")),
         ctr: 0.0075 * (weekend ? 0.88 : 1) * (0.92 + 0.16 * s("ctr")),
         bid: 2.1 * (0.94 + 0.12 * s("bid")),
@@ -268,7 +269,39 @@ const shareOf = (dim: Dim, v: string) => {
     const w = (x: string) => 0.35 + seeded(`w:${dim}:${x}`);
     return w(v) / DIM_VALUES[dim].reduce((s, x) => s + w(x), 0);
 };
-const multOf = (dim: Dim, v: string): Mult => Object.fromEntries(Object.keys(ONE).map((k) => [k, 0.85 + 0.3 * seeded(`${k}:${dim}:${v}`)])) as Mult;
+const rawMult = (dim: Dim, v: string): Mult => Object.fromEntries(Object.keys(ONE).map((k) => [k, 0.85 + 0.3 * seeded(`${k}:${dim}:${v}`)])) as Mult;
+
+/**
+ * v2 · Round 2 (24 Nov): a value's multipliers, scaled so a breakdown adds back up to its
+ * total. Each count is the share times a chain of multipliers (wins: win; impressions:
+ * win × render; revenue: win × render × eCPM; …), so each link is scaled by its chain's
+ * share-weighted average over the breakdown's values. Every chain then averages to 1, and
+ * Android plus iOS equals the total, as a publisher would expect. (The frozen full
+ * application kept the unscaled multipliers, so its breakdowns drift from its totals.)
+ */
+const multCache = new Map<Dim, Map<string, Mult>>();
+const multOf = (dim: Dim, v: string): Mult => {
+    let byValue = multCache.get(dim);
+    if (!byValue) {
+        const values = DIM_VALUES[dim];
+        const raw = new Map(values.map((x) => [x, rawMult(dim, x)]));
+        const avg = (f: (m: Mult) => number) => values.reduce((n, x) => n + shareOf(dim, x) * f(raw.get(x)!), 0);
+        const kWin = avg((m) => m.win);
+        const kRender = avg((m) => (m.win / kWin) * m.render);
+        const kEcpm = avg((m) => (m.win / kWin) * (m.render / kRender) * m.ecpm);
+        const kCtr = avg((m) => (m.win / kWin) * (m.render / kRender) * m.ctr);
+        const kFloor = avg((m) => (m.win / kWin) * (m.render / kRender) * m.floor);
+        const kBid = avg((m) => (m.win / kWin) * m.bid);
+        byValue = new Map(
+            values.map((x) => {
+                const m = raw.get(x)!;
+                return [x, { win: m.win / kWin, render: m.render / kRender, ecpm: m.ecpm / kEcpm, ctr: m.ctr / kCtr, floor: m.floor / kFloor, bid: m.bid / kBid }];
+            }),
+        );
+        multCache.set(dim, byValue);
+    }
+    return byValue.get(v)!;
+};
 
 export interface Combo {
     key: string;
