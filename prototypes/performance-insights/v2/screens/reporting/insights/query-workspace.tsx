@@ -21,6 +21,7 @@ import {
     PI_TABS,
     type Range,
     formatMetric,
+    longDate,
     metricOf,
     runQuery,
 } from "./insights-data";
@@ -30,6 +31,7 @@ import { QueryMenu, Toast } from "./query-menu";
 import { RangePicker } from "./range-picker";
 import { spanOf } from "./report-facts";
 import type { ScenarioQuery } from "./scenarios";
+import { TableTip, type TipData } from "./table-tip";
 
 /**
  * Performance Insights · Round 2 · C16: the query beside the report (24 Nov).
@@ -58,6 +60,8 @@ const SEGMENT_COLORS = [TEAL, PINK, "#2E5AAC", "#B54708", "#7F56D9", "#0BA5EC", 
 /** Rows the chart can plot at once: one per colour, so no two lines share one. */
 const MAX_PLOT = SEGMENT_COLORS.length;
 const PAGE_SIZES = [10, 25, 50, 100];
+/** A data cell's hover: its row lightens (group/row on the tr), the cell itself a shade darker. */
+const HOVER_CELL = "transition-colors duration-75 group-hover/row:bg-[#F9FAFB] hover:!bg-[#EAECF0]";
 /** A row picked but not plotted yet, and a row not picked. */
 const PICKED_GREY = "#475467";
 const UNPICKED_GREY = "#98A2B3";
@@ -677,6 +681,20 @@ export const QueryWorkspace = ({
     const pg = Math.min(page, pageCount - 1);
     const pageRows = shown.slice(pg * pageSize, pg * pageSize + pageSize);
 
+    /* -------- hover (after GA4): the row lightens, the cell darkens, a card names what it holds -------- */
+    const tbody = useRef<HTMLTableSectionElement>(null);
+    // The whole range compares with the period before it; one date, with the same date a period earlier.
+    const wholeVs = span === 1 ? "the day before" : `the previous ${span} days`;
+    const dayVs = span === 1 ? "the day before" : `${span} days earlier`;
+    const tip = (m: Metric, rowLabel: string, column: string, now: number, prev: number | undefined, vs = wholeVs): TipData => ({
+        "data-tip-head": rowLabel,
+        "data-tip-col": `${m} · ${column}`,
+        "data-tip-value": formatMetric(m, now),
+        "data-tip-change":
+            compare && prev ? `${now >= prev ? "+" : "−"}${Math.abs(((now - prev) / prev) * 100).toFixed(1)}% vs ${vs} (${formatMetric(m, prev)})` : "",
+    });
+    const columnOf = (p: string) => (/^\d{4}-\d{2}-\d{2}$/.test(p) ? longDate(p) : p);
+
     /* -------- segments: every table row is a line the chart can draw -------- */
 
     const segments = metrics.flatMap((m, mi) =>
@@ -1086,7 +1104,7 @@ export const QueryWorkspace = ({
                                                         ))}
                                                     </tr>
                                                 </thead>
-                                                <tbody>
+                                                <tbody ref={tbody}>
                                                     {shown.length === 0 && (
                                                         <tr>
                                                             <td
@@ -1114,11 +1132,22 @@ export const QueryWorkspace = ({
                                                                     onPress={() => toggleSegment(id)}
                                                                 />
                                                             );
+                                                            const rowLabel = breakdown.length ? c.combo.values.join(" · ") : "Total";
+                                                            const whole = tip(
+                                                                m,
+                                                                rowLabel,
+                                                                "Whole range",
+                                                                metricOf(m, c.t),
+                                                                c.prev ? metricOf(m, c.prev) : undefined,
+                                                            );
                                                             return (
-                                                                <tr key={id} className="border-t border-secondary">
+                                                                <tr key={id} className="group/row border-t border-secondary">
                                                                     {ci === 0 &&
                                                                         (breakdown.length === 0 ? (
-                                                                            <td className={cx(TABLE.report.td, "font-bold whitespace-nowrap")}>
+                                                                            <td
+                                                                                className={cx(TABLE.report.td, HOVER_CELL, "font-bold whitespace-nowrap")}
+                                                                                {...whole}
+                                                                            >
                                                                                 <span className="inline-flex items-center gap-2.5">
                                                                                     {checkbox}
                                                                                     <LetterBadge i={mi} />
@@ -1152,14 +1181,17 @@ export const QueryWorkspace = ({
                                                                         </td>
                                                                     )}
                                                                     {breakdown.length > 0 && (
-                                                                        <td className={cx(TABLE.report.td, "whitespace-nowrap")}>
+                                                                        <td className={cx(TABLE.report.td, HOVER_CELL, "whitespace-nowrap")} {...whole}>
                                                                             <span className="inline-flex items-center gap-2.5">
                                                                                 {checkbox}
                                                                                 {c.combo.values[c.combo.values.length - 1]}
                                                                             </span>
                                                                         </td>
                                                                     )}
-                                                                    <td className={cx(TABLE.report.td, "font-bold whitespace-nowrap tabular-nums")}>
+                                                                    <td
+                                                                        className={cx(TABLE.report.td, HOVER_CELL, "font-bold whitespace-nowrap tabular-nums")}
+                                                                        {...whole}
+                                                                    >
                                                                         <Cell
                                                                             m={m}
                                                                             now={metricOf(m, c.t)}
@@ -1171,7 +1203,20 @@ export const QueryWorkspace = ({
                                                                     {periods.map((p) => {
                                                                         const r = byKey.get(`${p}|${c.combo.key}`);
                                                                         return (
-                                                                            <td key={p} className={cx(TABLE.report.td, "whitespace-nowrap tabular-nums")}>
+                                                                            <td
+                                                                                key={p}
+                                                                                className={cx(TABLE.report.td, HOVER_CELL, "whitespace-nowrap tabular-nums")}
+                                                                                {...(r
+                                                                                    ? tip(
+                                                                                          m,
+                                                                                          rowLabel,
+                                                                                          columnOf(p),
+                                                                                          metricOf(m, r.t),
+                                                                                          r.prev ? metricOf(m, r.prev) : undefined,
+                                                                                          dayVs,
+                                                                                      )
+                                                                                    : {})}
+                                                                            >
                                                                                 {r ? (
                                                                                     <Cell
                                                                                         m={m}
@@ -1194,6 +1239,7 @@ export const QueryWorkspace = ({
                                             </table>
                                         </div>
                                     </div>
+                                    <TableTip target={tbody} />
                                 </div>
                             )}
                         </>

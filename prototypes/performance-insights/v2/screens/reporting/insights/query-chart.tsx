@@ -1,7 +1,11 @@
+import { useState } from "react";
+import { Check } from "@untitledui/icons";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { cx } from "@/utils/cx";
 import { axis } from "../../campaign-series";
 import { ChartTooltip } from "../../campaign-ui";
 import { PINK, TEAL } from "../../das-shell";
+import { TEAL_DARK } from "../../nimbus-ui";
 import { dayLabel } from "../../sample-data";
 import {
     ADDITIVE,
@@ -80,6 +84,9 @@ export const QueryChart = ({
      */
     segments?: ChartSegment[];
 }) => {
+    // C16: the legend is a set of switches, one per line (and one for the previous period's lines).
+    const [hidden, setHidden] = useState<Set<string>>(() => new Set());
+    const [hidePrev, setHidePrev] = useState(false);
     const periods = [...new Set(rows.map((r) => r.period))].reverse();
     const comboKeys = [...new Set(rows.map((r) => r.combo.key))];
     const byCombo = (key: string) => rows.filter((r) => r.combo.key === key);
@@ -93,11 +100,11 @@ export const QueryChart = ({
     const series: Series[] = segments
         ? segments.map((g) => ({ key: g.label, metric: g.metric, color: g.color, axis: "left" as const, combo: g.comboKey }))
         : hasBreakdown
-        ? [
-              ...top.map((key, i) => ({ key, metric: metrics[0], color: COLORS[i], axis: "left" as const })),
-              ...(rest.length ? [{ key: otherKey, metric: metrics[0], color: OTHER, axis: "left" as const }] : []),
-          ]
-        : metrics.slice(0, MAX_SERIES).map((m, i) => ({ key: m, metric: m, color: COLORS[i], axis: "left" as const }));
+          ? [
+                ...top.map((key, i) => ({ key, metric: metrics[0], color: COLORS[i], axis: "left" as const })),
+                ...(rest.length ? [{ key: otherKey, metric: metrics[0], color: OTHER, axis: "left" as const }] : []),
+            ]
+          : metrics.slice(0, MAX_SERIES).map((m, i) => ({ key: m, metric: m, color: COLORS[i], axis: "left" as const }));
     const leftUnit: Unit = UNIT[(series[0] ?? { metric: metrics[0] }).metric];
     for (const s of series) s.axis = UNIT[s.metric] === leftUnit ? "left" : "right";
     if (dualAxis && !hasBreakdown && series.length === 2) series[1].axis = "right";
@@ -107,6 +114,17 @@ export const QueryChart = ({
     const prevCell = (period: string, keys: string[]): Totals =>
         sumTotals(rows.filter((r) => r.period === period && keys.includes(r.combo.key) && r.prev).map((r) => r.prev!));
     const withPrev = Boolean(comparePrev) && chart === "line" && rows.some((r) => r.prev);
+    const toggles = Boolean(segments) && chart !== "pie";
+    /** The lines drawn: every series, less the ones switched off in the legend. */
+    const drawn = toggles ? series.filter((s) => !hidden.has(s.key)) : series;
+    const drawPrev = withPrev && !(toggles && hidePrev);
+    const flip = (key: string) =>
+        setHidden((h) => {
+            const next = new Set(h);
+            if (next.has(key)) next.delete(key);
+            else next.add(key);
+            return next;
+        });
     const PREV = " · previous";
     const data = periods.map((p) => {
         const row: Record<string, string | number> = { period: p };
@@ -188,11 +206,11 @@ export const QueryChart = ({
                     {xAxis}
                     {yAxes}
                     <Tooltip content={tooltip} />
-                    {series.map((s) => (
+                    {drawn.map((s) => (
                         <Line key={s.key} yAxisId={s.axis} dataKey={s.key} stroke={s.color} strokeWidth={2.5} dot={false} isAnimationActive={false} />
                     ))}
-                    {withPrev &&
-                        series.map((s) => (
+                    {drawPrev &&
+                        drawn.map((s) => (
                             <Line
                                 key={s.key + PREV}
                                 yAxisId={s.axis}
@@ -215,7 +233,7 @@ export const QueryChart = ({
                     {yAxes}
                     <Tooltip content={tooltip} />
                     {/* The first series draws last, so its fill sits on top. */}
-                    {[...series].reverse().map((s) => (
+                    {[...drawn].reverse().map((s) => (
                         <Area
                             key={s.key}
                             yAxisId={s.axis}
@@ -236,7 +254,7 @@ export const QueryChart = ({
                     {xAxis}
                     {yAxes}
                     <Tooltip content={tooltip} cursor={{ fill: "#F2F4F7" }} />
-                    {series.map((s) => (
+                    {drawn.map((s) => (
                         <Bar
                             key={s.key}
                             yAxisId={s.axis}
@@ -280,7 +298,66 @@ export const QueryChart = ({
                     {body}
                 </ResponsiveContainer>
             </div>
-            {showLegend && (
+            {showLegend && toggles && (
+                <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-md" role="group" aria-label="Lines on the chart">
+                    {legend.map((l) => {
+                        const on = !hidden.has(l.key);
+                        return (
+                            <button
+                                key={l.key}
+                                type="button"
+                                role="checkbox"
+                                aria-checked={on}
+                                onClick={() => flip(l.key)}
+                                className={cx(
+                                    "inline-flex items-center gap-2 rounded-md px-1.5 py-1 hover:bg-secondary",
+                                    on ? "text-secondary" : "text-quaternary",
+                                )}
+                            >
+                                <span
+                                    className="inline-flex size-4 shrink-0 items-center justify-center rounded"
+                                    style={on ? { backgroundColor: l.color, color: "#FFFFFF" } : { boxShadow: `inset 0 0 0 2px ${l.color}` }}
+                                    aria-hidden="true"
+                                >
+                                    {on && <Check className="size-3" />}
+                                </span>
+                                <span className={on ? undefined : "line-through"}>{l.key}</span>
+                            </button>
+                        );
+                    })}
+                    {withPrev && (
+                        <button
+                            type="button"
+                            role="checkbox"
+                            aria-checked={!hidePrev}
+                            onClick={() => setHidePrev((v) => !v)}
+                            className={cx(
+                                "inline-flex items-center gap-2 rounded-md px-1.5 py-1 hover:bg-secondary",
+                                hidePrev ? "text-quaternary" : "text-secondary",
+                            )}
+                        >
+                            <svg width="22" height="4" aria-hidden="true">
+                                <line x1="0" y1="2" x2="22" y2="2" stroke="#98A2B3" strokeWidth="2" strokeDasharray="5 4" opacity={hidePrev ? 0.4 : 1} />
+                            </svg>
+                            <span className={hidePrev ? "line-through" : undefined}>Previous period</span>
+                        </button>
+                    )}
+                    {(hidden.size > 0 || hidePrev) && (
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setHidden(new Set());
+                                setHidePrev(false);
+                            }}
+                            className="rounded-md px-1.5 py-1 font-semibold hover:bg-secondary"
+                            style={{ color: TEAL_DARK }}
+                        >
+                            Show all
+                        </button>
+                    )}
+                </div>
+            )}
+            {showLegend && !toggles && (
                 <div className="flex flex-wrap justify-center gap-x-6 gap-y-1 text-md text-tertiary">
                     {legend.map((l) => (
                         <span key={l.key} className="inline-flex items-center gap-2">
