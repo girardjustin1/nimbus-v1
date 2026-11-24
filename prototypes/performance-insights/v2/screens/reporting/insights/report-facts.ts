@@ -1,4 +1,4 @@
-import { type Dim, type Metric, type Range, formatMetric, metricOf, runQuery } from "./insights-data";
+import { type Dim, type Metric, type Range, formatMetric, metricOf, rangeDays, runQuery } from "./insights-data";
 
 /**
  * Round 2 · C14 and C15: facts about the report, worked out from the same sample data the
@@ -8,7 +8,7 @@ import { type Dim, type Metric, type Range, formatMetric, metricOf, runQuery } f
 
 type Excluded = Partial<Record<Dim, string[]>>;
 
-export const spanOf = (range: Range) => (range === "yesterday" ? 1 : Number(range));
+export const spanOf = (range: Range) => rangeDays(range).length;
 export const periodName = (range: Range) => (spanOf(range) === 1 ? "the day before" : `the previous ${spanOf(range)} days`);
 
 const pct = (v: number) => `${v >= 0 ? "+" : "−"}${Math.abs(v * 100).toFixed(1)}%`;

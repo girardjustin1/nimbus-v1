@@ -526,7 +526,7 @@ const MetricBlocks = ({
     charted?: Metric[];
     onPick?: (m: Metric) => void;
 }) => {
-    const span = range === "yesterday" ? 1 : Number(range);
+    const span = rangeDays(range).length;
     const totalRow = runQuery({ range, interval: "day", breakdown: [], excluded, totalsOnly: true, compare: onPick ? span : undefined })[0];
     const byPlatform = runQuery({ range, interval: "day", breakdown: ["Platform"], excluded, totalsOnly: true });
     if (!totalRow) return null;

@@ -1,5 +1,5 @@
 import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Calendar, Check, ChevronDown, Minus, Plus, SearchLg, XClose } from "@untitledui/icons";
+import { ArrowLeft, Check, ChevronDown, Minus, Plus, SearchLg, XClose } from "@untitledui/icons";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Toggle } from "@/components/base/toggle/toggle";
 import { cx } from "@/utils/cx";
@@ -19,13 +19,12 @@ import {
     PI_TABS,
     type Range,
     formatMetric,
-    longDate,
     metricOf,
-    rangeDays,
     runQuery,
 } from "./insights-data";
 import { LONG_ADVERTISERS, TOP_ADVERTISERS } from "./long-lists";
 import { type ChartSegment, QueryChart } from "./query-chart";
+import { RangePicker } from "./range-picker";
 import { spanOf } from "./report-facts";
 
 /**
@@ -358,6 +357,7 @@ export const QueryWorkspace = ({
     open,
     tab: initialTab = "query",
     manual: initialManual,
+    datesOpen,
 }: {
     metrics?: Metric[];
     breakdown?: Dim[];
@@ -369,6 +369,8 @@ export const QueryWorkspace = ({
     tab?: "query" | "chart";
     /** Rows ticked by hand when the screen opens (ids "Metric|value"). */
     manual?: string[];
+    /** The date picker open when the screen loads. */
+    datesOpen?: boolean;
 }) => {
     const [range, setRange] = useState<Range>("7");
     const [interval, setInterval] = useState<Interval>("day");
@@ -391,7 +393,6 @@ export const QueryWorkspace = ({
         open?.kind === "metric" ? "metrics" : open?.kind === "breakdown" ? "breakdown" : "filter",
     );
 
-    const days = rangeDays(range);
     const span = spanOf(range);
     const excluded = useMemo(() => bandExcluded(FILTER_DIMS, filters) as Partial<Record<Dim, string[]>>, [filters]);
     const rows = useMemo(
@@ -476,10 +477,7 @@ export const QueryWorkspace = ({
                 {/* ---------------- report ---------------- */}
                 <div className="flex min-w-0 flex-col gap-4 px-8 py-5">
                     <div className="flex flex-wrap items-center gap-2">
-                        <span className={PILL}>
-                            <Calendar className="size-4 text-fg-quaternary" aria-hidden="true" />
-                            {longDate(days[0]).slice(0, 6)} – {longDate(days[days.length - 1])}
-                        </span>
+                        <RangePicker value={range} onChange={setRange} defaultOpen={datesOpen} />
                         <Segmented label="Date range" value={range} options={QUICK} onChange={setRange} />
                         <span className="ml-auto flex items-center gap-2">
                             <PillSelect label="Interval" value={interval} options={INTERVALS} onChange={setInterval} />

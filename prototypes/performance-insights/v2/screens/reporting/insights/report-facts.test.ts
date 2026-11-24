@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { matchQuestion } from "./assistant-questions";
-import { metricOf, runQuery } from "./insights-data";
+import { DATA_TODAY, customRange, metricOf, rangeDays, runQuery } from "./insights-data";
 import { changeOf, moversBy, reportFacts, rowsBy } from "./report-facts";
 
 /** Round 2 · C14 and C15 quote only figures worked out from the report's own data. */
@@ -47,5 +47,23 @@ describe("Round 2 assistant questions", () => {
         expect(matchQuestion("why is fill so low")).toBe("fill");
         expect(matchQuestion("Why did revenue drop?")).toBe("revenue");
         expect(matchQuestion("what's the weather")).toBeNull();
+    });
+});
+
+describe("Round 2 custom date ranges (C16's date picker)", () => {
+    it("a custom range covers every day from start to end", () => {
+        expect(rangeDays(customRange("2026-11-01", "2026-11-10"))).toHaveLength(10);
+        expect(rangeDays(customRange("2026-10-30", "2026-11-02"))).toEqual(["2026-10-30", "2026-10-31", "2026-11-01", "2026-11-02"]);
+    });
+
+    it("a range that matches a preset becomes the preset", () => {
+        const d7 = rangeDays("7");
+        expect(customRange(d7[0], d7[6])).toBe("7");
+        expect(customRange(rangeDays("yesterday")[0], rangeDays("yesterday")[0])).toBe("yesterday");
+        expect(d7[6]).toBe(DATA_TODAY);
+    });
+
+    it("compare reaches back the length of a custom range", () => {
+        expect(changeOf("Revenue", customRange("2026-11-01", "2026-11-10"), {}).before).toBeGreaterThan(0);
     });
 });

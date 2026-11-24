@@ -123,7 +123,8 @@ export const DIM_VALUES: Record<Dim, string[]> = {
 
 /* --------------------------------------------------------- Date ranges --- */
 
-export type Range = "yesterday" | "7" | "14" | "30";
+/** A preset, or (v2 · Round 2, C16's date picker) a custom range written "start~end" in ISO dates. */
+export type Range = "yesterday" | "7" | "14" | "30" | `${string}~${string}`;
 export type Interval = "day" | "week" | "month";
 
 export const RANGES: { id: Range; label: string }[] = [
@@ -147,6 +148,10 @@ const iso = (t: number) => new Date(t).toISOString().slice(0, 10);
 /** The days a range covers, oldest first. */
 export const rangeDays = (r: Range): string[] => {
     if (r === "yesterday") return [iso(TODAY - DAY)];
+    if (r.includes("~")) {
+        const [start, end] = r.split("~").map((d) => Date.parse(`${d}T00:00:00Z`));
+        return Array.from({ length: Math.round((end - start) / DAY) + 1 }, (_, k) => iso(start + k * DAY));
+    }
     const n = Number(r);
     return Array.from({ length: n }, (_, k) => iso(TODAY - (n - 1 - k) * DAY));
 };
@@ -157,6 +162,18 @@ export const longDate = (d: string) => `${MONTHS[Number(d.slice(5, 7)) - 1]} ${d
 /** "Monday, November 9, 2026" — the chart tooltip's title. */
 export const fullDate = (d: string) =>
     new Date(`${d}T12:00:00Z`).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
+
+/** The sample data's “today”: every preset ends here, and the date picker stops here. */
+export const DATA_TODAY = iso(TODAY);
+
+/** A custom range; a range that matches a preset becomes that preset. */
+export const customRange = (start: string, end: string): Range => {
+    for (const r of ["yesterday", "7", "14", "30"] as const) {
+        const days = rangeDays(r);
+        if (days[0] === start && days[days.length - 1] === end) return r;
+    }
+    return `${start}~${end}`;
+};
 
 const shiftDay = (d: string, back: number) => iso(Date.parse(`${d}T00:00:00Z`) - back * DAY);
 
