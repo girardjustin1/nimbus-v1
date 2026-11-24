@@ -1,6 +1,7 @@
 import type { ProtoScreen } from "../../../../../shared/prototype-frame";
 import type { FilterState } from "../../nimbus-ui";
 import { NewQuery } from "./new-query";
+import { QueryWorkspace } from "./query-workspace";
 import { SavedQueries } from "./saved-queries";
 
 /* -------------------------------------------------- Round 2 · concepts --- */
@@ -22,28 +23,27 @@ const PAUSED: FilterState = {
 };
 
 function round2Screens(): ProtoScreen[] {
-    const c = (id: string, title: string, description: string, render: ProtoScreen["render"]): ProtoScreen => ({ id, area: CONCEPTS, title, description, render });
+    const c = (id: string, title: string, description: string, render: ProtoScreen["render"]): ProtoScreen => ({
+        id,
+        area: CONCEPTS,
+        title,
+        description,
+        render,
+    });
     return [
         c("c0-control", "C0 · Control, with filters", "Today's band with the same filters every concept starts from.", () => <NewQuery filters={SOME} />),
-        c(
-            "c1-tight-band",
-            "C1 · A tight filter band",
-            "+ Filter first, one bordered group per category, three values then +N, Clear all at the end.",
-            () => <NewQuery band="tight" filters={SOME} />,
-        ),
-        c("c1-tight-band-more", "C1 · +N opens the panel", "Country's +2 opens the panel on Country.", () => <NewQuery band="tight" filters={SOME} openFilterOn="Country" />),
-        c(
-            "c2-chips",
-            "C2 · One rule for a chip",
-            "Every value is a chip: its checkbox applies it, × removes it. The category name edits it.",
-            () => <NewQuery band="chips" filters={SOME} />,
-        ),
-        c(
-            "c2-chips-paused",
-            "C2 · Paused chips",
-            "Two countries unchecked and Ad Type paused: they stay on the row and leave the report.",
-            () => <NewQuery band="chips" filters={PAUSED} />,
-        ),
+        c("c1-tight-band", "C1 · A tight filter band", "+ Filter first, one bordered group per category, three values then +N, Clear all at the end.", () => (
+            <NewQuery band="tight" filters={SOME} />
+        )),
+        c("c1-tight-band-more", "C1 · +N opens the panel", "Country's +2 opens the panel on Country.", () => (
+            <NewQuery band="tight" filters={SOME} openFilterOn="Country" />
+        )),
+        c("c2-chips", "C2 · One rule for a chip", "Every value is a chip: its checkbox applies it, × removes it. The category name edits it.", () => (
+            <NewQuery band="chips" filters={SOME} />
+        )),
+        c("c2-chips-paused", "C2 · Paused chips", "Two countries unchecked and Ad Type paused: they stay on the row and leave the report.", () => (
+            <NewQuery band="chips" filters={PAUSED} />
+        )),
         c("c3-add", "C3 · Add a filter", "+ Filter opens the panel; picks stay a draft until Save.", () => <NewQuery band="chips" openFilterOn="Country" />),
         c("c3-edit", "C3 · Edit a category", "Country's name on the row opens the panel on Country, with its values picked.", () => (
             <NewQuery band="chips" filters={SOME} openFilterOn="Country" />
@@ -55,7 +55,9 @@ function round2Screens(): ProtoScreen[] {
             "Revenue, Requests, Impressions and eCPM by platform for one app, realtime's metric blocks over the chart.",
             () => <NewQuery defaultView />,
         ),
-        c("c4-default-view-chips", "C4 · With C2's chips", "Realtime's view with the C2 band and a filter set.", () => <NewQuery defaultView band="chips" filters={SOME} />),
+        c("c4-default-view-chips", "C4 · With C2's chips", "Realtime's view with the C2 band and a filter set.", () => (
+            <NewQuery defaultView band="chips" filters={SOME} />
+        )),
         c(
             "c7-panel",
             "C7 · The panel, polished",
@@ -88,9 +90,12 @@ function round2Screens(): ProtoScreen[] {
                 />
             ),
         ),
-        c("c10-blocks", "C10 · Metric blocks drive the chart", "Each block is a tab: Revenue is charted by platform; every block shows its change from the previous 7 days.", () => (
-            <NewQuery defaultView blocksDriveChart />
-        )),
+        c(
+            "c10-blocks",
+            "C10 · Metric blocks drive the chart",
+            "Each block is a tab: Revenue is charted by platform; every block shows its change from the previous 7 days.",
+            () => <NewQuery defaultView blocksDriveChart />,
+        ),
         c("c10-compare", "C10 · Two metrics compared", "Revenue and eCPM picked: the chart compares them on two axes.", () => (
             <NewQuery defaultView blocksDriveChart charted={["Revenue", "ECPM"]} />
         )),
@@ -108,6 +113,27 @@ function round2Screens(): ProtoScreen[] {
         ),
         c("c14-closed", "C14 · Just the prompts", "The panel closed: only the questions under the chart, the lightest version of the layer.", () => (
             <NewQuery defaultView blocksDriveChart assistant />
+        )),
+        c(
+            "c16-workspace",
+            "C16 · The query beside the report",
+            "After Mixpanel's Insights: Metrics, Filter and Breakdown as cards in a panel on the right; dates, quick ranges and Compare over the chart; chart, both or table; a pivoted table.",
+            () => <QueryWorkspace />,
+        ),
+        c(
+            "c16-compare",
+            "C16 · Compared with the previous period",
+            "Compare on: a chip says what with, the chart draws the previous period faded, every cell shows its change.",
+            () => <QueryWorkspace compare />,
+        ),
+        c("c16-filter", "C16 · Editing a filter", "Country's card opens its values in the panel: search, checkboxes, Apply.", () => (
+            <QueryWorkspace open={{ kind: "filter-values", dim: "Country", draft: ["United States", "Canada"] }} />
+        )),
+        c("c16-add-metric", "C16 · Adding a metric", "“Add metric” opens a searchable list of the metrics not in the query yet.", () => (
+            <QueryWorkspace open={{ kind: "metric" }} />
+        )),
+        c("c16-table", "C16 · Table only, compared", "Revenue and eCPM by platform against each day, each cell with its change.", () => (
+            <QueryWorkspace compare view="table" metrics={["Revenue", "Impressions", "ECPM"]} />
         )),
         c(
             "c15-notes",

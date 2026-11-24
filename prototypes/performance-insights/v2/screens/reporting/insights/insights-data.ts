@@ -269,7 +269,21 @@ const shareOf = (dim: Dim, v: string) => {
     const w = (x: string) => 0.35 + seeded(`w:${dim}:${x}`);
     return w(v) / DIM_VALUES[dim].reduce((s, x) => s + w(x), 0);
 };
-const rawMult = (dim: Dim, v: string): Mult => Object.fromEntries(Object.keys(ONE).map((k) => [k, 0.85 + 0.3 * seeded(`${k}:${dim}:${v}`)])) as Mult;
+// Render rate varies less than the rest (±6%), so no value's render rate reaches the 99.5% cap.
+const rawMult = (dim: Dim, v: string): Mult =>
+    Object.fromEntries(Object.keys(ONE).map((k) => [k, k === "render" ? 0.94 + 0.12 * seeded(`${k}:${dim}:${v}`) : 0.85 + 0.3 * seeded(`${k}:${dim}:${v}`)])) as Mult;
+
+/**
+ * v2 · Round 2: each value also moves a little from day to day (±8% of its share, ±4% on
+ * each multiplier), so Android and iOS do not rise and fall in step. Shares are rescaled
+ * per day to sum to 1 and multipliers per day as below, so breakdowns still add up.
+ */
+const shareOnDay = (dim: Dim, v: string, d: string) => {
+    const w = (x: string) => (0.35 + seeded(`w:${dim}:${x}`)) * (0.92 + 0.16 * seeded(`wd:${dim}:${x}:${d}`));
+    return w(v) / DIM_VALUES[dim].reduce((s, x) => s + w(x), 0);
+};
+const dayRawMult = (dim: Dim, v: string, d: string): Mult =>
+    Object.fromEntries(Object.entries(rawMult(dim, v)).map(([k, x]) => [k, x * (0.96 + 0.08 * seeded(`${k}:${dim}:${v}:${d}`))])) as Mult;
 
 /**
  * v2 · Round 2 (24 Nov): a value's multipliers, scaled so a breakdown adds back up to its
@@ -279,13 +293,15 @@ const rawMult = (dim: Dim, v: string): Mult => Object.fromEntries(Object.keys(ON
  * Android plus iOS equals the total, as a publisher would expect. (The frozen full
  * application kept the unscaled multipliers, so its breakdowns drift from its totals.)
  */
-const multCache = new Map<Dim, Map<string, Mult>>();
-const multOf = (dim: Dim, v: string): Mult => {
-    let byValue = multCache.get(dim);
+const multCache = new Map<string, Map<string, Mult>>();
+const multOf = (dim: Dim, v: string, day?: string): Mult => {
+    const cacheKey = day ? `${dim}|${day}` : dim;
+    let byValue = multCache.get(cacheKey);
     if (!byValue) {
         const values = DIM_VALUES[dim];
-        const raw = new Map(values.map((x) => [x, rawMult(dim, x)]));
-        const avg = (f: (m: Mult) => number) => values.reduce((n, x) => n + shareOf(dim, x) * f(raw.get(x)!), 0);
+        const raw = new Map(values.map((x) => [x, day ? dayRawMult(dim, x, day) : rawMult(dim, x)]));
+        const weight = (x: string) => (day ? shareOnDay(dim, x, day) : shareOf(dim, x));
+        const avg = (f: (m: Mult) => number) => values.reduce((n, x) => n + weight(x) * f(raw.get(x)!), 0);
         const kWin = avg((m) => m.win);
         const kRender = avg((m) => (m.win / kWin) * m.render);
         const kEcpm = avg((m) => (m.win / kWin) * (m.render / kRender) * m.ecpm);
@@ -298,7 +314,7 @@ const multOf = (dim: Dim, v: string): Mult => {
                 return [x, { win: m.win / kWin, render: m.render / kRender, ecpm: m.ecpm / kEcpm, ctr: m.ctr / kCtr, floor: m.floor / kFloor, bid: m.bid / kBid }];
             }),
         );
-        multCache.set(dim, byValue);
+        multCache.set(cacheKey, byValue);
     }
     return byValue.get(v)!;
 };
@@ -308,6 +324,9 @@ export interface Combo {
     values: string[];
     share: number;
     mult: Mult;
+    /** v2 · Round 2: the breakdown each value belongs to, and the values kept of filtered categories outside the breakdown. */
+    parts?: [Dim, string][];
+    kept?: [Dim, string[]][];
 }
 
 /** At most this many breakdown combinations; the smallest are dropped beyond it. */
@@ -330,6 +349,7 @@ export const combosOf = (breakdown: Dim[], excluded: Partial<Record<Dim, string[
                         values: [...c.values, v],
                         share: c.share * shareOf(dim, v),
                         mult: Object.fromEntries(Object.entries(c.mult).map(([k, x]) => [k, x * m[k as keyof Mult]])) as Mult,
+                        parts: [...(c.parts ?? []), [dim, v] as [Dim, string]],
                     };
                 }),
             )
@@ -339,12 +359,30 @@ export const combosOf = (breakdown: Dim[], excluded: Partial<Record<Dim, string[
     const filterShare = (Object.keys(excluded) as Dim[])
         .filter((d) => !breakdown.includes(d) && excluded[d]?.length)
         .reduce((s, d) => s * DIM_VALUES[d].filter((v) => !excluded[d]!.includes(v)).reduce((a, v) => a + shareOf(d, v), 0), 1);
-    return combos.map((c) => ({ ...c, share: c.share * filterShare }));
+    const kept = (Object.keys(excluded) as Dim[])
+        .filter((d) => !breakdown.includes(d) && excluded[d]?.length)
+        .map((d) => [d, DIM_VALUES[d].filter((v) => !excluded[d]!.includes(v))] as [Dim, string[]]);
+    return combos.map((c) => ({ ...c, share: c.share * filterShare, kept }));
+};
+
+/** v2 · Round 2: a combination's share and multipliers on one day (see shareOnDay). */
+const onDay = (d: string, c: Combo): { share: number; mult: Mult } => {
+    if (!c.parts) return { share: c.share, mult: c.mult };
+    let share = 1;
+    let mult = ONE;
+    for (const [dim, v] of c.parts) {
+        share *= shareOnDay(dim, v, d);
+        const m = multOf(dim, v, d);
+        mult = Object.fromEntries(Object.entries(mult).map(([k, x]) => [k, x * m[k as keyof Mult]])) as Mult;
+    }
+    for (const [dim, values] of c.kept ?? []) share *= values.reduce((a, v) => a + shareOnDay(dim, v, d), 0);
+    return { share, mult };
 };
 
 /** One combination's counts on one day. */
-export const dayTotals = (d: string, c: Combo): Totals => {
+export const dayTotals = (d: string, combo: Combo): Totals => {
     const b = dayBase(d);
+    const c = { ...combo, ...onDay(d, combo) };
     const requests = b.requests * c.share;
     const wins = requests * b.win * c.mult.win;
     const impressions = wins * Math.min(0.995, b.render * c.mult.render);

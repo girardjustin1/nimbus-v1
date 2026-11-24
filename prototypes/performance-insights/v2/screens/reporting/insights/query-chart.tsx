@@ -49,6 +49,8 @@ export const QueryChart = ({
     interval,
     showLegend,
     dualAxis,
+    comparePrev,
+    height = "h-[28rem]",
 }: {
     rows: ReportRow[];
     metrics: Metric[];
@@ -58,6 +60,10 @@ export const QueryChart = ({
     showLegend: boolean;
     /** Round 2 · C10: two metrics compared always take an axis each, even in the same unit. */
     dualAxis?: boolean;
+    /** Round 2 · C16: each line drawn again, faded and dashed, for the previous period (rows carry `prev`). */
+    comparePrev?: boolean;
+    /** The plot's height class. */
+    height?: string;
 }) => {
     const periods = [...new Set(rows.map((r) => r.period))].reverse();
     const comboKeys = [...new Set(rows.map((r) => r.combo.key))];
@@ -81,19 +87,31 @@ export const QueryChart = ({
     const rightUnit = series.find((s) => s.axis === "right") ? UNIT[series.find((s) => s.axis === "right")!.metric] : undefined;
 
     const cell = (period: string, keys: string[]): Totals => sumTotals(rows.filter((r) => r.period === period && keys.includes(r.combo.key)).map((r) => r.t));
+    const prevCell = (period: string, keys: string[]): Totals =>
+        sumTotals(rows.filter((r) => r.period === period && keys.includes(r.combo.key) && r.prev).map((r) => r.prev!));
+    const withPrev = Boolean(comparePrev) && chart === "line" && rows.some((r) => r.prev);
+    const PREV = " · previous";
     const data = periods.map((p) => {
         const row: Record<string, string | number> = { period: p };
         if (hasBreakdown) {
             top.forEach((key) => (row[key] = metricOf(metrics[0], cell(p, [key]))));
             if (rest.length) row[otherKey] = metricOf(metrics[0], cell(p, rest));
+            if (withPrev) {
+                top.forEach((key) => (row[key + PREV] = metricOf(metrics[0], prevCell(p, [key]))));
+                if (rest.length) row[otherKey + PREV] = metricOf(metrics[0], prevCell(p, rest));
+            }
         } else {
             const t = cell(p, comboKeys);
             series.forEach((s) => (row[s.key] = metricOf(s.metric, t)));
+            if (withPrev) {
+                const pt = prevCell(p, comboKeys);
+                series.forEach((s) => (row[s.key + PREV] = metricOf(s.metric, pt)));
+            }
         }
         return row;
     });
 
-    const metricFor = (name: string) => series.find((s) => s.key === name)?.metric ?? metrics[0];
+    const metricFor = (name: string) => series.find((s) => s.key === name.replace(PREV, ""))?.metric ?? metrics[0];
     const tooltip = <ChartTooltip format={(v, name) => formatMetric(metricFor(name), v)} title={(p) => title(interval, p)} />;
     const xAxis = (
         <XAxis
@@ -151,6 +169,20 @@ export const QueryChart = ({
                     {series.map((s) => (
                         <Line key={s.key} yAxisId={s.axis} dataKey={s.key} stroke={s.color} strokeWidth={2.5} dot={false} isAnimationActive={false} />
                     ))}
+                    {withPrev &&
+                        series.map((s) => (
+                            <Line
+                                key={s.key + PREV}
+                                yAxisId={s.axis}
+                                dataKey={s.key + PREV}
+                                stroke={s.color}
+                                strokeOpacity={0.45}
+                                strokeDasharray="6 5"
+                                strokeWidth={2}
+                                dot={false}
+                                isAnimationActive={false}
+                            />
+                        ))}
                 </LineChart>
             );
         if (chart === "area")
@@ -221,7 +253,7 @@ export const QueryChart = ({
     return (
         <div className="flex flex-col gap-4">
             {chart === "pie" && <h3 className="text-lg font-extrabold text-primary">{pieMetric}</h3>}
-            <div className="h-[28rem]">
+            <div className={height}>
                 <ResponsiveContainer width="100%" height="100%">
                     {body}
                 </ResponsiveContainer>
@@ -234,6 +266,14 @@ export const QueryChart = ({
                             {l.key}
                         </span>
                     ))}
+                    {withPrev && (
+                        <span className="inline-flex items-center gap-2">
+                            <svg width="22" height="4" aria-hidden="true">
+                                <line x1="0" y1="2" x2="22" y2="2" stroke="#98A2B3" strokeWidth="2" strokeDasharray="5 4" />
+                            </svg>
+                            Previous period
+                        </span>
+                    )}
                     {uncharted > 0 && <span>+{uncharted} more in Table</span>}
                 </div>
             )}

@@ -205,6 +205,22 @@ export const CONCEPTS: Concept[] = [
         ],
     },
     {
+        id: "C16",
+        title: "The query beside the report",
+        problem: "Product's ask, after Mixpanel's Insights: its filters, layout and the placement of things.",
+        idea: "The query moves to a panel on the right, in three sections: Metrics as lettered cards, Filter as one card per category (“Country is United States or Canada”), Breakdown as one card per field, each with its own +. Over the chart: the dates, quick ranges, interval and chart type, then Compare, which shows as a chip and draws the previous period faded. Under it: chart, both or table; the table pivots metric and breakdown values against the dates, each cell with its change.",
+        reach: "Rethink",
+        status: "Ready for review",
+        patterns: ["query-panel", "compare", "pivot", "search-first"],
+        screen: "c16-workspace",
+        states: [
+            ["Compared", "c16-compare"],
+            ["Editing a filter", "c16-filter"],
+            ["Adding a metric", "c16-add-metric"],
+            ["Table only", "c16-table"],
+        ],
+    },
+    {
         id: "C15",
         title: "What changed, beside the chart",
         problem: "A chart shows what happened; the dashboards people return to also say what changed.",

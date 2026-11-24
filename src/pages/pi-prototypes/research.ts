@@ -193,6 +193,16 @@ export const PATTERNS: Pattern[] = [
         ],
     },
     {
+        id: "query-panel",
+        title: "The query in a panel beside the report",
+        takeaway:
+            "The query lives in its own column on the right, in sections with a + each: metrics as lettered cards, filters as readable sentences, breakdowns as cards. The report gets the full width, the dates and comparison sit right over the chart, and the table under it pivots against the dates.",
+        refs: [
+            { app: "Mixpanel (flow)", note: "Comparing an insight with the previous period: Compare menu, a chip once set, faded lines for the previous period, the change in every cell.", url: "https://mobbin.com/flows/09f6e5da-eaa5-4633-9a33-231f800317f6" },
+            { app: "Mixpanel", note: "Metrics A and B, a Country filter card and two breakdown cards on the right; chart over a nested table.", url: m("8a37646e-121c-4446-a108-3706f9afc75a") },
+        ],
+    },
+    {
         id: "insight-beside",
         title: "The key insight next to the chart",
         takeaway:
