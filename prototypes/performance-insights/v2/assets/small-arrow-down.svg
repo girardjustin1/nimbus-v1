@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="9px" height="6px" viewBox="0 0 9 6" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.1 (78136) - https://sketchapp.com -->
+    <title>Shape</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Dashboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <g id="Mobile-Dashboard" transform="translate(-340.000000, -271.000000)" stroke="#DB6FA3" stroke-width="2">
+            <path d="M347.103553,270.457107 L347.103553,274.625878 C347.103553,274.808811 346.955257,274.957107 346.772325,274.957107 L342.603553,274.957107" id="Shape" transform="translate(344.853553, 272.707107) rotate(-315.000000) translate(-344.853553, -272.707107) "></path>
+        </g>
+    </g>
+</svg>
