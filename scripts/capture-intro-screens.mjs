@@ -2,7 +2,7 @@
 // (Start Here › Overview / Style guide / Process & roadmap / How to review, and
 // Prototypes › Deal Activation System › Rounds).
 //
-//   npm run proto:dev            (in another terminal; serves :5190)
+//   npm run proto:dev            (in another terminal; serves :5195)
 //   node scripts/capture-intro-screens.mjs
 //
 // Re-run after a visible change to the prototypes. Writes JPEGs to src/pages/intro/screens/.
@@ -13,7 +13,7 @@ import { chromium } from "playwright";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const out = path.join(root, "src/pages/intro/screens");
-const base = process.env.PROTO_URL ?? "http://localhost:5190/";
+const base = process.env.PROTO_URL ?? "http://localhost:5195/";
 mkdirSync(out, { recursive: true });
 
 /** Hide the dark prototype toolbar: these are pictures of the product, not of the prototype frame. */

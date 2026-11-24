@@ -14,7 +14,7 @@ const TEAL_DARK = "#1F7F80";
 const PINK_DARK = "#A94579";
 
 export const protoUrl = (route: string) =>
-    (typeof window !== "undefined" && /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname) ? "http://localhost:5190/das/v6/" : "./das/v6/") +
+    (typeof window !== "undefined" && /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname) ? "http://localhost:5195/das/v6/" : "./das/v6/") +
     `#/${route}`;
 export const docUrl = (id: string) => (id.endsWith("--docs") ? `./?path=/docs/${id}` : `./?path=/story/${id}`);
 

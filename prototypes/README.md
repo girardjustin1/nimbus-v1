@@ -6,10 +6,10 @@ on-brand automatically.
 
 | Prototype | Local | GitHub Pages (primary) | Netlify (backup) |
 | --- | --- | --- | --- |
-| Nimbus · Full application (Nov 13 style guide) | http://localhost:5190/app/ | https://girardjustin1.github.io/nimbus-v1/app/ | https://nimbus-ds-v1.netlify.app/app/ |
-| Deal Activation System | http://localhost:5190/das/ | https://girardjustin1.github.io/nimbus-v1/das/ | https://nimbus-ds-v1.netlify.app/das/ |
-| Performance Insights | http://localhost:5190/performance-insights/ | https://girardjustin1.github.io/nimbus-v1/performance-insights/ | https://nimbus-ds-v1.netlify.app/performance-insights/ |
-| DAS Studio | http://localhost:5190/das-studio/ | https://girardjustin1.github.io/nimbus-v1/das-studio/ | https://nimbus-ds-v1.netlify.app/das-studio/ |
+| Nimbus · Full application (Nov 13 style guide) | http://localhost:5195/app/ | https://girardjustin1.github.io/nimbus-v1/app/ | https://nimbus-ds-v1.netlify.app/app/ |
+| Deal Activation System | http://localhost:5195/das/ | https://girardjustin1.github.io/nimbus-v1/das/ | https://nimbus-ds-v1.netlify.app/das/ |
+| Performance Insights | http://localhost:5195/performance-insights/ | https://girardjustin1.github.io/nimbus-v1/performance-insights/ | https://nimbus-ds-v1.netlify.app/performance-insights/ |
+| DAS Studio | http://localhost:5195/das-studio/ | https://girardjustin1.github.io/nimbus-v1/das-studio/ | https://nimbus-ds-v1.netlify.app/das-studio/ |
 | Storybook (design system) | http://localhost:6006/ | https://girardjustin1.github.io/nimbus-v1/ | https://nimbus-ds-v1.netlify.app/ |
 
 Both hosts deploy from `main` and serve the same build. If one is behind, use the other.
@@ -20,7 +20,7 @@ path (`…/das/v1/`, `…/das/v2/`) so earlier rounds can be compared.
 ## Run locally
 
 ```bash
-npm run proto:dev     # http://localhost:5190/das/, /performance-insights/ and /das-studio/
+npm run proto:dev     # http://localhost:5195/das/, /performance-insights/ and /das-studio/
 npm run proto:build   # static build → ./dist-prototypes
 ```
 

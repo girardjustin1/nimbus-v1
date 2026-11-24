@@ -16,9 +16,9 @@ Storybook 10 · Vite.**
 | What | GitHub Pages (primary) | Netlify (backup) | Local |
 | --- | --- | --- | --- |
 | **Storybook** (design system) | [girardjustin1.github.io/nimbus-v1](https://girardjustin1.github.io/nimbus-v1/) | [nimbus-ds-v1.netlify.app](https://nimbus-ds-v1.netlify.app/) | `npm run storybook` → http://localhost:6006 |
-| **Prototype: Deal Activation System** | […/nimbus-v1/das/](https://girardjustin1.github.io/nimbus-v1/das/) | […netlify.app/das/](https://nimbus-ds-v1.netlify.app/das/) | `npm run proto:dev` → http://localhost:5190/das/ |
-| **Prototype: Performance Insights** | […/nimbus-v1/performance-insights/](https://girardjustin1.github.io/nimbus-v1/performance-insights/) | […netlify.app/performance-insights/](https://nimbus-ds-v1.netlify.app/performance-insights/) | `npm run proto:dev` → http://localhost:5190/performance-insights/ |
-| **Prototype: DAS Studio** | […/nimbus-v1/das-studio/](https://girardjustin1.github.io/nimbus-v1/das-studio/) | […netlify.app/das-studio/](https://nimbus-ds-v1.netlify.app/das-studio/) | `npm run proto:dev` → http://localhost:5190/das-studio/ |
+| **Prototype: Deal Activation System** | […/nimbus-v1/das/](https://girardjustin1.github.io/nimbus-v1/das/) | […netlify.app/das/](https://nimbus-ds-v1.netlify.app/das/) | `npm run proto:dev` → http://localhost:5195/das/ |
+| **Prototype: Performance Insights** | […/nimbus-v1/performance-insights/](https://girardjustin1.github.io/nimbus-v1/performance-insights/) | […netlify.app/performance-insights/](https://nimbus-ds-v1.netlify.app/performance-insights/) | `npm run proto:dev` → http://localhost:5195/performance-insights/ |
+| **Prototype: DAS Studio** | […/nimbus-v1/das-studio/](https://girardjustin1.github.io/nimbus-v1/das-studio/) | […netlify.app/das-studio/](https://nimbus-ds-v1.netlify.app/das-studio/) | `npm run proto:dev` → http://localhost:5195/das-studio/ |
 
 Start with the **[Start Here overview](https://girardjustin1.github.io/nimbus-v1/?path=/docs/start-here-overview--docs)**
 page in Storybook. It gives a guided overview and links to every prototype.
@@ -177,7 +177,7 @@ git clone https://github.com/girardjustin1/nimbus-v1.git
 cd nimbus-v1
 npm install
 npm run storybook     # design system → http://localhost:6006
-npm run proto:dev     # prototypes    → http://localhost:5190/das/  and  /performance-insights/
+npm run proto:dev     # prototypes    → http://localhost:5195/das/  and  /performance-insights/
 ```
 
 No tokens or secrets are needed. Icons come from the free `@untitledui/icons` set.
@@ -188,7 +188,7 @@ No tokens or secrets are needed. Icons come from the free `@untitledui/icons` se
 | --- | --- |
 | `npm run storybook` | Storybook dev server (port 6006) |
 | `npm run build-storybook` | Static Storybook → `storybook-static/` |
-| `npm run proto:dev` | Standalone prototypes dev server (port 5190) |
+| `npm run proto:dev` | Standalone prototypes dev server (port 5195) |
 | `npm run proto:build` | Static prototypes → `dist-prototypes/` |
 | `npm run typecheck` | TypeScript (`tsc -b`) across `src/` and `prototypes/` |
 | `npm run lint` | ESLint |
@@ -322,9 +322,9 @@ Every link inside the site is relative, so it works the same on either host.
 - **PRO icons (optional).** `@untitledui-pro/icons` isn't installed. To add it, put
   `UNTITLEDUI_PRO_TOKEN` in a local `.env` (read by `.npmrc`) and as a repository
   secret for CI.
-- **Ports.** Storybook runs on 6006 and the prototypes on 5190. Locally, the
-  The front pages' prototype buttons expect 5190, and the prototypes' "Design system"
-  link expects 6006. The prototype server won't silently switch ports if 5190 is taken.
+- **Ports.** Storybook runs on 6006 and the prototypes on 5195. Locally, the
+  The front pages' prototype buttons expect 5195, and the prototypes' "Design system"
+  link expects 6006. The prototype server won't silently switch ports if 5195 is taken.
   Storybook will, so if it lands elsewhere (e.g. `npm run storybook -- -p 6007`), that
   one link won't match.
 - **Formatting.** Prettier is configured (`.prettierrc`) but not enforced in CI yet,

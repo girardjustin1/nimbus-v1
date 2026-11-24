@@ -4,7 +4,7 @@ import { story } from "../intro/tokens";
 import { glossary, openCaptures } from "./terminology";
 
 export const proto = (hash = "") =>
-  (typeof window !== "undefined" && window.location.hostname === "localhost" ? "http://localhost:5190/das/v2/" : "../../das/v2/") + hash;
+  (typeof window !== "undefined" && window.location.hostname === "localhost" ? "http://localhost:5195/das/v2/" : "../../das/v2/") + hash;
 
 export const S = ({ to, children }) => (
   <a href={proto(to)} target="_top" style={{ color: "#A94579", fontWeight: 600 }}>{children}</a>
@@ -122,7 +122,7 @@ is the product's, and it's worth raising.
 
 Match Logic and Device Language were dropped for Round 2 on the 1 Oct instruction, but
 Match Logic is specified in the Extended Targeting charter with a wireframe, so
-<a href={(typeof window !== "undefined" && window.location.hostname === "localhost" ? "http://localhost:5190/das/v1/" : "../../das/v1/")} target="_top" style={{ color: "#1F7F80", fontWeight: 600 }}>Round 1</a> still
+<a href={(typeof window !== "undefined" && window.location.hostname === "localhost" ? "http://localhost:5195/das/v1/" : "../../das/v1/")} target="_top" style={{ color: "#1F7F80", fontWeight: 600 }}>Round 1</a> still
 has both. If the charter is amended, Round 1 can follow.
 
 </div>

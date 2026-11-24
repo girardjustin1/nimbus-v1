@@ -37,7 +37,7 @@ export default defineConfig({
     resolve: {
         alias: { "@": path.resolve(root, "../src") },
     },
-    server: { port: 5190, strictPort: true },
+    server: { port: 5195, strictPort: true },
     build: {
         outDir: path.resolve(root, "../dist-prototypes"),
         emptyOutDir: true,

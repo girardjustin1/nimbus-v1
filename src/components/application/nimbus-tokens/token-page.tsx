@@ -10,7 +10,7 @@ import type { ReactNode } from "react";
 
 export const protoHref = (route: string) => {
     const local = typeof window !== "undefined" && /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname);
-    return `${local ? "http://localhost:5190/" : "./"}das/v5/#/${route}`;
+    return `${local ? "http://localhost:5195/" : "./"}das/v5/#/${route}`;
 };
 
 /** The DAS content area: white, with the 32px gutter bands and tables bleed out of. */
