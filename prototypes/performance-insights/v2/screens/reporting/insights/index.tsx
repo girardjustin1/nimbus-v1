@@ -132,6 +132,18 @@ function round2Screens(): ProtoScreen[] {
         c("c16-add-metric", "C16 · Adding a metric", "“Add metric” opens a searchable list of the metrics not in the query yet.", () => (
             <QueryWorkspace open={{ kind: "metric" }} />
         )),
+        c(
+            "c16-segments",
+            "C16 · Segments: pick the rows to chart",
+            "Two breakdowns: grey blocks group the rows, each row has a checkbox in its line's colour. Two rows ticked by hand (manual segments).",
+            () => (
+                <QueryWorkspace
+                    metrics={["Revenue"]}
+                    breakdown={["Platform", "Ad Type"]}
+                    manual={["Revenue|iOS · Video", "Revenue|Android · Video"]}
+                />
+            ),
+        ),
         c("c16-table", "C16 · Table only, compared", "Revenue and eCPM by platform against each day, each cell with its change.", () => (
             <QueryWorkspace compare view="table" metrics={["Revenue", "Impressions", "ECPM"]} />
         )),

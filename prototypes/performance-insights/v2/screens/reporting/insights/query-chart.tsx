@@ -35,6 +35,15 @@ interface Series {
     metric: Metric;
     color: string;
     axis: "left" | "right";
+    /** Segments only: the combination the line sums. */
+    combo?: string;
+}
+
+export interface ChartSegment {
+    label: string;
+    metric: Metric;
+    comboKey: string;
+    color: string;
 }
 
 const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -51,6 +60,7 @@ export const QueryChart = ({
     dualAxis,
     comparePrev,
     height = "h-[28rem]",
+    segments,
 }: {
     rows: ReportRow[];
     metrics: Metric[];
@@ -64,6 +74,11 @@ export const QueryChart = ({
     comparePrev?: boolean;
     /** The plot's height class. */
     height?: string;
+    /**
+     * Round 2 · C16: exactly the lines to draw, one per ticked table row: a metric for one
+     * breakdown combination (comboKey "" for the totals), in that row's colour.
+     */
+    segments?: ChartSegment[];
 }) => {
     const periods = [...new Set(rows.map((r) => r.period))].reverse();
     const comboKeys = [...new Set(rows.map((r) => r.combo.key))];
@@ -75,13 +90,15 @@ export const QueryChart = ({
 
     /* -------- series -------- */
 
-    const series: Series[] = hasBreakdown
+    const series: Series[] = segments
+        ? segments.map((g) => ({ key: g.label, metric: g.metric, color: g.color, axis: "left" as const, combo: g.comboKey }))
+        : hasBreakdown
         ? [
               ...top.map((key, i) => ({ key, metric: metrics[0], color: COLORS[i], axis: "left" as const })),
               ...(rest.length ? [{ key: otherKey, metric: metrics[0], color: OTHER, axis: "left" as const }] : []),
           ]
         : metrics.slice(0, MAX_SERIES).map((m, i) => ({ key: m, metric: m, color: COLORS[i], axis: "left" as const }));
-    const leftUnit: Unit = UNIT[series[0].metric];
+    const leftUnit: Unit = UNIT[(series[0] ?? { metric: metrics[0] }).metric];
     for (const s of series) s.axis = UNIT[s.metric] === leftUnit ? "left" : "right";
     if (dualAxis && !hasBreakdown && series.length === 2) series[1].axis = "right";
     const rightUnit = series.find((s) => s.axis === "right") ? UNIT[series.find((s) => s.axis === "right")!.metric] : undefined;
@@ -93,7 +110,12 @@ export const QueryChart = ({
     const PREV = " · previous";
     const data = periods.map((p) => {
         const row: Record<string, string | number> = { period: p };
-        if (hasBreakdown) {
+        if (segments) {
+            for (const s of series) {
+                row[s.key] = metricOf(s.metric, cell(p, [s.combo!]));
+                if (withPrev) row[s.key + PREV] = metricOf(s.metric, prevCell(p, [s.combo!]));
+            }
+        } else if (hasBreakdown) {
             top.forEach((key) => (row[key] = metricOf(metrics[0], cell(p, [key]))));
             if (rest.length) row[otherKey] = metricOf(metrics[0], cell(p, rest));
             if (withPrev) {
@@ -241,7 +263,7 @@ export const QueryChart = ({
     })();
 
     const legend = chart === "pie" ? pieData.map((d) => ({ key: d.name, color: d.color })) : series.map((s) => ({ key: s.key, color: s.color }));
-    const uncharted = hasBreakdown ? 0 : Math.max(0, metrics.length - MAX_SERIES);
+    const uncharted = segments || hasBreakdown ? 0 : Math.max(0, metrics.length - MAX_SERIES);
 
     if (chart === "pie" && !pieMetric)
         return (
