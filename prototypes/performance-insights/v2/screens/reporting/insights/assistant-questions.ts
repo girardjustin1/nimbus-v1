@@ -1,4 +1,5 @@
-import type { ChartKind, Dim, Metric } from "./insights-data";
+import type { FilterState } from "../../nimbus-ui";
+import type { ChartKind, Dim, Metric, Range } from "./insights-data";
 
 /** Round 2 · C14: the questions the prototype's assistant answers (see ./assistant.tsx). */
 export type QuestionId = "revenue" | "countries" | "fill";
@@ -8,6 +9,10 @@ export interface ReportChange {
     breakdown?: Dim[];
     chart?: ChartKind;
     charted?: Metric[];
+    /** C16's chat builds a whole query: its filters, dates and comparison too. */
+    filters?: FilterState;
+    range?: Range;
+    compare?: boolean;
 }
 
 export const QUESTIONS: Record<QuestionId, string> = {

@@ -11,8 +11,9 @@ import { describe, expect, it } from "vitest";
  */
 const dir = __dirname;
 // Prototype chrome, not product UI: the Copy switch sits in the dark prototype toolbar
-// and matches its 12px controls (an exception on the Typography Rules page).
-const CHROME = new Set(["copy-deck-ui.tsx"]);
+// and matches its 12px controls (an exception on the Typography Rules page). The Data
+// scenario menu (scenario-ui.tsx) sits beside it in the same toolbar.
+const CHROME = new Set(["copy-deck-ui.tsx", "scenario-ui.tsx"]);
 // Nov 13: the app keeps each area's screens in its own folder, so the rules cover subfolders too.
 const files = (readdirSync(dir, { recursive: true }) as string[]).filter((f) => f.endsWith(".tsx") && !CHROME.has(f.split("/").pop()!));
 

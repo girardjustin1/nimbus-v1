@@ -1,11 +1,13 @@
 import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Check, ChevronDown, Minus, Plus, SearchLg, XClose } from "@untitledui/icons";
+import { ArrowLeft, Check, ChevronDown, Minus, Plus, SearchLg, Stars02, XClose } from "@untitledui/icons";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Toggle } from "@/components/base/toggle/toggle";
 import { cx } from "@/utils/cx";
 import { DasShell, PINK, TEAL } from "../../das-shell";
 import { type FilterState, PageTabs, StateAction, TABLE, TEAL_DARK, tableHead } from "../../nimbus-ui";
 import { R1 } from "../../round-1";
+import { AssistantPanel } from "./assistant";
+import type { ReportChange } from "./assistant-questions";
 import { bandExcluded, searchValues } from "./filter-state";
 import {
     type ChartKind,
@@ -26,6 +28,7 @@ import { LONG_ADVERTISERS, TOP_ADVERTISERS } from "./long-lists";
 import { type ChartSegment, QueryChart } from "./query-chart";
 import { RangePicker } from "./range-picker";
 import { spanOf } from "./report-facts";
+import type { ScenarioQuery } from "./scenarios";
 
 /**
  * Performance Insights · Round 2 · C16: the query beside the report (24 Nov).
@@ -346,6 +349,44 @@ const PickerPopover = ({
     );
 };
 
+/**
+ * Keeps a panel exactly as tall as the window below its top edge, so whatever sits at its
+ * bottom (the Ask tab's message box) is always on screen: before the page scrolls, while it
+ * scrolls, and once the panel sticks to the top.
+ */
+const useFitToWindow = (on: boolean) => {
+    const ref = useRef<HTMLElement>(null);
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        if (!on) {
+            el.style.height = "";
+            return;
+        }
+        let frame = 0;
+        const fit = () => {
+            cancelAnimationFrame(frame);
+            frame = requestAnimationFrame(() => {
+                el.style.height = `${Math.max(0, window.innerHeight - Math.max(0, el.getBoundingClientRect().top))}px`;
+            });
+        };
+        fit();
+        window.addEventListener("scroll", fit, { passive: true });
+        window.addEventListener("resize", fit);
+        // The page above can still settle (fonts, charts drawing), which moves the panel's top.
+        const settle = new ResizeObserver(fit);
+        settle.observe(document.body);
+        return () => {
+            cancelAnimationFrame(frame);
+            settle.disconnect();
+            window.removeEventListener("scroll", fit);
+            window.removeEventListener("resize", fit);
+            el.style.height = "";
+        };
+    }, [on]);
+    return ref;
+};
+
 /* ---------------------------------------------------------------- Screen --- */
 
 export const QueryWorkspace = ({
@@ -356,8 +397,10 @@ export const QueryWorkspace = ({
     view: initialView = "both",
     open,
     tab: initialTab = "query",
+    ask: firstAsk,
     manual: initialManual,
     datesOpen,
+    scenario,
 }: {
     metrics?: Metric[];
     breakdown?: Dim[];
@@ -366,28 +409,51 @@ export const QueryWorkspace = ({
     view?: View;
     /** A picker open when the screen loads (for the flow's states). */
     open?: Picker;
-    tab?: "query" | "chart";
+    tab?: "query" | "chart" | "ask";
+    /** Typed into the Ask tab when the screen opens (for the prototype's states). */
+    ask?: string;
     /** Rows ticked by hand when the screen opens (ids "Metric|value"). */
     manual?: string[];
     /** The date picker open when the screen loads. */
     datesOpen?: boolean;
+    /** Round 2: the data scenario picked in the prototype's toolbar (null: the screen's own). */
+    scenario?: ScenarioQuery | null;
 }) => {
-    const [range, setRange] = useState<Range>("7");
-    const [interval, setInterval] = useState<Interval>("day");
-    const [metrics, setMetrics] = useState<Metric[]>(initialMetrics);
-    const [breakdown, setBreakdown] = useState<Dim[]>(initialBreakdown);
-    const [filters, setFilters] = useState<FilterState>(initialFilters);
-    const [compare, setCompare] = useState(initialCompare);
+    // Round 2: a data scenario (prototype toolbar) replaces the screen's own query when one is picked.
+    const sc = scenario ?? undefined;
+    const [range, setRange] = useState<Range>(sc?.range ?? "7");
+    const [interval, setInterval] = useState<Interval>(sc?.interval ?? "day");
+    const [metrics, setMetrics] = useState<Metric[]>(sc?.metrics ?? initialMetrics);
+    const [breakdown, setBreakdown] = useState<Dim[]>(sc?.breakdown.slice(0, 2) ?? initialBreakdown);
+    const [filters, setFilters] = useState<FilterState>(sc?.filters ?? initialFilters);
+    const [compare, setCompare] = useState(sc?.compare ?? initialCompare);
     const [compareMenu, setCompareMenu] = useState(false);
     const [changeOnly, setChangeOnly] = useState(false);
-    const [view, setView] = useState<View>(initialView);
-    const [chart, setChart] = useState<Exclude<ChartKind, "table" | "pie">>("line");
+    const [view, setView] = useState<View>(sc?.chart === "table" ? "table" : initialView);
+    const [chart, setChart] = useState<Exclude<ChartKind, "table" | "pie">>(sc?.chart && sc.chart !== "table" ? sc.chart : "line");
     const [legend, setLegend] = useState(true);
     const [tab, setTab] = useState(initialTab);
+    const askPanel = useFitToWindow(tab === "ask");
+
+    /** C16's chat: a built chart replaces the query, and every card, the chart and the table follow. */
+    const applyChange = (c: ReportChange) => {
+        if (c.metrics) setMetrics(c.metrics);
+        if (c.breakdown) setBreakdown(c.breakdown.slice(0, 2));
+        if (c.filters) setFilters(c.filters);
+        if (c.range) setRange(c.range);
+        if (c.compare !== undefined) setCompare(c.compare);
+        if (c.chart === "table") setView("table");
+        else if (c.chart && c.chart !== "pie") {
+            setChart(c.chart);
+            setView((v) => (v === "table" ? "both" : v));
+        }
+        setManual(null);
+        setSearch("");
+    };
     const [picker, setPicker] = useState<Picker>(open ?? null);
     const [search, setSearch] = useState("");
     // Rows charted: null follows the query (the top rows, dynamic); a list is the rows ticked by hand.
-    const [manual, setManual] = useState<string[] | null>(initialManual ?? null);
+    const [manual, setManual] = useState<string[] | null>(sc ? null : (initialManual ?? null));
     const [segmentMenu, setSegmentMenu] = useState(false);
     const [pickerAt, setPickerAt] = useState<"metrics" | "filter" | "breakdown">(
         open?.kind === "metric" ? "metrics" : open?.kind === "breakdown" ? "breakdown" : "filter",
@@ -555,7 +621,7 @@ export const QueryWorkspace = ({
                             {view !== "table" &&
                                 (chartSegments.length === 0 ? (
                                     <p className="rounded-xl border border-dashed border-secondary px-6 py-16 text-center text-md text-tertiary">
-                                        No rows ticked. Tick a row in the table to chart it.
+                                        {totals.length === 0 ? "No data for these dates and filters." : "No rows ticked. Tick a row in the table to chart it."}
                                     </p>
                                 ) : (
                                     <QueryChart
@@ -678,6 +744,16 @@ export const QueryWorkspace = ({
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                {shown.length === 0 && (
+                                                    <tr>
+                                                        <td
+                                                            colSpan={2 + breakdown.length + periods.length}
+                                                            className="px-8 py-10 text-center text-md text-tertiary"
+                                                        >
+                                                            {totals.length === 0 ? "No data for these dates and filters." : "No rows match the search."}
+                                                        </td>
+                                                    </tr>
+                                                )}
                                                 {metrics.flatMap((m, mi) => {
                                                     const mine = segments.filter((g) => g.mi === mi);
                                                     return shown.map((c, ci) => {
@@ -778,11 +854,15 @@ export const QueryWorkspace = ({
 
                 {/* ---------------- query panel ---------------- */}
                 <aside
+                    ref={askPanel}
                     aria-label="Query"
-                    className="sticky top-0 flex max-h-screen min-h-[40rem] flex-col self-stretch border-l border-secondary bg-secondary/40"
+                    className={cx(
+                        "sticky top-0 flex flex-col border-l border-secondary",
+                        tab === "ask" ? "bg-primary" : "max-h-screen min-h-[40rem] self-stretch bg-secondary/40",
+                    )}
                 >
                     <div className="flex border-b border-secondary px-4" role="tablist">
-                        {(["query", "chart"] as const).map((t) => (
+                        {(["query", "chart", "ask"] as const).map((t) => (
                             <button
                                 key={t}
                                 type="button"
@@ -795,12 +875,21 @@ export const QueryWorkspace = ({
                                 )}
                                 style={tab === t ? { color: TEAL_DARK, borderColor: TEAL } : undefined}
                             >
-                                {t}
+                                {t === "ask" ? (
+                                    <span className="inline-flex items-center gap-1.5">
+                                        <Stars02 className="size-4" style={{ color: tab === t ? TEAL_DARK : PINK }} aria-hidden="true" />
+                                        Ask
+                                    </span>
+                                ) : (
+                                    t
+                                )}
                             </button>
                         ))}
                     </div>
 
-                    <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-4">
+                    {tab === "ask" && <AssistantPanel builder embedded range={range} excluded={excluded} onApply={applyChange} firstAsk={firstAsk} />}
+
+                    <div className={cx("min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-4", tab === "ask" ? "hidden" : "flex")}>
                         {tab === "chart" ? (
                             <div className="flex flex-col gap-4">
                                 <span style={R1.filterLabel}>Chart type</span>

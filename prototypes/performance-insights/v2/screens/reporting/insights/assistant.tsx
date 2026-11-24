@@ -4,6 +4,7 @@ import { cx } from "@/utils/cx";
 import { PINK, TEAL } from "../../das-shell";
 import { TEAL_DARK } from "../../nimbus-ui";
 import { QUESTIONS, type QuestionId, type ReportChange, matchQuestion } from "./assistant-questions";
+import { BUILD_EXAMPLES, type BuildRequest, parseRequest } from "./chart-request";
 import { type Dim, type Range, formatMetric } from "./insights-data";
 import { changeOf, formatChange, moversBy, periodName, rowsBy } from "./report-facts";
 
@@ -114,7 +115,29 @@ interface Turn {
     id: number;
     text: string;
     q: QuestionId | null;
+    /** C16: a chart request read from the text, built on “Build this chart”. */
+    build?: BuildRequest | null;
 }
+
+/** C16: what the chat read from a chart request, listed back before it is built. */
+const buildAnswer = (b: BuildRequest): Answer => ({
+    steps: ["Reading your request", "Matching metrics and fields", "Setting up the chart"],
+    body: (
+        <>
+            <p>Here is what I read. Build it, then change anything in the Query tab.</p>
+            <dl className="grid grid-cols-[96px_minmax(0,1fr)] gap-x-3 gap-y-1.5 rounded-lg bg-secondary px-3 py-2.5">
+                {b.read.map(([k, v]) => (
+                    <div key={k} className="contents">
+                        <dt className="font-semibold text-tertiary">{k}</dt>
+                        <dd className="font-semibold text-primary">{v}</dd>
+                    </div>
+                ))}
+            </dl>
+        </>
+    ),
+    apply: { label: "Build this chart", change: b.change },
+    next: [],
+});
 
 /** The prompts that sit right under the chart (the light version of the layer). */
 export const AskRow = ({ onAsk }: { onAsk: (q: QuestionId) => void }) => (
@@ -151,6 +174,8 @@ const AnswerView = ({
     excluded,
     onApply,
     onAsk,
+    onAskText,
+    builder,
     latest,
 }: {
     turn: Turn;
@@ -158,9 +183,11 @@ const AnswerView = ({
     excluded: Excluded;
     onApply: (c: ReportChange) => void;
     onAsk: (q: QuestionId) => void;
+    onAskText: (text: string) => void;
+    builder?: boolean;
     latest: boolean;
 }) => {
-    const answer = turn.q ? answerOf(turn.q, range, excluded) : null;
+    const answer = turn.build ? buildAnswer(turn.build) : turn.q ? answerOf(turn.q, range, excluded) : null;
     const steps = answer?.steps.length ?? 0;
     // The steps tick through once, then the answer appears; earlier answers show at once.
     const [done, setDone] = useState(latest ? 0 : steps);
@@ -175,7 +202,19 @@ const AnswerView = ({
     if (!answer)
         return (
             <div className="flex flex-col gap-3 text-md text-secondary">
-                <p>In this prototype I can answer three questions about the report:</p>
+                {builder ? (
+                    <>
+                        <p>I could not find a metric or a breakdown in that. Name one, like “revenue by country”, or try one of these:</p>
+                        <div className="flex flex-col items-start gap-2">
+                            {BUILD_EXAMPLES.map((x) => (
+                                <TextSuggest key={x} text={x} onAsk={onAskText} />
+                            ))}
+                        </div>
+                        <p>Or ask about the report:</p>
+                    </>
+                ) : (
+                    <p>In this prototype I can answer three questions about the report:</p>
+                )}
                 <div className="flex flex-col items-start gap-2">
                     {(Object.keys(QUESTIONS) as QuestionId[]).map((q) => (
                         <SuggestButton key={q} q={q} onAsk={onAsk} />
@@ -219,7 +258,7 @@ const AnswerView = ({
                         style={applied ? { color: TEAL_DARK, backgroundColor: `${TEAL}1f` } : { color: "#FFFFFF", backgroundColor: TEAL_DARK }}
                     >
                         {applied ? <CheckCircle className="size-4" aria-hidden="true" /> : <BarChart10 className="size-4" aria-hidden="true" />}
-                        {applied ? "Showing in the report" : answer.apply.label}
+                        {applied ? (turn.build ? "Built in the report" : "Showing in the report") : answer.apply.label}
                     </button>
                     {latest && (
                         <div className="flex flex-col items-start gap-2 pt-1">
@@ -233,6 +272,18 @@ const AnswerView = ({
         </div>
     );
 };
+
+/** A chart request offered as a button (C16). */
+const TextSuggest = ({ text, onAsk }: { text: string; onAsk: (text: string) => void }) => (
+    <button
+        type="button"
+        onClick={() => onAsk(text)}
+        className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-left text-md font-semibold text-secondary ring-1 ring-secondary hover:bg-secondary"
+    >
+        <BarChart10 className="size-4 shrink-0" style={{ color: TEAL_DARK }} aria-hidden="true" />
+        {text}
+    </button>
+);
 
 const SuggestButton = ({ q, onAsk }: { q: QuestionId; onAsk: (q: QuestionId) => void }) => (
     <button
@@ -252,11 +303,20 @@ export const AssistantPanel = ({
     onClose,
     pending,
     onPendingTaken,
+    builder,
+    embedded,
+    firstAsk,
 }: {
     range: Range;
     excluded: Excluded;
     onApply: (c: ReportChange) => void;
-    onClose: () => void;
+    onClose?: () => void;
+    /** C16: the chat also builds charts from what is typed. */
+    builder?: boolean;
+    /** C16: drawn inside another panel (no frame of its own, no close button). */
+    embedded?: boolean;
+    /** A request already typed when the panel opens (for the prototype's states). */
+    firstAsk?: string;
     /** A question asked from outside the panel (the row under the chart). */
     pending?: QuestionId | null;
     onPendingTaken?: () => void;
@@ -287,17 +347,34 @@ export const AssistantPanel = ({
         if (box) box.scrollTo({ top: box.scrollHeight, behavior: "smooth" });
     }, [turns.length]);
 
-    const send = () => {
-        const t = text.trim();
+    /** A typed line: a question (why, which, where…), or in builder mode a chart to build. */
+    const askText = (raw: string) => {
+        const t = raw.trim();
         if (!t) return;
-        ask(matchQuestion(t), t);
+        const question = /^(why|which|where|what|how|who|when|is|are|did|does)\b/i.test(t) ? matchQuestion(t) : null;
+        const build = !question && builder ? parseRequest(t) : null;
+        setTurns((cur) => [...cur, { id: nextId.current++, text: t, q: question ?? (build ? null : matchQuestion(t)), build }]);
+        if (title === "New conversation") setTitle(t.replace(/\?$/, "").slice(0, 42));
+    };
+    const firstTaken = useRef(false);
+    useEffect(() => {
+        if (!firstAsk || firstTaken.current) return;
+        firstTaken.current = true;
+        askText(firstAsk);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [firstAsk]);
+    const send = () => {
+        askText(text);
         setText("");
     };
 
     return (
         <aside
             aria-label="Ask about this report"
-            className="relative z-10 sticky top-0 flex h-[calc(100vh-1rem)] max-h-[56rem] flex-col border-l border-secondary bg-primary"
+            className={cx(
+                "flex flex-col bg-primary",
+                embedded ? "min-h-0 flex-1" : "relative sticky top-0 z-10 h-[calc(100vh-1rem)] max-h-[56rem] border-l border-secondary",
+            )}
         >
             <div className="flex items-center gap-2 border-b border-secondary px-5 py-3">
                 {renaming ? (
@@ -333,15 +410,17 @@ export const AssistantPanel = ({
                 >
                     <Edit05 className="size-5" aria-hidden="true" />
                 </button>
-                <button
-                    type="button"
-                    aria-label="Close assistant"
-                    title="Close"
-                    onClick={onClose}
-                    className="rounded-md p-1.5 text-fg-quaternary hover:bg-secondary hover:text-fg-secondary"
-                >
-                    <XClose className="size-5" aria-hidden="true" />
-                </button>
+                {onClose && (
+                    <button
+                        type="button"
+                        aria-label="Close assistant"
+                        title="Close"
+                        onClick={onClose}
+                        className="rounded-md p-1.5 text-fg-quaternary hover:bg-secondary hover:text-fg-secondary"
+                    >
+                        <XClose className="size-5" aria-hidden="true" />
+                    </button>
+                )}
             </div>
 
             <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-5 py-5">
@@ -349,9 +428,20 @@ export const AssistantPanel = ({
                     <div className="mt-auto flex flex-col gap-4">
                         <Stars02 className="size-7" style={{ color: PINK }} aria-hidden="true" />
                         <div>
-                            <div className="text-display-xs font-extrabold text-primary">Ask about this report</div>
-                            <div className="text-md text-tertiary">Answers use the report's own figures, for the dates and filters you have set.</div>
+                            <div className="text-display-xs font-extrabold text-primary">{builder ? "Describe a chart, or ask" : "Ask about this report"}</div>
+                            <div className="text-md text-tertiary">
+                                {builder
+                                    ? "Say what you want to see and I'll set up the metrics, breakdown, filters, dates and chart. Questions use the report's own figures."
+                                    : "Answers use the report's own figures, for the dates and filters you have set."}
+                            </div>
                         </div>
+                        {builder && (
+                            <div className="flex flex-col items-start gap-2">
+                                {BUILD_EXAMPLES.map((x) => (
+                                    <TextSuggest key={x} text={x} onAsk={askText} />
+                                ))}
+                            </div>
+                        )}
                         <div className="flex flex-col items-start gap-2">
                             {(Object.keys(QUESTIONS) as QuestionId[]).map((q) => (
                                 <SuggestButton key={q} q={q} onAsk={(x) => ask(x, QUESTIONS[x])} />
@@ -368,6 +458,8 @@ export const AssistantPanel = ({
                                 excluded={excluded}
                                 onApply={onApply}
                                 onAsk={(q) => ask(q, QUESTIONS[q])}
+                                onAskText={askText}
+                                builder={builder}
                                 latest={i === turns.length - 1}
                             />
                         </div>
@@ -391,7 +483,7 @@ export const AssistantPanel = ({
                                 send();
                             }
                         }}
-                        placeholder="Ask about this report"
+                        placeholder={builder ? "Describe a chart, or ask a question" : "Ask about this report"}
                         aria-label="Ask about this report"
                         className="max-h-32 min-h-6 flex-1 resize-none bg-transparent py-1 text-md text-primary outline-none placeholder:text-placeholder"
                     />

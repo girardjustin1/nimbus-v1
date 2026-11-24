@@ -15,6 +15,7 @@ export const InsightNotes = ({ range, excluded }: { range: Range; excluded: Part
     return (
         <aside aria-label="What changed" className="flex flex-col gap-3">
             <div className="text-md font-bold text-tertiary">What changed vs {periodName(range)}</div>
+            {facts.length === 0 && <span className="text-md text-tertiary">No data for these dates and filters.</span>}
             {facts.map((f) => (
                 <div
                     key={f.id}

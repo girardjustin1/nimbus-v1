@@ -74,7 +74,7 @@ export const RoundTwo = () => (
         eyebrow="Round 2 · current · Nov 24, 2026"
         title="Organise the filters, then open on something"
         what="From the 24 Nov sync: make the filter band intentional, give a chip one behaviour, finish the flow from adding a filter to removing it, and open the page on realtime's view now that Performance Insights replaces it."
-        point="A gradient of concepts, from a restyle engineering can take as CSS to a few that change the model. Each one is its own screen in the prototype, next to today's page as the control."
+        point="A gradient of concepts, from a restyle engineering can take as CSS to a few that change the model. Each one is its own screen in the prototype, next to today's page as the control. The prototype's toolbar has a Data menu that fills every concept with the same query, minimal, busy, worst case, empty or random, to see each one under stress."
         actions={
             <CtaRow>
                 <Cta kind="primary" href={proto(V2, "c2-chips")}>

@@ -22,6 +22,7 @@ export interface Change {
 /** A metric for the whole range against the same span just before it. */
 export const changeOf = (metric: Metric, range: Range, excluded: Excluded): Change => {
     const r = runQuery({ range, interval: "day", breakdown: [], excluded, totalsOnly: true, compare: spanOf(range) })[0];
+    if (!r) return { now: 0, before: 0, change: 0 };
     const now = metricOf(metric, r.t);
     const before = r.prev ? metricOf(metric, r.prev) : now;
     return { now, before, change: before ? (now - before) / before : 0 };
@@ -58,7 +59,7 @@ export const moversBy = (dim: Dim, metric: Metric, range: Range, excluded: Exclu
 export const bestDay = (metric: Metric, range: Range, excluded: Excluded) => {
     const days = runQuery({ range, interval: "day", breakdown: [], excluded });
     const best = [...days].sort((a, b) => metricOf(metric, b.t) - metricOf(metric, a.t))[0];
-    return { day: best.period, value: metricOf(metric, best.t) };
+    return best ? { day: best.period, value: metricOf(metric, best.t) } : null;
 };
 
 /** A line of fact, with the figures already formatted. */
@@ -74,6 +75,8 @@ const trendOf = (change: number): Fact["trend"] => (Math.abs(change) < 0.0005 ? 
 
 /** C15: what changed in the range, in three lines. */
 export const reportFacts = (range: Range, excluded: Excluded): Fact[] => {
+    // Filters that match nothing: there is nothing to say.
+    if (!runQuery({ range, interval: "day", breakdown: [], excluded, totalsOnly: true }).length) return [];
     const revenue = changeOf("Revenue", range, excluded);
     const platforms = rowsBy("Platform", "Revenue", range, excluded);
     const mover = moversBy("Demand Source", "Revenue", range, excluded, 1)[0];
@@ -103,7 +106,7 @@ export const reportFacts = (range: Range, excluded: Excluded): Fact[] => {
             detail: `${formatMetric("Fill Rate", fill.now)} fill, ${pct(fill.change)} vs ${periodName(range)}.`,
             trend: trendOf(fill.change),
         });
-    facts.push({ id: "best-day", title: `Best day: ${day.day}`, detail: `${formatMetric("Revenue", day.value)} in revenue.`, trend: "flat" });
+    if (day) facts.push({ id: "best-day", title: `Best day: ${day.day}`, detail: `${formatMetric("Revenue", day.value)} in revenue.`, trend: "flat" });
     return facts;
 };
 

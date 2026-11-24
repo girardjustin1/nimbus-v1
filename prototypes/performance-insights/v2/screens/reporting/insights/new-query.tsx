@@ -64,6 +64,7 @@ import {
 } from "./insights-data";
 import { LONG_ADVERTISERS, TOP_ADVERTISERS } from "./long-lists";
 import { QueryChart } from "./query-chart";
+import type { ScenarioQuery } from "./scenarios";
 
 /**
  * Performance Insights · New Query — Nov 13 style guide, rebuilt from staging
@@ -109,6 +110,7 @@ export const NewQuery = ({
     assistant,
     assistantAsk,
     insightNotes,
+    scenario,
 }: {
     chart?: ChartKind;
     metrics?: Metric[];
@@ -137,16 +139,20 @@ export const NewQuery = ({
     assistantAsk?: QuestionId;
     /** Round 2 · C15: what changed, beside the chart. */
     insightNotes?: boolean;
+    /** Round 2: the data scenario picked in the prototype's toolbar (null: the screen's own). */
+    scenario?: ScenarioQuery | null;
 }) => {
     // A saved query opened from Saved Queries brings its own settings.
     const [opened] = useState(() => findQuery(readHashParams().get("q")));
-    const [range, setRange] = useState<Range>(opened?.range ?? "7");
-    const [interval, setInterval] = useState<Interval>(opened?.interval ?? "day");
-    const [metrics, setMetrics] = useState<Metric[]>(opened?.metrics ?? (defaultView ? DEFAULT_VIEW.metrics : initialMetrics));
-    const [breakdown, setBreakdown] = useState<Dim[]>(opened?.breakdown ?? (defaultView ? DEFAULT_VIEW.breakdown : initialBreakdown));
-    const [filters, setFilters] = useState<FilterState>(initialFilters);
-    const [compare, setCompare] = useState("");
-    const [chart, setChart] = useState<ChartKind>(opened?.chart ?? (defaultView ? DEFAULT_VIEW.chart : initialChart));
+    // Round 2: a data scenario (prototype toolbar) replaces the screen's own query when one is picked.
+    const sc = scenario ?? undefined;
+    const [range, setRange] = useState<Range>(sc?.range ?? opened?.range ?? "7");
+    const [interval, setInterval] = useState<Interval>(sc?.interval ?? opened?.interval ?? "day");
+    const [metrics, setMetrics] = useState<Metric[]>(sc?.metrics ?? opened?.metrics ?? (defaultView ? DEFAULT_VIEW.metrics : initialMetrics));
+    const [breakdown, setBreakdown] = useState<Dim[]>(sc?.breakdown ?? opened?.breakdown ?? (defaultView ? DEFAULT_VIEW.breakdown : initialBreakdown));
+    const [filters, setFilters] = useState<FilterState>(sc?.filters ?? initialFilters);
+    const [compare, setCompare] = useState(sc?.compare ? String(rangeDays(sc.range).length) : "");
+    const [chart, setChart] = useState<ChartKind>(sc?.chart ?? opened?.chart ?? (defaultView ? DEFAULT_VIEW.chart : initialChart));
     const [totalsOnly, setTotalsOnly] = useState(false);
     const [showLegend, setShowLegend] = useState(true);
     // C4 opens like realtime: the report first, the builder one click away (Expand).
