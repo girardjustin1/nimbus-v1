@@ -1,10 +1,10 @@
 import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Check, ChevronDown, LayoutRight, Minus, Plus, SearchLg, Stars02, XClose } from "@untitledui/icons";
+import { ArrowLeft, Check, ChevronDown, ChevronLeft, ChevronRight, LayoutRight, Minus, Plus, SearchLg, Stars02, XClose } from "@untitledui/icons";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Toggle } from "@/components/base/toggle/toggle";
 import { cx } from "@/utils/cx";
 import { DasShell, PINK, TEAL } from "../../das-shell";
-import { type FilterState, PageTabs, StateAction, TABLE, TEAL_DARK, tableHead } from "../../nimbus-ui";
+import { type FilterState, PageTabs, StateAction, TABLE, TEAL_DARK, tableHead, tealControls } from "../../nimbus-ui";
 import { R1 } from "../../round-1";
 import { AssistantPanel } from "./assistant";
 import type { ReportChange } from "./assistant-questions";
@@ -55,7 +55,12 @@ const LETTERS = "ABCDEFGHIJKLM";
 const DYNAMIC_N = 6;
 /** One colour per table row, shared by its checkbox and its line. */
 const SEGMENT_COLORS = [TEAL, PINK, "#2E5AAC", "#B54708", "#7F56D9", "#0BA5EC", "#B42318", "#4CA30D", "#DD2590", "#6172F3", "#854A0E", "#667085"];
-const TOP_N = 12;
+/** Rows the chart can plot at once: one per colour, so no two lines share one. */
+const MAX_PLOT = SEGMENT_COLORS.length;
+const PAGE_SIZES = [10, 25, 50, 100];
+/** A row picked but not plotted yet, and a row not picked. */
+const PICKED_GREY = "#475467";
+const UNPICKED_GREY = "#98A2B3";
 const CHART_KINDS: { id: Exclude<ChartKind, "table" | "pie">; label: string }[] = [
     { id: "line", label: "Line" },
     { id: "area", label: "Area" },
@@ -142,6 +147,79 @@ const PillSelect = <T extends string>({
         <ChevronDown className="pointer-events-none absolute right-2.5 size-4 text-fg-quaternary" aria-hidden="true" />
     </label>
 );
+
+/** Chart type, with the legend switch under it (it used to live in the panel's Chart tab). */
+const ChartMenu = ({
+    value,
+    onChange,
+    legend,
+    onLegend,
+}: {
+    value: Exclude<ChartKind, "table" | "pie">;
+    onChange: (v: Exclude<ChartKind, "table" | "pie">) => void;
+    legend: boolean;
+    onLegend: (on: boolean) => void;
+}) => {
+    const [open, setOpen] = useState(false);
+    const box = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        if (!open) return;
+        const key = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+        const down = (e: MouseEvent) => box.current && !box.current.contains(e.target as Node) && setOpen(false);
+        window.addEventListener("keydown", key);
+        window.addEventListener("mousedown", down);
+        return () => {
+            window.removeEventListener("keydown", key);
+            window.removeEventListener("mousedown", down);
+        };
+    }, [open]);
+    return (
+        <div ref={box} className="relative">
+            <button
+                type="button"
+                aria-label={`Chart type: ${CHART_KINDS.find((k) => k.id === value)?.label}`}
+                aria-haspopup="menu"
+                aria-expanded={open}
+                onClick={() => setOpen((o) => !o)}
+                className={cx(PILL, "gap-6")}
+            >
+                {CHART_KINDS.find((k) => k.id === value)?.label}
+                <ChevronDown className="size-4 text-fg-quaternary" aria-hidden="true" />
+            </button>
+            {open && (
+                <div
+                    role="menu"
+                    aria-label="Chart type"
+                    className="absolute top-11 left-0 z-20 flex w-60 flex-col rounded-xl bg-primary p-1.5 shadow-xl ring-1 ring-secondary"
+                    style={tealControls}
+                >
+                    {CHART_KINDS.map((k) => (
+                        <button
+                            key={k.id}
+                            type="button"
+                            role="menuitemradio"
+                            aria-checked={value === k.id}
+                            onClick={() => {
+                                onChange(k.id);
+                                setOpen(false);
+                            }}
+                            className="flex items-center gap-2 rounded-md px-3 py-2 text-left text-md text-secondary hover:bg-secondary"
+                            style={value === k.id ? { color: TEAL_DARK, fontWeight: 700 } : undefined}
+                        >
+                            <span className="flex size-5 items-center justify-center">{value === k.id && <Check className="size-4" aria-hidden="true" />}</span>
+                            {k.label}
+                        </button>
+                    ))}
+                    <div className="my-1 h-px bg-border-secondary" role="separator" />
+                    <span className="flex items-center justify-between gap-4 px-3 py-2">
+                        <span className="text-md font-semibold text-secondary">Show legend</span>
+                        <Toggle size="md" aria-label="Show legend" isSelected={legend} onChange={onLegend} />
+                    </span>
+                </div>
+            )}
+        </div>
+    );
+};
 
 const Change = ({ now, before, only }: { now: number; before: number | undefined; only?: boolean }) => {
     if (before === undefined || !before) return only ? <span className="text-tertiary">—</span> : null;
@@ -412,7 +490,7 @@ export const QueryWorkspace = ({
     view?: View;
     /** A picker open when the screen loads (for the flow's states). */
     open?: Picker;
-    tab?: "query" | "chart" | "ask";
+    tab?: "query" | "ask";
     /** Typed into the Ask tab when the screen opens (for the prototype's states). */
     ask?: string;
     /** Rows ticked by hand when the screen opens (ids "Metric|value"). */
@@ -463,6 +541,10 @@ export const QueryWorkspace = ({
     // Rows charted: null follows the query (the top rows, dynamic); a list is the rows ticked by hand.
     const [manual, setManual] = useState<string[] | null>(sc ? null : (initialManual ?? null));
     const [segmentMenu, setSegmentMenu] = useState(false);
+    // Plot rows (after GA4): ticking rows picks them; Plot rows sends the pick to the chart.
+    const [draft, setDraft] = useState<string[] | null>(null);
+    const [page, setPage] = useState(0);
+    const [pageSize, setPageSize] = useState(10);
 
     /* -------- the ⋯ menu: name, undo, refresh, export -------- */
 
@@ -577,7 +659,8 @@ export const QueryWorkspace = ({
     const periods = [...new Set(rows.map((r) => r.period))].reverse();
     const byKey = new Map(rows.map((r) => [`${r.period}|${r.combo.key}`, r]));
     const first = metrics[0];
-    const ranked = [...totals].sort((a, b) => (first ? metricOf(first, b.t) - metricOf(first, a.t) : 0)).slice(0, TOP_N);
+    // Every value, largest first; the table pages through them.
+    const ranked = [...totals].sort((a, b) => (first ? metricOf(first, b.t) - metricOf(first, a.t) : 0));
     // With two breakdowns, rows group under the first one's values (largest group first), as blocks.
     const groupTotal = (v: string) => ranked.filter((r) => r.combo.values[0] === v).reduce((n, r) => n + (first ? metricOf(first, r.t) : 0), 0);
     const combos =
@@ -590,6 +673,9 @@ export const QueryWorkspace = ({
               )
             : ranked;
     const shown = combos.filter((r) => !search || r.combo.values.join(" ").toLowerCase().includes(search.toLowerCase()));
+    const pageCount = Math.max(1, Math.ceil(shown.length / pageSize));
+    const pg = Math.min(page, pageCount - 1);
+    const pageRows = shown.slice(pg * pageSize, pg * pageSize + pageSize);
 
     /* -------- segments: every table row is a line the chart can draw -------- */
 
@@ -603,16 +689,36 @@ export const QueryWorkspace = ({
             label: breakdown.length ? `${LETTERS[mi]} · ${c.combo.values.join(" · ")}` : `${LETTERS[mi]}. ${m}`,
         })),
     );
-    const colorOf = new Map(segments.map((g, i) => [g.id, SEGMENT_COLORS[i % SEGMENT_COLORS.length]]));
+    const segIds = new Set(segments.map((g) => g.id));
+    const labelOf = new Map(segments.map((g) => [g.id, g.label]));
     const dynamicIds = segments.slice(0, DYNAMIC_N).map((g) => g.id);
-    const picked = manual ? manual.filter((id) => colorOf.has(id)) : dynamicIds;
+    /** Plotted: the top rows (dynamic), or the rows last sent with Plot rows. */
+    const picked = (manual ? manual.filter((id) => segIds.has(id)) : dynamicIds).slice(0, MAX_PLOT);
+    // Colours go to plotted rows in order, so lines never share one.
+    const colorOf = new Map(picked.map((id, i) => [id, SEGMENT_COLORS[i % SEGMENT_COLORS.length]]));
     const isOn = (id: string) => picked.includes(id);
-    const toggleSegment = (id: string) => setManual(picked.includes(id) ? picked.filter((x) => x !== id) : [...picked, id]);
-    /** A group block shows only its rows; pressing it again brings every row back. */
-    const isolate = (ids: string[]) => setManual(picked.length === ids.length && ids.every(isOn) ? segments.map((g) => g.id) : ids);
-    const isolated = (ids: string[]) => picked.length === ids.length && ids.every(isOn);
-    const allOn = segments.length > 0 && segments.every((g) => isOn(g.id));
-    const someOn = picked.length > 0 && !allOn;
+    /** Ticked: the pick waiting for Plot rows (the plotted rows until a box is ticked). */
+    const selected = (draft ?? picked).filter((id) => segIds.has(id));
+    const isSelected = (id: string) => selected.includes(id);
+    const pending = draft !== null && (selected.length !== picked.length || selected.some((id) => !isOn(id)));
+    const full = selected.length >= MAX_PLOT;
+    const toggleSegment = (id: string) => setDraft(isSelected(id) ? selected.filter((x) => x !== id) : full ? selected : [...selected, id]);
+    const plotRows = () => {
+        setManual(selected);
+        setDraft(null);
+    };
+    const isolated = (ids: string[]) => picked.length === Math.min(ids.length, MAX_PLOT) && ids.slice(0, MAX_PLOT).every(isOn);
+    /** A group block plots only its rows at once; pressing it again goes back to the top rows. */
+    const isolate = (ids: string[]) => {
+        setDraft(null);
+        setManual(isolated(ids) ? null : ids.slice(0, MAX_PLOT));
+    };
+    const pageIds = metrics.flatMap((m) => pageRows.map((c) => `${m}|${c.combo.key}`));
+    const allOnPage = pageIds.length > 0 && pageIds.every(isSelected);
+    const someOnPage = !allOnPage && pageIds.some(isSelected);
+    const togglePage = () =>
+        setDraft(allOnPage ? selected.filter((id) => !pageIds.includes(id)) : [...selected, ...pageIds.filter((id) => !isSelected(id))].slice(0, MAX_PLOT));
+    const boxColor = (id: string) => colorOf.get(id) ?? (isSelected(id) ? PICKED_GREY : UNPICKED_GREY);
     const chartSegments: ChartSegment[] = segments
         .filter((g) => isOn(g.id))
         .map((g) => ({ label: g.label, metric: g.metric, comboKey: g.comboKey, color: colorOf.get(g.id)! }));
@@ -747,7 +853,7 @@ export const QueryWorkspace = ({
                             )}
                         </div>
                         <PillSelect label="Interval" value={interval} options={INTERVALS} onChange={setInterval} />
-                        <PillSelect label="Chart type" value={chart} options={CHART_KINDS} onChange={setChart} />
+                        <ChartMenu value={chart} onChange={setChart} legend={legend} onLegend={setLegend} />
                         {compare && (
                             <>
                                 <span
@@ -817,199 +923,276 @@ export const QueryWorkspace = ({
 
                             {view !== "chart" && (
                                 <div className="flex flex-col gap-3">
-                                    <div className="flex flex-wrap items-center gap-2">
-                                        {breakdown.length > 0 && (
-                                            <label className="relative flex w-72 items-center">
-                                                <SearchLg className="pointer-events-none absolute left-3 size-5 text-fg-quaternary" aria-hidden="true" />
+                                    {/* The table's own bar (after GA4): Plot rows, search, then paging on the right. */}
+                                    <div className="rounded-lg ring-1 ring-secondary">
+                                        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-secondary px-3 py-2">
+                                            <button
+                                                type="button"
+                                                disabled={!pending}
+                                                onClick={plotRows}
+                                                title={pending ? `Plot the ${selected.length} rows picked` : "Pick rows to plot"}
+                                                className="inline-flex h-9 items-center gap-2 rounded-md px-3.5 text-md font-bold whitespace-nowrap ring-1 transition duration-100 ease-linear disabled:cursor-not-allowed"
+                                                style={
+                                                    pending
+                                                        ? { backgroundColor: TEAL_DARK, color: "#FFFFFF", ["--tw-ring-color" as string]: TEAL_DARK }
+                                                        : { color: UNPICKED_GREY, ["--tw-ring-color" as string]: "#EAECF0" }
+                                                }
+                                            >
+                                                Plot rows
+                                                {pending && <span className="rounded-full bg-white/20 px-1.5 tabular-nums">{selected.length}</span>}
+                                            </button>
+                                            <span className="h-6 w-px bg-border-secondary" aria-hidden="true" />
+                                            <label className="relative flex min-w-56 flex-1 items-center">
+                                                <SearchLg className="pointer-events-none absolute left-1 size-5 text-fg-quaternary" aria-hidden="true" />
                                                 <input
                                                     type="search"
                                                     value={search}
-                                                    onChange={(e) => setSearch(e.target.value)}
-                                                    placeholder={`Search ${breakdown.join(", ")}`}
+                                                    onChange={(e) => {
+                                                        setSearch(e.target.value);
+                                                        setPage(0);
+                                                    }}
+                                                    placeholder={breakdown.length ? `Search ${breakdown.join(", ")}` : "Search…"}
                                                     aria-label="Search the table"
-                                                    className="h-10 w-full rounded-md bg-secondary pr-3 pl-10 text-md text-primary outline-focus-ring placeholder:text-placeholder focus-visible:outline-2"
+                                                    className="h-9 w-full bg-transparent pr-2 pl-8 text-md text-primary outline-none placeholder:text-placeholder"
                                                 />
                                             </label>
-                                        )}
-                                        <div className="relative">
-                                            <button type="button" className={PILL} aria-expanded={segmentMenu} onClick={() => setSegmentMenu((v) => !v)}>
-                                                {manual ? "Manual segments" : "Dynamic segments"}
-                                                <ChevronDown className="size-4 text-fg-quaternary" aria-hidden="true" />
-                                            </button>
-                                            {segmentMenu && (
-                                                <div
-                                                    className="absolute top-11 left-0 z-20 flex w-80 flex-col rounded-xl bg-primary p-1.5 shadow-xl ring-1 ring-secondary"
-                                                    role="menu"
-                                                >
-                                                    {[
-                                                        {
-                                                            on: !manual,
-                                                            title: "Dynamic segments",
-                                                            body: `The top ${DYNAMIC_N} rows are charted, and follow the query.`,
-                                                            pick: () => setManual(null),
-                                                        },
-                                                        {
-                                                            on: Boolean(manual),
-                                                            title: "Manual segments",
-                                                            body: "The rows you tick are charted. Ticking a row switches to this.",
-                                                            pick: () => setManual(picked),
-                                                        },
-                                                    ].map((o) => (
-                                                        <button
-                                                            key={o.title}
-                                                            type="button"
-                                                            role="menuitemradio"
-                                                            aria-checked={o.on}
-                                                            onClick={() => {
-                                                                o.pick();
-                                                                setSegmentMenu(false);
-                                                            }}
-                                                            className="flex flex-col gap-0.5 rounded-md px-3 py-2 text-left hover:bg-secondary"
-                                                        >
-                                                            <span className="text-md font-bold" style={{ color: o.on ? TEAL_DARK : undefined }}>
-                                                                {o.title}
-                                                            </span>
-                                                            <span className="text-md text-tertiary">{o.body}</span>
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-                                        <span className="text-md font-semibold text-tertiary">
-                                            {picked.length} of {segments.length} rows charted
-                                        </span>
-                                    </div>
-                                    <div className="overflow-x-auto rounded-lg ring-1 ring-secondary">
-                                        <table className={TABLE.table}>
-                                            <thead style={tableHead("report")}>
-                                                <tr>
-                                                    {["Metric", ...breakdown].map((h, hi, all) => (
-                                                        <th key={h} className={TABLE.report.th}>
-                                                            <span className="inline-flex items-center gap-2.5">
-                                                                {hi === all.length - 1 && (
-                                                                    <SegmentBox
-                                                                        label={allOn ? "Chart no rows" : "Chart every row"}
-                                                                        color={TEAL}
-                                                                        checked={allOn}
-                                                                        mixed={someOn}
-                                                                        onPress={() => setManual(allOn ? [] : segments.map((g) => g.id))}
-                                                                    />
-                                                                )}
-                                                                {h}
-                                                                {hi > 0 && <span className="font-semibold text-white/60">top {TOP_N}</span>}
-                                                            </span>
-                                                        </th>
-                                                    ))}
-                                                    <th className={TABLE.report.th}>Whole range</th>
-                                                    {periods.map((p) => (
-                                                        <th key={p} className={cx(TABLE.report.th, "whitespace-nowrap")}>
-                                                            {p}
-                                                        </th>
-                                                    ))}
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {shown.length === 0 && (
-                                                    <tr>
-                                                        <td
-                                                            colSpan={2 + breakdown.length + periods.length}
-                                                            className="px-8 py-10 text-center text-md text-tertiary"
-                                                        >
-                                                            {totals.length === 0 ? "No data for these dates and filters." : "No rows match the search."}
-                                                        </td>
-                                                    </tr>
+                                            <div className="relative">
+                                                <button type="button" className={PILL} aria-expanded={segmentMenu} onClick={() => setSegmentMenu((v) => !v)}>
+                                                    {manual ? "Manual segments" : "Dynamic segments"}
+                                                    <ChevronDown className="size-4 text-fg-quaternary" aria-hidden="true" />
+                                                </button>
+                                                {segmentMenu && (
+                                                    <div
+                                                        className="absolute top-11 left-0 z-20 flex w-80 flex-col rounded-xl bg-primary p-1.5 shadow-xl ring-1 ring-secondary"
+                                                        role="menu"
+                                                    >
+                                                        {[
+                                                            {
+                                                                on: !manual,
+                                                                title: "Dynamic segments",
+                                                                body: `The top ${DYNAMIC_N} rows are plotted, and follow the query.`,
+                                                                pick: () => setManual(null),
+                                                            },
+                                                            {
+                                                                on: Boolean(manual),
+                                                                title: "Manual segments",
+                                                                body: `The rows you pick, up to ${MAX_PLOT}, sent with Plot rows.`,
+                                                                pick: () => setManual(picked),
+                                                            },
+                                                        ].map((o) => (
+                                                            <button
+                                                                key={o.title}
+                                                                type="button"
+                                                                role="menuitemradio"
+                                                                aria-checked={o.on}
+                                                                onClick={() => {
+                                                                    o.pick();
+                                                                    setSegmentMenu(false);
+                                                                }}
+                                                                className="flex flex-col gap-0.5 rounded-md px-3 py-2 text-left hover:bg-secondary"
+                                                            >
+                                                                <span className="text-md font-bold" style={{ color: o.on ? TEAL_DARK : undefined }}>
+                                                                    {o.title}
+                                                                </span>
+                                                                <span className="text-md text-tertiary">{o.body}</span>
+                                                            </button>
+                                                        ))}
+                                                    </div>
                                                 )}
-                                                {metrics.flatMap((m, mi) => {
-                                                    const mine = segments.filter((g) => g.mi === mi);
-                                                    return shown.map((c, ci) => {
-                                                        const id = `${m}|${c.combo.key}`;
-                                                        const group = c.combo.values[0];
-                                                        const groupStart = breakdown.length > 1 && (ci === 0 || shown[ci - 1].combo.values[0] !== group);
-                                                        const groupRows = shown.filter((x) => x.combo.values[0] === group).length;
-                                                        const groupIds = mine.filter((g) => g.group === group).map((g) => g.id);
-                                                        const checkbox = (
-                                                            <SegmentBox
-                                                                label={`Chart ${segments.find((g) => g.id === id)?.label}`}
-                                                                color={colorOf.get(id)!}
-                                                                checked={isOn(id)}
-                                                                onPress={() => toggleSegment(id)}
-                                                            />
-                                                        );
-                                                        return (
-                                                            <tr key={id} className="border-t border-secondary">
-                                                                {ci === 0 &&
-                                                                    (breakdown.length === 0 ? (
-                                                                        <td className={cx(TABLE.report.td, "font-bold whitespace-nowrap")}>
-                                                                            <span className="inline-flex items-center gap-2.5">
-                                                                                {checkbox}
-                                                                                <LetterBadge i={mi} />
-                                                                                {m}
-                                                                            </span>
-                                                                        </td>
-                                                                    ) : (
-                                                                        <td rowSpan={shown.length} className="h-px border-r border-secondary p-1.5 align-top">
-                                                                            <GroupBlock
-                                                                                label={`Show only ${m}`}
-                                                                                active={isolated(mine.map((g) => g.id))}
-                                                                                onPress={() => isolate(mine.map((g) => g.id))}
+                                            </div>
+                                            <span className="text-md font-semibold whitespace-nowrap text-tertiary">
+                                                {picked.length} of {segments.length} plotted
+                                            </span>
+                                            <span className="ml-auto flex items-center gap-3 whitespace-nowrap">
+                                                <label className="flex items-center gap-2 text-md text-tertiary">
+                                                    Rows per page
+                                                    <span className="relative flex items-center">
+                                                        <select
+                                                            value={pageSize}
+                                                            onChange={(e) => {
+                                                                setPageSize(Number(e.target.value));
+                                                                setPage(0);
+                                                            }}
+                                                            className="h-9 cursor-pointer appearance-none rounded-md bg-transparent pr-7 pl-2 text-md font-semibold text-primary outline-focus-ring hover:bg-secondary focus-visible:outline-2"
+                                                        >
+                                                            {PAGE_SIZES.map((n) => (
+                                                                <option key={n} value={n}>
+                                                                    {n}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                        <ChevronDown
+                                                            className="pointer-events-none absolute right-1.5 size-4 text-fg-quaternary"
+                                                            aria-hidden="true"
+                                                        />
+                                                    </span>
+                                                </label>
+                                                <span className="text-md font-semibold text-secondary tabular-nums" aria-live="polite">
+                                                    {shown.length === 0
+                                                        ? "0 of 0"
+                                                        : `${pg * pageSize + 1}–${pg * pageSize + pageRows.length} of ${shown.length}`}
+                                                </span>
+                                                <span className="flex items-center">
+                                                    <button
+                                                        type="button"
+                                                        aria-label="Previous page"
+                                                        disabled={pg === 0}
+                                                        onClick={() => setPage(pg - 1)}
+                                                        className="inline-flex size-9 items-center justify-center rounded-md text-fg-secondary hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:bg-transparent"
+                                                    >
+                                                        <ChevronLeft className="size-5" aria-hidden="true" />
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        aria-label="Next page"
+                                                        disabled={pg >= pageCount - 1}
+                                                        onClick={() => setPage(pg + 1)}
+                                                        className="inline-flex size-9 items-center justify-center rounded-md text-fg-secondary hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:bg-transparent"
+                                                    >
+                                                        <ChevronRight className="size-5" aria-hidden="true" />
+                                                    </button>
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div className="overflow-x-auto rounded-b-lg">
+                                            <table className={TABLE.table}>
+                                                <thead style={tableHead("report")}>
+                                                    <tr>
+                                                        {["Metric", ...breakdown].map((h, hi, all) => (
+                                                            <th key={h} className={TABLE.report.th}>
+                                                                <span className="inline-flex items-center gap-2.5">
+                                                                    {hi === all.length - 1 && (
+                                                                        <SegmentBox
+                                                                            label={
+                                                                                allOnPage
+                                                                                    ? "Clear the rows on this page"
+                                                                                    : `Pick the rows on this page (up to ${MAX_PLOT})`
+                                                                            }
+                                                                            color={TEAL}
+                                                                            checked={allOnPage}
+                                                                            mixed={someOnPage}
+                                                                            onPress={togglePage}
+                                                                        />
+                                                                    )}
+                                                                    {h}
+                                                                </span>
+                                                            </th>
+                                                        ))}
+                                                        <th className={TABLE.report.th}>Whole range</th>
+                                                        {periods.map((p) => (
+                                                            <th key={p} className={cx(TABLE.report.th, "whitespace-nowrap")}>
+                                                                {p}
+                                                            </th>
+                                                        ))}
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {shown.length === 0 && (
+                                                        <tr>
+                                                            <td
+                                                                colSpan={2 + breakdown.length + periods.length}
+                                                                className="px-8 py-10 text-center text-md text-tertiary"
+                                                            >
+                                                                {totals.length === 0 ? "No data for these dates and filters." : "No rows match the search."}
+                                                            </td>
+                                                        </tr>
+                                                    )}
+                                                    {metrics.flatMap((m, mi) => {
+                                                        const mine = segments.filter((g) => g.mi === mi);
+                                                        return pageRows.map((c, ci) => {
+                                                            const id = `${m}|${c.combo.key}`;
+                                                            const group = c.combo.values[0];
+                                                            const groupStart = breakdown.length > 1 && (ci === 0 || pageRows[ci - 1].combo.values[0] !== group);
+                                                            const groupRows = pageRows.filter((x) => x.combo.values[0] === group).length;
+                                                            const groupIds = mine.filter((g) => g.group === group).map((g) => g.id);
+                                                            const checkbox = (
+                                                                <SegmentBox
+                                                                    label={`Pick ${labelOf.get(id)}`}
+                                                                    color={boxColor(id)}
+                                                                    checked={isSelected(id)}
+                                                                    disabled={full && !isSelected(id)}
+                                                                    onPress={() => toggleSegment(id)}
+                                                                />
+                                                            );
+                                                            return (
+                                                                <tr key={id} className="border-t border-secondary">
+                                                                    {ci === 0 &&
+                                                                        (breakdown.length === 0 ? (
+                                                                            <td className={cx(TABLE.report.td, "font-bold whitespace-nowrap")}>
+                                                                                <span className="inline-flex items-center gap-2.5">
+                                                                                    {checkbox}
+                                                                                    <LetterBadge i={mi} />
+                                                                                    {m}
+                                                                                </span>
+                                                                            </td>
+                                                                        ) : (
+                                                                            <td
+                                                                                rowSpan={pageRows.length}
+                                                                                className="h-px border-r border-secondary p-1.5 align-top"
                                                                             >
-                                                                                <LetterBadge i={mi} />
-                                                                                {m}
+                                                                                <GroupBlock
+                                                                                    label={`Show only ${m}`}
+                                                                                    active={isolated(mine.map((g) => g.id))}
+                                                                                    onPress={() => isolate(mine.map((g) => g.id))}
+                                                                                >
+                                                                                    <LetterBadge i={mi} />
+                                                                                    {m}
+                                                                                </GroupBlock>
+                                                                            </td>
+                                                                        ))}
+                                                                    {groupStart && (
+                                                                        <td rowSpan={groupRows} className="h-px border-r border-secondary p-1.5 align-top">
+                                                                            <GroupBlock
+                                                                                label={`Show only ${m}, ${group}`}
+                                                                                active={isolated(groupIds)}
+                                                                                onPress={() => isolate(groupIds)}
+                                                                            >
+                                                                                {group}
                                                                             </GroupBlock>
                                                                         </td>
-                                                                    ))}
-                                                                {groupStart && (
-                                                                    <td rowSpan={groupRows} className="h-px border-r border-secondary p-1.5 align-top">
-                                                                        <GroupBlock
-                                                                            label={`Show only ${m}, ${group}`}
-                                                                            active={isolated(groupIds)}
-                                                                            onPress={() => isolate(groupIds)}
-                                                                        >
-                                                                            {group}
-                                                                        </GroupBlock>
-                                                                    </td>
-                                                                )}
-                                                                {breakdown.length > 0 && (
-                                                                    <td className={cx(TABLE.report.td, "whitespace-nowrap")}>
-                                                                        <span className="inline-flex items-center gap-2.5">
-                                                                            {checkbox}
-                                                                            {c.combo.values[c.combo.values.length - 1]}
-                                                                        </span>
-                                                                    </td>
-                                                                )}
-                                                                <td className={cx(TABLE.report.td, "font-bold whitespace-nowrap tabular-nums")}>
-                                                                    <Cell
-                                                                        m={m}
-                                                                        now={metricOf(m, c.t)}
-                                                                        before={c.prev ? metricOf(m, c.prev) : undefined}
-                                                                        compare={compare}
-                                                                        changeOnly={changeOnly}
-                                                                    />
-                                                                </td>
-                                                                {periods.map((p) => {
-                                                                    const r = byKey.get(`${p}|${c.combo.key}`);
-                                                                    return (
-                                                                        <td key={p} className={cx(TABLE.report.td, "whitespace-nowrap tabular-nums")}>
-                                                                            {r ? (
-                                                                                <Cell
-                                                                                    m={m}
-                                                                                    now={metricOf(m, r.t)}
-                                                                                    before={r.prev ? metricOf(m, r.prev) : undefined}
-                                                                                    compare={compare}
-                                                                                    changeOnly={changeOnly}
-                                                                                />
-                                                                            ) : (
-                                                                                "—"
-                                                                            )}
+                                                                    )}
+                                                                    {breakdown.length > 0 && (
+                                                                        <td className={cx(TABLE.report.td, "whitespace-nowrap")}>
+                                                                            <span className="inline-flex items-center gap-2.5">
+                                                                                {checkbox}
+                                                                                {c.combo.values[c.combo.values.length - 1]}
+                                                                            </span>
                                                                         </td>
-                                                                    );
-                                                                })}
-                                                            </tr>
-                                                        );
-                                                    });
-                                                })}
-                                            </tbody>
-                                        </table>
+                                                                    )}
+                                                                    <td className={cx(TABLE.report.td, "font-bold whitespace-nowrap tabular-nums")}>
+                                                                        <Cell
+                                                                            m={m}
+                                                                            now={metricOf(m, c.t)}
+                                                                            before={c.prev ? metricOf(m, c.prev) : undefined}
+                                                                            compare={compare}
+                                                                            changeOnly={changeOnly}
+                                                                        />
+                                                                    </td>
+                                                                    {periods.map((p) => {
+                                                                        const r = byKey.get(`${p}|${c.combo.key}`);
+                                                                        return (
+                                                                            <td key={p} className={cx(TABLE.report.td, "whitespace-nowrap tabular-nums")}>
+                                                                                {r ? (
+                                                                                    <Cell
+                                                                                        m={m}
+                                                                                        now={metricOf(m, r.t)}
+                                                                                        before={r.prev ? metricOf(m, r.prev) : undefined}
+                                                                                        compare={compare}
+                                                                                        changeOnly={changeOnly}
+                                                                                    />
+                                                                                ) : (
+                                                                                    "—"
+                                                                                )}
+                                                                            </td>
+                                                                        );
+                                                                    })}
+                                                                </tr>
+                                                            );
+                                                        });
+                                                    })}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             )}
@@ -1030,7 +1213,7 @@ export const QueryWorkspace = ({
                     )}
                 >
                     <div className="flex border-b border-secondary px-4" role="tablist">
-                        {(["query", "chart", "ask"] as const).map((t) => (
+                        {(["query", "ask"] as const).map((t) => (
                             <button
                                 key={t}
                                 type="button"
@@ -1058,133 +1241,107 @@ export const QueryWorkspace = ({
                     {tab === "ask" && <AssistantPanel builder embedded range={range} excluded={excluded} onApply={applyChange} firstAsk={firstAsk} />}
 
                     <div className={cx("min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-4", tab === "ask" ? "hidden" : "flex")}>
-                        {tab === "chart" ? (
-                            <div className="flex flex-col gap-4">
-                                <span style={R1.filterLabel}>Chart type</span>
-                                <div className="flex flex-col gap-1">
-                                    {CHART_KINDS.map((k) => (
-                                        <button
-                                            key={k.id}
-                                            type="button"
-                                            onClick={() => setChart(k.id)}
-                                            aria-pressed={chart === k.id}
-                                            className="rounded-md px-3 py-2 text-left text-md text-secondary hover:bg-secondary"
-                                            style={chart === k.id ? { color: TEAL_DARK, backgroundColor: `${TEAL}1f`, fontWeight: 700 } : undefined}
-                                        >
-                                            {k.label}
-                                        </button>
-                                    ))}
-                                </div>
-                                <span className="flex items-center justify-between">
-                                    <span className="text-md font-semibold text-secondary">Show legend</span>
-                                    <Toggle size="md" aria-label="Show legend" isSelected={legend} onChange={setLegend} />
-                                </span>
-                            </div>
-                        ) : (
-                            <>
-                                <section className="relative flex flex-col gap-2">
-                                    <SectionHead title="Metrics" addLabel="Add metric" onAdd={() => openPicker({ kind: "metric" }, "metrics")} />
-                                    {metrics.map((m, i) => (
-                                        <Card
-                                            key={m}
-                                            label={`Change metric ${LETTERS[i]}: ${m}`}
-                                            onPress={() => openPicker({ kind: "metric", replace: m }, "metrics")}
-                                            onRemove={() => setMetrics((cur) => cur.filter((x) => x !== m))}
-                                            removeLabel={`Remove ${m}`}
-                                        >
-                                            <span className="inline-flex items-center gap-2 text-md font-bold text-primary">
-                                                <LetterBadge i={i} />
-                                                {m}
-                                            </span>
-                                        </Card>
-                                    ))}
-                                    <button
-                                        type="button"
-                                        onClick={() => openPicker({ kind: "metric" }, "metrics")}
-                                        className="ring-dashed inline-flex items-center gap-2 rounded-lg px-3 py-2.5 text-left text-md font-semibold text-tertiary ring-1 ring-secondary hover:bg-primary"
-                                        style={{ outline: "1px dashed #D0D5DD", outlineOffset: -1 }}
+                        <>
+                            <section className="relative flex flex-col gap-2">
+                                <SectionHead title="Metrics" addLabel="Add metric" onAdd={() => openPicker({ kind: "metric" }, "metrics")} />
+                                {metrics.map((m, i) => (
+                                    <Card
+                                        key={m}
+                                        label={`Change metric ${LETTERS[i]}: ${m}`}
+                                        onPress={() => openPicker({ kind: "metric", replace: m }, "metrics")}
+                                        onRemove={() => setMetrics((cur) => cur.filter((x) => x !== m))}
+                                        removeLabel={`Remove ${m}`}
                                     >
-                                        <span className="inline-flex size-6 items-center justify-center rounded-md bg-secondary font-bold">
-                                            {LETTERS[metrics.length]}
+                                        <span className="inline-flex items-center gap-2 text-md font-bold text-primary">
+                                            <LetterBadge i={i} />
+                                            {m}
                                         </span>
-                                        Add metric
-                                    </button>
-                                    {picker && pickerAt === "metrics" && (
-                                        <PickerHost
-                                            picker={picker}
-                                            setPicker={setPicker}
-                                            metrics={metrics}
-                                            breakdown={breakdown}
-                                            filters={filters}
-                                            setMetrics={setMetrics}
-                                            setBreakdown={setBreakdown}
-                                            setFilters={setFilters}
-                                        />
-                                    )}
-                                </section>
+                                    </Card>
+                                ))}
+                                <button
+                                    type="button"
+                                    onClick={() => openPicker({ kind: "metric" }, "metrics")}
+                                    className="ring-dashed inline-flex items-center gap-2 rounded-lg px-3 py-2.5 text-left text-md font-semibold text-tertiary ring-1 ring-secondary hover:bg-primary"
+                                    style={{ outline: "1px dashed #D0D5DD", outlineOffset: -1 }}
+                                >
+                                    <span className="inline-flex size-6 items-center justify-center rounded-md bg-secondary font-bold">
+                                        {LETTERS[metrics.length]}
+                                    </span>
+                                    Add metric
+                                </button>
+                                {picker && pickerAt === "metrics" && (
+                                    <PickerHost
+                                        picker={picker}
+                                        setPicker={setPicker}
+                                        metrics={metrics}
+                                        breakdown={breakdown}
+                                        filters={filters}
+                                        setMetrics={setMetrics}
+                                        setBreakdown={setBreakdown}
+                                        setFilters={setFilters}
+                                    />
+                                )}
+                            </section>
 
-                                <section className="relative flex flex-col gap-2">
-                                    <SectionHead title="Filter" addLabel="Add filter" onAdd={() => openPicker({ kind: "filter-field" }, "filter")} />
-                                    {(Object.keys(filters) as Dim[]).map((d) => (
-                                        <Card
-                                            key={d}
-                                            label={`Edit ${d} filter`}
-                                            onPress={() => openPicker({ kind: "filter-values", dim: d, draft: filters[d].values }, "filter")}
-                                            onRemove={() => setFilters((cur) => Object.fromEntries(Object.entries(cur).filter(([k]) => k !== d)))}
-                                            removeLabel={`Remove ${d} filter`}
-                                        >
-                                            <span className="text-md font-bold text-primary">{d}</span>
-                                            <span className="text-md text-tertiary">
-                                                is <span className="font-semibold text-secondary">{filterSummary(d)}</span>
-                                            </span>
-                                        </Card>
-                                    ))}
-                                    {Object.keys(filters).length === 0 && (
-                                        <span className="text-md text-tertiary">No filters. Every value is in the report.</span>
-                                    )}
-                                    {picker && pickerAt === "filter" && (
-                                        <PickerHost
-                                            picker={picker}
-                                            setPicker={setPicker}
-                                            metrics={metrics}
-                                            breakdown={breakdown}
-                                            filters={filters}
-                                            setMetrics={setMetrics}
-                                            setBreakdown={setBreakdown}
-                                            setFilters={setFilters}
-                                        />
-                                    )}
-                                </section>
+                            <section className="relative flex flex-col gap-2">
+                                <SectionHead title="Filter" addLabel="Add filter" onAdd={() => openPicker({ kind: "filter-field" }, "filter")} />
+                                {(Object.keys(filters) as Dim[]).map((d) => (
+                                    <Card
+                                        key={d}
+                                        label={`Edit ${d} filter`}
+                                        onPress={() => openPicker({ kind: "filter-values", dim: d, draft: filters[d].values }, "filter")}
+                                        onRemove={() => setFilters((cur) => Object.fromEntries(Object.entries(cur).filter(([k]) => k !== d)))}
+                                        removeLabel={`Remove ${d} filter`}
+                                    >
+                                        <span className="text-md font-bold text-primary">{d}</span>
+                                        <span className="text-md text-tertiary">
+                                            is <span className="font-semibold text-secondary">{filterSummary(d)}</span>
+                                        </span>
+                                    </Card>
+                                ))}
+                                {Object.keys(filters).length === 0 && <span className="text-md text-tertiary">No filters. Every value is in the report.</span>}
+                                {picker && pickerAt === "filter" && (
+                                    <PickerHost
+                                        picker={picker}
+                                        setPicker={setPicker}
+                                        metrics={metrics}
+                                        breakdown={breakdown}
+                                        filters={filters}
+                                        setMetrics={setMetrics}
+                                        setBreakdown={setBreakdown}
+                                        setFilters={setFilters}
+                                    />
+                                )}
+                            </section>
 
-                                <section className="relative flex flex-col gap-2">
-                                    <SectionHead title="Breakdown" addLabel="Add breakdown" onAdd={() => openPicker({ kind: "breakdown" }, "breakdown")} />
-                                    {breakdown.map((d) => (
-                                        <Card
-                                            key={d}
-                                            label={d}
-                                            onRemove={() => setBreakdown((cur) => cur.filter((x) => x !== d))}
-                                            removeLabel={`Remove ${d} breakdown`}
-                                        >
-                                            <span className="text-md font-bold text-primary">{d}</span>
-                                            <span className="text-md text-tertiary">Top {TOP_N} values</span>
-                                        </Card>
-                                    ))}
-                                    {breakdown.length === 0 && <span className="text-md text-tertiary">No breakdown. The report shows totals.</span>}
-                                    {picker && pickerAt === "breakdown" && (
-                                        <PickerHost
-                                            picker={picker}
-                                            setPicker={setPicker}
-                                            metrics={metrics}
-                                            breakdown={breakdown}
-                                            filters={filters}
-                                            setMetrics={setMetrics}
-                                            setBreakdown={setBreakdown}
-                                            setFilters={setFilters}
-                                        />
-                                    )}
-                                </section>
-                            </>
-                        )}
+                            <section className="relative flex flex-col gap-2">
+                                <SectionHead title="Breakdown" addLabel="Add breakdown" onAdd={() => openPicker({ kind: "breakdown" }, "breakdown")} />
+                                {breakdown.map((d) => (
+                                    <Card
+                                        key={d}
+                                        label={d}
+                                        onRemove={() => setBreakdown((cur) => cur.filter((x) => x !== d))}
+                                        removeLabel={`Remove ${d} breakdown`}
+                                    >
+                                        <span className="text-md font-bold text-primary">{d}</span>
+                                        <span className="text-md text-tertiary">Every value, largest first</span>
+                                    </Card>
+                                ))}
+                                {breakdown.length === 0 && <span className="text-md text-tertiary">No breakdown. The report shows totals.</span>}
+                                {picker && pickerAt === "breakdown" && (
+                                    <PickerHost
+                                        picker={picker}
+                                        setPicker={setPicker}
+                                        metrics={metrics}
+                                        breakdown={breakdown}
+                                        filters={filters}
+                                        setMetrics={setMetrics}
+                                        setBreakdown={setBreakdown}
+                                        setFilters={setFilters}
+                                    />
+                                )}
+                            </section>
+                        </>
                     </div>
                 </aside>
             </div>
@@ -1260,15 +1417,30 @@ const PickerHost = ({
  * A row's checkbox in the row's own colour (its line on the chart): filled when the row is
  * charted, an outline when not. `mixed` shows a dash, for the header when some rows are on.
  */
-const SegmentBox = ({ label, color, checked, mixed, onPress }: { label: string; color: string; checked: boolean; mixed?: boolean; onPress: () => void }) => (
+const SegmentBox = ({
+    label,
+    color,
+    checked,
+    mixed,
+    disabled,
+    onPress,
+}: {
+    label: string;
+    color: string;
+    checked: boolean;
+    mixed?: boolean;
+    disabled?: boolean;
+    onPress: () => void;
+}) => (
     <button
         type="button"
         role="checkbox"
         aria-checked={mixed ? "mixed" : checked}
         aria-label={label}
-        title={label}
+        title={disabled ? `Up to ${MAX_PLOT} rows can be plotted` : label}
+        disabled={disabled}
         onClick={onPress}
-        className="inline-flex size-5 shrink-0 items-center justify-center rounded transition duration-100 ease-linear"
+        className="inline-flex size-5 shrink-0 items-center justify-center rounded transition duration-100 ease-linear disabled:cursor-not-allowed disabled:opacity-35"
         style={checked || mixed ? { backgroundColor: color, color: "#FFFFFF" } : { backgroundColor: "#FFFFFF", boxShadow: `inset 0 0 0 2px ${color}` }}
     >
         {checked ? <Check className="size-3.5" aria-hidden="true" /> : mixed ? <Minus className="size-3.5" aria-hidden="true" /> : null}

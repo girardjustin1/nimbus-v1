@@ -145,7 +145,7 @@ function round2Screens(): ProtoScreen[] {
         c(
             "c16-segments",
             "C16 · Segments: pick the rows to chart",
-            "Two breakdowns: grey blocks group the rows, each row has a checkbox in its line's colour. Two rows ticked by hand (manual segments).",
+            "Two breakdowns: grey blocks group the rows; tick rows, then Plot rows sends them to the chart. Paging and search in the table's bar.",
             (sc) => (
                 <QueryWorkspace
                     scenario={sc}
