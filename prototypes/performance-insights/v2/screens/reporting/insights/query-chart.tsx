@@ -65,6 +65,9 @@ export const QueryChart = ({
     comparePrev,
     height = "h-[28rem]",
     segments,
+    hiddenLabels,
+    onToggleLabel,
+    onShowAll,
 }: {
     rows: ReportRow[];
     metrics: Metric[];
@@ -83,9 +86,17 @@ export const QueryChart = ({
      * breakdown combination (comboKey "" for the totals), in that row's colour.
      */
     segments?: ChartSegment[];
+    /**
+     * C16: lines switched off, when the page keeps that state (its table's checkboxes are the
+     * same switches). Without these, the legend keeps its own.
+     */
+    hiddenLabels?: string[];
+    onToggleLabel?: (label: string) => void;
+    onShowAll?: () => void;
 }) => {
     // C16: the legend is a set of switches, one per line (and one for the previous period's lines).
-    const [hidden, setHidden] = useState<Set<string>>(() => new Set());
+    const [ownHidden, setOwnHidden] = useState<Set<string>>(() => new Set());
+    const hidden = hiddenLabels ? new Set(hiddenLabels) : ownHidden;
     const [hidePrev, setHidePrev] = useState(false);
     const periods = [...new Set(rows.map((r) => r.period))].reverse();
     const comboKeys = [...new Set(rows.map((r) => r.combo.key))];
@@ -119,12 +130,14 @@ export const QueryChart = ({
     const drawn = toggles ? series.filter((s) => !hidden.has(s.key)) : series;
     const drawPrev = withPrev && !(toggles && hidePrev);
     const flip = (key: string) =>
-        setHidden((h) => {
-            const next = new Set(h);
-            if (next.has(key)) next.delete(key);
-            else next.add(key);
-            return next;
-        });
+        onToggleLabel
+            ? onToggleLabel(key)
+            : setOwnHidden((h) => {
+                  const next = new Set(h);
+                  if (next.has(key)) next.delete(key);
+                  else next.add(key);
+                  return next;
+              });
     const PREV = " · previous";
     const data = periods.map((p) => {
         const row: Record<string, string | number> = { period: p };
@@ -346,7 +359,8 @@ export const QueryChart = ({
                         <button
                             type="button"
                             onClick={() => {
-                                setHidden(new Set());
+                                if (onShowAll) onShowAll();
+                                else setOwnHidden(new Set());
                                 setHidePrev(false);
                             }}
                             className="rounded-md px-1.5 py-1 font-semibold hover:bg-secondary"

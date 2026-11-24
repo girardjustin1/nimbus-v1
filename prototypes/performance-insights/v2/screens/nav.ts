@@ -61,7 +61,7 @@ const reference = Object.fromEntries(navSections.flatMap((s) => s.items).map((i)
 /** Keep the reference nav's icon for an item, drop its badge (the live dashboard shows none). */
 const item = (key: string, label: string, href?: string): GlobalNavItem => ({ key, label, href, icon: reference[key]?.icon });
 
-export const APP_NAV_SECTIONS: GlobalNavSection[] = [
+const ALL_NAV_SECTIONS: GlobalNavSection[] = [
     {
         id: "reporting",
         label: "Reporting",
@@ -115,6 +115,15 @@ export const APP_NAV_SECTIONS: GlobalNavSection[] = [
         items: [item("settings", "settings", ROUTES.settings), item("log out", "log out")],
     },
 ];
+
+/**
+ * Round 2 is about Performance Insights only (owner, Nov 24): every other item stays in the
+ * nav, as in the app, but as a label that goes nowhere. The shell dims them (das-shell.tsx).
+ */
+export const APP_NAV_SECTIONS: GlobalNavSection[] = ALL_NAV_SECTIONS.map((section) => ({
+    ...section,
+    items: section.items.map((i) => (i.key === "performance insights" ? i : { ...i, href: undefined })),
+}));
 
 /** Nimbus staff see the admin bar across the top; its pages are outside the rebuild, so its items are labels. */
 export const ADMIN_LINKS = [

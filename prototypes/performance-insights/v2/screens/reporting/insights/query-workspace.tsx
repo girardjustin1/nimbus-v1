@@ -1,5 +1,5 @@
-import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Check, ChevronDown, ChevronLeft, ChevronRight, LayoutRight, Minus, Plus, SearchLg, Stars02, XClose } from "@untitledui/icons";
+import { type DragEvent, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { ArrowLeft, Check, ChevronDown, ChevronLeft, ChevronRight, DotsGrid, LayoutRight, Minus, Plus, SearchLg, Stars02, XClose } from "@untitledui/icons";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Toggle } from "@/components/base/toggle/toggle";
 import { cx } from "@/utils/cx";
@@ -61,7 +61,11 @@ const SEGMENT_COLORS = [TEAL, PINK, "#2E5AAC", "#B54708", "#7F56D9", "#0BA5EC", 
 const MAX_PLOT = SEGMENT_COLORS.length;
 const PAGE_SIZES = [10, 25, 50, 100];
 /** A data cell's hover: its row lightens (group/row on the tr), the cell itself a shade darker. */
-const HOVER_CELL = "transition-colors duration-75 group-hover/row:bg-[#F9FAFB] hover:!bg-[#EAECF0]";
+// Row and column under the mouse take a clear grey; the cell where they cross, a darker one. The column is
+// marked from table-tip.tsx (data-col-hover), so moving the mouse never re-renders the table.
+const HOVER_CELL = "transition-colors duration-75 group-hover/row:bg-[#EDF0F3] data-[col-hover]:bg-[#EDF0F3] hover:!bg-[#D5DBE3]";
+/** The hovered column's header lightens on the dark header row. */
+const HOVER_HEAD = "transition-colors duration-75 data-[col-hover]:bg-[#344054]";
 /** A row picked but not plotted yet, and a row not picked. */
 const PICKED_GREY = "#475467";
 const UNPICKED_GREY = "#98A2B3";
@@ -249,20 +253,115 @@ const SectionHead = ({ title, onAdd, addLabel }: { title: string; onAdd: () => v
     </div>
 );
 
+/** A card's place in a list that can be dragged into a new order (metrics, breakdowns). */
+interface ReorderProps {
+    name: string;
+    dragging: boolean;
+    over: "above" | "below" | null;
+    canUp: boolean;
+    canDown: boolean;
+    onDragStart: (e: DragEvent) => void;
+    onDragOver: (e: DragEvent) => void;
+    onDrop: (e: DragEvent) => void;
+    onDragEnd: () => void;
+    onMove: (by: -1 | 1) => void;
+}
+
+/** Drag (or the grip's arrow keys) to reorder a list; the order is the query's. */
+const useReorder = <T,>(list: T[], set: (next: T[]) => void, name: (item: T) => string) => {
+    const [from, setFrom] = useState<number | null>(null);
+    const [over, setOver] = useState<number | null>(null);
+    const move = (a: number, b: number) => {
+        if (a === b || b < 0 || b >= list.length) return;
+        const next = [...list];
+        const [item] = next.splice(a, 1);
+        next.splice(b, 0, item);
+        set(next);
+    };
+    const end = () => {
+        setFrom(null);
+        setOver(null);
+    };
+    return (i: number): ReorderProps => ({
+        name: name(list[i]),
+        dragging: from === i,
+        over: from !== null && over === i && from !== i ? (from < i ? "below" : "above") : null,
+        canUp: i > 0,
+        canDown: i < list.length - 1,
+        onDragStart: (e) => {
+            setFrom(i);
+            e.dataTransfer.effectAllowed = "move";
+            e.dataTransfer.setData("text/plain", String(i));
+        },
+        onDragOver: (e) => {
+            if (from === null) return;
+            e.preventDefault();
+            setOver(i);
+        },
+        onDrop: (e) => {
+            e.preventDefault();
+            if (from !== null) move(from, i);
+            end();
+        },
+        onDragEnd: end,
+        onMove: (by) => move(i, i + by),
+    });
+};
+
 const Card = ({
     children,
     onPress,
     onRemove,
     removeLabel,
     label,
+    reorder,
 }: {
     children: ReactNode;
     onPress?: () => void;
     onRemove: () => void;
     removeLabel: string;
     label: string;
+    reorder?: ReorderProps;
 }) => (
-    <div className="group flex items-start gap-2 rounded-lg bg-primary px-3 py-2.5 ring-1 ring-secondary">
+    <div
+        draggable={Boolean(reorder)}
+        onDragStart={reorder?.onDragStart}
+        onDragOver={reorder?.onDragOver}
+        onDrop={reorder?.onDrop}
+        onDragEnd={reorder?.onDragEnd}
+        className={cx(
+            "group relative flex items-start gap-2 rounded-lg bg-primary py-2.5 pr-3 ring-1 ring-secondary",
+            reorder ? "pl-1.5" : "pl-3",
+            reorder?.dragging && "opacity-40",
+        )}
+    >
+        {/* Where the card will land. */}
+        {reorder?.over && (
+            <span
+                className={cx("absolute inset-x-0 h-0.5 rounded-full", reorder.over === "above" ? "-top-1.5" : "-bottom-1.5")}
+                style={{ backgroundColor: TEAL }}
+                aria-hidden="true"
+            />
+        )}
+        {reorder && (
+            <button
+                type="button"
+                aria-label={`Move ${reorder.name}`}
+                title="Drag to reorder"
+                onKeyDown={(e) => {
+                    if (e.key === "ArrowUp" && reorder.canUp) {
+                        e.preventDefault();
+                        reorder.onMove(-1);
+                    } else if (e.key === "ArrowDown" && reorder.canDown) {
+                        e.preventDefault();
+                        reorder.onMove(1);
+                    }
+                }}
+                className="cursor-grab self-center rounded-md p-0.5 text-fg-quaternary opacity-60 group-hover:opacity-100 hover:bg-secondary active:cursor-grabbing"
+            >
+                <DotsGrid className="size-4" aria-hidden="true" />
+            </button>
+        )}
         <button type="button" onClick={onPress} aria-label={label} className="flex min-w-0 flex-1 flex-col items-start gap-0.5 text-left">
             {children}
         </button>
@@ -547,6 +646,23 @@ export const QueryWorkspace = ({
     const [segmentMenu, setSegmentMenu] = useState(false);
     // Plot rows (after GA4): ticking rows picks them; Plot rows sends the pick to the chart.
     const [draft, setDraft] = useState<string[] | null>(null);
+    // Picking: Plot rows (or ticking a row not plotted) starts it; Plot N rows confirms, Cancel drops it.
+    const [picking, setPicking] = useState(false);
+    // Plotted rows switched off, from the table's checkboxes or the chart's legend: the same switch in two places.
+    const [hiddenIds, setHiddenIds] = useState<Set<string>>(() => new Set());
+    // Drag to reorder: metrics set the letters, the table's order and which one ranks the rows;
+    // breakdowns pivot the table (the first groups the rows), so the plotted rows start again.
+    const metricOrder = useReorder(metrics, setMetrics, (m) => m);
+    const breakdownOrder = useReorder(
+        breakdown,
+        (next) => {
+            setBreakdown(next);
+            setManual(null);
+            setDraft(null);
+            setHiddenIds(new Set());
+        },
+        (d) => d,
+    );
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
 
@@ -724,11 +840,31 @@ export const QueryWorkspace = ({
     const plotRows = () => {
         setManual(selected);
         setDraft(null);
+        setPicking(false);
+        setHiddenIds(new Set());
     };
+    const startPicking = (add?: string) => {
+        setDraft(add && !isOn(add) && picked.length < MAX_PLOT ? [...picked, add] : picked);
+        setPicking(true);
+    };
+    const cancelPicking = () => {
+        setDraft(null);
+        setPicking(false);
+    };
+    const toggleHidden = (id: string) =>
+        setHiddenIds((h) => {
+            const next = new Set(h);
+            if (next.has(id)) next.delete(id);
+            else next.add(id);
+            return next;
+        });
+    const isVisible = (id: string) => isOn(id) && !hiddenIds.has(id);
     const isolated = (ids: string[]) => picked.length === Math.min(ids.length, MAX_PLOT) && ids.slice(0, MAX_PLOT).every(isOn);
     /** A group block plots only its rows at once; pressing it again goes back to the top rows. */
     const isolate = (ids: string[]) => {
         setDraft(null);
+        setPicking(false);
+        setHiddenIds(new Set());
         setManual(isolated(ids) ? null : ids.slice(0, MAX_PLOT));
     };
     const pageIds = metrics.flatMap((m) => pageRows.map((c) => `${m}|${c.combo.key}`));
@@ -737,6 +873,7 @@ export const QueryWorkspace = ({
     const togglePage = () =>
         setDraft(allOnPage ? selected.filter((id) => !pageIds.includes(id)) : [...selected, ...pageIds.filter((id) => !isSelected(id))].slice(0, MAX_PLOT));
     const boxColor = (id: string) => colorOf.get(id) ?? (isSelected(id) ? PICKED_GREY : UNPICKED_GREY);
+    const idOfLabel = new Map(segments.map((g) => [g.label, g.id]));
     const chartSegments: ChartSegment[] = segments
         .filter((g) => isOn(g.id))
         .map((g) => ({ label: g.label, metric: g.metric, comboKey: g.comboKey, color: colorOf.get(g.id)! }));
@@ -922,6 +1059,9 @@ export const QueryWorkspace = ({
                                         showLegend={legend}
                                         comparePrev={compare}
                                         segments={chartSegments}
+                                        hiddenLabels={chartSegments.filter((g) => hiddenIds.has(idOfLabel.get(g.label)!)).map((g) => g.label)}
+                                        onToggleLabel={(label) => toggleHidden(idOfLabel.get(label)!)}
+                                        onShowAll={() => setHiddenIds(new Set())}
                                         height={view === "chart" ? "h-[34rem]" : "h-[20rem]"}
                                     />
                                 ))}
@@ -944,21 +1084,39 @@ export const QueryWorkspace = ({
                                     {/* The table's own bar (after GA4): Plot rows, search, then paging on the right. */}
                                     <div className="rounded-lg ring-1 ring-secondary">
                                         <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-secondary px-3 py-2">
-                                            <button
-                                                type="button"
-                                                disabled={!pending}
-                                                onClick={plotRows}
-                                                title={pending ? `Plot the ${selected.length} rows picked` : "Pick rows to plot"}
-                                                className="inline-flex h-9 items-center gap-2 rounded-md px-3.5 text-md font-bold whitespace-nowrap ring-1 transition duration-100 ease-linear disabled:cursor-not-allowed"
-                                                style={
-                                                    pending
-                                                        ? { backgroundColor: TEAL_DARK, color: "#FFFFFF", ["--tw-ring-color" as string]: TEAL_DARK }
-                                                        : { color: UNPICKED_GREY, ["--tw-ring-color" as string]: "#EAECF0" }
-                                                }
-                                            >
-                                                Plot rows
-                                                {pending && <span className="rounded-full bg-white/20 px-1.5 tabular-nums">{selected.length}</span>}
-                                            </button>
+                                            {picking ? (
+                                                <span className="flex items-center gap-2">
+                                                    <button
+                                                        type="button"
+                                                        onClick={cancelPicking}
+                                                        className="inline-flex h-9 items-center rounded-md px-3.5 text-md font-bold whitespace-nowrap text-secondary ring-1 ring-secondary transition duration-100 ease-linear hover:bg-secondary"
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        disabled={selected.length === 0 || !pending}
+                                                        onClick={plotRows}
+                                                        className="inline-flex h-9 items-center rounded-md px-3.5 text-md font-bold whitespace-nowrap text-white transition duration-100 ease-linear hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+                                                        style={{ backgroundColor: TEAL_DARK }}
+                                                    >
+                                                        Plot {selected.length} {selected.length === 1 ? "row" : "rows"}
+                                                    </button>
+                                                    <span className="text-md whitespace-nowrap text-tertiary tabular-nums">
+                                                        {selected.length} of {MAX_PLOT} picked
+                                                    </span>
+                                                </span>
+                                            ) : (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => startPicking()}
+                                                    title={`Pick up to ${MAX_PLOT} rows to plot`}
+                                                    className="inline-flex h-9 items-center rounded-md px-3.5 text-md font-bold whitespace-nowrap ring-1 transition duration-100 ease-linear hover:bg-secondary"
+                                                    style={{ color: TEAL_DARK, ["--tw-ring-color" as string]: `${TEAL}66` }}
+                                                >
+                                                    Plot rows
+                                                </button>
+                                            )}
                                             <span className="h-6 w-px bg-border-secondary" aria-hidden="true" />
                                             <label className="relative flex min-w-56 flex-1 items-center">
                                                 <SearchLg className="pointer-events-none absolute left-1 size-5 text-fg-quaternary" aria-hidden="true" />
@@ -1077,9 +1235,13 @@ export const QueryWorkspace = ({
                                                 <thead style={tableHead("report")}>
                                                     <tr>
                                                         {["Metric", ...breakdown].map((h, hi, all) => (
-                                                            <th key={h} className={TABLE.report.th}>
+                                                            <th
+                                                                key={h}
+                                                                className={cx(TABLE.report.th, hi === all.length - 1 && HOVER_HEAD)}
+                                                                data-col={hi === all.length - 1 ? "label" : undefined}
+                                                            >
                                                                 <span className="inline-flex items-center gap-2.5">
-                                                                    {hi === all.length - 1 && (
+                                                                    {hi === all.length - 1 && picking && (
                                                                         <SegmentBox
                                                                             label={
                                                                                 allOnPage
@@ -1096,9 +1258,11 @@ export const QueryWorkspace = ({
                                                                 </span>
                                                             </th>
                                                         ))}
-                                                        <th className={TABLE.report.th}>Whole range</th>
+                                                        <th className={cx(TABLE.report.th, HOVER_HEAD)} data-col="whole">
+                                                            Whole range
+                                                        </th>
                                                         {periods.map((p) => (
-                                                            <th key={p} className={cx(TABLE.report.th, "whitespace-nowrap")}>
+                                                            <th key={p} className={cx(TABLE.report.th, HOVER_HEAD, "whitespace-nowrap")} data-col={p}>
                                                                 {p}
                                                             </th>
                                                         ))}
@@ -1123,13 +1287,35 @@ export const QueryWorkspace = ({
                                                             const groupStart = breakdown.length > 1 && (ci === 0 || pageRows[ci - 1].combo.values[0] !== group);
                                                             const groupRows = pageRows.filter((x) => x.combo.values[0] === group).length;
                                                             const groupIds = mine.filter((g) => g.group === group).map((g) => g.id);
-                                                            const checkbox = (
+                                                            const pressRow = () =>
+                                                                picking ? toggleSegment(id) : isOn(id) ? toggleHidden(id) : startPicking(id);
+                                                            const blocked = picking && full && !isSelected(id);
+                                                            // The whole cell ticks the row, not only its box (the box stays the control for keyboards).
+                                                            const cellPress = {
+                                                                onClick: (e: React.MouseEvent) => {
+                                                                    if (!blocked && !(e.target as Element).closest("button")) pressRow();
+                                                                },
+                                                                className: blocked ? "cursor-not-allowed" : "cursor-pointer select-none",
+                                                            };
+                                                            const checkbox = picking ? (
                                                                 <SegmentBox
                                                                     label={`Pick ${labelOf.get(id)}`}
                                                                     color={boxColor(id)}
                                                                     checked={isSelected(id)}
                                                                     disabled={full && !isSelected(id)}
                                                                     onPress={() => toggleSegment(id)}
+                                                                />
+                                                            ) : (
+                                                                // Plotted: shows or hides the line (the legend's switch). Not plotted: starts picking with it.
+                                                                <SegmentBox
+                                                                    label={
+                                                                        isOn(id)
+                                                                            ? `${isVisible(id) ? "Hide" : "Show"} ${labelOf.get(id)}`
+                                                                            : `Plot ${labelOf.get(id)}`
+                                                                    }
+                                                                    color={colorOf.get(id) ?? UNPICKED_GREY}
+                                                                    checked={isVisible(id)}
+                                                                    onPress={() => (isOn(id) ? toggleHidden(id) : startPicking(id))}
                                                                 />
                                                             );
                                                             const rowLabel = breakdown.length ? c.combo.values.join(" · ") : "Total";
@@ -1145,7 +1331,14 @@ export const QueryWorkspace = ({
                                                                     {ci === 0 &&
                                                                         (breakdown.length === 0 ? (
                                                                             <td
-                                                                                className={cx(TABLE.report.td, HOVER_CELL, "font-bold whitespace-nowrap")}
+                                                                                className={cx(
+                                                                                    TABLE.report.td,
+                                                                                    HOVER_CELL,
+                                                                                    "font-bold whitespace-nowrap",
+                                                                                    cellPress.className,
+                                                                                )}
+                                                                                onClick={cellPress.onClick}
+                                                                                data-col="label"
                                                                                 {...whole}
                                                                             >
                                                                                 <span className="inline-flex items-center gap-2.5">
@@ -1181,7 +1374,18 @@ export const QueryWorkspace = ({
                                                                         </td>
                                                                     )}
                                                                     {breakdown.length > 0 && (
-                                                                        <td className={cx(TABLE.report.td, HOVER_CELL, "whitespace-nowrap")} {...whole}>
+                                                                        <td
+                                                                            // Under a group block this cell is often the row's first: keep its padding, so every row lines up.
+                                                                            className={cx(
+                                                                                TABLE.report.td,
+                                                                                HOVER_CELL,
+                                                                                "whitespace-nowrap first:pl-4",
+                                                                                cellPress.className,
+                                                                            )}
+                                                                            onClick={cellPress.onClick}
+                                                                            data-col="label"
+                                                                            {...whole}
+                                                                        >
                                                                             <span className="inline-flex items-center gap-2.5">
                                                                                 {checkbox}
                                                                                 {c.combo.values[c.combo.values.length - 1]}
@@ -1190,6 +1394,7 @@ export const QueryWorkspace = ({
                                                                     )}
                                                                     <td
                                                                         className={cx(TABLE.report.td, HOVER_CELL, "font-bold whitespace-nowrap tabular-nums")}
+                                                                        data-col="whole"
                                                                         {...whole}
                                                                     >
                                                                         <Cell
@@ -1206,6 +1411,7 @@ export const QueryWorkspace = ({
                                                                             <td
                                                                                 key={p}
                                                                                 className={cx(TABLE.report.td, HOVER_CELL, "whitespace-nowrap tabular-nums")}
+                                                                                data-col={p}
                                                                                 {...(r
                                                                                     ? tip(
                                                                                           m,
@@ -1293,6 +1499,7 @@ export const QueryWorkspace = ({
                                 {metrics.map((m, i) => (
                                     <Card
                                         key={m}
+                                        reorder={metrics.length > 1 ? metricOrder(i) : undefined}
                                         label={`Change metric ${LETTERS[i]}: ${m}`}
                                         onPress={() => openPicker({ kind: "metric", replace: m }, "metrics")}
                                         onRemove={() => setMetrics((cur) => cur.filter((x) => x !== m))}
@@ -1362,9 +1569,10 @@ export const QueryWorkspace = ({
 
                             <section className="relative flex flex-col gap-2">
                                 <SectionHead title="Breakdown" addLabel="Add breakdown" onAdd={() => openPicker({ kind: "breakdown" }, "breakdown")} />
-                                {breakdown.map((d) => (
+                                {breakdown.map((d, i) => (
                                     <Card
                                         key={d}
+                                        reorder={breakdown.length > 1 ? breakdownOrder(i) : undefined}
                                         label={d}
                                         onRemove={() => setBreakdown((cur) => cur.filter((x) => x !== d))}
                                         removeLabel={`Remove ${d} breakdown`}

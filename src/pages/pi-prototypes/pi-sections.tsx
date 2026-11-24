@@ -70,10 +70,10 @@ export const PiHero = () => (
         }
         shots={[
             { src: shotQuery, label: "Performance Insights today", href: proto(V2, "pi-query") },
-            { src: shotRealtime, label: "Realtime dashboard", href: proto(V2, "realtime") },
-            { src: shotKeyMetrics, label: "Key metrics", href: proto(V2, "key-metrics") },
+            { src: shotRealtime, label: "Realtime dashboard" },
+            { src: shotKeyMetrics, label: "Key metrics" },
         ]}
-        caption="Round 2 starts from the full application with the Round 1 styles: these are its screens, the control every concept is judged against. Sample data."
+        caption="Round 2 starts from the full application with the Round 1 styles; its prototype holds only Performance Insights, the control every concept is judged against. Sample data."
     />
 );
 
@@ -83,7 +83,7 @@ export const RoundTwo = () => (
         eyebrow="Round 2 · current · Nov 24, 2026"
         title="Organise the filters, then open on something"
         what="The 24 Nov sync asked for organisation, not a redesign: make the filter band intentional, give a chip one behaviour, finish the flow from adding a filter to removing it, and open the page on realtime's view now that Performance Insights replaces it."
-        point="Three groups, each judged against today's page (C0): fixes that keep today's layout and answer one problem from the sync, the same parts reorganised around realtime and the field tiers, and three new concepts with a different layout (C14 to C16). The prototype's toolbar has a Data menu that fills every concept with the same query, minimal, busy, worst case, empty or random, to see each one under stress."
+        point="Three groups, each judged against today's page (C0): fixes that keep today's layout and answer one problem from the sync, the same parts reorganised around realtime and the field tiers, and three new concepts with a different layout (C14 to C16). The prototype holds only Performance Insights: its toolbar picks a concept, then that concept's main screen or one of its edge cases, and has a Data menu that fills every concept with the same query, minimal, busy, worst case, empty or random, to see each one under stress."
         actions={
             <CtaRow>
                 <Cta kind="primary" href={proto(V2, "c16-workspace")}>

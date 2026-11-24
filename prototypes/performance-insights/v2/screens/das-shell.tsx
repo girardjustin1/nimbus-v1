@@ -139,7 +139,10 @@ export const DasShell = ({ navKey, tabs, footer, concept, account = "publisher",
             className="flex min-h-screen bg-secondary [&_footer]:text-md"
             style={{ ...R1.numbers, ...R1_VARS }}
         >
-            <GlobalNav sections={APP_NAV_SECTIONS} defaultActiveKey={navKey} />
+            {/* Only Performance Insights links anywhere in this prototype: the other items are labels, dimmed and inert. */}
+            <div className="contents [&_a[href='#']]:pointer-events-none [&_a[href='#']]:opacity-40">
+                <GlobalNav sections={APP_NAV_SECTIONS} defaultActiveKey={navKey} />
+            </div>
 
             <main className={cx("flex min-w-0 flex-1 flex-col bg-primary", FIELD_TYPE_R1)}>
                 <AdminBar />

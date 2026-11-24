@@ -7,7 +7,9 @@ import { TEAL_DARK } from "../../nimbus-ui";
  * metric and column, the value, and its change when the report is compared.
  *
  * Cells carry their card as data attributes (TipData); this listens on the table body, so
- * only the card re-renders as the mouse moves, never the table.
+ * only the card re-renders as the mouse moves, never the table. It also marks the hovered
+ * column (every cell and header with the same data-col gets data-col-hover), so the row and
+ * the column both light up; the row's own highlight is CSS.
  */
 
 export type TipData = {
@@ -28,7 +30,16 @@ export const TableTip = ({ target }: { target: RefObject<HTMLElement | null> }) 
     useEffect(() => {
         const el = target.current;
         if (!el) return;
+        const table = el.closest("table");
+        let column: string | null = null;
+        const markColumn = (next: string | null) => {
+            if (next === column || !table) return;
+            table.querySelectorAll("[data-col-hover]").forEach((c) => c.removeAttribute("data-col-hover"));
+            if (next) table.querySelectorAll(`[data-col="${CSS.escape(next)}"]`).forEach((c) => c.setAttribute("data-col-hover", ""));
+            column = next;
+        };
         const move = (e: MouseEvent) => {
+            markColumn((e.target as Element).closest<HTMLElement>("td[data-col]")?.dataset.col ?? null);
             const td = (e.target as Element).closest<HTMLElement>("td[data-tip-head]");
             // Checkboxes and group blocks are controls: no card over them.
             if (!td || (e.target as Element).closest("button")) return setTip(null);
@@ -42,7 +53,10 @@ export const TableTip = ({ target }: { target: RefObject<HTMLElement | null> }) 
                 change: d.tipChange ?? "",
             });
         };
-        const leave = () => setTip(null);
+        const leave = () => {
+            setTip(null);
+            markColumn(null);
+        };
         el.addEventListener("mousemove", move);
         el.addEventListener("mouseleave", leave);
         window.addEventListener("scroll", leave, { passive: true });
