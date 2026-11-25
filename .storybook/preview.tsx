@@ -2,6 +2,7 @@ import type { Preview } from "@storybook/react-vite";
 // Import the Untitled UI + Nimbus design system styles (Tailwind + theme tokens)
 // so components render with the correct teal brand theme inside Storybook.
 import "../src/styles/globals.css";
+import { create } from "storybook/theming";
 import { installHashLinks } from "./hash-links";
 
 // Anchor links on a docs page scroll to their target (see ./hash-links.ts).
@@ -9,6 +10,14 @@ installHashLinks();
 
 const preview: Preview = {
     parameters: {
+        // Docs pages read in Proxima Nova, the product's font (Storybook's default is Nunito Sans).
+        // The Adobe Fonts kit loads in preview-head.html. Added 25 Nov 2026.
+        docs: {
+            theme: create({
+                base: "light",
+                fontBase: '"proxima-nova", "Proxima Nova", Inter, -apple-system, "Segoe UI", Roboto, Arial, sans-serif',
+            }),
+        },
         options: {
             storySort: {
                 method: "alphabetical",

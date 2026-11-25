@@ -918,7 +918,7 @@ export const QueryWorkspace = ({
 
     return (
         <DasShell navKey="performance insights" account="publisher">
-            <PageTabs tabs={PI_TABS} active="query" trailing={<span className="text-md font-semibold text-tertiary">All reports are in UTC.</span>} />
+            <PageTabs tabs={PI_TABS} active="query" trailing={<span className="text-md font-bold text-[#667085]">All reports are in UTC.</span>} />
             <div className={cx("grid items-start", panelOpen ? "grid-cols-[minmax(0,1fr)_360px]" : "grid-cols-1")}>
                 {/* ---------------- report ---------------- */}
                 <div className="flex min-w-0 flex-col gap-4 px-8 py-5">

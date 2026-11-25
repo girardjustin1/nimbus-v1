@@ -4,7 +4,7 @@ import { NIMBUS_CHART_ICONS } from "@/components/application/chart-type-bar/char
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { cx } from "@/utils/cx";
 import { PINK, TEAL } from "./das-shell";
-import { R1, STAGING } from "./round-1";
+import { DATE_LABEL, R1 } from "./round-1";
 import { type SortState, ariaSort } from "./table-sort";
 
 /**
@@ -229,9 +229,9 @@ export const Band = ({ label, children, flush, trailing }: { label: string; chil
 export const DateCell = ({ label, children, onPress }: { label: string; children: ReactNode; onPress?: () => void }) => {
     const body = (
         <>
-            {/* R1-04: the start / end date label takes the one small upper case style. */}
-            <span style={{ ...R1.smallUpper, color: STAGING.greyLight }}>{label}:</span>
-            <span className="text-md font-bold text-primary">{children}</span>
+            {/* R1-04: the start / end date label takes the small upper case style, at staging's 11px for this label (type scrape, 25 Nov). */}
+            <span style={DATE_LABEL}>{label}:</span>
+            <span className="text-md font-bold text-[#101828]">{children}</span>
         </>
     );
     // The first cell takes the page padding, so it lines up with the band labels below.
@@ -309,8 +309,8 @@ export const UiControlButton = ({
         type="button"
         aria-pressed={pressed}
         onClick={onPress}
-        // R1-09, R1-10: staging's button text and height.
-        className="gap-1.5 whitespace-nowrap text-tertiary ring-1 ring-secondary transition duration-100 ease-linear hover:bg-secondary"
+        // R1-09, R1-10: staging's button text and height; #667085 is staging's colour (type scrape, 25 Nov).
+        className="gap-1.5 whitespace-nowrap text-[#667085] ring-1 ring-secondary transition duration-100 ease-linear hover:bg-secondary"
         style={R1.button}
     >
         {Icon && <Icon className="size-4" aria-hidden="true" />}

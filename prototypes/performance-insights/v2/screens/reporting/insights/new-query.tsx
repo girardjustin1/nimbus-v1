@@ -304,7 +304,7 @@ export const NewQuery = ({
                 active="query"
                 trailing={
                     <>
-                        <span className="text-md font-semibold text-tertiary">All reports are in UTC.</span>
+                        <span className="text-md font-bold text-[#667085]">All reports are in UTC.</span>
                         <CollapseButton collapsed={collapsed} onToggle={() => setCollapsed((v) => !v)} />
                         {assistant && <AskButton open={askOpen} onPress={() => setAskOpen((v) => !v)} />}
                     </>
@@ -461,7 +461,7 @@ export const NewQuery = ({
                             )}
 
                             {ordered.length === 0 ? (
-                                <p className="py-8 text-md text-tertiary">Select at least one metric and an attribute.</p>
+                                <p className="py-8 text-md text-[#475467]">Select at least one metric and an attribute.</p>
                             ) : chart !== "table" ? (
                                 <div className={cx("py-8", insightNotes && "grid grid-cols-[minmax(0,1fr)_300px] items-start gap-8")}>
                                     <div className="flex min-w-0 flex-col gap-4">

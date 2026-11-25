@@ -12,8 +12,14 @@ import { EdgeCaseTable, RulesInContext, SpecimenList, StyleMatrix } from "./typo
   <Chip bg="#FCE7F1" fg="#A94579">Prototype 3 · Deal Activation System</Chip>
   <Chip>Set in Product's 5 Oct review</Chip>
   <Chip>Measured 8 Oct 2026</Chip>
+  <Chip bg="#E6F7F7" fg="#1F7F80">Revised 25 Nov 2026 · staging checked, 3 of 7 questions answered</Chip>
   <Chip>Audience: Design, Engineering</Chip>
 </div>
+
+<Callout tone="#EFF8FF" edge="#B2DDFF" title="25 Nov 2026 · Staging is the reference from Round 1 on">
+  <p style={{ margin: "0 0 8px" }}>These three rules are Prototype 3's, set in Product's 5 Oct review. From Transition Round 1 on (the full application v2, Performance Insights v2 and every prototype after them), screens follow <strong>staging's CSS</strong> instead, re-checked on 25 Nov 2026 by measuring every text element on staging's Performance Insights page.</p>
+  <p style={{ margin: 0 }}>Staging breaks two of the rules. Its page title ("Nimbus Exchange") is 26px at 700, not 800, and it uses 11, 12 and 13px text. The prototypes keep staging's values. <a href="#8-staging-check-25-nov-2026">Section 8</a> lists every difference and the questions for the team; <a href="#9-revisions">section 9</a> logs each revision.</p>
+</Callout>
 
 <Callout tone="#FFFBEB" edge="#FDE68A" title="Open questions for Product">
   <p style={{ margin: "0 0 10px" }}>Each one is built one way today, described after the question. A yes keeps it; a different answer is a small change.</p>
@@ -26,7 +32,7 @@ import { EdgeCaseTable, RulesInContext, SpecimenList, StyleMatrix } from "./typo
     <li><strong>Monospace for data.</strong> Keywords, bundle IDs and markup use the system monospace font at 15px, not Proxima Nova. Keep mono? <em>Built: mono.</em></li>
     <li><strong>Long values in the 300px summary rail</strong> wrap onto a second line (for example "Sports fans · Interstitial") rather than shrink or truncate. Wrap or truncate with a tooltip? <em>Built: wrap.</em></li>
     <li><strong>17 styles here, 10 in the audit.</strong> The Typography Audit proposed 10 named styles for the product. Prototype 3 ended up with 17, mostly colour and case variants of the same size. Should these be folded into the audit's 10 before anything is built for real? <em>Built: 17, listed in section 3.</em></li>
-    <li><strong>Beyond Prototype 3.</strong> The rules apply only to Prototype 3. The design system's defaults (13px small text, 500-weight labels), the App Screens and the other prototypes are unchanged. Adopt them across the design system next? <em>Built: Prototype 3 only.</em></li>
+    <li><strong>Beyond Prototype 3.</strong> The rules apply only to Prototype 3. The design system's defaults (13px small text, 500-weight labels), the App Screens and the other prototypes are unchanged. Adopt them across the design system next? <em>Built: Prototype 3 only.</em> <strong>Answered 25 Nov 2026:</strong> no. From Round 1 on, prototypes follow staging's CSS; see section 8.</li>
   </ol>
 </Callout>
 
@@ -150,6 +156,66 @@ in all), and so were every input, select and textarea.
 | Headlines not at 800 | **0** |
 | Form fields under 15px | **0** |
 | Text under 15px, all exceptions | Mock-ad artwork (AD, Learn more →, ADVERTISEMENT) and the prototype's Click to fill hints |
+`} />
+
+---
+
+## 8. Staging check, 25 Nov 2026
+
+Every visible text element on staging's Performance Insights page (100 elements, 26 styles) was measured in the
+browser on 25 Nov 2026 and compared with Performance Insights v2's Control (C0). All text on both is Proxima Nova.
+
+**Staging against the rules.** Where they differ, the prototypes follow staging.
+
+<MdTable md={`
+| Element | Staging | The rules say | Prototypes from Round 1 on |
+|---|---|---|---|
+| Page title (account name, e.g. Nimbus Exchange) | 26px · 700 · black | Headlines 800, page titles 24px | Staging: 26px · 700 |
+| Band labels (Metrics:, Breakdown:, Compare:, Chart Type:) | 16px · 700 · black | Labels 700, black | Same on both |
+| Metric and breakdown checkbox labels | 13px · 700 · #666666 | 700, black, 15px or more | Staging |
+| Buttons (Save Query, Download .CSV, Collapse) | 13px · 800 · caps, 0.75px | 15px or more | Staging |
+| Start date / End date labels | 11px · 800 · caps · #888888 | 15px or more | Staging |
+| Left-nav app links | 13px · 700 · pink | 15px or more | Staging |
+| Footer links, copyright | 13px and 12px · 700 | 15px or more | Still the design system's; see question 5 |
+| Chart types, + ADD, tabs, dates | 15px · 700 | 15px or more | Same on both |
+`} />
+
+**Fixed in Performance Insights v2 on 25 Nov 2026** to match staging:
+
+<MdTable md={`
+| Element | Was | Now (staging) |
+|---|---|---|
+| Start date / End date labels | 12px | 11px |
+| Date values | #181D27 | #101828 |
+| "All reports are in UTC." | 600 · #535862 | 700 · #667085 |
+| Collapse | #535862 | #667085 |
+| Empty-state message | #535862 | #475467 |
+| Announcement banner | 15px · 400, link 700 | 16px · 500, link 700 |
+`} />
+
+**Open questions for the team**
+
+<ol style={{ listStyle: "decimal", paddingLeft: 22, display: "flex", flexDirection: "column", gap: 8 }}>
+  <li><strong>Headline weight in the product.</strong> Staging's page title is 700; Prototype 3 (DAS) made every headline 800. Which does the final product use? <em style={{ color: "#1F7F80" }}><strong>Answered 25 Nov 2026 (Realtime Dashboard font spec):</strong> 700. The publisher name is 26px · 700, and every large figure (metric values, tooltip titles) is 700 too. 800 is used only on small upper case text: badges, date labels, buttons, metric labels.</em></li>
+  <li><strong>The 15px floor.</strong> Staging uses 13px (checkbox labels, buttons, nav links, footer), 12px (copyright) and 11px (date labels). Keep staging's sizes in the product, or adopt the floor? <em style={{ color: "#1F7F80" }}><strong>Answered 25 Nov 2026 (Realtime Dashboard font spec):</strong> keep staging's sizes. The spec sets 11px (date and metric labels), 12px (account badge), 13px (checkbox labels, buttons, table headers, axis ticks) and 14px (table cells). There is no 15px floor.</em></li>
+  <li><strong>Checkbox label colour.</strong> Staging's metric and breakdown labels are grey (#666666) at 700; rule 2 says black. Which is right? <em style={{ color: "#1F7F80" }}><strong>Answered 25 Nov 2026 (Realtime Dashboard font spec):</strong> grey. Checkbox labels are 13px · 700 · line height 20px · #666.</em></li>
+  <li><strong>Sidebar weights.</strong> Staging's app links (key metrics, performance insights…) are 700; the design system's nav uses 600. Change the design system's nav to 700? <em><strong>Still open:</strong> the spec doesn't cover the sidebar.</em></li>
+  <li><strong>Sidebar footer.</strong> Staging's footer links are 13px · 700 · #BBBBBB; the design system's are 15px · 600 · #A4A7AE. Match staging? <em><strong>Still open:</strong> the spec doesn't cover the sidebar footer.</em></li>
+  <li><strong>"Totals Only".</strong> Staging shows a Totals Only control (16px · 700) at the right of the control row. The prototype doesn't have it. What does it do, and should it be added? <em style={{ color: "#8A5A00" }}><strong>Partly answered 25 Nov 2026 (Realtime Dashboard font spec):</strong> on the Realtime Dashboard, Totals Only is one of the band labels (with Platform and Filters:), 16px · 700 · black. What it does on Performance Insights, and whether PI needs it, is still open.</em></li>
+  <li><strong>Empty-state message.</strong> With Table picked, staging reads "Select at least one metric."; with Pie it reads "Select at least one metric and an attribute." Does the message always follow the chart type? And does staging remember the last chart type picked (this check opened on Table)? <em><strong>Still open:</strong> the spec covers type only, not behaviour.</em></li>
+</ol>
+
+---
+
+## 9. Revisions
+
+<MdTable md={`
+| Date | Change |
+|---|---|
+| 5 Oct 2026 | The three rules set in Product's review, for Prototype 3 |
+| 8 Oct 2026 | All 43 Prototype 3 screens measured: no text under 15px, every headline at 800 |
+| 25 Nov 2026 | Staging's Performance Insights page measured. Decision: from Transition Round 1 on, prototypes follow staging's CSS, and these rules stay Prototype 3's (open question 9 answered). Performance Insights v2 fixed in six places to match staging. Storybook's docs pages switched to Proxima Nova. Seven questions for the team added (section 8) |
+| 25 Nov 2026 | Section 8 checked against the Realtime Dashboard font spec (design-refresh cascade). Answered: headlines 700, keep staging's 11–14px sizes, grey checkbox labels. Partly answered: Totals Only (styled as a band label). Still open: sidebar weight, sidebar footer, empty-state behaviour |
 `} />
 
 </div>
