@@ -9,35 +9,34 @@ import { EdgeCaseTable, RulesInContext, SpecimenList, StyleMatrix } from "./typo
 # Typography Rules
 
 <div style={{ display: "flex", flexWrap: "wrap", gap: 10, margin: "14px 0 6px" }}>
-  <Chip bg="#FCE7F1" fg="#A94579">Prototype 3 · Deal Activation System</Chip>
-  <Chip>Set in Product's 5 Oct review</Chip>
-  <Chip>Measured 8 Oct 2026</Chip>
-  <Chip bg="#E6F7F7" fg="#1F7F80">Revised 25 Nov 2026 · type specimen and staging, 6 of 7 questions answered</Chip>
+  <Chip bg="#E6F7F7" fg="#1F7F80">Revised 25 Nov 2026</Chip>
+  <Chip bg="#FCE7F1" fg="#A94579">Every prototype from Round 1 on</Chip>
+  <Chip>Reference: the design-refresh type specimen, then staging</Chip>
   <Chip>Audience: Design, Engineering</Chip>
 </div>
 
-<Callout tone="#EFF8FF" edge="#B2DDFF" title="25 Nov 2026 · The type specimen, then staging, are the reference from Round 1 on">
-  <p style={{ margin: "0 0 8px" }}><strong>First reference: the design-refresh type specimen</strong> (every page, received 25 Nov 2026). Where it gives a style, the prototypes follow it. Where it says nothing, they follow staging's CSS, measured the same day. These rules stay Prototype 3's.</p>
-  <p style={{ margin: "0 0 8px" }}>These three rules are Prototype 3's, set in Product's 5 Oct review. From Transition Round 1 on (the full application v2, Performance Insights v2 and every prototype after them), screens follow <strong>staging's CSS</strong> instead, re-checked on 25 Nov 2026 by measuring every text element on staging's Performance Insights page.</p>
-  <p style={{ margin: 0 }}>Staging breaks two of the rules. Its page title ("Nimbus Exchange") is 26px at 700, not 800, and it uses 11, 12 and 13px text. The prototypes keep staging's values. <a href="#8-staging-check-25-nov-2026">Section 8</a> lists every difference and the questions for the team; <a href="#9-revisions">section 9</a> logs each revision.</p>
+<Callout tone="#EFF8FF" edge="#B2DDFF" title="How type is decided now (25 Nov 2026)">
+  <p style={{ margin: "0 0 8px" }}><strong>1. The design-refresh type specimen</strong> (every page of the product). Where it gives a style, the prototypes follow it.</p>
+  <p style={{ margin: "0 0 8px" }}><strong>2. Staging's CSS</strong>, measured on staging's Performance Insights page, for anything the specimen doesn't cover.</p>
+  <p style={{ margin: 0 }}>The three rules further down were set for Prototype 3 (DAS) in Product's 5 Oct review and are kept as its record. Where they disagree with the specimen or staging (headlines at 800, nothing under 15px), the specimen and staging win. <a href="#8-staging-check-25-nov-2026">Section 8</a> lists the differences and the team's questions; <a href="#9-revisions">section 9</a> logs each revision.</p>
 </Callout>
 
-<Callout tone="#FFFBEB" edge="#FDE68A" title="Open questions for Product">
-  <p style={{ margin: "0 0 10px" }}>Each one is built one way today, described after the question. A yes keeps it; a different answer is a small change.</p>
+<Callout tone="#FFFBEB" edge="#FDE68A" title="Product's review questions, answered from the type specimen (25 Nov 2026)">
+  <p style={{ margin: "0 0 10px" }}>Asked in the 5 Oct review of Prototype 3. Each now has the specimen's answer, or is marked still open where the specimen doesn't cover it.</p>
   <ol style={{ listStyle: "decimal", paddingLeft: 22, margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
-    <li><strong>Page titles are smaller than section headlines.</strong> "Test Publisher" is 24px, and "Auction Rules" below it is 26px. Should page titles move up, or section headlines down to 24px? <em>Built: as the design system had them.</em></li>
-    <li><strong>Are targeting card titles labels or headlines?</strong> Geos, Apps, Ad Unit and the rest are 18px bold (700), following the review's "Geos should be the bolds." Headlines are 800. <em>Built: 700.</em></li>
-    <li><strong>KPI numbers.</strong> Large figures such as "1,284,902" are 24px at 600, treated as data rather than headlines. Should they be 800 too? <em>Built: 600.</em></li>
-    <li><strong>Uppercase at 15px.</strong> Uppercase reads bigger than mixed case. Text actions (CLEAR ALL, BROWSE), statuses (ON TRACK) and group labels are all 15px. Keep them at 15px, or allow uppercase a step smaller? <em>Built: 15px, no exceptions.</em></li>
-    <li><strong>Two exceptions.</strong> Text inside the mock ads (AD, Learn more →) stays at the scale of the ad it shows, and the prototype's own toolbar is outside the rules. Agreed? <em>Built: both exempt.</em></li>
-    <li><strong>Monospace for data.</strong> Keywords, bundle IDs and markup use the system monospace font at 15px, not Proxima Nova. Keep mono? <em>Built: mono.</em></li>
-    <li><strong>Long values in the 300px summary rail</strong> wrap onto a second line (for example "Sports fans · Interstitial") rather than shrink or truncate. Wrap or truncate with a tooltip? <em>Built: wrap.</em></li>
-    <li><strong>17 styles here, 10 in the audit.</strong> The Typography Audit proposed 10 named styles for the product. Prototype 3 ended up with 17, mostly colour and case variants of the same size. Should these be folded into the audit's 10 before anything is built for real? <em>Built: 17, listed in section 3.</em></li>
-    <li><strong>Beyond Prototype 3.</strong> The rules apply only to Prototype 3. The design system's defaults (13px small text, 500-weight labels), the App Screens and the other prototypes are unchanged. Adopt them across the design system next? <em>Built: Prototype 3 only.</em> <strong>Answered 25 Nov 2026:</strong> no. From Round 1 on, prototypes follow staging's CSS; see section 8.</li>
+    <li><strong>Page titles are smaller than section headlines.</strong> "Test Publisher" was 24px and "Auction Rules" below it 26px. Should page titles move up, or section headlines down? <em style={{ color: "#1F7F80" }}><strong>Answered:</strong> page titles move up. The page and publisher name is 26px · 700 (line height 36, or 30 on settings pages); section labels such as Targeting are 20px · 700; display titles (Manage Campaigns, Overview) are 24px · 700, and 800 only on DAS Manage.</em></li>
+    <li><strong>Are targeting card titles labels or headlines?</strong> Geos, Apps, Ad Unit and the rest are 18px. <em style={{ color: "#1F7F80" }}><strong>Answered:</strong> module titles: 18px · 700 · line height 28, the same style as DAS panel titles and Benchmarks chart titles. Not 800.</em></li>
+    <li><strong>KPI numbers.</strong> Large figures such as "1,284,902" were 24px at 600. Should they be 800? <em style={{ color: "#1F7F80" }}><strong>Answered:</strong> 700. Realtime and report totals are 26px · 700 · line height 30 in teal (#039C9E); Key Metrics numbers are 40px · 700.</em></li>
+    <li><strong>Uppercase at 15px.</strong> Keep upper case text at 15px, or allow it a step smaller? <em style={{ color: "#1F7F80" }}><strong>Answered:</strong> a step smaller where it labels or acts. Small upper case labels (dates, fields, metric labels) are 11px · 800 · 0.75px; buttons are 13px · 800 · 0.75px; text actions (+ Add Filters, Unblock, Remove) and chart type options stay 15px · 700.</em></li>
+    <li><strong>Two exceptions.</strong> Text inside the mock ads stays at the scale of the ad it shows, and the prototype's own toolbar is outside the rules. Agreed? <em style={{ color: "#8A5A00" }}><strong>Still open:</strong> the specimen covers the product only, not mock ad artwork or the prototype toolbar. Both stay exempt until the team says otherwise.</em></li>
+    <li><strong>Monospace for data.</strong> Keywords, bundle IDs and markup in the system monospace font. Keep mono? <em style={{ color: "#1F7F80" }}><strong>Answered:</strong> yes. Keyword names, blocking cells and API keys use ui-monospace at 15px (500 in blocking tables).</em></li>
+    <li><strong>Long values in the 300px summary rail.</strong> Wrap onto a second line, or truncate with a tooltip? <em style={{ color: "#8A5A00" }}><strong>Still open:</strong> the specimen doesn't cover the summary rail. Built: wrap.</em></li>
+    <li><strong>How many named styles?</strong> The Typography Audit proposed 10; Prototype 3 ended up with 17. <em style={{ color: "#1F7F80" }}><strong>Answered:</strong> neither list. The specimen names 14 shared styles (body, form value, small upper case label, primary button, pink action, band label, checkbox text, section label, module title, display title, page title, totals number, Key Metrics number, hint) and lists 14 page-specific exceptions. Build against those.</em></li>
+    <li><strong>Beyond Prototype 3.</strong> Adopt the three rules across the design system? <em style={{ color: "#1F7F80" }}><strong>Answered:</strong> no. From Round 1 on, prototypes follow the type specimen, then staging's CSS; the rules stay Prototype 3's.</em></li>
   </ol>
 </Callout>
 
-<Callout tone="#F0FDF9" edge="#99F6E0" title="The rules, as built">
+<Callout tone="#F0FDF9" edge="#99F6E0" title="The record: Prototype 3's rules, as built in October">
   The <a href="./?path=/docs/research-typography-audit--docs" target="_top">Typography Audit</a> records what the
   production dashboard does. This page records what Prototype 3 does instead, after Product's 5 Oct review: three
   rules, applied to every screen in <code>prototypes/das/v3</code>. The design system's defaults are unchanged, and
@@ -228,6 +227,7 @@ browser on 25 Nov 2026 and compared with Performance Insights v2's Control (C0).
 | 25 Nov 2026 | Staging's Performance Insights page measured. Decision: from Transition Round 1 on, prototypes follow staging's CSS, and these rules stay Prototype 3's (open question 9 answered). Performance Insights v2 fixed in six places to match staging. Storybook's docs pages switched to Proxima Nova. Seven questions for the team added (section 8) |
 | 25 Nov 2026 | Section 8 checked against the Realtime Dashboard font spec (design-refresh cascade). Answered: headlines 700, keep staging's 11–14px sizes, grey checkbox labels. Partly answered: Totals Only (styled as a band label). Still open: sidebar weight, sidebar footer, empty-state behaviour |
 | 25 Nov 2026 | The design-refresh type specimen (every page) received and made the first reference, ahead of staging. Answered: sidebar links 600, footer 15px · 600 · #A4A7AE, empty-state message by chart type. Performance Insights v2 matched to it: sidebar section titles, checkbox line height, the empty-state message and its colour (#667085). Still open: what Totals Only does on PI, and whether staging remembers the last chart type |
+| 25 Nov 2026 | Chips brought up to date (Prototype 3, 5 Oct and 8 Oct chips removed). The nine questions from Product's 5 Oct review answered from the type specimen: page titles 26px · 700, card titles 18px · 700, totals 700, upper case smaller for labels (11px) and buttons (13px), monospace kept, 14 named styles. Still open: the mock-ad and toolbar exceptions, and wrap versus truncate in the summary rail |
 `} />
 
 </div>
