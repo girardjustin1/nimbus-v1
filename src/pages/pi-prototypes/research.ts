@@ -52,7 +52,12 @@ export const HEARD: { title: string; body: string }[] = [
 
 /** The five access tiers from the data inventory. Counts are fields and metrics. */
 export const TIERS: { name: string; count: number; who: string; what: string }[] = [
-    { name: "Default", count: 7, who: "Publishers and Nimbus", what: "Loads on open, as realtime does: Revenue, Requests, Impressions and eCPM, by day and platform, scoped to one app." },
+    {
+        name: "Default",
+        count: 7,
+        who: "Publishers and Nimbus",
+        what: "Loads on open, as realtime does: Revenue, Requests, Impressions and eCPM, by day and platform, scoped to one app.",
+    },
     {
         name: "Quick add",
         count: 18,
@@ -65,7 +70,12 @@ export const TIERS: { name: string; count: number; who: string; what: string }[]
         who: "Publishers and Nimbus",
         what: "A grouped, searchable picker: Inventory, Geo & network, Device, Audience & session, Request format, Creative & advertiser, Demand & deals, Video & delivery. Any field is a breakdown or a filter, unless it is filter-only.",
     },
-    { name: "Nimbus internal", count: 17, who: "Nimbus staff only", what: "Its own tab, shown only to staff and tinted wherever it appears, so a screenshot shows when it holds staff-only data." },
+    {
+        name: "Nimbus internal",
+        count: 17,
+        who: "Nimbus staff only",
+        what: "Its own tab, shown only to staff and tinted wherever it appears, so a screenshot shows when it holds staff-only data.",
+    },
     { name: "Captured, not displayed", count: 10, who: "Nobody in the interface", what: "Kept in the warehouse and never offered as a field." },
 ];
 
@@ -113,9 +123,21 @@ export const PATTERNS: Pattern[] = [
         takeaway:
             "The best rows read as sentences (“Country is US ×”), stay on one line, and tuck the rest behind an overflow menu that holds Clear all and Save. Adding a filter is a fixed control, not the last chip.",
         refs: [
-            { app: "Plausible Analytics", note: "“Page is /sign-up ×” chips on one row, an overflow with Save as segment and Clear all filters.", url: m("efd91c15-b39f-4c6b-96cd-4176075f286b") },
-            { app: "Visitors", note: "Small “is Slack ×” chips over the metric row; the filter control is an icon at the right.", url: m("decbd241-09d5-42e6-be62-b9ef54306e0d") },
-            { app: "Revolut", note: "Pill controls for account, period and category in one quiet row above the chart.", url: m("b2809120-c6b3-43d6-9142-35fbfddf28fb") },
+            {
+                app: "Plausible Analytics",
+                note: "“Page is /sign-up ×” chips on one row, an overflow with Save as segment and Clear all filters.",
+                url: m("efd91c15-b39f-4c6b-96cd-4176075f286b"),
+            },
+            {
+                app: "Visitors",
+                note: "Small “is Slack ×” chips over the metric row; the filter control is an icon at the right.",
+                url: m("decbd241-09d5-42e6-be62-b9ef54306e0d"),
+            },
+            {
+                app: "Revolut",
+                note: "Pill controls for account, period and category in one quiet row above the chart.",
+                url: m("b2809120-c6b3-43d6-9142-35fbfddf28fb"),
+            },
             { app: "Whop", note: "The period, comparison and grain as a single row of compact controls.", url: m("0b39694c-dee7-4300-9f2e-ebe25b14c75e") },
         ],
     },
@@ -125,8 +147,16 @@ export const PATTERNS: Pattern[] = [
         takeaway:
             "The same two-pane shape as today's panel: categories on the left, values with search on the right. Good ones say how many are picked, offer Select all, and let you choose “is one of” or “is not one of”.",
         refs: [
-            { app: "Base44", note: "Filters panel: category rail on the left, the chosen category's values with checkboxes on the right, Clear filter.", url: m("a272c926-5944-459a-9e56-0705ac96b621") },
-            { app: "Gorgias", note: "“Is one of / is all of / is not one of”, search, Select all with a count, then the values.", url: m("17be7384-36a0-436b-b98b-a3a8cc5e5085") },
+            {
+                app: "Base44",
+                note: "Filters panel: category rail on the left, the chosen category's values with checkboxes on the right, Clear filter.",
+                url: m("a272c926-5944-459a-9e56-0705ac96b621"),
+            },
+            {
+                app: "Gorgias",
+                note: "“Is one of / is all of / is not one of”, search, Select all with a count, then the values.",
+                url: m("17be7384-36a0-436b-b98b-a3a8cc5e5085"),
+            },
             { app: "Mixpanel", note: "Value picker with search, “Select all in list (3)” and one Add button.", url: m("87f36249-9cd4-4341-b932-1acaffc62b85") },
         ],
     },
@@ -136,7 +166,11 @@ export const PATTERNS: Pattern[] = [
         takeaway: "For fields with thousands of values, the panel opens on a search box and a short list of popular values. Nobody scrolls an alphabet.",
         refs: [
             { app: "Visitors", note: "Country filter opens on a search field; typing “uni” narrows to five.", url: m("a6ee400c-d1b9-4036-bb0c-0465bc23993b") },
-            { app: "Preply", note: "Search above a “Popular” group, chosen values shown as chips under the bar.", url: m("a830f90b-5e12-4415-af31-1afb3cf9c338") },
+            {
+                app: "Preply",
+                note: "Search above a “Popular” group, chosen values shown as chips under the bar.",
+                url: m("a830f90b-5e12-4415-af31-1afb3cf9c338"),
+            },
             { app: "Hotjar", note: "Search over saved and recommended segments before anything else.", url: m("ca38e7f1-0157-4475-82f0-603103421c77") },
         ],
     },
@@ -146,11 +180,27 @@ export const PATTERNS: Pattern[] = [
         takeaway:
             "Metrics grouped by kind, with search; the chosen ones listed apart and in order; breakdowns as chips. A limit on how many metrics chart at once keeps the chart readable.",
         refs: [
-            { app: "Reddit Ads", note: "Groups on the left, a checklist in the middle, the 9 selected listed and reorderable on the right; breakdown as chips.", url: m("27e1b0c8-2267-443b-9eac-1515dee05f1b") },
-            { app: "Pinterest", note: "Edit metrics sheet: grouped checkboxes, up to five, each numbered in the order it appears.", url: m("1da5691c-51e8-41b8-8f8b-e97cfbcf32a4") },
+            {
+                app: "Reddit Ads",
+                note: "Groups on the left, a checklist in the middle, the 9 selected listed and reorderable on the right; breakdown as chips.",
+                url: m("27e1b0c8-2267-443b-9eac-1515dee05f1b"),
+            },
+            {
+                app: "Pinterest",
+                note: "Edit metrics sheet: grouped checkboxes, up to five, each numbered in the order it appears.",
+                url: m("1da5691c-51e8-41b8-8f8b-e97cfbcf32a4"),
+            },
             { app: "Shopify", note: "Metrics searched within a category, applied together.", url: m("1215369b-1fc6-48b8-ac28-ce5f48bae456") },
-            { app: "Mixpanel", note: "Metrics, Filter and Breakdown stacked in one side panel beside the table.", url: m("8a37646e-121c-4446-a108-3706f9afc75a") },
-            { app: "Zendesk", note: "Metrics and Attributes tabs; any attribute can be added as a row, a column or a filter.", url: m("91114259-2758-46c7-879a-4df78f0c5de1") },
+            {
+                app: "Mixpanel",
+                note: "Metrics, Filter and Breakdown stacked in one side panel beside the table.",
+                url: m("8a37646e-121c-4446-a108-3706f9afc75a"),
+            },
+            {
+                app: "Zendesk",
+                note: "Metrics and Attributes tabs; any attribute can be added as a row, a column or a filter.",
+                url: m("91114259-2758-46c7-879a-4df78f0c5de1"),
+            },
         ],
     },
     {
@@ -158,8 +208,16 @@ export const PATTERNS: Pattern[] = [
         title: "Every field in a grouped drawer",
         takeaway: "When fields run to dozens, a drawer with groups down the side and search across all of them is the common answer.",
         refs: [
-            { app: "Frame.io", note: "Groups down the left, every field searchable in the middle, the chosen field's options on the right.", url: m("1a8bd942-0e91-4034-99f1-fb39235ba8ef") },
-            { app: "Square", note: "A side sheet that filters by one category, with search and checkboxes, then Apply.", url: m("7d869088-c92f-4412-8088-6ecdb40d68fd") },
+            {
+                app: "Frame.io",
+                note: "Groups down the left, every field searchable in the middle, the chosen field's options on the right.",
+                url: m("1a8bd942-0e91-4034-99f1-fb39235ba8ef"),
+            },
+            {
+                app: "Square",
+                note: "A side sheet that filters by one category, with search and checkboxes, then Apply.",
+                url: m("7d869088-c92f-4412-8088-6ecdb40d68fd"),
+            },
         ],
     },
     {
@@ -168,9 +226,17 @@ export const PATTERNS: Pattern[] = [
         takeaway: "The headline numbers double as the chart's tabs. One or two at a time, each with its change from the previous period.",
         refs: [
             { app: "Pinterest", note: "Metric cards with a checkbox each: pick up to two to chart.", url: m("ce8ad3cf-159d-44bf-8b48-323a8fd178dc") },
-            { app: "Squarespace", note: "A row of KPI tabs over the chart; the selected one is charted, the table follows.", url: m("ab088f05-b521-444b-9ee4-f173dc3b7579") },
+            {
+                app: "Squarespace",
+                note: "A row of KPI tabs over the chart; the selected one is charted, the table follows.",
+                url: m("ab088f05-b521-444b-9ee4-f173dc3b7579"),
+            },
             { app: "X", note: "A primary metric and an optional secondary metric over one chart.", url: m("3e77ebad-1450-458e-b0f9-9a2c7d54de37") },
-            { app: "Customer.io", note: "The legend is the metric picker: tick a metric beside the chart to plot it.", url: m("9d6e8ea4-9fd9-40b2-a930-93d9f05beb78") },
+            {
+                app: "Customer.io",
+                note: "The legend is the metric picker: tick a metric beside the chart to plot it.",
+                url: m("9d6e8ea4-9fd9-40b2-a930-93d9f05beb78"),
+            },
         ],
     },
     {
@@ -178,7 +244,11 @@ export const PATTERNS: Pattern[] = [
         title: "Comparing with another period",
         takeaway: "Compare is one control beside the date, with plain options: previous period, same period last year, custom.",
         refs: [
-            { app: "Square", note: "Compare to: none, previous period, same period last year, your usual, custom.", url: m("94e2d233-f9b7-431d-929b-a3c6de227514") },
+            {
+                app: "Square",
+                note: "Compare to: none, previous period, same period last year, your usual, custom.",
+                url: m("94e2d233-f9b7-431d-929b-a3c6de227514"),
+            },
             { app: "Klaviyo", note: "Time period and comparison period in one small panel.", url: m("817e4450-5215-4979-ac69-d8ba8ce88bcf") },
         ],
     },
@@ -198,8 +268,16 @@ export const PATTERNS: Pattern[] = [
         takeaway:
             "The query lives in its own column on the right, in sections with a + each: metrics as lettered cards, filters as readable sentences, breakdowns as cards. The report gets the full width, the dates and comparison sit right over the chart, and the table under it pivots against the dates.",
         refs: [
-            { app: "Mixpanel (flow)", note: "Comparing an insight with the previous period: Compare menu, a chip once set, faded lines for the previous period, the change in every cell.", url: "https://mobbin.com/flows/09f6e5da-eaa5-4633-9a33-231f800317f6" },
-            { app: "Mixpanel", note: "Metrics A and B, a Country filter card and two breakdown cards on the right; chart over a nested table.", url: m("8a37646e-121c-4446-a108-3706f9afc75a") },
+            {
+                app: "Mixpanel (flow)",
+                note: "Comparing an insight with the previous period: Compare menu, a chip once set, faded lines for the previous period, the change in every cell.",
+                url: "https://mobbin.com/flows/09f6e5da-eaa5-4633-9a33-231f800317f6",
+            },
+            {
+                app: "Mixpanel",
+                note: "Metrics A and B, a Country filter card and two breakdown cards on the right; chart over a nested table.",
+                url: m("8a37646e-121c-4446-a108-3706f9afc75a"),
+            },
         ],
     },
     {
@@ -207,7 +285,13 @@ export const PATTERNS: Pattern[] = [
         title: "The key insight next to the chart",
         takeaway:
             "From a study of 2,108 dashboards: the ones people remember do not only show what happened, they say what changed, right beside the chart, and they know what to leave out. Other ideas from it to keep in mind: a live view of activity, a heat map of busy hours, and a metric of your own that people come to quote.",
-        refs: [{ app: "Mobbin · I studied 2,108 dashboards (video)", note: "Insights next to the chart, a prompt under it, or a full AI layer alongside; AI dashboards get about twice the saves.", url: "https://www.youtube.com/watch?v=kdRkuqu8apE" }],
+        refs: [
+            {
+                app: "Mobbin · I studied 2,108 dashboards (video)",
+                note: "Insights next to the chart, a prompt under it, or a full AI layer alongside; AI dashboards get about twice the saves.",
+                url: "https://www.youtube.com/watch?v=kdRkuqu8apE",
+            },
+        ],
     },
     {
         id: "assistant",
@@ -215,10 +299,22 @@ export const PATTERNS: Pattern[] = [
         takeaway:
             "The useful ones suggest questions and set up the report the user then controls; the report stays the source of truth. The lightest version is one prompt under the chart; the fullest is a panel you can talk to beside the data.",
         refs: [
-            { app: "Linktree", note: "Insights with an assistant docked on the right: suggested questions, an “ask” prompt under every card, answers that show their analysis steps.", url: m("922aee3e-fd5b-4556-99d6-4e3d1d906be0") },
-            { app: "Linktree (flow)", note: "Chatting with the assistant: from the suggested questions to a summary and next steps.", url: "https://mobbin.com/flows/7da1f0d6-6070-4eba-9ab1-dfee042adf19" },
+            {
+                app: "Linktree",
+                note: "Insights with an assistant docked on the right: suggested questions, an “ask” prompt under every card, answers that show their analysis steps.",
+                url: m("922aee3e-fd5b-4556-99d6-4e3d1d906be0"),
+            },
+            {
+                app: "Linktree (flow)",
+                note: "Chatting with the assistant: from the suggested questions to a summary and next steps.",
+                url: "https://mobbin.com/flows/7da1f0d6-6070-4eba-9ab1-dfee042adf19",
+            },
             { app: "Linktree (flow)", note: "Renaming a conversation from its title.", url: "https://mobbin.com/flows/fb1b66ac-09cb-49bc-b270-389341542294" },
-            { app: "Pipedrive", note: "The question on the left, the generated report and its filters on the right, editable.", url: m("2f13cf32-e76e-4b5a-b52a-036dea6e3bb5") },
+            {
+                app: "Pipedrive",
+                note: "The question on the left, the generated report and its filters on the right, editable.",
+                url: m("2f13cf32-e76e-4b5a-b52a-036dea6e3bb5"),
+            },
             { app: "Seline", note: "Suggested questions over the dashboard before anything is typed.", url: m("33f047c0-7e1c-4f29-a65b-a25189a5e5ff") },
         ],
     },
@@ -233,3 +329,87 @@ export const PATTERNS: Pattern[] = [
         ],
     },
 ];
+
+/**
+ * The auction traffic field spec (engineering, read 25 Nov 2026): the fields the new data
+ * gives Performance Insights. Field names and labels are the spec's; sample values come
+ * from the prototype (fictional). The concepts (C1–C16) offer these; C0 stays on staging's.
+ */
+export const AUCTION_SPEC = {
+    counts: { fields: 77, attributes: 49, metrics: 25, implicit: 3 },
+    /** Each new breakdown's field name. */
+    newDims: {
+        "Ad Category": "ad_category",
+        Buyer: "seat_id",
+        Carrier: "carrier",
+        "Connection Usage": "connection_type",
+        "Deal ID": "deal_id",
+        "Deal Type": "deal_type",
+        "ID Link Vendors": "id_link_vendors",
+        Language: "language",
+        Manufacturer: "manufacturer",
+        "OS Version": "os_version",
+        "Original Demand Source": "original_network",
+        "Request Ad Type": "request_auction_type",
+    } as Record<string, string>,
+    /** Each new metric's field name. */
+    newMetrics: {
+        "Gross Revenue": "gross_revenue",
+        "Net Revenue": "net_revenue",
+        "Cost per Click": "cost_per_click",
+        "Average Win Bid Floor": "average_win_bid_floor",
+        "eCPM Native": "ecpm_native",
+        "eCPM Static": "ecpm_static",
+        "eCPM Video": "ecpm_video",
+        "Video Companion Clicks": "video_companion_clicks",
+        "Video First Quartile Impressions": "video_first_quartile_impressions",
+        "Video Second Quartile Impressions": "video_second_quartile_impressions",
+        "Video Third Quartile Impressions": "video_third_quartile_impressions",
+        "Video Fourth Quartile Impressions": "video_fourth_quartile_impressions",
+    } as Record<string, string>,
+    /** Today's 28 breakdowns and the field behind each. */
+    existing: [
+        ["Account", "account"],
+        ["Account Manager", "account_manager"],
+        ["Ad ID", "ad_id_status"],
+        ["Ad Size", "ad_size"],
+        ["Ad Type", "presentation_type"],
+        ["Ad Unit", "ad_unit"],
+        ["Advertiser", "adomain"],
+        ["App", "publisher"],
+        ["App Bundle", "bundle_id"],
+        ["App Category", "app_category"],
+        ["App Version", "app_version"],
+        ["Common Ad Size", "common_ad_size"],
+        ["Country", "country"],
+        ["DAS Asset", "sc_asset_id"],
+        ["DAS Campaign", "sc_campaign_id"],
+        ["DAS Deal", "sc_deal_id"],
+        ["Demand Source", "network (or demand_source)"],
+        ["Demand Source Pool", "network_pool"],
+        ["Demand Source Type", "is_sdk_network"],
+        ["Integration Type", "integration_type"],
+        ["Internal Demand Source", "original_network_and_pool"],
+        ["LiveRamp ID", "has_liveramp_id_link"],
+        ["Placement", "placement"],
+        ["Platform", "app_platform"],
+        ["Position", "position"],
+        ["Region", "region"],
+        ["SDK Version", "sdk_version"],
+        ["Unified ID 2.0", "has_uid2_id_link"],
+    ] as [string, string][],
+    /** Left out of the prototypes, and why. */
+    leftOut: [
+        "Date, Week, Month, Quarter and Year: PI shows time through its date range and interval.",
+        "Is Test: internal, test traffic.",
+        "auction_type, labelled “Ad Type”, and demand_source, labelled “Demand Source”: each shares its label with the field PI already uses.",
+    ],
+    /** Open questions for engineering. */
+    questions: [
+        "Two fields are labelled “Demand Source” (demand_source and network), two “Ad Type” (auction_type and presentation_type) and two “Year” (week_year and year). Which does PI show, and what are the others called?",
+        "Revenue, Net Revenue and Gross Revenue: how do they differ, and which can a publisher see?",
+        "The sample's Ad Type values combine type and unit (“Static - Banner”, “Video - Interstitial”, “Native - Native”). Is that the new Ad Type list?",
+        "Demand Source Type shows SDK / S2S today; the spec labels the field “Is SDK Demand Source”, Yes / No. Which wording does PI keep?",
+        "Do any of the new breakdowns grey out the request metrics, as Ad Size and the other served-only breakdowns do today, or do they show Unknown instead?",
+    ],
+};

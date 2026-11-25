@@ -1,9 +1,10 @@
 import type { CSSProperties, ReactNode } from "react";
+import { DIM_VALUES, NEW_DIMS, NEW_METRICS, UNIT, VALUE_TAGS } from "../../../prototypes/performance-insights/v2/screens/reporting/insights/insights-data";
 import { BODY, INK, LINE, MUTED, PINK_DARK, PINK_SOFT, TEAL_DARK, TEAL_SOFT, WARM, proto, story } from "../intro/tokens";
 import { CardGrid, Chip, Cta, CtaRow, Feature, Hero, PageHeader, ShotCard } from "../intro/ui";
 import heroArt from "../transition/art/hero-panels.jpg";
 import stackArt from "../transition/art/hero-stack.jpg";
-import { CONSTRAINTS, HEARD, MOBBIN_COLLECTION, PATTERNS, TIERS } from "./research";
+import { AUCTION_SPEC, CONSTRAINTS, HEARD, MOBBIN_COLLECTION, PATTERNS, TIERS } from "./research";
 import { CONCEPTS, type Concept, GROUPS, REACH_NOTE, type Reach } from "./round-2";
 import shotV1 from "./screens/pi-v1.jpg";
 import shotKeyMetrics from "./screens/pi-v2-key-metrics.jpg";
@@ -393,3 +394,117 @@ export const Patterns = () => (
         })}
     </>
 );
+
+/* ------------------------------------------------------- Auction traffic --- */
+
+const TH: CSSProperties = { textAlign: "left", fontSize: 15, fontWeight: 700, color: MUTED, padding: "8px 12px", borderBottom: `1px solid ${LINE}` };
+const TD: CSSProperties = { fontSize: 15, color: BODY, padding: "8px 12px", borderBottom: `1px solid ${LINE}`, verticalAlign: "top" };
+const MONO: CSSProperties = { fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", fontSize: 15, color: INK };
+
+const SpecTable = ({ head, rows }: { head: string[]; rows: ReactNode[][] }) => (
+    <div style={{ overflowX: "auto", border: `1px solid ${LINE}`, borderRadius: 12, margin: "10px 0 18px", fontFamily: FONT }}>
+        <table style={{ borderCollapse: "collapse", width: "100%" }}>
+            <thead>
+                <tr>
+                    {head.map((h) => (
+                        <th key={h} style={TH}>
+                            {h}
+                        </th>
+                    ))}
+                </tr>
+            </thead>
+            <tbody>
+                {rows.map((r, i) => (
+                    <tr key={i}>
+                        {r.map((c, j) => (
+                            <td key={j} style={TD}>
+                                {c}
+                            </td>
+                        ))}
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    </div>
+);
+
+const Tagged = ({ value }: { value: string }) =>
+    VALUE_TAGS[value] ? (
+        <span title={VALUE_TAGS[value]} style={{ fontStyle: "italic", color: MUTED, border: `1px solid ${LINE}`, borderRadius: 4, padding: "0 6px" }}>
+            {value}
+        </span>
+    ) : (
+        <>{value}</>
+    );
+
+const Sub = ({ children }: { children: ReactNode }) => (
+    <div style={{ fontFamily: FONT, fontSize: 19, fontWeight: 800, color: INK, margin: "22px 0 4px" }}>{children}</div>
+);
+
+export const AuctionFields = () => {
+    const { counts, newDims, newMetrics, existing, leftOut, questions } = AUCTION_SPEC;
+    return (
+        <>
+            <Text>
+                Engineering's field spec for the new auction traffic data lists {counts.fields} fields: {counts.implicit} date fields, {counts.attributes}{" "}
+                attributes and {counts.metrics} metrics. Every breakdown and metric Performance Insights has today maps to one of them. The concepts (C1–C16)
+                now offer the {NEW_DIMS.length} new breakdowns and {NEW_METRICS.length} new metrics below; C0 stays on staging's 13 metrics and 28 breakdowns.
+                Values are the prototype's samples.
+            </Text>
+            <Sub>New breakdowns</Sub>
+            <SpecTable
+                head={["Breakdown", "Field", "Sample values"]}
+                rows={NEW_DIMS.map((d) => [
+                    <strong key="l">{d}</strong>,
+                    <code key="f" style={MONO}>
+                        {newDims[d]}
+                    </code>,
+                    <span key="v">
+                        {DIM_VALUES[d].map((v, i) => (
+                            <span key={v}>
+                                {i > 0 && " · "}
+                                <Tagged value={v} />
+                            </span>
+                        ))}
+                    </span>,
+                ])}
+            />
+            <Sub>New metrics</Sub>
+            <SpecTable
+                head={["Metric", "Field", "Unit"]}
+                rows={NEW_METRICS.map((m) => [
+                    <strong key="l">{m}</strong>,
+                    <code key="f" style={MONO}>
+                        {newMetrics[m]}
+                    </code>,
+                    UNIT[m] === "money" ? "Money" : UNIT[m] === "pct" ? "Percent" : "Count",
+                ])}
+            />
+            <Sub>Value tags</Sub>
+            <Text>A value that is missing, late or grouped shows as one of three tags, with the spec's tooltip.</Text>
+            <SpecTable head={["Tag", "Tooltip"]} rows={Object.entries(VALUE_TAGS).map(([t, tip]) => [<Tagged key="t" value={t} />, tip])} />
+            <Sub>Today's breakdowns, and their fields</Sub>
+            <SpecTable
+                head={["Breakdown", "Field"]}
+                rows={existing.map(([l, f]) => [
+                    l,
+                    <code key="f" style={MONO}>
+                        {f}
+                    </code>,
+                ])}
+            />
+            <Sub>Left out of the prototypes</Sub>
+            <ul style={{ fontFamily: FONT, fontSize: 15, lineHeight: 1.6, color: BODY, paddingLeft: 22 }}>
+                {leftOut.map((l) => (
+                    <li key={l}>{l}</li>
+                ))}
+            </ul>
+            <Sub>Open questions for engineering</Sub>
+            <ol style={{ fontFamily: FONT, fontSize: 15, lineHeight: 1.6, color: BODY, paddingLeft: 22, display: "grid", gap: 6 }}>
+                {questions.map((q) => (
+                    <li key={q}>{q}</li>
+                ))}
+            </ol>
+        </>
+    );
+};

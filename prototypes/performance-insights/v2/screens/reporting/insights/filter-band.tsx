@@ -7,6 +7,7 @@ import { type FilterState, StateAction, TEAL_DARK } from "../../nimbus-ui";
 import { R1 } from "../../round-1";
 import { type PanelDim, PolishedPanel } from "./filter-panel";
 import { type BandLook, bandCounts, searchValues } from "./filter-state";
+import { ValueText } from "./value-tag";
 
 /**
  * Performance Insights · Round 2 · the filter band concepts (24 Nov PI sync).
@@ -178,7 +179,11 @@ export const FilterBand = ({
                                             <Checkbox
                                                 size="sm"
                                                 aria-label={`${on ? "Pause" : "Apply"} ${d.label}: ${v}`}
-                                                label={<span style={{ ...R1.checkboxText, color: on ? TEAL_DARK : undefined }}>{v}</span>}
+                                                label={
+                                                    <span style={{ ...R1.checkboxText, color: on ? TEAL_DARK : undefined }}>
+                                                        <ValueText value={v} />
+                                                    </span>
+                                                }
                                                 isSelected={on}
                                                 onChange={() => toggle(d.id, v)}
                                             />
@@ -295,7 +300,7 @@ export const FilterBand = ({
                                                 )}
                                                 style={chosen ? { color: TEAL_DARK, backgroundColor: `${TEAL}1f` } : undefined}
                                             >
-                                                {v}
+                                                <ValueText value={v} />
                                             </button>
                                         </li>
                                     );
@@ -303,7 +308,8 @@ export const FilterBand = ({
                             </ul>
                             {searchValues({ values: current.values }, query).more > 0 && (
                                 <p className="border-t border-secondary px-4 py-2 text-md text-tertiary">
-                                    Showing 1,000 of {(1000 + searchValues({ values: current.values }, query).more).toLocaleString("en-US")}. Search to find the rest.
+                                    Showing 1,000 of {(1000 + searchValues({ values: current.values }, query).more).toLocaleString("en-US")}. Search to find the
+                                    rest.
                                 </p>
                             )}
                         </div>

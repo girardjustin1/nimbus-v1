@@ -12,11 +12,12 @@ import { EdgeCaseTable, RulesInContext, SpecimenList, StyleMatrix } from "./typo
   <Chip bg="#FCE7F1" fg="#A94579">Prototype 3 · Deal Activation System</Chip>
   <Chip>Set in Product's 5 Oct review</Chip>
   <Chip>Measured 8 Oct 2026</Chip>
-  <Chip bg="#E6F7F7" fg="#1F7F80">Revised 25 Nov 2026 · staging checked, 3 of 7 questions answered</Chip>
+  <Chip bg="#E6F7F7" fg="#1F7F80">Revised 25 Nov 2026 · type specimen and staging, 6 of 7 questions answered</Chip>
   <Chip>Audience: Design, Engineering</Chip>
 </div>
 
-<Callout tone="#EFF8FF" edge="#B2DDFF" title="25 Nov 2026 · Staging is the reference from Round 1 on">
+<Callout tone="#EFF8FF" edge="#B2DDFF" title="25 Nov 2026 · The type specimen, then staging, are the reference from Round 1 on">
+  <p style={{ margin: "0 0 8px" }}><strong>First reference: the design-refresh type specimen</strong> (every page, received 25 Nov 2026). Where it gives a style, the prototypes follow it. Where it says nothing, they follow staging's CSS, measured the same day. These rules stay Prototype 3's.</p>
   <p style={{ margin: "0 0 8px" }}>These three rules are Prototype 3's, set in Product's 5 Oct review. From Transition Round 1 on (the full application v2, Performance Insights v2 and every prototype after them), screens follow <strong>staging's CSS</strong> instead, re-checked on 25 Nov 2026 by measuring every text element on staging's Performance Insights page.</p>
   <p style={{ margin: 0 }}>Staging breaks two of the rules. Its page title ("Nimbus Exchange") is 26px at 700, not 800, and it uses 11, 12 and 13px text. The prototypes keep staging's values. <a href="#8-staging-check-25-nov-2026">Section 8</a> lists every difference and the questions for the team; <a href="#9-revisions">section 9</a> logs each revision.</p>
 </Callout>
@@ -189,8 +190,18 @@ browser on 25 Nov 2026 and compared with Performance Insights v2's Control (C0).
 | Date values | #181D27 | #101828 |
 | "All reports are in UTC." | 600 · #535862 | 700 · #667085 |
 | Collapse | #535862 | #667085 |
-| Empty-state message | #535862 | #475467 |
+| Empty-state message | #535862 | #475467, then #667085 (specimen) |
 | Announcement banner | 15px · 400, link 700 | 16px · 500, link 700 |
+`} />
+
+**Then matched to the type specimen** the same day (it wins where it disagrees with staging):
+
+<MdTable md={`
+| Element | Was | Now (specimen) |
+|---|---|---|
+| Sidebar section titles (Reporting, Demand…) | 15px · 600 · white | 12px · 700 · 0.04em · caps · #A4A7AE |
+| Metric and breakdown checkbox text | line height 24px | line height 20px |
+| Empty-state message | One message | Pie: "Select at least one metric and an attribute." Table and the other charts: "Select at least one metric." · #667085 |
 `} />
 
 **Open questions for the team**
@@ -199,10 +210,10 @@ browser on 25 Nov 2026 and compared with Performance Insights v2's Control (C0).
   <li><strong>Headline weight in the product.</strong> Staging's page title is 700; Prototype 3 (DAS) made every headline 800. Which does the final product use? <em style={{ color: "#1F7F80" }}><strong>Answered 25 Nov 2026 (Realtime Dashboard font spec):</strong> 700. The publisher name is 26px · 700, and every large figure (metric values, tooltip titles) is 700 too. 800 is used only on small upper case text: badges, date labels, buttons, metric labels.</em></li>
   <li><strong>The 15px floor.</strong> Staging uses 13px (checkbox labels, buttons, nav links, footer), 12px (copyright) and 11px (date labels). Keep staging's sizes in the product, or adopt the floor? <em style={{ color: "#1F7F80" }}><strong>Answered 25 Nov 2026 (Realtime Dashboard font spec):</strong> keep staging's sizes. The spec sets 11px (date and metric labels), 12px (account badge), 13px (checkbox labels, buttons, table headers, axis ticks) and 14px (table cells). There is no 15px floor.</em></li>
   <li><strong>Checkbox label colour.</strong> Staging's metric and breakdown labels are grey (#666666) at 700; rule 2 says black. Which is right? <em style={{ color: "#1F7F80" }}><strong>Answered 25 Nov 2026 (Realtime Dashboard font spec):</strong> grey. Checkbox labels are 13px · 700 · line height 20px · #666.</em></li>
-  <li><strong>Sidebar weights.</strong> Staging's app links (key metrics, performance insights…) are 700; the design system's nav uses 600. Change the design system's nav to 700? <em><strong>Still open:</strong> the spec doesn't cover the sidebar.</em></li>
-  <li><strong>Sidebar footer.</strong> Staging's footer links are 13px · 700 · #BBBBBB; the design system's are 15px · 600 · #A4A7AE. Match staging? <em><strong>Still open:</strong> the spec doesn't cover the sidebar footer.</em></li>
-  <li><strong>"Totals Only".</strong> Staging shows a Totals Only control (16px · 700) at the right of the control row. The prototype doesn't have it. What does it do, and should it be added? <em style={{ color: "#8A5A00" }}><strong>Partly answered 25 Nov 2026 (Realtime Dashboard font spec):</strong> on the Realtime Dashboard, Totals Only is one of the band labels (with Platform and Filters:), 16px · 700 · black. What it does on Performance Insights, and whether PI needs it, is still open.</em></li>
-  <li><strong>Empty-state message.</strong> With Table picked, staging reads "Select at least one metric."; with Pie it reads "Select at least one metric and an attribute." Does the message always follow the chart type? And does staging remember the last chart type picked (this check opened on Table)? <em><strong>Still open:</strong> the spec covers type only, not behaviour.</em></li>
+  <li><strong>Sidebar weights.</strong> Staging's app links (key metrics, performance insights…) are 700; the design system's nav uses 600. Change the design system's nav to 700? <em style={{ color: "#1F7F80" }}><strong>Answered 25 Nov 2026 (type specimen):</strong> 600. Sidebar links are 15px · 600 · line height 24 · #A4A7AE, as the design system has them; section titles are 12px · 700 · 0.04em · caps · #A4A7AE.</em></li>
+  <li><strong>Sidebar footer.</strong> Staging's footer links are 13px · 700 · #BBBBBB; the design system's are 15px · 600 · #A4A7AE. Match staging? <em style={{ color: "#1F7F80" }}><strong>Answered 25 Nov 2026 (type specimen):</strong> no. Footer links are 15px · 600 · #A4A7AE, as the design system has them.</em></li>
+  <li><strong>"Totals Only".</strong> Staging shows a Totals Only control (16px · 700) at the right of the control row. The prototype doesn't have it. What does it do, and should it be added? <em style={{ color: "#8A5A00" }}><strong>Partly answered 25 Nov 2026 (Realtime Dashboard font spec):</strong> on the Realtime Dashboard, Totals Only is one of the band labels (with Platform and Filters:), 16px · 700 · black. The type specimen agrees (a filter / band label). What it does on Performance Insights, and whether PI needs it, is still open.</em></li>
+  <li><strong>Empty-state message.</strong> With Table picked, staging reads "Select at least one metric."; with Pie it reads "Select at least one metric and an attribute." Does the message always follow the chart type? And does staging remember the last chart type picked (this check opened on Table)? <em style={{ color: "#8A5A00" }}><strong>Partly answered 25 Nov 2026 (type specimen):</strong> yes, it follows the chart type: Table and the other charts read "Select at least one metric."; Pie reads "Select at least one metric and an attribute." Built that way. Whether staging remembers the last chart type is still open.</em></li>
 </ol>
 
 ---
@@ -216,6 +227,7 @@ browser on 25 Nov 2026 and compared with Performance Insights v2's Control (C0).
 | 8 Oct 2026 | All 43 Prototype 3 screens measured: no text under 15px, every headline at 800 |
 | 25 Nov 2026 | Staging's Performance Insights page measured. Decision: from Transition Round 1 on, prototypes follow staging's CSS, and these rules stay Prototype 3's (open question 9 answered). Performance Insights v2 fixed in six places to match staging. Storybook's docs pages switched to Proxima Nova. Seven questions for the team added (section 8) |
 | 25 Nov 2026 | Section 8 checked against the Realtime Dashboard font spec (design-refresh cascade). Answered: headlines 700, keep staging's 11–14px sizes, grey checkbox labels. Partly answered: Totals Only (styled as a band label). Still open: sidebar weight, sidebar footer, empty-state behaviour |
+| 25 Nov 2026 | The design-refresh type specimen (every page) received and made the first reference, ahead of staging. Answered: sidebar links 600, footer 15px · 600 · #A4A7AE, empty-state message by chart type. Performance Insights v2 matched to it: sidebar section titles, checkbox line height, the empty-state message and its colour (#667085). Still open: what Totals Only does on PI, and whether staging remembers the last chart type |
 `} />
 
 </div>

@@ -8,16 +8,15 @@ import { type FilterState, PageTabs, StateAction, TABLE, TEAL_DARK, tableHead, t
 import { R1 } from "../../round-1";
 import { AssistantPanel } from "./assistant";
 import type { ReportChange } from "./assistant-questions";
+import { useFields } from "./field-set";
 import { bandExcluded, searchValues } from "./filter-state";
-import { useStagingLists, withStagingLists } from "./staging-lists";
 import {
+    AUCTION_DIMS,
     type ChartKind,
-    DIMS,
     DIM_VALUES,
     type Dim,
     INTERVALS,
     type Interval,
-    METRICS,
     type Metric,
     PI_TABS,
     type Range,
@@ -32,7 +31,9 @@ import { QueryMenu, Toast } from "./query-menu";
 import { RangePicker } from "./range-picker";
 import { spanOf } from "./report-facts";
 import type { ScenarioQuery } from "./scenarios";
+import { useStagingLists, withStagingLists } from "./staging-lists";
 import { TableTip, type TipData } from "./table-tip";
+import { ValueText } from "./value-tag";
 
 /**
  * Performance Insights · Round 2 · C16: the query beside the report (24 Nov).
@@ -83,8 +84,8 @@ const QUICK: { id: Range; label: string }[] = [
     { id: "30", label: "30D" },
 ];
 
-/** The categories a filter can use; Advertiser carries its full list, searched first (C8). */
-const FILTER_DIMS = DIMS.map((d) =>
+/** The categories a filter can use (every breakdown either list has); Advertiser carries its full list, searched first (C8). */
+const FILTER_DIMS = AUCTION_DIMS.map((d) =>
     d === "Advertiser" ? { id: d, label: d, values: LONG_ADVERTISERS, top: TOP_ADVERTISERS } : { id: d, label: d, values: DIM_VALUES[d] },
 );
 const dimOf = (d: Dim) => FILTER_DIMS.find((x) => x.id === d)!;
@@ -400,6 +401,8 @@ const PickerPopover = ({
     onSaveFilter: (d: Dim, values: string[]) => void;
 }) => {
     const stagingLists = useStagingLists();
+    // The metrics and breakdowns on offer: the auction traffic spec's, as a concept (./field-set).
+    const fields = useFields();
     const [query, setQuery] = useState("");
     const box = useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -438,7 +441,7 @@ const PickerPopover = ({
                         onClick={() => onPick(v)}
                         className="w-full rounded-md px-3 py-2 text-left text-md text-secondary hover:bg-secondary hover:text-primary"
                     >
-                        {v}
+                        <ValueText value={v} />
                     </button>
                 </li>
             ))}
@@ -447,9 +450,9 @@ const PickerPopover = ({
 
     let body: ReactNode;
     if (picker.kind === "metric") {
-        const items = METRICS.filter((m) => (picker.replace ? m === picker.replace || !metrics.includes(m) : !metrics.includes(m))).filter((m) =>
-            m.toLowerCase().includes(q),
-        );
+        const items = fields.metrics
+            .filter((m) => (picker.replace ? m === picker.replace || !metrics.includes(m) : !metrics.includes(m)))
+            .filter((m) => m.toLowerCase().includes(q));
         body = (
             <>
                 {search("Search metrics")}
@@ -458,7 +461,7 @@ const PickerPopover = ({
         );
     } else if (picker.kind === "breakdown" || picker.kind === "filter-field") {
         const taken = picker.kind === "breakdown" ? breakdown : (Object.keys(filters) as Dim[]);
-        const items = DIMS.filter((d) => !taken.includes(d)).filter((d) => d.toLowerCase().includes(q));
+        const items = fields.dims.filter((d) => !taken.includes(d)).filter((d) => d.toLowerCase().includes(q));
         body = (
             <>
                 {search(picker.kind === "breakdown" ? "Break down by…" : "Filter by…")}
@@ -500,7 +503,11 @@ const PickerPopover = ({
                         <Checkbox
                             key={v}
                             size="md"
-                            label={<span style={R1.checkboxText}>{v}</span>}
+                            label={
+                                <span style={R1.checkboxText}>
+                                    <ValueText value={v} />
+                                </span>
+                            }
                             isSelected={picker.draft.includes(v)}
                             onChange={() => pick(v)}
                         />

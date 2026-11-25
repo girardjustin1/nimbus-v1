@@ -33,7 +33,26 @@ export const METRICS = [
     "Average Winning Bid Price",
     "Average Impression Bid Floor",
 ] as const;
-export type Metric = (typeof METRICS)[number];
+
+/**
+ * v2 · Round 2 (25 Nov): the metrics the auction traffic field spec adds (reference/112626,
+ * labels as the spec writes them). The concepts offer them; C0 keeps staging's 13.
+ */
+export const NEW_METRICS = [
+    "Gross Revenue",
+    "Net Revenue",
+    "Cost per Click",
+    "Average Win Bid Floor",
+    "eCPM Native",
+    "eCPM Static",
+    "eCPM Video",
+    "Video Companion Clicks",
+    "Video First Quartile Impressions",
+    "Video Second Quartile Impressions",
+    "Video Third Quartile Impressions",
+    "Video Fourth Quartile Impressions",
+] as const;
+export type Metric = (typeof METRICS)[number] | (typeof NEW_METRICS)[number];
 
 export type Unit = "count" | "money" | "pct";
 export const UNIT: Record<Metric, Unit> = {
@@ -50,10 +69,35 @@ export const UNIT: Record<Metric, Unit> = {
     RCPM: "money",
     "Average Winning Bid Price": "money",
     "Average Impression Bid Floor": "money",
+    "Gross Revenue": "money",
+    "Net Revenue": "money",
+    "Cost per Click": "money",
+    "Average Win Bid Floor": "money",
+    "eCPM Native": "money",
+    "eCPM Static": "money",
+    "eCPM Video": "money",
+    "Video Companion Clicks": "count",
+    "Video First Quartile Impressions": "count",
+    "Video Second Quartile Impressions": "count",
+    "Video Third Quartile Impressions": "count",
+    "Video Fourth Quartile Impressions": "count",
 };
 
 /** Metrics that add up across rows, so they can stack or slice into a pie. */
-export const ADDITIVE: Metric[] = ["Requests", "Wins", "Impressions", "Revenue", "Clicks"];
+export const ADDITIVE: Metric[] = [
+    "Requests",
+    "Wins",
+    "Impressions",
+    "Revenue",
+    "Clicks",
+    "Gross Revenue",
+    "Net Revenue",
+    "Video Companion Clicks",
+    "Video First Quartile Impressions",
+    "Video Second Quartile Impressions",
+    "Video Third Quartile Impressions",
+    "Video Fourth Quartile Impressions",
+];
 
 /* ---------------------------------------------------------- Breakdowns --- */
 
@@ -87,7 +131,45 @@ export const DIMS = [
     "SDK Version",
     "Unified ID 2.0",
 ] as const;
-export type Dim = (typeof DIMS)[number];
+
+/**
+ * v2 · Round 2 (25 Nov): the breakdowns the auction traffic field spec adds, labelled as the
+ * spec labels them. Left out: the time fields (Date, Week, Month, Quarter, Year: PI shows
+ * time through its date range and interval), Is Test (internal), and the spec's second
+ * "Ad Type" and "Demand Source" (same labels as fields PI already has). The concepts offer
+ * these; C0 keeps staging's 28.
+ */
+export const NEW_DIMS = [
+    "Ad Category",
+    "Buyer",
+    "Carrier",
+    "Connection Usage",
+    "Deal ID",
+    "Deal Type",
+    "ID Link Vendors",
+    "Language",
+    "Manufacturer",
+    "OS Version",
+    "Original Demand Source",
+    "Request Ad Type",
+] as const;
+export type Dim = (typeof DIMS)[number] | (typeof NEW_DIMS)[number];
+
+/** Staging's lists (C0) and the auction traffic lists (the concepts), metrics in staging's order first. */
+export const STAGING_METRICS: readonly Metric[] = METRICS;
+export const AUCTION_METRICS: readonly Metric[] = [...METRICS, ...NEW_METRICS];
+export const STAGING_DIMS: readonly Dim[] = DIMS;
+export const AUCTION_DIMS: readonly Dim[] = [...DIMS, ...NEW_DIMS].sort((a, b) => a.localeCompare(b));
+
+/**
+ * The spec's value tags (reference/112626): a value that is missing or grouped shows as one
+ * of these labels, with its tooltip.
+ */
+export const VALUE_TAGS: Record<string, string> = {
+    Unknown: "We don’t have this value — it was never provided, or the metric can’t be broken down by this column.",
+    Unavailable: "This value isn’t available yet. Reporting data trues up over time, and it may fill in as that process finalizes.",
+    Other: "Values we don’t support individually (e.g. uncommon ad sizes) are grouped together.",
+};
 
 /** Staging's definitions, shown when the mouse is over a metric's name (25 Nov). */
 export const METRIC_DEFINITIONS: Record<Metric, string> = {
@@ -104,6 +186,19 @@ export const METRIC_DEFINITIONS: Record<Metric, string> = {
     RCPM: "“Revenue Cost Per Mille”, revenue over overall request opportunity",
     "Average Winning Bid Price": "Average price of winning bids expressed as a CPM",
     "Average Impression Bid Floor": "Average bid floor for an auction that resulted in an impression expressed as a CPM",
+    // The field spec has labels but no definitions for these yet.
+    "Gross Revenue": "No definition in the field spec yet.",
+    "Net Revenue": "No definition in the field spec yet.",
+    "Cost per Click": "Revenue divided by clicks.",
+    "Average Win Bid Floor": "Average bid floor for an auction that resulted in a win expressed as a CPM",
+    "eCPM Native": "eCPM for native impressions.",
+    "eCPM Static": "eCPM for static impressions.",
+    "eCPM Video": "eCPM for video impressions.",
+    "Video Companion Clicks": "Clicks on a video ad's companion banner.",
+    "Video First Quartile Impressions": "Video impressions played to 25%.",
+    "Video Second Quartile Impressions": "Video impressions played to 50%.",
+    "Video Third Quartile Impressions": "Video impressions played to 75%.",
+    "Video Fourth Quartile Impressions": "Video impressions played to the end.",
 };
 
 /**
@@ -128,8 +223,7 @@ export const SERVED_ONLY_DIMS: readonly Dim[] = [
 export const REQUEST_METRICS: readonly Metric[] = ["Requests", "Fill Rate", "Win Rate", "RCPM"];
 
 /** The metrics a breakdown rules out (none for most). */
-export const blockedMetrics = (breakdown: readonly Dim[]): Metric[] =>
-    breakdown.some((d) => SERVED_ONLY_DIMS.includes(d)) ? [...REQUEST_METRICS] : [];
+export const blockedMetrics = (breakdown: readonly Dim[]): Metric[] => (breakdown.some((d) => SERVED_ONLY_DIMS.includes(d)) ? [...REQUEST_METRICS] : []);
 
 /** Each breakdown's values. Fictional throughout: sample accounts, apps, partners, example.com advertisers. */
 export const DIM_VALUES: Record<Dim, string[]> = {
@@ -161,6 +255,19 @@ export const DIM_VALUES: Record<Dim, string[]> = {
     Region: ["North America", "Europe", "Latin America", "Asia Pacific"],
     "SDK Version": ["2.28.0", "2.27.1", "2.26.3", "2.25.0"],
     "Unified ID 2.0": ["Present", "Absent"],
+    // The auction traffic spec's breakdowns. Sample values; Unknown and Unavailable are the spec's value tags.
+    "Ad Category": ["Arts & Entertainment", "Hobbies & Interests", "Shopping", "Sports", "Unknown"],
+    Buyer: ["Acme Advertising", "Northstar Media", "Brightline Digital", "Unknown"],
+    Carrier: ["Carrier A", "Carrier B", "Carrier C", "Carrier D", "Unknown"],
+    "Connection Usage": ["Wi-Fi", "Cellular", "Unknown"],
+    "Deal ID": ["Sports fans PMP", "Commuters PG", "Summer Premium Inventory", "Unavailable"],
+    "Deal Type": ["DAS", "Private Marketplace", "Programmatic Guaranteed"],
+    "ID Link Vendors": ["LiveRamp", "Unified ID 2.0", "LiveRamp, Unified ID 2.0", "Unknown"],
+    Language: ["English", "Spanish", "German", "French", "Japanese"],
+    Manufacturer: ["Apple", "Samsung", "Google", "Motorola", "Unknown"],
+    "OS Version": ["18.6", "18.5", "18.4", "15", "14"],
+    "Original Demand Source": [...DEMAND_PARTNERS.slice(0, 6), "DAS"],
+    "Request Ad Type": ["Video, Native", "Static", "Native", "Static, Video"],
 };
 
 /* --------------------------------------------------------- Date ranges --- */
@@ -288,8 +395,45 @@ export const metricOf = (m: Metric, t: Totals): number => {
             return ratio(t.bid, t.wins);
         case "Average Impression Bid Floor":
             return ratio(t.floor, t.impressions);
+        // The spec's new metrics, derived from the same counts with fixed sample ratios (the
+        // spec's sample rows), so they move with the rest. Fictional, like every figure here.
+        case "Gross Revenue":
+            return t.revenue * NEW.gross;
+        case "Net Revenue":
+            return t.revenue * NEW.net;
+        case "Cost per Click":
+            return ratio(t.revenue, t.clicks);
+        case "Average Win Bid Floor":
+            return ratio(t.floor, t.impressions) * NEW.winFloor;
+        case "eCPM Native":
+            return ratio(t.revenue, t.impressions) * 1000 * NEW.ecpm.native;
+        case "eCPM Static":
+            return ratio(t.revenue, t.impressions) * 1000 * NEW.ecpm.static;
+        case "eCPM Video":
+            return ratio(t.revenue, t.impressions) * 1000 * NEW.ecpm.video;
+        case "Video Companion Clicks":
+            return t.impressions * NEW.video * NEW.companion;
+        case "Video First Quartile Impressions":
+            return t.impressions * NEW.video * NEW.quartiles[0];
+        case "Video Second Quartile Impressions":
+            return t.impressions * NEW.video * NEW.quartiles[1];
+        case "Video Third Quartile Impressions":
+            return t.impressions * NEW.video * NEW.quartiles[2];
+        case "Video Fourth Quartile Impressions":
+            return t.impressions * NEW.video * NEW.quartiles[3];
     }
 };
+
+/** Sample ratios for the new metrics, read off the spec's example rows (reference/112626). */
+const NEW = {
+    net: 1.49,
+    gross: 1.53,
+    winFloor: 1.08,
+    ecpm: { native: 0.7, static: 0.35, video: 1.6 },
+    video: 0.42,
+    companion: 0.001,
+    quartiles: [0.805, 0.656, 0.549, 0.492],
+} as const;
 
 export const formatMetric = (m: Metric, v: number) => {
     const unit = UNIT[m];
@@ -330,7 +474,9 @@ const shareOf = (dim: Dim, v: string) => {
 };
 // Render rate varies less than the rest (±6%), so no value's render rate reaches the 99.5% cap.
 const rawMult = (dim: Dim, v: string): Mult =>
-    Object.fromEntries(Object.keys(ONE).map((k) => [k, k === "render" ? 0.94 + 0.12 * seeded(`${k}:${dim}:${v}`) : 0.85 + 0.3 * seeded(`${k}:${dim}:${v}`)])) as Mult;
+    Object.fromEntries(
+        Object.keys(ONE).map((k) => [k, k === "render" ? 0.94 + 0.12 * seeded(`${k}:${dim}:${v}`) : 0.85 + 0.3 * seeded(`${k}:${dim}:${v}`)]),
+    ) as Mult;
 
 /**
  * v2 · Round 2: each value also moves a little from day to day (±8% of its share, ±4% on
@@ -370,7 +516,10 @@ const multOf = (dim: Dim, v: string, day?: string): Mult => {
         byValue = new Map(
             values.map((x) => {
                 const m = raw.get(x)!;
-                return [x, { win: m.win / kWin, render: m.render / kRender, ecpm: m.ecpm / kEcpm, ctr: m.ctr / kCtr, floor: m.floor / kFloor, bid: m.bid / kBid }];
+                return [
+                    x,
+                    { win: m.win / kWin, render: m.render / kRender, ecpm: m.ecpm / kEcpm, ctr: m.ctr / kCtr, floor: m.floor / kFloor, bid: m.bid / kBid },
+                ];
             }),
         );
         multCache.set(cacheKey, byValue);

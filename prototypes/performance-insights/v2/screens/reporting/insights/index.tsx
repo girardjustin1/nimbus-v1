@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { ProtoScreen } from "../../../../../shared/prototype-frame";
 import type { FilterState } from "../../nimbus-ui";
+import { AUCTION_FIELDS, FieldsProvider, STAGING_FIELDS } from "./field-set";
 import { NewQuery } from "./new-query";
 import { QueryWorkspace } from "./query-workspace";
 import { SavedQueries } from "./saved-queries";
@@ -68,7 +69,12 @@ function round2Screens(): ProtoScreen[] {
         area: areaOf(id),
         title,
         description,
-        render: () => <WithScenario>{render}</WithScenario>,
+        // C0 is staging's control (staging's metrics and breakdowns); every concept offers the auction traffic spec's (25 Nov).
+        render: () => (
+            <FieldsProvider fields={id.startsWith("c0-") ? STAGING_FIELDS : AUCTION_FIELDS}>
+                <WithScenario>{render}</WithScenario>
+            </FieldsProvider>
+        ),
     });
     const list: ProtoScreen[] = [
         c("c0-control", "C0 · Control, first load", "As staging opens: nothing picked, Pie chart, Show legend on.", (sc) => (
