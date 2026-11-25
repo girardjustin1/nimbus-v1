@@ -104,8 +104,9 @@ const AnnouncementBanner = () => {
     const [open, setOpen] = useState(!bannerClosed);
     if (!open) return null;
     return (
-        <div className="relative flex items-center justify-center gap-2 px-12 py-2.5 text-md text-white" style={{ backgroundColor: PINK }}>
-            <span>Announcement set in Configure Banner.</span>
+        <div className="relative flex items-center justify-center gap-2 px-12 py-2.5 text-[16px] leading-[19.2px] text-white" style={{ backgroundColor: PINK }}>
+            {/* Staging's banner text: 16px, 500; its link 700 (type scrape, 25 Nov). */}
+            <span className="font-medium">Announcement set in Configure Banner.</span>
             <a href="#" onClick={(e) => e.preventDefault()} className="font-bold underline">
                 Read more
             </a>

@@ -557,7 +557,7 @@ export const FullPerformance = ({
                     </div>
                     {/* Where staging's tab row carries them, beside the page's own heading. */}
                     <div className="flex items-center gap-3">
-                        <span className="text-md text-tertiary">All reports are in UTC.</span>
+                        <span className="text-md font-bold text-[#667085]">All reports are in UTC.</span>
                         <CollapseButton collapsed={collapsed} onToggle={() => setCollapsed((v) => !v)} />
                     </div>
                 </div>
