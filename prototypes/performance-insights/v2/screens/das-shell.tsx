@@ -6,7 +6,7 @@ import { cx } from "@/utils/cx";
 import { type Campaign, type CampaignStatus, type PaceState, paceOf } from "../../../das/v1/screens/das-data";
 import { useScreenNotes } from "../../../shared/screen-notes";
 import { ADMIN_LINKS, APP_NAV_SECTIONS } from "./nav";
-import { R1 } from "./round-1";
+import { NAV_SECTION, R1 } from "./round-1";
 import { FIELD_TYPE_R1, HEADLINE } from "./type-rules";
 
 /**
@@ -62,7 +62,15 @@ export const R1_VARS = {
     "--r1-button-weight": String(R1.button.fontWeight),
     "--r1-button-spacing": R1.button.letterSpacing,
     "--r1-button-height": `${R1.button.height}px`,
+    "--nav-section-size": `${NAV_SECTION.fontSize}px`,
+    "--nav-section-weight": String(NAV_SECTION.fontWeight),
+    "--nav-section-spacing": NAV_SECTION.letterSpacing,
+    "--nav-section-color": NAV_SECTION.color,
 } as CSSProperties;
+
+/** The type specimen's sidebar section titles, set on the design system's nav from outside it (25 Nov 2026). */
+const NAV_SECTION_TYPE =
+    "[&_nav>button]:text-(length:--nav-section-size) [&_nav>button]:font-(--nav-section-weight) [&_nav>button]:tracking-(--nav-section-spacing) [&_nav>button]:text-(--nav-section-color) [&_nav>button]:uppercase [&_nav>div]:text-(length:--nav-section-size) [&_nav>div]:font-(--nav-section-weight) [&_nav>div]:tracking-(--nav-section-spacing) [&_nav>div]:text-(--nav-section-color) [&_nav>div]:uppercase";
 
 export interface DasShellProps {
     /** Global Nav item to highlight. */
@@ -136,12 +144,9 @@ export const DasShell = ({ navKey, tabs, footer, concept, account = "publisher",
         // The shared Global Nav sets its footer links at 13px; the 15px minimum is applied
         // from here rather than by editing the shared component.
         // R1-14: every number in the app uses tabular figures, set once here. R1-16: the one option hover, as a variable.
-        <div
-            className="flex min-h-screen bg-secondary [&_footer]:text-md"
-            style={{ ...R1.numbers, ...R1_VARS }}
-        >
+        <div className="flex min-h-screen bg-secondary [&_footer]:text-md" style={{ ...R1.numbers, ...R1_VARS }}>
             {/* Only Performance Insights links anywhere in this prototype: the other items are labels, dimmed and inert. */}
-            <div className="contents [&_a[href='#']]:pointer-events-none [&_a[href='#']]:opacity-40">
+            <div className={cx("contents [&_a[href='#']]:pointer-events-none [&_a[href='#']]:opacity-40", NAV_SECTION_TYPE)}>
                 <GlobalNav sections={APP_NAV_SECTIONS} defaultActiveKey={navKey} />
             </div>
 

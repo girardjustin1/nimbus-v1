@@ -29,16 +29,17 @@ import {
     TABLE,
     TEAL_DARK,
     filterExcluded,
-    tealToggles,
     tableHead,
+    tealToggles,
 } from "../../nimbus-ui";
-import { R1 } from "../../round-1";
+import { MUTED_TEXT, R1 } from "../../round-1";
 import { compactNum } from "../../sample-data";
 import { StatLookContext } from "../../stat-look";
 import { useTableSort } from "../../table-sort";
 import { LABEL } from "../../type-rules";
 import { AskButton, AskRow, AssistantPanel } from "./assistant";
 import type { QuestionId, ReportChange } from "./assistant-questions";
+import { useFields } from "./field-set";
 import { FilterBand } from "./filter-band";
 import { type BandLook, bandExcluded } from "./filter-state";
 import { InsightNotes } from "./insight-notes";
@@ -49,7 +50,6 @@ import {
     type Dim,
     INTERVALS,
     type Interval,
-    METRICS,
     METRIC_DEFINITIONS,
     type Metric,
     PI_TABS,
@@ -68,8 +68,9 @@ import {
 } from "./insights-data";
 import { LONG_ADVERTISERS, TOP_ADVERTISERS } from "./long-lists";
 import { QueryChart } from "./query-chart";
-import { useStagingLists, withStagingLists } from "./staging-lists";
 import type { ScenarioQuery } from "./scenarios";
+import { useStagingLists, withStagingLists } from "./staging-lists";
+import { ValueText } from "./value-tag";
 
 /**
  * Performance Insights · New Query — Nov 13 style guide, rebuilt from staging
@@ -91,7 +92,8 @@ const CHART_TYPES: ChartTypeOption<ChartKind>[] = [
     { id: "pie", label: "Pie", icon: DEFAULT_CHART_ICONS.pie },
 ];
 
-const FILTER_DIMS = DIMS.map((d) => ({ id: d, label: d, values: DIM_VALUES[d] }));
+const toFilterDims = (dims: readonly Dim[]) => dims.map((d) => ({ id: d, label: d, values: DIM_VALUES[d] }));
+const FILTER_DIMS = toFilterDims(DIMS);
 
 /**
  * The control's panel, in staging's shape (25 Nov): one DAS entry (its deals, with staging's
@@ -109,7 +111,15 @@ const CONTROL_FILTER_DIMS: FilterDim[] = FILTER_DIMS.filter((d) => d.id !== "DAS
                 ...d,
                 group: {
                     label: "Region",
-                    of: { "United States": "NORAM", Canada: "NORAM", "United Kingdom": "EUROPE", Germany: "EUROPE", Mexico: "LATAM", Brazil: "LATAM", Japan: "APAC" },
+                    of: {
+                        "United States": "NORAM",
+                        Canada: "NORAM",
+                        "United Kingdom": "EUROPE",
+                        Germany: "EUROPE",
+                        Mexico: "LATAM",
+                        Brazil: "LATAM",
+                        Japan: "APAC",
+                    },
                 },
             }
           : d.id === "App"
@@ -130,7 +140,8 @@ const CONTROL_FILTER_DIMS: FilterDim[] = FILTER_DIMS.filter((d) => d.id !== "DAS
 );
 
 /** C8: the same categories with Advertiser's long list, opening search first on its top values. */
-const LONG_FILTER_DIMS = FILTER_DIMS.map((d) => (d.id === "Advertiser" ? { ...d, values: LONG_ADVERTISERS, top: TOP_ADVERTISERS } : d));
+const withLongAdvertisers = (list: ReturnType<typeof toFilterDims>) =>
+    list.map((d) => (d.id === "Advertiser" ? { ...d, values: LONG_ADVERTISERS, top: TOP_ADVERTISERS } : d));
 
 /** C0 with long lists: Advertiser carries the full sample list (staging's runs to 30,000+). */
 const CONTROL_LONG_DIMS = CONTROL_FILTER_DIMS.map((d) => (d.id === "Advertiser" ? { ...d, values: LONG_ADVERTISERS } : d));
@@ -211,13 +222,20 @@ export const NewQuery = ({
     // C0 on this machine: staging's real filter lists when the dev server has them (sample data otherwise).
     const stagingLists = useStagingLists();
     const controlDims = useMemo(() => withStagingLists(longLists ? CONTROL_LONG_DIMS : CONTROL_FILTER_DIMS, stagingLists), [longLists, stagingLists]);
+    // C0 offers staging's metrics and breakdowns; the concepts the auction traffic spec's (./field-set).
+    const fields = useFields();
     // The concepts' bands (C1–C15) take the same lists; their panels list them flat (no groups).
-    const bandDims = useMemo(() => withStagingLists(longLists ? LONG_FILTER_DIMS : FILTER_DIMS, stagingLists), [longLists, stagingLists]);
+    const bandDims = useMemo(() => {
+        const list = toFilterDims(fields.dims);
+        return withStagingLists(longLists ? withLongAdvertisers(list) : list, stagingLists);
+    }, [fields, longLists, stagingLists]);
     // Some breakdowns rule out the request metrics (staging: Common Ad Size greys them out).
     const blocked = useMemo(() => blockedMetrics(breakdown), [breakdown]);
     // C4 leads with Revenue, as realtime does: the first metric is the one charted.
-    const ordered = METRICS.filter((m) => metrics.includes(m) && !blocked.includes(m)).sort((a, b) => (defaultView ? Number(b === "Revenue") - Number(a === "Revenue") : 0));
-    const dims = useMemo(() => DIMS.filter((d) => breakdown.includes(d)), [breakdown]);
+    const ordered = fields.metrics
+        .filter((m) => metrics.includes(m) && !blocked.includes(m))
+        .sort((a, b) => (defaultView ? Number(b === "Revenue") - Number(a === "Revenue") : 0));
+    const dims = useMemo(() => fields.dims.filter((d) => breakdown.includes(d)), [fields, breakdown]);
     const compareDays = Number(compare) > 0 ? Number(compare) : undefined;
     const excluded = useMemo(
         () => (band ? bandExcluded(bandDims, filters) : filterExcluded(controlDims, filters)) as Partial<Record<Dim, string[]>>,
@@ -360,7 +378,7 @@ export const NewQuery = ({
                                 {/* ✕ shows on a band only while it has something ticked, as on staging. */}
                                 <Band label="Metrics" trailing={ordered.length > 0 && <ClearBand what="metrics" onPress={() => setMetrics([])} />}>
                                     <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
-                                        {METRICS.map((m) => (
+                                        {fields.metrics.map((m) => (
                                             <Checkbox
                                                 key={m}
                                                 size="md"
@@ -376,7 +394,7 @@ export const NewQuery = ({
 
                                 <Band label="Breakdown" trailing={breakdown.length > 0 && <ClearBand what="breakdown" onPress={() => setBreakdown([])} />}>
                                     <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
-                                        {DIMS.map((d) => (
+                                        {fields.dims.map((d) => (
                                             <Checkbox
                                                 key={d}
                                                 size="md"
@@ -461,7 +479,10 @@ export const NewQuery = ({
                             )}
 
                             {ordered.length === 0 ? (
-                                <p className="py-8 text-md text-[#475467]">Select at least one metric and an attribute.</p>
+                                <p className="py-8 text-md" style={{ color: MUTED_TEXT }}>
+                                    {/* The type specimen's two empty states (25 Nov 2026): Pie also needs a breakdown. */}
+                                    {chart === "pie" ? "Select at least one metric and an attribute." : "Select at least one metric."}
+                                </p>
                             ) : chart !== "table" ? (
                                 <div className={cx("py-8", insightNotes && "grid grid-cols-[minmax(0,1fr)_300px] items-start gap-8")}>
                                     <div className="flex min-w-0 flex-col gap-4">
@@ -523,7 +544,7 @@ export const NewQuery = ({
                                                         <td className={cx(TABLE.report.td, "whitespace-nowrap tabular-nums")}>{r.period}</td>
                                                         {r.combo.values.map((v, i) => (
                                                             <td key={i} className={cx(TABLE.report.td, "whitespace-nowrap")}>
-                                                                {v}
+                                                                <ValueText value={v} />
                                                             </td>
                                                         ))}
                                                         {ordered.map((m) => (
