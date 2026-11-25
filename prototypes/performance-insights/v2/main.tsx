@@ -22,7 +22,7 @@ const isConcept = (s: ProtoScreen) => /^c\d+-/.test(s.id);
 
 // Round 2 holds only Performance Insights (owner, Nov 24): the concepts, and today's PI
 // screens filed under C0, the control, as its edge cases. The other app screens are left out.
-const C0_ORDER = ["c0-control", "pi-query", "pi-query-line", "pi-query-area", "pi-query-bar", "pi-saved", "pi-saved-empty"];
+const C0_ORDER = ["c0-control", "c0-filter-panel", "c0-filter-country", "c0-filter-search", "c0-filter-unticked", "pi-query", "pi-query-line", "pi-query-area", "pi-query-bar", "pi-saved", "pi-saved-empty"];
 const piScreens: ProtoScreen[] = screens
     .filter((s) => conceptOf(s.id) !== null)
     .map((s) => (s.id.startsWith("pi-") ? { ...s, area: CONCEPT_AREAS.control, title: `C0 · Today's ${s.title}` } : s))

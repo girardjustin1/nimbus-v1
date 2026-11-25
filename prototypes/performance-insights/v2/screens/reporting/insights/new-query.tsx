@@ -20,6 +20,7 @@ import {
     DateCell,
     DateRow,
     FilterControl,
+    type FilterDim,
     type FilterState,
     PageTabs,
     REPORT_STRIPE,
@@ -49,6 +50,7 @@ import {
     INTERVALS,
     type Interval,
     METRICS,
+    METRIC_DEFINITIONS,
     type Metric,
     PI_TABS,
     RANGES,
@@ -90,8 +92,47 @@ const CHART_TYPES: ChartTypeOption<ChartKind>[] = [
 
 const FILTER_DIMS = DIMS.map((d) => ({ id: d, label: d, values: DIM_VALUES[d] }));
 
+/**
+ * The control's panel, in staging's shape (25 Nov): one DAS entry (its deals, with staging's
+ * note) where the breakdowns have three; Country by region and App by account. Sample data.
+ */
+const CONTROL_FILTER_DIMS: FilterDim[] = FILTER_DIMS.filter((d) => d.id !== "DAS Asset" && d.id !== "DAS Campaign").map((d): FilterDim =>
+    d.id === "DAS Deal"
+        ? {
+              ...d,
+              label: "DAS",
+              note: "Performance Insights data is subject to true-up and is finalized within 72 hours. For real-time campaign spend, open DAS › Manage Campaigns.",
+          }
+        : d.id === "Country"
+          ? {
+                ...d,
+                group: {
+                    label: "Region",
+                    of: { "United States": "NORAM", Canada: "NORAM", "United Kingdom": "EUROPE", Germany: "EUROPE", Mexico: "LATAM", Brazil: "LATAM", Japan: "APAC" },
+                },
+            }
+          : d.id === "App"
+            ? {
+                  ...d,
+                  group: {
+                      label: "Account",
+                      of: {
+                          "Daily Scores": "Scoreline Media",
+                          "Match Report": "Scoreline Media",
+                          "Xtra Innings": "Metro Mobile",
+                          "Puzzle Parade": "Northlight Apps",
+                          "Garden Planner": "Greenleaf Studio",
+                      },
+                  },
+              }
+            : d,
+);
+
 /** C8: the same categories with Advertiser's long list, opening search first on its top values. */
 const LONG_FILTER_DIMS = FILTER_DIMS.map((d) => (d.id === "Advertiser" ? { ...d, values: LONG_ADVERTISERS, top: TOP_ADVERTISERS } : d));
+
+/** C0 with long lists: Advertiser carries the full sample list (staging's runs to 30,000+). */
+const CONTROL_LONG_DIMS = CONTROL_FILTER_DIMS.map((d) => (d.id === "Advertiser" ? { ...d, values: LONG_ADVERTISERS } : d));
 
 /** C4: the Default tier, which realtime opens on today. */
 const DEFAULT_VIEW = { metrics: ["Revenue", "Requests", "Impressions", "ECPM"] as Metric[], breakdown: ["Platform"] as Dim[], chart: "line" as ChartKind };
@@ -103,6 +144,7 @@ export const NewQuery = ({
     band,
     filters: initialFilters = {},
     openFilterOn,
+    openFilterGroup,
     defaultView,
     panel,
     panelQuery,
@@ -123,6 +165,8 @@ export const NewQuery = ({
     filters?: FilterState;
     /** Opens the filter panel on this category (C3 states). */
     openFilterOn?: string;
+    /** C0: the group open in a grouped list (Country's region). */
+    openFilterGroup?: string;
     /** Round 2 · C4: opens on realtime's view, with its metric blocks over the chart. */
     defaultView?: boolean;
     /** Round 2 · C7: the polished filter panel (C8's search first comes with it). */
@@ -170,7 +214,7 @@ export const NewQuery = ({
     const dims = useMemo(() => DIMS.filter((d) => breakdown.includes(d)), [breakdown]);
     const compareDays = Number(compare) > 0 ? Number(compare) : undefined;
     const excluded = useMemo(
-        () => (band ? bandExcluded(FILTER_DIMS, filters) : filterExcluded(FILTER_DIMS, filters)) as Partial<Record<Dim, string[]>>,
+        () => (band ? bandExcluded(FILTER_DIMS, filters) : filterExcluded(CONTROL_FILTER_DIMS, filters)) as Partial<Record<Dim, string[]>>,
         [filters, band],
     );
     const tableTotals = chart === "table" && totalsOnly;
@@ -314,7 +358,8 @@ export const NewQuery = ({
                                             <Checkbox
                                                 key={m}
                                                 size="md"
-                                                label={<span style={R1.checkboxText}>{m}</span>}
+                                                label={<MetricName metric={m} />}
+                                                aria-describedby={defId(m)}
                                                 isSelected={metrics.includes(m) && !blocked.includes(m)}
                                                 isDisabled={blocked.includes(m)}
                                                 onChange={() => toggleMetric(m)}
@@ -349,7 +394,14 @@ export const NewQuery = ({
                                             panelQuery={panelQuery}
                                         />
                                     ) : (
-                                        <FilterControl dims={FILTER_DIMS} value={filters} onChange={setFilters} />
+                                        <FilterControl
+                                            dims={longLists ? CONTROL_LONG_DIMS : CONTROL_FILTER_DIMS}
+                                            value={filters}
+                                            onChange={setFilters}
+                                            openOn={openFilterOn}
+                                            openGroup={openFilterGroup}
+                                            query={panelQuery}
+                                        />
                                     )}
                                 </Band>
 
@@ -506,6 +558,28 @@ export const NewQuery = ({
         </DasShell>
     );
 };
+
+const defId = (m: Metric) => `metric-def-${m.replace(/\W+/g, "-").toLowerCase()}`;
+
+/**
+ * A metric's name, with staging's definition in a navy card while the mouse is over it.
+ * The card stays out of the checkbox's name; the checkbox points at it as its description.
+ */
+const MetricName = ({ metric }: { metric: Metric }) => (
+    <span className="group/def relative">
+        <span style={R1.checkboxText}>{metric}</span>
+        <span
+            id={defId(metric)}
+            role="tooltip"
+            aria-hidden="true"
+            className="pointer-events-none invisible absolute top-full left-0 z-30 mt-3 w-[290px] rounded-lg px-4 py-3 font-semibold text-white opacity-0 shadow-lg transition-opacity duration-100 group-hover/def:visible group-hover/def:opacity-100"
+            style={{ backgroundColor: "#002534", fontSize: 15, lineHeight: "20px", textTransform: "none", letterSpacing: "normal" }}
+        >
+            <span aria-hidden="true" className="absolute -top-1.5 left-6 size-3 rotate-45" style={{ backgroundColor: "#002534" }} />
+            {METRIC_DEFINITIONS[metric]}
+        </span>
+    </span>
+);
 
 /** The pink ✕ at a band's right edge, behind a rule: clears what the band has ticked. */
 const ClearBand = ({ what, onPress }: { what: string; onPress: () => void }) => (

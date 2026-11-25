@@ -368,6 +368,13 @@ export interface FilterDim {
     id: string;
     label: string;
     values: string[];
+    /**
+     * A two-level list (staging: Country by region, App by account): each value's group. The
+     * panel lists the groups in a middle pane, then the open group's values.
+     */
+    group?: { label: string; of: Record<string, string> };
+    /** A note beside the values (staging's DAS: data is subject to true-up). */
+    note?: string;
 }
 
 /** Per dimension: the values chosen in the menu, and which of those are toggled off. */
@@ -375,161 +382,266 @@ export type FilterState = Record<string, { values: string[]; off: string[] }>;
 
 /**
  * What a FilterState leaves out, per dimension: every value that isn't chosen and on.
- * Dimensions with nothing chosen leave nothing out.
+ * Dimensions with nothing chosen leave nothing out, and so do dimensions with every value
+ * toggled off: on staging an unticked chip stays on the row but drops out of the query.
  */
 export const filterExcluded = (dims: FilterDim[], state: FilterState): Record<string, string[]> =>
     Object.fromEntries(
         dims.map((d) => {
             const f = state[d.id];
-            if (!f?.values.length) return [d.id, []];
-            const kept = f.values.filter((v) => !f.off.includes(v));
+            const kept = f ? f.values.filter((v) => !f.off.includes(v)) : [];
+            if (!kept.length) return [d.id, []];
             return [d.id, d.values.filter((v) => !kept.includes(v))];
         }),
     );
 
 export const hasFilters = (state: FilterState) => Object.values(state).some((f) => f.values.length);
 
+/** Staging's panel (25 Nov): lists longer than this get a search box and two columns. */
+const SEARCH_OVER = 7;
+/** Staging draws at most this many values; search reaches the rest. */
+const DRAW_CAP = 1000;
+/** “Country” → “countries”, “Region” → “regions” (for search labels). */
+const plural = (word: string, keepCase = false) => {
+    const w = keepCase ? word : word.toLowerCase();
+    return /[^aeiou]y$/i.test(w) ? `${w.slice(0, -1)}ies` : `${w}s`;
+};
+/** Selected rows and the open category: teal at 8%, as on staging. */
+const TEAL_ROW = "rgba(55, 182, 183, 0.08)";
+
+const PanelRow = ({ on, onPress, children, arrow }: { on?: boolean; onPress: () => void; children: ReactNode; arrow?: boolean }) => (
+    <li>
+        <button
+            type="button"
+            onClick={onPress}
+            aria-pressed={arrow ? undefined : on}
+            aria-current={arrow && on ? "true" : undefined}
+            className={cx("flex h-10 w-full items-center justify-between gap-2 px-4 text-left text-md", on ? "" : "text-secondary hover:bg-secondary")}
+            style={on ? { color: TEAL_DARK, backgroundColor: TEAL_ROW, fontWeight: arrow ? 700 : 400 } : undefined}
+        >
+            <span className="min-w-0 truncate">{children}</span>
+            {arrow && <ChevronRight className={cx("size-4 shrink-0", on ? "" : "text-fg-quaternary")} aria-hidden="true" />}
+        </button>
+    </li>
+);
+
+const PanelSearch = ({ value, onChange, label }: { value: string; onChange: (v: string) => void; label: string }) => (
+    <input
+        type="search"
+        aria-label={label}
+        placeholder="Search"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="mx-4 my-2 h-11 w-[calc(100%-2rem)] max-w-[530px] shrink-0 rounded-md border border-[#efedec] px-4 text-md text-primary outline-none placeholder:text-[#c4c4c4] focus:border-[#7bcacd] focus:ring-2 focus:ring-[#7bcacd66]"
+    />
+);
+
 /**
- * Performance Insights' filter menu (staging, 26 Oct):
- *   + ADD opens a two-pane menu — categories on the left, that category's values on the
- *   right with Clear Selections — and CANCEL / SAVE. Saved values sit in the Filters band
- *   as checkboxes, so you can add iOS and Android and toggle one off to compare; the ✕ at
- *   the far right clears every filter.
- * A dimension can't be toggled down to nothing: the last value on stays on.
+ * Performance Insights' filter control, as on staging (25 Nov); shared with Buyer Breakdown,
+ * Benchmarks and Realtime.
+ *
+ *   Band     + ADD in the 190px column, then each saved category: its name in grey (190px)
+ *            and its values as checkboxes. Unticking a value keeps it on the row and drops it
+ *            from the query (every value may be unticked). ✕, behind a rule, clears them all.
+ *   Panel    a fixed 360px body: the category rail (picked count in brackets), then the
+ *            category's values with Clear Selections. Lists over seven values get a search
+ *            box and two columns; "All" picks every value; picks are teal rows, not boxes.
+ *            Grouped lists (Country by region, App by account) add a middle pane. At most
+ *            1,000 values are drawn; search reaches the rest. CANCEL / SAVE.
  */
-export const FilterControl = ({ dims, value, onChange }: { dims: FilterDim[]; value: FilterState; onChange: (next: FilterState) => void }) => {
-    const [open, setOpen] = useState(false);
+export const FilterControl = ({
+    dims,
+    value,
+    onChange,
+    openOn,
+    openGroup,
+    query: initialQuery = "",
+}: {
+    dims: FilterDim[];
+    value: FilterState;
+    onChange: (next: FilterState) => void;
+    /** Opens the panel on this category when the screen loads (prototype states). */
+    openOn?: string;
+    /** With openOn: the group open in a grouped list. */
+    openGroup?: string;
+    /** With openOn: a search already typed. */
+    query?: string;
+}) => {
+    const [open, setOpen] = useState(Boolean(openOn));
     const [draft, setDraft] = useState<FilterState>(value);
-    const [cat, setCat] = useState(dims[0]?.id);
+    const [cat, setCat] = useState(openOn ?? dims[0]?.id);
+    const [query, setQuery] = useState(initialQuery);
+    const [group, setGroup] = useState<string | undefined>(openGroup);
     const current = dims.find((d) => d.id === cat) ?? dims[0];
+    const groupOf = (v: string) => current?.group?.of[v] ?? "Other";
+    const groups = current?.group ? [...new Set(current.values.map(groupOf))] : [];
+    const openGroupName = group && groups.includes(group) ? group : groups[0];
     const any = hasFilters(value);
 
     const openMenu = () => {
         setDraft(value);
         setCat(dims[0]?.id);
+        setGroup(undefined);
+        setQuery("");
         setOpen(true);
     };
-    const pick = (dim: string, v: string) =>
-        setDraft((cur) => {
-            const f = cur[dim] ?? { values: [], off: [] };
-            const values = f.values.includes(v) ? f.values.filter((x) => x !== v) : [...f.values, v];
-            return { ...cur, [dim]: { values, off: f.off.filter((x) => values.includes(x)) } };
-        });
+    const pickCat = (id: string) => {
+        setCat(id);
+        setGroup(undefined);
+        setQuery("");
+    };
+    const picked = (dim: string) => draft[dim]?.values ?? [];
+    const setPicked = (dim: string, values: string[]) =>
+        setDraft((cur) => ({ ...cur, [dim]: { values, off: (cur[dim]?.off ?? []).filter((x) => values.includes(x)) } }));
+    const pick = (dim: string, v: string) => {
+        const now = picked(dim);
+        setPicked(dim, now.includes(v) ? now.filter((x) => x !== v) : [...now, v]);
+    };
+    const pickAll = (dim: string, of: string[]) => {
+        const now = picked(dim);
+        const all = of.every((v) => now.includes(v));
+        setPicked(dim, all ? now.filter((v) => !of.includes(v)) : [...new Set([...now, ...of])]);
+    };
     const toggle = (dim: string, v: string) => {
         const f = value[dim];
-        const off = f.off.includes(v) ? f.off.filter((x) => x !== v) : [...f.off, v];
-        if (off.length >= f.values.length) return;
-        onChange({ ...value, [dim]: { ...f, off } });
+        onChange({ ...value, [dim]: { ...f, off: f.off.includes(v) ? f.off.filter((x) => x !== v) : [...f.off, v] } });
     };
     const changed = JSON.stringify(draft) !== JSON.stringify(value);
 
+    const q = query.trim().toLowerCase();
+    const matches = (v: string) => !q || v.toLowerCase().includes(q);
+    const searchable = Boolean(current && (current.group || current.note || current.values.length > SEARCH_OVER));
+    // Grouped: the middle pane keeps groups whose name or values match; the right, the open group's values.
+    const shownGroups = groups.filter((g) => !q || g.toLowerCase().includes(q) || current.values.some((v) => groupOf(v) === g && matches(v)));
+    const listed = !current
+        ? []
+        : current.group
+          ? current.values.filter((v) => groupOf(v) === openGroupName && (matches(v) || Boolean(openGroupName?.toLowerCase().includes(q))))
+          : current.values.filter(matches);
+    const drawn = listed.slice(0, DRAW_CAP);
+    const allOn = listed.length > 0 && listed.every((v) => picked(current.id).includes(v));
+
     return (
         <div className="flex flex-col gap-3">
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-                <button
-                    type="button"
-                    onClick={() => (open ? setOpen(false) : openMenu())}
-                    aria-expanded={open}
-                    className="inline-flex items-center gap-1 text-md font-bold uppercase"
-                    style={{ color: PINK }}
-                >
-                    <Plus className="size-4" aria-hidden="true" /> Add
-                </button>
-                {dims.map((d) => {
-                    const f = value[d.id];
-                    if (!f?.values.length) return null;
-                    return (
-                        <span key={d.id} className="inline-flex flex-wrap items-center gap-x-4 gap-y-2">
-                            <span className="text-md font-semibold text-tertiary">{d.label}</span>
-                            {f.values.map((v) => (
-                                <Checkbox
-                                    key={v}
-                                    size="md"
-                                    label={<span style={R1.checkboxText}>{v}</span>}
-                                    isSelected={!f.off.includes(v)}
-                                    onChange={() => toggle(d.id, v)}
-                                />
-                            ))}
-                        </span>
-                    );
-                })}
+            <div className="flex items-stretch gap-4">
+                <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-6 gap-y-3">
+                    <span className="w-[190px] shrink-0">
+                        <button
+                            type="button"
+                            onClick={() => (open ? setOpen(false) : openMenu())}
+                            aria-expanded={open}
+                            className="inline-flex items-center gap-1 font-bold uppercase"
+                            style={{ color: PINK, fontSize: 15, letterSpacing: "0.75px" }}
+                        >
+                            <Plus className="size-4" aria-hidden="true" /> Add
+                        </button>
+                    </span>
+                    {dims.map((d) => {
+                        const f = value[d.id];
+                        if (!f?.values.length) return null;
+                        return (
+                            <span key={d.id} className="inline-flex flex-wrap items-center gap-x-6 gap-y-3">
+                                <span className="w-[190px] shrink-0 font-bold" style={{ fontSize: 15, color: "#667085" }}>
+                                    {d.label}
+                                </span>
+                                {f.values.map((v) => (
+                                    <Checkbox
+                                        key={v}
+                                        size="md"
+                                        label={<span style={R1.checkboxText}>{v}</span>}
+                                        isSelected={!f.off.includes(v)}
+                                        onChange={() => toggle(d.id, v)}
+                                    />
+                                ))}
+                            </span>
+                        );
+                    })}
+                </div>
                 {any && (
-                    <button
-                        type="button"
-                        aria-label="Clear all filters"
-                        title="Clear all filters"
-                        onClick={() => onChange({})}
-                        className="ml-auto rounded-md p-1 transition duration-100 ease-linear hover:bg-secondary"
-                        style={{ color: PINK }}
-                    >
-                        <XClose className="size-5" aria-hidden="true" />
-                    </button>
+                    <span className="flex w-10 shrink-0 items-center justify-center self-stretch border-l border-secondary">
+                        <button
+                            type="button"
+                            aria-label="Clear all filters"
+                            title="Clear all filters"
+                            onClick={() => onChange({})}
+                            className="rounded-md p-1 transition duration-100 ease-linear hover:bg-secondary"
+                            style={{ color: PINK }}
+                        >
+                            <XClose className="size-6" aria-hidden="true" />
+                        </button>
+                    </span>
                 )}
             </div>
 
             {open && current && (
-                <div className="overflow-hidden rounded-lg ring-1 ring-secondary">
-                    <div className="grid grid-cols-[240px_minmax(0,1fr)]">
-                        <ul className="max-h-80 overflow-y-auto border-r border-secondary py-1" aria-label="Filter categories">
+                <div className="overflow-hidden rounded-lg bg-primary ring-1 ring-secondary">
+                    <div className="flex h-[360px]">
+                        <ul className="w-[240px] shrink-0 overflow-y-auto border-r border-secondary py-1" aria-label="Filter categories">
                             {dims.map((d) => {
-                                const on = d.id === current.id;
                                 const n = draft[d.id]?.values.length ?? 0;
                                 return (
-                                    <li key={d.id}>
-                                        <button
-                                            type="button"
-                                            onClick={() => setCat(d.id)}
-                                            aria-current={on ? "true" : undefined}
-                                            className={cx(
-                                                "flex w-full items-center justify-between px-4 py-2 text-left text-md",
-                                                on ? "font-bold" : "text-secondary hover:bg-secondary",
-                                            )}
-                                            style={on ? { color: TEAL_DARK, backgroundColor: `${TEAL}14` } : undefined}
-                                        >
-                                            <span>
-                                                {d.label}
-                                                {n > 0 && <span className="ml-1.5 text-tertiary">({n})</span>}
-                                            </span>
-                                            <ChevronRight className="size-4 text-fg-quaternary" aria-hidden="true" />
-                                        </button>
-                                    </li>
+                                    <PanelRow key={d.id} arrow on={d.id === current.id} onPress={() => pickCat(d.id)}>
+                                        {d.label}
+                                        {n > 0 && <span className={cx("ml-1.5", d.id === current.id ? "" : "text-tertiary")}>({n})</span>}
+                                    </PanelRow>
                                 );
                             })}
                         </ul>
-                        <div className="flex min-w-0 flex-col">
-                            <div className="flex items-center justify-between px-4 pt-3 pb-1">
-                                <span className="text-md font-bold text-primary">{current.label}</span>
-                                <button
-                                    type="button"
-                                    onClick={() => setDraft((cur) => ({ ...cur, [current.id]: { values: [], off: [] } }))}
-                                    className="text-md font-semibold underline"
-                                    style={{ color: PINK }}
-                                >
-                                    Clear Selections
-                                </button>
+
+                        {current.group && (
+                            <div className="flex w-[240px] shrink-0 flex-col border-r border-secondary">
+                                <PanelSearch value={query} onChange={setQuery} label={`Filter ${plural(current.group.label)} and ${plural(current.label)}`} />
+                                <ul className="min-h-0 flex-1 overflow-y-auto py-1" aria-label={plural(current.group.label, true)}>
+                                    {!q && (
+                                        <PanelRow on={current.values.every((v) => picked(current.id).includes(v))} onPress={() => pickAll(current.id, current.values)}>
+                                            All
+                                        </PanelRow>
+                                    )}
+                                    {shownGroups.map((g) => (
+                                        <PanelRow key={g} arrow on={g === openGroupName} onPress={() => setGroup(g)}>
+                                            {g}
+                                        </PanelRow>
+                                    ))}
+                                </ul>
                             </div>
-                            <ul className="max-h-72 overflow-y-auto py-1" aria-label={`${current.label} values`}>
-                                {current.values.map((v) => {
-                                    const chosen = draft[current.id]?.values.includes(v) ?? false;
-                                    return (
-                                        <li key={v}>
-                                            <button
-                                                type="button"
-                                                aria-pressed={chosen}
-                                                onClick={() => pick(current.id, v)}
-                                                className={cx(
-                                                    "w-full px-4 py-2 text-left text-md",
-                                                    chosen ? "font-semibold" : "text-secondary hover:bg-secondary",
-                                                )}
-                                                style={chosen ? { color: TEAL_DARK, backgroundColor: `${TEAL}1f` } : undefined}
-                                            >
-                                                {v}
-                                            </button>
-                                        </li>
-                                    );
-                                })}
+                        )}
+
+                        <div className={cx("flex min-w-0 flex-col", current.note ? "w-[200px] shrink-0 border-r border-secondary" : "flex-1")}>
+                            {!current.note && (
+                                <div className="flex items-center justify-between px-4 pt-3 pb-1">
+                                    <span className="text-md font-bold text-primary">{current.label}</span>
+                                    <button type="button" onClick={() => setPicked(current.id, [])} className="text-md font-bold underline" style={{ color: PINK }}>
+                                        Clear Selections
+                                    </button>
+                                </div>
+                            )}
+                            {searchable && !current.group && <PanelSearch value={query} onChange={setQuery} label={`Search ${current.label}`} />}
+                            <ul
+                                className={cx(
+                                    "min-h-0 flex-1 overflow-y-auto py-1",
+                                    searchable && !current.note && "grid auto-rows-min grid-cols-2 [&>li:nth-child(even)]:border-l [&>li:nth-child(even)]:border-secondary",
+                                )}
+                                aria-label={`${current.label} values`}
+                            >
+                                {!q && (
+                                    <PanelRow on={allOn} onPress={() => pickAll(current.id, listed)}>
+                                        All
+                                    </PanelRow>
+                                )}
+                                {drawn.map((v) => (
+                                    <PanelRow key={v} on={picked(current.id).includes(v)} onPress={() => pick(current.id, v)}>
+                                        {v}
+                                    </PanelRow>
+                                ))}
+                                {listed.length === 0 && <li className="px-4 py-2 text-md text-tertiary">No matches</li>}
                             </ul>
+                            {listed.length > DRAW_CAP && (
+                                <p className="border-t border-secondary px-4 py-2 text-md text-tertiary">
+                                    Showing {DRAW_CAP.toLocaleString()} of {listed.length.toLocaleString()}. Search to find the rest.
+                                </p>
+                            )}
                         </div>
+                        {current.note && <p className="w-[220px] shrink-0 p-3 text-md font-bold text-primary">{current.note}</p>}
                     </div>
                     <div className="flex justify-end gap-3 border-t border-secondary px-4 py-3">
                         <StateAction quiet onPress={() => setOpen(false)}>

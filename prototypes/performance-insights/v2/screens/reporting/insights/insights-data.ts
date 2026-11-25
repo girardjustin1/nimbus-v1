@@ -89,6 +89,23 @@ export const DIMS = [
 ] as const;
 export type Dim = (typeof DIMS)[number];
 
+/** Staging's definitions, shown when the mouse is over a metric's name (25 Nov). */
+export const METRIC_DEFINITIONS: Record<Metric, string> = {
+    Requests: "Number of times your app sends an ad opportunity to Nimbus, initiating an auction",
+    Wins: "Number of times a request from your app has garnered a winning bid",
+    Impressions: "Number of successful bids (wins) that have displayed within the ad unit",
+    Revenue: "Total monies generated for completed successful auctions",
+    ECPM: "“Effective Cost Per Mille”, price per thousand ad impressions in your app",
+    "Fill Rate": "Percentage of requests that resulted in an impression",
+    "Win Rate": "Percentage of total requests that converted into wins",
+    "Render Rate": "Percentage of total wins that converted into impressions",
+    Clicks: "Frequency in which a user clicked and advanced the advertisement’s call to action",
+    CTR: "“Click Through Rate”, percentage of users who click and advance an advertisement’s call to action",
+    RCPM: "“Revenue Cost Per Mille”, revenue over overall request opportunity",
+    "Average Winning Bid Price": "Average price of winning bids expressed as a CPM",
+    "Average Impression Bid Floor": "Average bid floor for an auction that resulted in an impression expressed as a CPM",
+};
+
 /**
  * Breakdowns staging can't split requests by (owner's staging screenshots, 25 Nov): picking
  * any of them greys out and unticks the request-based metrics. These are only known once an

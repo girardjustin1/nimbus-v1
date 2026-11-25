@@ -12,11 +12,11 @@ export interface CheckboxBaseProps {
 }
 
 /**
- * Nimbus checkbox, as on staging (26 Oct review): sampled from Performance Insights and
- * Deal Activation Setup.
+ * Nimbus checkbox, as on staging: sampled from Performance Insights and Deal Activation
+ * Setup (26 Oct), values from staging's stylesheet (25 Nov: .checkbox-container .checkmark).
  *
- *   unchecked  white, grey border
- *   checked    pale teal fill, teal-grey border, teal check mark
+ *   unchecked  white, #999 border, 3px corners
+ *   checked    #7bcacd at 20%, #039c9e border and check mark
  *   disabled   warm grey fill, no check
  */
 export const CheckboxBase = ({ className, isSelected, isDisabled, isIndeterminate, size = "sm", isFocusVisible = false }: CheckboxBaseProps) => {
@@ -24,9 +24,9 @@ export const CheckboxBase = ({ className, isSelected, isDisabled, isIndeterminat
     return (
         <div
             className={cx(
-                "relative flex size-4 shrink-0 cursor-pointer appearance-none items-center justify-center rounded bg-primary ring-1 ring-[#b9b9b9] ring-inset",
+                "relative flex size-4 shrink-0 cursor-pointer appearance-none items-center justify-center rounded-[3px] bg-primary ring-1 ring-[#999999] ring-inset",
                 size === "md" && "size-5",
-                on && "bg-[#e7f5f6] ring-[#5fa9ab]",
+                on && "bg-[#7bcacd33] ring-[#039c9e]",
                 isDisabled && "cursor-not-allowed",
                 isDisabled && on && "opacity-50",
                 isDisabled && !on && "bg-[#e5e1e0] ring-[#d6d2d0]",
@@ -39,7 +39,7 @@ export const CheckboxBase = ({ className, isSelected, isDisabled, isIndeterminat
                 viewBox="0 0 14 14"
                 fill="none"
                 className={cx(
-                    "pointer-events-none absolute h-3 w-2.5 text-[#18a1a2] opacity-0 transition-inherit-all",
+                    "pointer-events-none absolute h-3 w-2.5 text-[#039c9e] opacity-0 transition-inherit-all",
                     size === "md" && "size-3.5",
                     isIndeterminate && "opacity-100",
                 )}
@@ -52,7 +52,7 @@ export const CheckboxBase = ({ className, isSelected, isDisabled, isIndeterminat
                 viewBox="0 0 14 14"
                 fill="none"
                 className={cx(
-                    "pointer-events-none absolute size-3 text-[#18a1a2] opacity-0 transition-inherit-all",
+                    "pointer-events-none absolute size-3 text-[#039c9e] opacity-0 transition-inherit-all",
                     size === "md" && "size-3.5",
                     isSelected && !isIndeterminate && "opacity-100",
                 )}

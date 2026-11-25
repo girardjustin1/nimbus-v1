@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { type ReactNode, useMemo } from "react";
 import { ArrowLeft, ArrowRight, ChevronDown } from "@untitledui/icons";
 import { CONCEPTS } from "../../../src/pages/pi-prototypes/round-2";
 import type { ProtoScreen, ScreenPicker } from "../../shared/prototype-frame";
@@ -16,16 +16,25 @@ import { conceptOf } from "./concept-of";
 const NAMES: Record<number, string> = Object.fromEntries(CONCEPTS.map((c) => [Number(c.id.slice(1)), c.title]));
 
 const withoutId = (title: string) => title.replace(/^C\d+ · /, "");
+/** The closed Concept menu's label: the name up to a colon (“Control: today's …” → “Control”). */
+const shortName = (name: string) => name.split(":")[0];
 
 const selectClass =
-    "cursor-pointer appearance-none rounded-md border border-white/15 bg-white/5 py-1 pr-7 pl-2 text-sm text-white outline-none focus:border-white/40 disabled:cursor-default disabled:opacity-50";
+    "flex items-center gap-1.5 rounded-md border border-white/15 bg-white/5 py-1 pr-7 pl-2 text-sm whitespace-nowrap text-white peer-focus-visible:border-white/40";
 
-const Select = ({ label, ...props }: { label: string } & React.SelectHTMLAttributes<HTMLSelectElement>) => (
+/**
+ * A menu that shows a short label when closed (the open list keeps the full names): the
+ * native select sits invisible over the label, so the menu is only as wide as its label.
+ */
+const Select = ({ label, display, ...props }: { label: string; display: ReactNode } & React.SelectHTMLAttributes<HTMLSelectElement>) => (
     <label className="flex items-center gap-2">
         <span className="text-xs font-semibold whitespace-nowrap text-white/60">{label}</span>
-        <span className="relative flex items-center">
-            <select aria-label={label} {...props} className={`${selectClass} ${props.className ?? ""}`} />
-            <ChevronDown className="pointer-events-none absolute right-2 size-3.5 text-white/70" aria-hidden="true" />
+        <span className="relative inline-flex min-w-0">
+            <select aria-label={label} {...props} className="peer absolute inset-0 w-full cursor-pointer opacity-0 disabled:cursor-default" />
+            <span aria-hidden="true" className={`${selectClass} pointer-events-none ${props.disabled ? "opacity-50" : ""}`}>
+                {display}
+                <ChevronDown className="absolute right-2 size-3.5 text-white/70" />
+            </span>
         </span>
     </label>
 );
@@ -68,7 +77,14 @@ export const ConceptPicker: ScreenPicker = ({ screens, activeId }) => {
             >
                 <ArrowLeft className="size-4" aria-hidden="true" />
             </a>
-            <Select label="Concept" value={current.num} onChange={(e) => go(concepts.find((c) => c.num === Number(e.target.value))!.screens[0].id)}>
+            <Select
+                label="Concept"
+                display={
+                    <span className="max-w-[16rem] truncate">
+                        C{current.num} · {shortName(NAMES[current.num] ?? withoutId(current.screens[0].title))}
+                    </span>
+                }
+                value={current.num} onChange={(e) => go(concepts.find((c) => c.num === Number(e.target.value))!.screens[0].id)}>
                 {areas.map((area) => (
                     <optgroup key={area} label={area.replace(/^Round 2 · /, "")} className="text-black">
                         {concepts
@@ -81,7 +97,22 @@ export const ConceptPicker: ScreenPicker = ({ screens, activeId }) => {
                     </optgroup>
                 ))}
             </Select>
-            <Select label="Screen" value={activeId} onChange={(e) => go(e.target.value)} disabled={cases.length === 0} className="max-w-[24rem]">
+            <Select
+                label="Screen"
+                display={
+                    <>
+                        <span className="max-w-[14rem] truncate">{at <= 0 ? "Main" : shortName(withoutId(current.screens[at].title))}</span>
+                        {cases.length > 0 && (
+                            <span className="text-white/50 tabular-nums">
+                                {Math.max(at, 0) + 1}/{current.screens.length}
+                            </span>
+                        )}
+                    </>
+                }
+                value={activeId}
+                onChange={(e) => go(e.target.value)}
+                disabled={cases.length === 0}
+            >
                 <option value={main.id} className="text-black">
                     Main screen
                 </option>
@@ -102,7 +133,6 @@ export const ConceptPicker: ScreenPicker = ({ screens, activeId }) => {
             >
                 <ArrowRight className="size-4" aria-hidden="true" />
             </a>
-            <span className="text-xs whitespace-nowrap opacity-60">{at === 0 ? "Main screen" : `Edge case ${at} of ${cases.length}`}</span>
         </div>
     );
 };

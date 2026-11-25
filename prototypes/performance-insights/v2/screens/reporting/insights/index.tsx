@@ -48,6 +48,12 @@ const SOME: FilterState = {
     Platform: { values: ["iOS"], off: [] },
 };
 
+/** C0: Static unticked, and Platform's only value unticked (staging allows every value off). */
+const UNTICKED: FilterState = {
+    "Ad Type": { values: ["Static", "Video"], off: ["Static"] },
+    Platform: { values: ["iOS"], off: ["iOS"] },
+};
+
 /** The same set with two countries unchecked and Ad Type paused altogether. */
 const PAUSED: FilterState = {
     Country: { values: ["United States", "Canada", "United Kingdom", "Germany", "Mexico"], off: ["Germany", "Mexico"] },
@@ -67,6 +73,18 @@ function round2Screens(): ProtoScreen[] {
     const list: ProtoScreen[] = [
         c("c0-control", "C0 · Control, with filters", "Today's band with the same filters every concept starts from.", (sc) => (
             <NewQuery scenario={sc} filters={SOME} />
+        )),
+        c("c0-filter-panel", "C0 · The filter panel", "+ ADD open on Ad Type: the category rail, the values as rows, Cancel and Save.", (sc) => (
+            <NewQuery scenario={sc} filters={SOME} openFilterOn="Ad Type" />
+        )),
+        c("c0-filter-country", "C0 · Country, by region", "Country lists regions first, with search; the open region's countries in two columns.", (sc) => (
+            <NewQuery scenario={sc} filters={SOME} openFilterOn="Country" openFilterGroup="EUROPE" />
+        )),
+        c("c0-filter-search", "C0 · A long list, searched", "Advertiser's long list: search, two columns, at most 1,000 drawn.", (sc) => (
+            <NewQuery scenario={sc} openFilterOn="Advertiser" panelQuery="shoe" longLists />
+        )),
+        c("c0-filter-unticked", "C0 · Chips unticked", "Static and every Platform unticked: they stay on the row and leave the report.", (sc) => (
+            <NewQuery scenario={sc} filters={UNTICKED} />
         )),
         c("c1-tight-band", "C1 · A tight filter band", "+ Filter first, one bordered group per category, three values then +N, Clear all at the end.", (sc) => (
             <NewQuery scenario={sc} band="tight" filters={SOME} />
