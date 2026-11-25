@@ -4,7 +4,7 @@ import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Toggle } from "@/components/base/toggle/toggle";
 import { cx } from "@/utils/cx";
 import { DasShell, PINK, TEAL } from "../../das-shell";
-import { type FilterState, PageTabs, StateAction, TABLE, TEAL_DARK, tableHead, tealControls } from "../../nimbus-ui";
+import { type FilterState, PageTabs, StateAction, TABLE, TEAL_DARK, tableHead, tealControls, tealToggles } from "../../nimbus-ui";
 import { R1 } from "../../round-1";
 import { AssistantPanel } from "./assistant";
 import type { ReportChange } from "./assistant-questions";
@@ -199,7 +199,7 @@ const ChartMenu = ({
                     role="menu"
                     aria-label="Chart type"
                     className="absolute top-11 left-0 z-20 flex w-60 flex-col rounded-xl bg-primary p-1.5 shadow-xl ring-1 ring-secondary"
-                    style={tealControls}
+                    style={{ ...tealControls, ...tealToggles }}
                 >
                     {CHART_KINDS.map((k) => (
                         <button

@@ -59,6 +59,15 @@ export const tealControls = {
     "--border-color-brand-solid": TEAL,
 } as CSSProperties;
 
+/**
+ * Performance Insights' toggles (staging, 25 Nov): teal where the rest of the app keeps
+ * pink. Set on the page's wrapper, so Show legend and Totals Only both take it.
+ */
+export const tealToggles = {
+    "--toggle-on": TEAL,
+    "--toggle-on-hover": "#2E9FA0",
+} as CSSProperties;
+
 export const TealControls = ({ children, className }: { children: ReactNode; className?: string }) => (
     <div className={className} style={tealControls}>
         {children}
@@ -320,17 +329,24 @@ export const CollapseButton = ({ collapsed, onToggle }: { collapsed: boolean; on
  * Actions on the current state ("Save Query", "Download .CSV"). Pink pill; inactive (pale,
  * not clickable) while there's no state to act on, as on staging before a metric is picked.
  */
+/** Staging's disabled button fill (Save Query, Download .CSV with nothing to save). */
+const DISABLED_FILL = "#E2DEDD";
+
 export const StateAction = ({ children, onPress, disabled, quiet }: { children: ReactNode; onPress: () => void; disabled?: boolean; quiet?: boolean }) => (
     <button
         type="button"
         onClick={onPress}
         disabled={disabled}
         className={cx(
-            "whitespace-nowrap transition duration-100 ease-linear disabled:cursor-not-allowed disabled:opacity-35",
-            quiet ? "bg-transparent ring-1 enabled:hover:bg-secondary" : "text-white enabled:hover:opacity-90",
+            "whitespace-nowrap transition duration-100 ease-linear disabled:cursor-not-allowed",
+            quiet ? "bg-transparent ring-1 enabled:hover:bg-secondary disabled:opacity-35" : "text-white enabled:hover:opacity-90",
         )}
         // R1-09, R1-10: staging's button text (13px, weight 800, upper case), 33px tall, the label centred.
-        style={{ ...R1.button, ...(quiet ? { color: PINK, ["--tw-ring-color" as string]: `${PINK}66` } : { backgroundColor: PINK }) }}
+        // Disabled, a filled button turns warm grey with white text, as on staging (25 Nov), not a faded pink.
+        style={{
+            ...R1.button,
+            ...(quiet ? { color: PINK, ["--tw-ring-color" as string]: `${PINK}66` } : { backgroundColor: disabled ? DISABLED_FILL : PINK }),
+        }}
     >
         {children}
     </button>

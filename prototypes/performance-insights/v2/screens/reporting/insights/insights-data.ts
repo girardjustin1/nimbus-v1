@@ -89,6 +89,31 @@ export const DIMS = [
 ] as const;
 export type Dim = (typeof DIMS)[number];
 
+/**
+ * Breakdowns staging can't split requests by (owner's staging screenshots, 25 Nov): picking
+ * any of them greys out and unticks the request-based metrics. These are only known once an
+ * ad is bid on or served, so there is no request to count against them. Breakdowns not
+ * listed here were not shown greying anything; nothing is greyed with no breakdown ticked.
+ */
+export const SERVED_ONLY_DIMS: readonly Dim[] = [
+    "Ad Size",
+    "Ad Type",
+    "Advertiser",
+    "Common Ad Size",
+    "DAS Asset",
+    "DAS Deal",
+    "Demand Source",
+    "Demand Source Pool",
+    "Demand Source Type",
+    "Internal Demand Source",
+    "Placement",
+];
+export const REQUEST_METRICS: readonly Metric[] = ["Requests", "Fill Rate", "Win Rate", "RCPM"];
+
+/** The metrics a breakdown rules out (none for most). */
+export const blockedMetrics = (breakdown: readonly Dim[]): Metric[] =>
+    breakdown.some((d) => SERVED_ONLY_DIMS.includes(d)) ? [...REQUEST_METRICS] : [];
+
 /** Each breakdown's values. Fictional throughout: sample accounts, apps, partners, example.com advertisers. */
 export const DIM_VALUES: Record<Dim, string[]> = {
     Account: ["Test Publisher", "Scoreline Media", "Northlight Apps", "Metro Mobile", "Greenleaf Studio", "Stride Labs"],

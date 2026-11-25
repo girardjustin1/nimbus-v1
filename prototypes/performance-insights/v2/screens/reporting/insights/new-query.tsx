@@ -28,6 +28,7 @@ import {
     TABLE,
     TEAL_DARK,
     filterExcluded,
+    tealToggles,
     tableHead,
 } from "../../nimbus-ui";
 import { R1 } from "../../round-1";
@@ -54,6 +55,7 @@ import {
     type Range,
     UNIT,
     addSavedQuery,
+    blockedMetrics,
     csvMetric,
     findQuery,
     formatMetric,
@@ -161,8 +163,10 @@ export const NewQuery = ({
     const [name, setName] = useState(opened?.name ?? "");
     const [savedAs, setSavedAs] = useState<string | null>(null);
 
+    // Some breakdowns rule out the request metrics (staging: Common Ad Size greys them out).
+    const blocked = useMemo(() => blockedMetrics(breakdown), [breakdown]);
     // C4 leads with Revenue, as realtime does: the first metric is the one charted.
-    const ordered = METRICS.filter((m) => metrics.includes(m)).sort((a, b) => (defaultView ? Number(b === "Revenue") - Number(a === "Revenue") : 0));
+    const ordered = METRICS.filter((m) => metrics.includes(m) && !blocked.includes(m)).sort((a, b) => (defaultView ? Number(b === "Revenue") - Number(a === "Revenue") : 0));
     const dims = useMemo(() => DIMS.filter((d) => breakdown.includes(d)), [breakdown]);
     const compareDays = Number(compare) > 0 ? Number(compare) : undefined;
     const excluded = useMemo(
@@ -217,7 +221,13 @@ export const NewQuery = ({
     });
 
     const toggleMetric = (m: Metric) => setMetrics((cur) => (cur.includes(m) ? cur.filter((x) => x !== m) : [...cur, m]));
-    const toggleDim = (d: Dim) => setBreakdown((cur) => (cur.includes(d) ? cur.filter((x) => x !== d) : [...cur, d]));
+    const toggleDim = (d: Dim) => {
+        const next = breakdown.includes(d) ? breakdown.filter((x) => x !== d) : [...breakdown, d];
+        setBreakdown(next);
+        // A breakdown that rules metrics out unticks them, so taking it off again doesn't bring them back.
+        const ruledOut = blockedMetrics(next);
+        if (ruledOut.length) setMetrics((cur) => cur.filter((m) => !ruledOut.includes(m)));
+    };
 
     const prevLabel = (m: Metric) => `${m} (${compareDays} Days Ago)`;
     const exportCsv = () =>
@@ -250,7 +260,7 @@ export const NewQuery = ({
                     </>
                 }
             />
-            <div>
+            <div style={tealToggles}>
                 <div className="flex min-w-0 flex-col px-8 pb-12">
                     <Bands className="border-t-0">
                         {/* The quick pickers run a little narrower than the shared w-56, so SAVE QUERY
@@ -297,37 +307,23 @@ export const NewQuery = ({
 
                         {!collapsed && (
                             <>
-                                <Band
-                                    label="Metrics"
-                                    trailing={
-                                        <span className="flex self-stretch border-l border-secondary pl-4">
-                                            <button
-                                                type="button"
-                                                aria-label="Clear metrics"
-                                                title="Clear metrics"
-                                                onClick={() => setMetrics([])}
-                                                className="rounded-md p-1 transition duration-100 ease-linear hover:bg-secondary"
-                                                style={{ color: PINK }}
-                                            >
-                                                <XClose className="size-6" aria-hidden="true" />
-                                            </button>
-                                        </span>
-                                    }
-                                >
+                                {/* ✕ shows on a band only while it has something ticked, as on staging. */}
+                                <Band label="Metrics" trailing={ordered.length > 0 && <ClearBand what="metrics" onPress={() => setMetrics([])} />}>
                                     <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
                                         {METRICS.map((m) => (
                                             <Checkbox
                                                 key={m}
                                                 size="md"
                                                 label={<span style={R1.checkboxText}>{m}</span>}
-                                                isSelected={metrics.includes(m)}
+                                                isSelected={metrics.includes(m) && !blocked.includes(m)}
+                                                isDisabled={blocked.includes(m)}
                                                 onChange={() => toggleMetric(m)}
                                             />
                                         ))}
                                     </div>
                                 </Band>
 
-                                <Band label="Breakdown">
+                                <Band label="Breakdown" trailing={breakdown.length > 0 && <ClearBand what="breakdown" onPress={() => setBreakdown([])} />}>
                                     <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
                                         {DIMS.map((d) => (
                                             <Checkbox
@@ -407,7 +403,7 @@ export const NewQuery = ({
                             )}
 
                             {ordered.length === 0 ? (
-                                <p className="py-8 text-md text-tertiary">Select at least one metric.</p>
+                                <p className="py-8 text-md text-tertiary">Select at least one metric and an attribute.</p>
                             ) : chart !== "table" ? (
                                 <div className={cx("py-8", insightNotes && "grid grid-cols-[minmax(0,1fr)_300px] items-start gap-8")}>
                                     <div className="flex min-w-0 flex-col gap-4">
@@ -510,6 +506,22 @@ export const NewQuery = ({
         </DasShell>
     );
 };
+
+/** The pink ✕ at a band's right edge, behind a rule: clears what the band has ticked. */
+const ClearBand = ({ what, onPress }: { what: string; onPress: () => void }) => (
+    <span className="flex self-stretch border-l border-secondary pl-4">
+        <button
+            type="button"
+            aria-label={`Clear ${what}`}
+            title={`Clear ${what}`}
+            onClick={onPress}
+            className="rounded-md p-1 transition duration-100 ease-linear hover:bg-secondary"
+            style={{ color: PINK }}
+        >
+            <XClose className="size-6" aria-hidden="true" />
+        </button>
+    </span>
+);
 
 /**
  * C4: realtime's metric blocks over the report: each metric's total for the range, and a
