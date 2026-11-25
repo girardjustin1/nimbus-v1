@@ -6,7 +6,7 @@ import { PINK, TEAL } from "../../das-shell";
 import { type FilterState, StateAction, TEAL_DARK } from "../../nimbus-ui";
 import { R1 } from "../../round-1";
 import { type PanelDim, PolishedPanel } from "./filter-panel";
-import { type BandLook, bandCounts } from "./filter-state";
+import { type BandLook, bandCounts, searchValues } from "./filter-state";
 
 /**
  * Performance Insights · Round 2 · the filter band concepts (24 Nov PI sync).
@@ -72,6 +72,7 @@ export const FilterBand = ({
     const [open, setOpen] = useState(Boolean(openOn));
     const [draft, setDraft] = useState<FilterState>(value);
     const [cat, setCat] = useState(openOn ?? dims[0]?.id);
+    const [query, setQuery] = useState("");
     const current = dims.find((d) => d.id === cat) ?? dims[0];
     const shown = dims.filter((d) => value[d.id]?.values.length);
     const { chips, applied } = bandCounts(value);
@@ -236,7 +237,10 @@ export const FilterBand = ({
                                     <li key={d.id}>
                                         <button
                                             type="button"
-                                            onClick={() => setCat(d.id)}
+                                            onClick={() => {
+                                                setCat(d.id);
+                                                setQuery("");
+                                            }}
                                             aria-current={on ? "true" : undefined}
                                             className={cx(
                                                 "flex w-full items-center justify-between px-4 py-2 text-left text-md",
@@ -266,8 +270,18 @@ export const FilterBand = ({
                                     Clear Selections
                                 </button>
                             </div>
+                            {current.values.length > 7 && (
+                                <input
+                                    type="search"
+                                    aria-label={`Search ${current.label}`}
+                                    placeholder="Search"
+                                    value={query}
+                                    onChange={(e) => setQuery(e.target.value)}
+                                    className="mx-4 my-2 h-11 max-w-[530px] rounded-md border border-[#efedec] px-4 text-md text-primary outline-none placeholder:text-[#c4c4c4] focus:border-[#7bcacd]"
+                                />
+                            )}
                             <ul className="max-h-72 overflow-y-auto py-1" aria-label={`${current.label} values`}>
-                                {current.values.map((v) => {
+                                {searchValues({ values: current.values }, query).values.map((v) => {
                                     const chosen = draft[current.id]?.values.includes(v) ?? false;
                                     return (
                                         <li key={v}>
@@ -287,6 +301,11 @@ export const FilterBand = ({
                                     );
                                 })}
                             </ul>
+                            {searchValues({ values: current.values }, query).more > 0 && (
+                                <p className="border-t border-secondary px-4 py-2 text-md text-tertiary">
+                                    Showing 1,000 of {(1000 + searchValues({ values: current.values }, query).more).toLocaleString("en-US")}. Search to find the rest.
+                                </p>
+                            )}
                         </div>
                     </div>
                     <div className="flex items-center justify-end gap-3 border-t border-secondary px-4 py-3">

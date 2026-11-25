@@ -68,6 +68,7 @@ import {
 } from "./insights-data";
 import { LONG_ADVERTISERS, TOP_ADVERTISERS } from "./long-lists";
 import { QueryChart } from "./query-chart";
+import { useStagingLists, withStagingLists } from "./staging-lists";
 import type { ScenarioQuery } from "./scenarios";
 
 /**
@@ -207,6 +208,11 @@ export const NewQuery = ({
     const [name, setName] = useState(opened?.name ?? "");
     const [savedAs, setSavedAs] = useState<string | null>(null);
 
+    // C0 on this machine: staging's real filter lists when the dev server has them (sample data otherwise).
+    const stagingLists = useStagingLists();
+    const controlDims = useMemo(() => withStagingLists(longLists ? CONTROL_LONG_DIMS : CONTROL_FILTER_DIMS, stagingLists), [longLists, stagingLists]);
+    // The concepts' bands (C1–C15) take the same lists; their panels list them flat (no groups).
+    const bandDims = useMemo(() => withStagingLists(longLists ? LONG_FILTER_DIMS : FILTER_DIMS, stagingLists), [longLists, stagingLists]);
     // Some breakdowns rule out the request metrics (staging: Common Ad Size greys them out).
     const blocked = useMemo(() => blockedMetrics(breakdown), [breakdown]);
     // C4 leads with Revenue, as realtime does: the first metric is the one charted.
@@ -214,8 +220,8 @@ export const NewQuery = ({
     const dims = useMemo(() => DIMS.filter((d) => breakdown.includes(d)), [breakdown]);
     const compareDays = Number(compare) > 0 ? Number(compare) : undefined;
     const excluded = useMemo(
-        () => (band ? bandExcluded(FILTER_DIMS, filters) : filterExcluded(CONTROL_FILTER_DIMS, filters)) as Partial<Record<Dim, string[]>>,
-        [filters, band],
+        () => (band ? bandExcluded(bandDims, filters) : filterExcluded(controlDims, filters)) as Partial<Record<Dim, string[]>>,
+        [filters, band, controlDims, bandDims],
     );
     const tableTotals = chart === "table" && totalsOnly;
     const rows = useMemo(
@@ -386,7 +392,7 @@ export const NewQuery = ({
                                     {band ? (
                                         <FilterBand
                                             look={band}
-                                            dims={longLists ? LONG_FILTER_DIMS : FILTER_DIMS}
+                                            dims={bandDims}
                                             value={filters}
                                             onChange={setFilters}
                                             openOn={openFilterOn}
@@ -395,7 +401,7 @@ export const NewQuery = ({
                                         />
                                     ) : (
                                         <FilterControl
-                                            dims={longLists ? CONTROL_LONG_DIMS : CONTROL_FILTER_DIMS}
+                                            dims={controlDims}
                                             value={filters}
                                             onChange={setFilters}
                                             openOn={openFilterOn}

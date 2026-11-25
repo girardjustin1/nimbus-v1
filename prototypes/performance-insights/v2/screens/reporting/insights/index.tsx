@@ -71,8 +71,8 @@ function round2Screens(): ProtoScreen[] {
         render: () => <WithScenario>{render}</WithScenario>,
     });
     const list: ProtoScreen[] = [
-        c("c0-control", "C0 · Control, with filters", "Today's band with the same filters every concept starts from.", (sc) => (
-            <NewQuery scenario={sc} filters={SOME} />
+        c("c0-control", "C0 · Control, first load", "As staging opens: nothing picked, Pie chart, Show legend on.", (sc) => (
+            <NewQuery scenario={sc} metrics={[]} chart="pie" />
         )),
         c("c0-filter-panel", "C0 · The filter panel", "+ ADD open on Ad Type: the category rail, the values as rows, Cancel and Save.", (sc) => (
             <NewQuery scenario={sc} filters={SOME} openFilterOn="Ad Type" />

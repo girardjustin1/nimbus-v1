@@ -191,6 +191,12 @@ export const PolishedPanel = ({
                             </p>
                         )}
 
+                        {!searchFirst && listed.more > 0 && (
+                            <p className="py-2 text-md text-tertiary">
+                                Showing {listed.values.length.toLocaleString("en-US")} of {(listed.values.length + listed.more).toLocaleString("en-US")}. Search to find the rest.
+                            </p>
+                        )}
+
                         {searchFirst && (
                             <p className="py-2 text-md text-tertiary">
                                 {query

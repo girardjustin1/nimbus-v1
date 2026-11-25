@@ -25,6 +25,9 @@ export const bandCounts = (state: FilterState) => {
     return { chips: all.length, applied: all.length - off.length };
 };
 
+/** Staging draws at most this many values in a list (25 Nov); search reaches the rest. */
+export const LIST_CAP = 1000;
+
 /** C8: how many matches a search-first list shows at once. */
 export const SEARCH_CAP = 50;
 
@@ -34,8 +37,10 @@ export const SEARCH_CAP = 50;
  */
 export const searchValues = (dim: { values: string[]; top?: string[] }, query: string): { values: string[]; more: number } => {
     const q = query.trim().toLowerCase();
-    if (!q) return { values: dim.top ?? dim.values, more: 0 };
+    // Without top values a list is drawn as staging draws it: at most LIST_CAP, search for the rest.
+    const capped = (all: string[]) => ({ values: all.slice(0, LIST_CAP), more: Math.max(0, all.length - LIST_CAP) });
+    if (!q) return dim.top ? { values: dim.top, more: 0 } : capped(dim.values);
     const matches = dim.values.filter((v) => v.toLowerCase().includes(q));
-    if (!dim.top) return { values: matches, more: 0 };
+    if (!dim.top) return capped(matches);
     return { values: matches.slice(0, SEARCH_CAP), more: Math.max(0, matches.length - SEARCH_CAP) };
 };

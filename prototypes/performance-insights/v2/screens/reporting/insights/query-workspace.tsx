@@ -9,6 +9,7 @@ import { R1 } from "../../round-1";
 import { AssistantPanel } from "./assistant";
 import type { ReportChange } from "./assistant-questions";
 import { bandExcluded, searchValues } from "./filter-state";
+import { useStagingLists, withStagingLists } from "./staging-lists";
 import {
     type ChartKind,
     DIMS,
@@ -398,6 +399,7 @@ const PickerPopover = ({
     onPickBreakdown: (d: Dim) => void;
     onSaveFilter: (d: Dim, values: string[]) => void;
 }) => {
+    const stagingLists = useStagingLists();
     const [query, setQuery] = useState("");
     const box = useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -471,7 +473,7 @@ const PickerPopover = ({
             </>
         );
     } else {
-        const dim = dimOf(picker.dim);
+        const dim = withStagingLists([dimOf(picker.dim)], stagingLists)[0];
         const found = searchValues(dim, query);
         const pick = (v: string) => setPicker({ ...picker, draft: picker.draft.includes(v) ? picker.draft.filter((x) => x !== v) : [...picker.draft, v] });
         const shown = dim.top ? [...picker.draft, ...found.values.filter((v) => !picker.draft.includes(v))] : found.values;
@@ -759,7 +761,9 @@ export const QueryWorkspace = ({
     );
 
     const span = spanOf(range);
-    const excluded = useMemo(() => bandExcluded(FILTER_DIMS, filters) as Partial<Record<Dim, string[]>>, [filters]);
+    const stagingLists = useStagingLists();
+    const filterDims = useMemo(() => withStagingLists(FILTER_DIMS, stagingLists), [stagingLists]);
+    const excluded = useMemo(() => bandExcluded(filterDims, filters) as Partial<Record<Dim, string[]>>, [filters, filterDims]);
     const rows = useMemo(
         () => runQuery({ range, interval, breakdown, excluded, compare: compare ? span : undefined }),
         [range, interval, breakdown, excluded, compare, span],
