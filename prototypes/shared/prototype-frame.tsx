@@ -1,5 +1,5 @@
 import { type ReactNode, useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, BookOpen01, Grid01 } from "@untitledui/icons";
+import { ArrowLeft, ArrowRight, BookOpen01, ChevronDown, Grid01 } from "@untitledui/icons";
 import { runPageFill } from "./demo-fill";
 import { DemoFillControls } from "./demo-fill-ui";
 import { ScreenInfoButton } from "./screen-notes-ui";
@@ -61,9 +61,28 @@ const storybookUrl = () => (window.location.hostname === "localhost" ? "http://l
 /** Versions that show the Fill / Type switch. Round 3 introduced it; earlier rounds keep the toolbar they were reviewed with. */
 const CLICK_TO_FILL = new Set(["v3", "v4"]);
 
+/** “v2 · Round 2 · Concepts · November 24, 2026” → “v2 · Round 2 · Nov 24”. */
+const shortVersion = (v?: ProtoMeta["versions"][number]) => {
+    if (!v) return "";
+    const date = v.date.replace(/^(\w{3})\w*\s+(\d+).*$/, "$1 $2");
+    return [v.id, v.label.split(" · ")[0], date].filter(Boolean).join(" · ");
+};
+
 const selectClass = "rounded-md border border-white/15 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-white/40";
 
-const Toolbar = ({ meta, screens, activeId, extras }: { meta: ProtoMeta; screens: ProtoScreen[]; activeId?: string; extras?: ReactNode }) => {
+const Toolbar = ({
+    meta,
+    screens,
+    activeId,
+    extras,
+    picker,
+}: {
+    meta: ProtoMeta;
+    screens: ProtoScreen[];
+    activeId?: string;
+    extras?: ReactNode;
+    picker?: ScreenPicker;
+}) => {
     const index = screens.findIndex((s) => s.id === activeId);
     const prev = index > 0 ? screens[index - 1] : undefined;
     const next = index >= 0 && index < screens.length - 1 ? screens[index + 1] : undefined;
@@ -72,23 +91,34 @@ const Toolbar = ({ meta, screens, activeId, extras }: { meta: ProtoMeta; screens
     return (
         <div className="sticky top-0 z-50 flex flex-wrap items-center gap-x-4 gap-y-2 bg-[#101828] px-4 py-2 text-sm text-white">
             <a href="#/" className="font-semibold whitespace-nowrap hover:opacity-80">
-                <span className="opacity-60">Nimbus prototype ·</span> {meta.name}
+                {!picker && <span className="opacity-60">Nimbus prototype ·</span>} {meta.name}
             </a>
 
-            <select
-                aria-label="Version"
-                className={selectClass}
-                value={meta.current}
-                onChange={(e) => window.location.assign(`../${e.target.value}/${window.location.hash}`)}
-            >
-                {meta.versions.map((v) => (
-                    <option key={v.id} value={v.id} className="text-black">
-                        {v.id} · {v.label} · {v.date}
-                    </option>
-                ))}
-            </select>
+            {/* With a screen picker (PI v2) the closed menu shows a short label; the list keeps the full one. */}
+            <span className={picker ? "relative inline-flex" : "contents"}>
+                {picker && (
+                    <span aria-hidden="true" className={`${selectClass} pointer-events-none flex items-center gap-1.5 pr-7 whitespace-nowrap`}>
+                        {shortVersion(meta.versions.find((v) => v.id === meta.current))}
+                        <ChevronDown className="absolute right-2 size-3.5 text-white/70" />
+                    </span>
+                )}
+                <select
+                    aria-label="Version"
+                    className={picker ? "absolute inset-0 cursor-pointer opacity-0" : selectClass}
+                    value={meta.current}
+                    onChange={(e) => window.location.assign(`../${e.target.value}/${window.location.hash}`)}
+                >
+                    {meta.versions.map((v) => (
+                        <option key={v.id} value={v.id} className="text-black">
+                            {v.id} · {v.label} · {v.date}
+                        </option>
+                    ))}
+                </select>
+            </span>
 
-            {activeId && (
+            {activeId && picker && picker({ screens, activeId })}
+
+            {activeId && !picker && (
                 <div className="flex min-w-0 items-center gap-1.5">
                     <a
                         href={prev ? `#/${prev.id}` : undefined}
@@ -216,7 +246,13 @@ const IndexPage = ({ meta, screens }: { meta: ProtoMeta; screens: ProtoScreen[] 
     );
 };
 
+/** A version's own screen picker, in place of the toolbar's arrows and screen menu. */
+export type ScreenPicker = (props: { screens: ProtoScreen[]; activeId: string }) => ReactNode;
+
 /**
+ * `picker` replaces the toolbar's screen menu with a version's own (PI Round 2: Concept,
+ * then its edge cases). Versions that don't pass it are unchanged.
+ *
  * `toolbarExtras` lets a version add its own controls to the toolbar for the screens
  * they apply to (Round 3's copy deck). Versions that don't pass it are unchanged.
  */
@@ -224,10 +260,12 @@ export const PrototypeApp = ({
     meta,
     screens,
     toolbarExtras,
+    picker,
 }: {
     meta: ProtoMeta;
     screens: ProtoScreen[];
     toolbarExtras?: (screen: ProtoScreen) => ReactNode;
+    picker?: ScreenPicker;
 }) => {
     const route = useHashRoute();
     const screen = screens.find((s) => s.id === route);
@@ -238,7 +276,7 @@ export const PrototypeApp = ({
 
     return (
         <>
-            <Toolbar meta={meta} screens={screens} activeId={screen?.id} extras={screen && toolbarExtras?.(screen)} />
+            <Toolbar meta={meta} screens={screens} activeId={screen?.id} extras={screen && toolbarExtras?.(screen)} picker={picker} />
             {screen ? <div key={screen.id}>{screen.render()}</div> : <IndexPage meta={meta} screens={screens} />}
         </>
     );

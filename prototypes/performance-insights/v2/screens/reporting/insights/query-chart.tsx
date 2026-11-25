@@ -1,0 +1,395 @@
+import { useState } from "react";
+import { Check } from "@untitledui/icons";
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { cx } from "@/utils/cx";
+import { axis } from "../../campaign-series";
+import { ChartTooltip } from "../../campaign-ui";
+import { PINK, TEAL } from "../../das-shell";
+import { TEAL_DARK } from "../../nimbus-ui";
+import { dayLabel } from "../../sample-data";
+import {
+    ADDITIVE,
+    type ChartKind,
+    type Interval,
+    type Metric,
+    type ReportRow,
+    type Totals,
+    UNIT,
+    type Unit,
+    axisTick,
+    formatMetric,
+    fullDate,
+    metricOf,
+    sumTotals,
+} from "./insights-data";
+
+/**
+ * The New Query chart: the same report as the table, drawn as Line, Area, Bar, Stacked Bar
+ * or Pie. With no breakdown each ticked metric is a series; counts and money take the left
+ * axis and rates the right, so Requests and CTR read together as on staging. With a
+ * breakdown the first ticked metric is drawn per value, the largest six and "Other".
+ */
+
+const COLORS = [TEAL, PINK, "#2E5AAC", "#854A0E", "#7F56D9", "#F79009"];
+const OTHER = "#98A2B3";
+const MAX_SERIES = COLORS.length;
+
+interface Series {
+    key: string;
+    metric: Metric;
+    color: string;
+    axis: "left" | "right";
+    /** Segments only: the combination the line sums. */
+    combo?: string;
+}
+
+export interface ChartSegment {
+    label: string;
+    metric: Metric;
+    comboKey: string;
+    color: string;
+}
+
+const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const tick = (interval: Interval, p: string) => (interval === "month" ? `${MONTH_NAMES[Number(p.slice(5, 7)) - 1]} ${p.slice(0, 4)}` : dayLabel(p));
+const title = (interval: Interval, p: string) => (interval === "month" ? tick(interval, p) : interval === "week" ? `Week of ${fullDate(p)}` : fullDate(p));
+
+export const QueryChart = ({
+    rows,
+    metrics,
+    hasBreakdown,
+    chart,
+    interval,
+    showLegend,
+    dualAxis,
+    comparePrev,
+    height = "h-[28rem]",
+    segments,
+    hiddenLabels,
+    onToggleLabel,
+    onShowAll,
+}: {
+    rows: ReportRow[];
+    metrics: Metric[];
+    hasBreakdown: boolean;
+    chart: Exclude<ChartKind, "table">;
+    interval: Interval;
+    showLegend: boolean;
+    /** Round 2 · C10: two metrics compared always take an axis each, even in the same unit. */
+    dualAxis?: boolean;
+    /** Round 2 · C16: each line drawn again, faded and dashed, for the previous period (rows carry `prev`). */
+    comparePrev?: boolean;
+    /** The plot's height class. */
+    height?: string;
+    /**
+     * Round 2 · C16: exactly the lines to draw, one per ticked table row: a metric for one
+     * breakdown combination (comboKey "" for the totals), in that row's colour.
+     */
+    segments?: ChartSegment[];
+    /**
+     * C16: lines switched off, when the page keeps that state (its table's checkboxes are the
+     * same switches). Without these, the legend keeps its own.
+     */
+    hiddenLabels?: string[];
+    onToggleLabel?: (label: string) => void;
+    onShowAll?: () => void;
+}) => {
+    // C16: the legend is a set of switches, one per line (and one for the previous period's lines).
+    const [ownHidden, setOwnHidden] = useState<Set<string>>(() => new Set());
+    const hidden = hiddenLabels ? new Set(hiddenLabels) : ownHidden;
+    const [hidePrev, setHidePrev] = useState(false);
+    const periods = [...new Set(rows.map((r) => r.period))].reverse();
+    const comboKeys = [...new Set(rows.map((r) => r.combo.key))];
+    const byCombo = (key: string) => rows.filter((r) => r.combo.key === key);
+    const top = comboKeys.slice(0, MAX_SERIES);
+    const rest = comboKeys.slice(MAX_SERIES);
+    // The grey seventh series is "Other" when it folds several values, else that one value.
+    const otherKey = rest.length === 1 ? rest[0] : "Other";
+
+    /* -------- series -------- */
+
+    const series: Series[] = segments
+        ? segments.map((g) => ({ key: g.label, metric: g.metric, color: g.color, axis: "left" as const, combo: g.comboKey }))
+        : hasBreakdown
+          ? [
+                ...top.map((key, i) => ({ key, metric: metrics[0], color: COLORS[i], axis: "left" as const })),
+                ...(rest.length ? [{ key: otherKey, metric: metrics[0], color: OTHER, axis: "left" as const }] : []),
+            ]
+          : metrics.slice(0, MAX_SERIES).map((m, i) => ({ key: m, metric: m, color: COLORS[i], axis: "left" as const }));
+    const leftUnit: Unit = UNIT[(series[0] ?? { metric: metrics[0] }).metric];
+    for (const s of series) s.axis = UNIT[s.metric] === leftUnit ? "left" : "right";
+    if (dualAxis && !hasBreakdown && series.length === 2) series[1].axis = "right";
+    const rightUnit = series.find((s) => s.axis === "right") ? UNIT[series.find((s) => s.axis === "right")!.metric] : undefined;
+
+    const cell = (period: string, keys: string[]): Totals => sumTotals(rows.filter((r) => r.period === period && keys.includes(r.combo.key)).map((r) => r.t));
+    const prevCell = (period: string, keys: string[]): Totals =>
+        sumTotals(rows.filter((r) => r.period === period && keys.includes(r.combo.key) && r.prev).map((r) => r.prev!));
+    const withPrev = Boolean(comparePrev) && chart === "line" && rows.some((r) => r.prev);
+    const toggles = Boolean(segments) && chart !== "pie";
+    /** The lines drawn: every series, less the ones switched off in the legend. */
+    const drawn = toggles ? series.filter((s) => !hidden.has(s.key)) : series;
+    const drawPrev = withPrev && !(toggles && hidePrev);
+    const flip = (key: string) =>
+        onToggleLabel
+            ? onToggleLabel(key)
+            : setOwnHidden((h) => {
+                  const next = new Set(h);
+                  if (next.has(key)) next.delete(key);
+                  else next.add(key);
+                  return next;
+              });
+    const PREV = " · previous";
+    const data = periods.map((p) => {
+        const row: Record<string, string | number> = { period: p };
+        if (segments) {
+            for (const s of series) {
+                row[s.key] = metricOf(s.metric, cell(p, [s.combo!]));
+                if (withPrev) row[s.key + PREV] = metricOf(s.metric, prevCell(p, [s.combo!]));
+            }
+        } else if (hasBreakdown) {
+            top.forEach((key) => (row[key] = metricOf(metrics[0], cell(p, [key]))));
+            if (rest.length) row[otherKey] = metricOf(metrics[0], cell(p, rest));
+            if (withPrev) {
+                top.forEach((key) => (row[key + PREV] = metricOf(metrics[0], prevCell(p, [key]))));
+                if (rest.length) row[otherKey + PREV] = metricOf(metrics[0], prevCell(p, rest));
+            }
+        } else {
+            const t = cell(p, comboKeys);
+            series.forEach((s) => (row[s.key] = metricOf(s.metric, t)));
+            if (withPrev) {
+                const pt = prevCell(p, comboKeys);
+                series.forEach((s) => (row[s.key + PREV] = metricOf(s.metric, pt)));
+            }
+        }
+        return row;
+    });
+
+    const metricFor = (name: string) => series.find((s) => s.key === name.replace(PREV, ""))?.metric ?? metrics[0];
+    const tooltip = <ChartTooltip format={(v, name) => formatMetric(metricFor(name), v)} title={(p) => title(interval, p)} />;
+    const xAxis = (
+        <XAxis
+            dataKey="period"
+            {...axis}
+            padding={chart === "line" || chart === "area" ? { left: 32, right: 32 } : undefined}
+            tickFormatter={(p: string) => tick(interval, p)}
+            interval={Math.max(0, Math.ceil(periods.length / 8) - 1)}
+        />
+    );
+    const yAxes = (
+        <>
+            <YAxis yAxisId="left" {...axis} width={72} tickFormatter={(v: number) => axisTick(leftUnit, v)} />
+            {rightUnit && <YAxis yAxisId="right" orientation="right" {...axis} width={72} tickFormatter={(v: number) => axisTick(rightUnit, v)} />}
+        </>
+    );
+    const grid = <CartesianGrid vertical={false} yAxisId="left" className="[&_line]:stroke-border-secondary" />;
+    const margin = { top: 8, right: 8, bottom: 0, left: 0 };
+
+    /* -------- pie -------- */
+
+    const pieMetric = metrics.find((m) => ADDITIVE.includes(m));
+    const pieData = (() => {
+        if (!pieMetric) return [];
+        if (hasBreakdown)
+            return [
+                ...top.map((key, i) => ({ name: key, value: metricOf(pieMetric, sumTotals(byCombo(key).map((r) => r.t))), color: COLORS[i] })),
+                ...(rest.length ? [{ name: otherKey, value: metricOf(pieMetric, sumTotals(rest.flatMap(byCombo).map((r) => r.t))), color: OTHER }] : []),
+            ];
+        const newest = [...periods].reverse();
+        const slices = newest
+            .slice(0, MAX_SERIES)
+            .map((p, i) => ({ name: tick(interval, p), value: metricOf(pieMetric, cell(p, comboKeys)), color: COLORS[i] }));
+        const older = newest.slice(MAX_SERIES);
+        return older.length
+            ? [
+                  ...slices,
+                  {
+                      name: older.length === 1 ? tick(interval, older[0]) : "Other",
+                      value: metricOf(pieMetric, sumTotals(older.map((p) => cell(p, comboKeys)))),
+                      color: OTHER,
+                  },
+              ]
+            : slices;
+    })();
+
+    const body = (() => {
+        if (chart === "line")
+            return (
+                <LineChart data={data} margin={margin}>
+                    {grid}
+                    {xAxis}
+                    {yAxes}
+                    <Tooltip content={tooltip} />
+                    {drawn.map((s) => (
+                        <Line key={s.key} yAxisId={s.axis} dataKey={s.key} stroke={s.color} strokeWidth={2.5} dot={false} isAnimationActive={false} />
+                    ))}
+                    {drawPrev &&
+                        drawn.map((s) => (
+                            <Line
+                                key={s.key + PREV}
+                                yAxisId={s.axis}
+                                dataKey={s.key + PREV}
+                                stroke={s.color}
+                                strokeOpacity={0.45}
+                                strokeDasharray="6 5"
+                                strokeWidth={2}
+                                dot={false}
+                                isAnimationActive={false}
+                            />
+                        ))}
+                </LineChart>
+            );
+        if (chart === "area")
+            return (
+                <AreaChart data={data} margin={margin}>
+                    {grid}
+                    {xAxis}
+                    {yAxes}
+                    <Tooltip content={tooltip} />
+                    {/* The first series draws last, so its fill sits on top. */}
+                    {[...drawn].reverse().map((s) => (
+                        <Area
+                            key={s.key}
+                            yAxisId={s.axis}
+                            dataKey={s.key}
+                            stroke={s.color}
+                            fill={s.color}
+                            fillOpacity={0.15}
+                            strokeWidth={2.5}
+                            isAnimationActive={false}
+                        />
+                    ))}
+                </AreaChart>
+            );
+        if (chart === "bar" || chart === "stacked")
+            return (
+                <BarChart data={data} margin={margin}>
+                    {grid}
+                    {xAxis}
+                    {yAxes}
+                    <Tooltip content={tooltip} cursor={{ fill: "#F2F4F7" }} />
+                    {drawn.map((s) => (
+                        <Bar
+                            key={s.key}
+                            yAxisId={s.axis}
+                            dataKey={s.key}
+                            fill={s.color}
+                            // Rates don't add up, so only counts and money stack.
+                            stackId={chart === "stacked" && UNIT[s.metric] !== "pct" ? s.axis : undefined}
+                            maxBarSize={56}
+                            isAnimationActive={false}
+                        />
+                    ))}
+                </BarChart>
+            );
+        return (
+            <PieChart>
+                <Tooltip content={<ChartTooltip format={(v) => (pieMetric ? formatMetric(pieMetric, v) : String(v))} />} />
+                <Pie data={pieData} dataKey="value" nameKey="name" innerRadius="45%" outerRadius="80%" paddingAngle={1} isAnimationActive={false}>
+                    {pieData.map((d) => (
+                        <Cell key={d.name} fill={d.color} />
+                    ))}
+                </Pie>
+            </PieChart>
+        );
+    })();
+
+    const legend = chart === "pie" ? pieData.map((d) => ({ key: d.name, color: d.color })) : series.map((s) => ({ key: s.key, color: s.color }));
+    const uncharted = segments || hasBreakdown ? 0 : Math.max(0, metrics.length - MAX_SERIES);
+
+    if (chart === "pie" && !pieMetric)
+        return (
+            <p className="rounded-xl border border-dashed border-secondary px-6 py-10 text-center text-md text-tertiary">
+                Pie charts show metrics that add up: Requests, Wins, Impressions, Revenue or Clicks.
+            </p>
+        );
+
+    return (
+        <div className="flex flex-col gap-4">
+            {chart === "pie" && <h3 className="text-lg font-extrabold text-primary">{pieMetric}</h3>}
+            <div className={height}>
+                <ResponsiveContainer width="100%" height="100%">
+                    {body}
+                </ResponsiveContainer>
+            </div>
+            {showLegend && toggles && (
+                <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-md" role="group" aria-label="Lines on the chart">
+                    {legend.map((l) => {
+                        const on = !hidden.has(l.key);
+                        return (
+                            <button
+                                key={l.key}
+                                type="button"
+                                role="checkbox"
+                                aria-checked={on}
+                                onClick={() => flip(l.key)}
+                                className={cx(
+                                    "inline-flex items-center gap-2 rounded-md px-1.5 py-1 hover:bg-secondary",
+                                    on ? "text-secondary" : "text-quaternary",
+                                )}
+                            >
+                                <span
+                                    className="inline-flex size-4 shrink-0 items-center justify-center rounded"
+                                    style={on ? { backgroundColor: l.color, color: "#FFFFFF" } : { boxShadow: `inset 0 0 0 2px ${l.color}` }}
+                                    aria-hidden="true"
+                                >
+                                    {on && <Check className="size-3" />}
+                                </span>
+                                <span className={on ? undefined : "line-through"}>{l.key}</span>
+                            </button>
+                        );
+                    })}
+                    {withPrev && (
+                        <button
+                            type="button"
+                            role="checkbox"
+                            aria-checked={!hidePrev}
+                            onClick={() => setHidePrev((v) => !v)}
+                            className={cx(
+                                "inline-flex items-center gap-2 rounded-md px-1.5 py-1 hover:bg-secondary",
+                                hidePrev ? "text-quaternary" : "text-secondary",
+                            )}
+                        >
+                            <svg width="22" height="4" aria-hidden="true">
+                                <line x1="0" y1="2" x2="22" y2="2" stroke="#98A2B3" strokeWidth="2" strokeDasharray="5 4" opacity={hidePrev ? 0.4 : 1} />
+                            </svg>
+                            <span className={hidePrev ? "line-through" : undefined}>Previous period</span>
+                        </button>
+                    )}
+                    {(hidden.size > 0 || hidePrev) && (
+                        <button
+                            type="button"
+                            onClick={() => {
+                                if (onShowAll) onShowAll();
+                                else setOwnHidden(new Set());
+                                setHidePrev(false);
+                            }}
+                            className="rounded-md px-1.5 py-1 font-semibold hover:bg-secondary"
+                            style={{ color: TEAL_DARK }}
+                        >
+                            Show all
+                        </button>
+                    )}
+                </div>
+            )}
+            {showLegend && !toggles && (
+                <div className="flex flex-wrap justify-center gap-x-6 gap-y-1 text-md text-tertiary">
+                    {legend.map((l) => (
+                        <span key={l.key} className="inline-flex items-center gap-2">
+                            <span className="size-3 rounded-full" style={{ backgroundColor: l.color }} aria-hidden="true" />
+                            {l.key}
+                        </span>
+                    ))}
+                    {withPrev && (
+                        <span className="inline-flex items-center gap-2">
+                            <svg width="22" height="4" aria-hidden="true">
+                                <line x1="0" y1="2" x2="22" y2="2" stroke="#98A2B3" strokeWidth="2" strokeDasharray="5 4" />
+                            </svg>
+                            Previous period
+                        </span>
+                    )}
+                    {uncharted > 0 && <span>+{uncharted} more in Table</span>}
+                </div>
+            )}
+        </div>
+    );
+};

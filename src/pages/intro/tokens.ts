@@ -17,6 +17,6 @@ export const WARM = "#FCFAF9";
 const isLocal = () => typeof window !== "undefined" && /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname);
 
 /** A prototype URL: `proto("app/v1", "pi-query")`. Local dev server when Storybook runs locally. */
-export const proto = (path: string, screen = "") => `${isLocal() ? "http://localhost:5190/" : "./"}${path}/${screen ? `#/${screen}` : ""}`;
+export const proto = (path: string, screen = "") => `${isLocal() ? "http://localhost:5195/" : "./"}${path}/${screen ? `#/${screen}` : ""}`;
 /** A Storybook page or story by id. */
 export const story = (id: string) => `./?path=/${id.endsWith("--docs") ? "docs" : "story"}/${id}`;

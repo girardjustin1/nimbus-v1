@@ -1,7 +1,7 @@
 // Captures the before and after pictures for Storybook › Transition › Round 1 › Before and after:
 // the same element of the full application in v1 (before Round 1) and v2 (staging's styles).
 //
-//   npm run proto:dev            (in another terminal; serves :5190)
+//   npm run proto:dev            (in another terminal; serves :5195)
 //   node scripts/capture-round-1-shots.mjs
 //
 // Both versions use sample data only, so the pictures are safe for the public Storybook.
@@ -14,7 +14,7 @@ import { chromium } from "playwright";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(root, "src/pages/transition/round-1/shots");
-const BASE = "http://localhost:5190/app";
+const BASE = "http://localhost:5195/app";
 
 /**
  * One picture per entry. `find` runs in the page and returns the element to frame;

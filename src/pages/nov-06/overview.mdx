@@ -6,7 +6,7 @@ import { framing, items, links, outside } from "./feedback";
 <Meta title="Reviews/Nov 6 · Delivery chart/Summary" />
 
 export const protoUrl = (route) =>
-  (typeof window !== "undefined" && /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname) ? "http://localhost:5190/das/v6/" : "./das/v6/") + `#/${route}`;
+  (typeof window !== "undefined" && /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname) ? "http://localhost:5195/das/v6/" : "./das/v6/") + `#/${route}`;
 export const storyUrl = (id) => (id.endsWith("--docs") ? `./?path=/docs/${id}` : `./?path=/story/${id}`);
 
 export const Pill = ({ href, kind, children }) => (

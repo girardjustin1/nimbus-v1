@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="319px" height="379px" viewBox="0 0 319 379" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 56.3 (81716) - https://sketch.com -->
+    <title>sample table</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M35,5 L101,5 C103.761424,5 106,7.23857625 106,10 L106,75 L30,75 L30,10 C30,7.23857625 32.2385763,5 35,5 Z" id="path-1"></path>
+        <filter x="-13.2%" y="-17.1%" width="136.8%" height="140.0%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="4" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="4" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <path d="M0,-2.27373675e-13 L298,-2.27373675e-13 L298,308 C298,310.761424 295.761424,313 293,313 L5,313 C2.23857625,313 3.38176876e-16,310.761424 0,308 L0,-2.27373675e-13 Z" id="path-3"></path>
+        <filter x="-3.4%" y="-3.8%" width="109.4%" height="108.9%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="4" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="4" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <path d="M0,0 L298,0 L298,308 C298,310.761424 295.761424,313 293,313 L5,313 C2.23857625,313 3.38176876e-16,310.761424 0,308 L0,0 Z" id="path-5"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="sample-table" transform="translate(4.000000, 1.000000)">
+            <g id="top-white-bar-copy-6">
+                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+            <path d="M5,0 L101,0 C103.761424,-5.07265313e-16 106,2.23857625 106,5 L106,80 L0,80 L0,5 C-3.38176876e-16,2.23857625 2.23857625,5.07265313e-16 5,0 Z" id="top-white-bar-copy-2" fill="#003B59"></path>
+            <g id="table" transform="translate(0.000000, 55.000000)">
+                <g id="top-white-bar-copy-4">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                    <path stroke="#DDDDDD" stroke-width="1" d="M0.5,0.5 L0.5,308 C0.5,310.485281 2.51471863,312.5 5,312.5 L293,312.5 C295.485281,312.5 297.5,310.485281 297.5,308 L297.5,0.5 L0.5,0.5 Z" stroke-linejoin="square" fill="#FFFFFF" fill-rule="evenodd"></path>
+                </g>
+                <path d="M100.5,0 L100.5,49" id="Line-Copy-23" stroke-opacity="0.2" stroke="#FFFFFF" stroke-linecap="square"></path>
+                <path d="M200.5,0 L200.5,49" id="Line-Copy-24" stroke-opacity="0.2" stroke="#FFFFFF" stroke-linecap="square"></path>
+                <rect id="Rectangle" fill-opacity="0.6" fill="#FAF7F5" x="1" y="95" width="296" height="41"></rect>
+                <rect id="Rectangle-Copy" fill-opacity="0.6" fill="#FAF7F5" x="1" y="183" width="296" height="41"></rect>
+                <g id="Group-3" transform="translate(0.000000, -0.000000)">
+                    <mask id="mask-6" fill="white">
+                        <use xlink:href="#path-5"></use>
+                    </mask>
+                    <g id="top-white-bar-copy-7"></g>
+                    <rect id="Rectangle-Copy-13" fill-opacity="0.6" fill="#FAF7F5" mask="url(#mask-6)" x="1" y="271" width="296" height="40"></rect>
+                </g>
+                <path d="M100,50 L100,313" id="Line-Copy-5" stroke="#DDDDDD" stroke-linecap="square"></path>
+                <path d="M200,50 L200,313" id="Line-Copy-6" stroke="#DDDDDD" stroke-linecap="square"></path>
+                <path d="M0,93.5 L298,93.5" id="Line-2" stroke="#DDDDDD" stroke-linecap="square"></path>
+                <path d="M0,181.5 L298,181.5" id="Line-2-Copy-2" stroke="#DDDDDD" stroke-linecap="square"></path>
+                <path d="M0,225.5 L298,225.5" id="Line-2-Copy-5" stroke="#DDDDDD" stroke-linecap="square"></path>
+                <rect id="Rectangle" fill="#F5F0ED" x="202" y="183" width="94" height="41"></rect>
+                <path d="M2,137.5 L296,137.5" id="Line-2-Copy-3" stroke="#DDDDDD" stroke-width="3" stroke-linecap="square"></path>
+                <path d="M0,269.5 L298,269.5" id="Line-2-Copy-4" stroke="#DDDDDD" stroke-linecap="square"></path>
+                <path d="M0,-2.27373675e-13 L293,-2.27373675e-13 C295.761424,-2.27880941e-13 298,2.23857625 298,5 L298,50 L0,50 L0,-2.27373675e-13 Z" id="top-white-bar-copy-3" fill="#003B59"></path>
+                <text id="Demand-Revenue" font-family="ProximaNova-Bold, Proxima Nova" font-size="13" font-weight="bold" line-spacing="15" fill="#FFFFFF">
+                    <tspan x="15" y="22">Demand </tspan>
+                    <tspan x="15" y="37">Revenue</tspan>
+                </text>
+                <text id="Nimbus-Revenue" font-family="ProximaNova-Bold, Proxima Nova" font-size="13" font-weight="bold" line-spacing="15" fill="#FFFFFF">
+                    <tspan x="114" y="22">Nimbus </tspan>
+                    <tspan x="114" y="37">Revenue</tspan>
+                </text>
+                <text id="Revenue-Discrepancy" font-family="ProximaNova-Bold, Proxima Nova" font-size="13" font-weight="bold" line-spacing="15" fill="#FFFFFF">
+                    <tspan x="214" y="22">Revenue</tspan>
+                    <tspan x="214" y="37">Discrepancy</tspan>
+                </text>
+            </g>
+            <text id="Yesterday" font-family="ProximaNova-Bold, Proxima Nova" font-size="13" font-weight="bold" line-spacing="15" fill="#FFFFFF">
+                <tspan x="22.5" y="35">Yesterday</tspan>
+            </text>
+            <ellipse id="Oval" stroke="#817E76" stroke-width="2" cx="248.5" cy="258" rx="65.5" ry="38"></ellipse>
+            <text id="$2,920.03-$217.00" font-family="ProximaNova-Regular, Proxima Nova" font-size="13" font-weight="normal" line-spacing="44" fill="#666666">
+                <tspan x="15" y="132">$2,920.03</tspan>
+                <tspan x="15" y="176">$217.00</tspan>
+            </text>
+            <text id="$2,970.81-$221.78" font-family="ProximaNova-Regular, Proxima Nova" font-size="13" font-weight="normal" line-spacing="44" fill="#666666">
+                <tspan x="114" y="132">$2,970.81</tspan>
+                <tspan x="114" y="176">$221.78</tspan>
+            </text>
+            <text id="2%-2%" font-family="ProximaNova-Regular, Proxima Nova" font-size="13" font-weight="normal" line-spacing="44" fill="#666666">
+                <tspan x="214" y="132">2%</tspan>
+                <tspan x="214" y="176">2%</tspan>
+            </text>
+            <text id="$141.74-$1782.46-$7." font-family="ProximaNova-Regular, Proxima Nova" font-size="13" font-weight="normal" line-spacing="44" fill="#666666">
+                <tspan x="15" y="219">$141.74</tspan>
+                <tspan x="15" y="263">$1782.46</tspan>
+                <tspan x="15" y="307">$7.07</tspan>
+                <tspan x="15" y="351">$21.56</tspan>
+            </text>
+            <text id="$146.45-$2195.23-$7." font-family="ProximaNova-Regular, Proxima Nova" font-size="13" font-weight="normal" line-spacing="44" fill="#666666">
+                <tspan x="114" y="219">$146.45</tspan>
+                <tspan x="114" y="263">$2195.23</tspan>
+                <tspan x="114" y="307">$7.78</tspan>
+                <tspan x="114" y="351">$21.90</tspan>
+            </text>
+            <text id="3%-19%-9%-2%" font-family="ProximaNova-Regular, Proxima Nova" font-size="13" font-weight="normal" line-spacing="44">
+                <tspan x="214" y="219" fill="#666666">3%</tspan>
+                <tspan x="214" y="263" font-family="ProximaNova-Bold, Proxima Nova" font-size="16" font-weight="bold" fill="#CB0001">19%</tspan>
+                <tspan x="214" y="307" fill="#666666">9%</tspan>
+                <tspan x="214" y="351" fill="#666666">2%</tspan>
+            </text>
+        </g>
+    </g>
+</svg>

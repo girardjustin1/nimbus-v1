@@ -1,6 +1,6 @@
 // Captures the prototype v5 screens shown in Storybook › Reviews › Oct 26 · Nimbus tokens › Walkthrough.
 //
-//   npm run proto:dev            (in another terminal; serves :5190)
+//   npm run proto:dev            (in another terminal; serves :5195)
 //   node scripts/capture-oct-26-screens.mjs
 //
 // Re-run after any change to v5 so the review guide shows what Product will see.
@@ -12,7 +12,7 @@ import { chromium } from "playwright";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const out = path.join(root, "src/pages/oct-26/screens");
-const base = process.env.PROTO_URL ?? "http://localhost:5190/das/v5/";
+const base = process.env.PROTO_URL ?? "http://localhost:5195/das/v5/";
 mkdirSync(out, { recursive: true });
 
 /** [file, route, optional interaction, optional full-page] */

@@ -1,6 +1,6 @@
 // Captures the prototype v6 screens shown in Storybook › Reviews › Oct 29 · Reporting › Walkthrough.
 //
-//   npm run proto:dev            (in another terminal; serves :5190)
+//   npm run proto:dev            (in another terminal; serves :5195)
 //   node scripts/capture-oct-29-screens.mjs
 //
 // Re-run after any change to v6 so the review guide shows what Product will see.
@@ -12,7 +12,7 @@ import { chromium } from "playwright";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const out = path.join(root, "src/pages/oct-29/screens");
-const base = process.env.PROTO_URL ?? "http://localhost:5190/das/v6/";
+const base = process.env.PROTO_URL ?? "http://localhost:5195/das/v6/";
 mkdirSync(out, { recursive: true });
 
 /** [file, route, optional interaction, optional full-page] */

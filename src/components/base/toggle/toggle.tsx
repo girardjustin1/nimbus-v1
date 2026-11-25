@@ -20,9 +20,12 @@ interface ToggleBaseProps {
  *   off  light grey track, the knob ringed in grey on the left, a white ✕ on the right
  *
  * `slim` is kept for existing callers and draws the same toggle.
+ *
+ * Performance Insights draws its toggles teal (staging, 25 Nov): a wrapper sets
+ * `--toggle-on` and `--toggle-on-hover`, and every toggle inside it takes them.
  */
-const PINK = "#D076A6";
-const PINK_HOVER = "#C2669A";
+const PINK = "var(--toggle-on, #D076A6)";
+const PINK_HOVER = "var(--toggle-on-hover, #C2669A)";
 const GREY = "#DCDCDC";
 const GREY_RING = "#CFCFCF";
 

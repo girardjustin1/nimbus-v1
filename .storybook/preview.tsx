@@ -68,6 +68,8 @@ const preview: Preview = {
                             "Finance",
                             "Settings",
                         ],
+                        "Performance Insights",
+                        ["Rounds", "Research", "*"],
                         "Deal Activation System",
                         [
                             "Rounds",

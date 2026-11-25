@@ -7,7 +7,7 @@ import { Cta } from "../intro/ui";
  */
 
 export const protoUrl = (route = "") =>
-    (typeof window !== "undefined" && /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname) ? "http://localhost:5190/app/v1/" : "./app/v1/") +
+    (typeof window !== "undefined" && /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname) ? "http://localhost:5195/app/v1/" : "./app/v1/") +
     (route ? `#/${route}` : "");
 
 export const th = {
